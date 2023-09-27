@@ -1,11 +1,13 @@
 ---
-title: Getting Started with Legend State
+title: Getting Started
 description: Legend State Basic
 ---
 
+import Install from "../../../Components/Install/Install.mdx";
+
 ## Install Legend-State
 
-<Install name="@legendapp/state" uid="getting-started" />
+<Install />
 
 ## Core concepts
 
@@ -28,7 +30,7 @@ state$.text.set("hi");
 state$.text.set((text) => text + " there");
 ```
 
-[Read more](../observable)
+[Read more](../../2-usage/1-observable)
 
 ### Observing observables
 
@@ -59,7 +61,7 @@ await when(() => state$.settings.theme.get() === "dark");
 const isDark$ = observable(() => state$.settings.theme.get() === "dark");
 ```
 
-[Read more](../reactivity)
+[Read more](../../2-usage/2-reactivity)
 
 ### Selectors
 
@@ -89,7 +91,7 @@ import { enableReactUse } from "@legendapp/state/config/enableReactUse";
 enableReactUse(); // This adds the use() function to observables
 ```
 
-There are also more options such as enabling getting/setting values directly with a `$` property. See [configuring](../configuring) for more details.
+There are also more options such as enabling getting/setting values directly with a `$` property. See [configuring](../../2-usage/3-configuring) for more details.
 
 ### 2. Create global state
 
@@ -129,7 +131,7 @@ export const uiState = observable({
 
 ### 3. Use in React
 
-Head over to [React Introduction](../react-introduction) for a detailed guide to getting started in React.
+Head over to [React Introduction](../../3-react/1-react-introduction) for a detailed guide to getting started in React.
 
 ### 4. Persistence plugins
 
@@ -154,4 +156,4 @@ persistObservable(state$, {
 })
 ```
 
-[Read more](../persistence)
+[Read more](../../4-guides/1-persistence)
