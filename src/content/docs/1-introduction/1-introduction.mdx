@@ -1,5 +1,5 @@
 ---
-title: Introduction to Legend State
+title: Introduction
 description: Basic intro to Legend State.
 ---
 
@@ -38,15 +38,16 @@ const Component = function Component() {
 
 Legend-State beats every other state library on just about every metric and is so optimized for arrays that it even beats vanilla JS on the "swap" and "replace all rows" benchmarks. At only `4kb` and with the massive reduction in boilerplate code, you'll have big savings in file size too.
 
-<img src="/img/dev/state/times.png" style={{ borderRadius: "1rem" }} />
+<img
+  src="https://legendapp.com/img/dev/state/times.png"
+  style={{ borderRadius: "1rem" }}
+/>
 
-See [Fast 🔥](./fast) for more details of why Legend-State is so fast.
+See [Fast 🔥](../3-fast-) for more details of why Legend-State is so fast.
 
 ### 3. 🔥 Fine-grained reactivity for minimal renders
 
 Legend-State lets you make your renders super fine-grained allowing only the leaves of your component tree to re-render when required, thus making your apps go faster 🔥, and removing unnecessary overhead from React's render cycle.
-
-{/* <Example name="Primitive"> */}
 
 ```jsx
 function Normal() {
@@ -78,8 +79,6 @@ function FineGrained() {
 
 <Primitives />
 
-{/* </Example> */}
-
 ### 4. 💾 Powerful persistence
 
 Legend-State includes a powerful [persistence plugin system](../persistence) for local caching and remote sync. It easily enables offline-first apps by tracking changes made while offline that save when coming online, managing conflict resolution, and syncing only small diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
@@ -103,7 +102,9 @@ persistObservable(state$, {
 
 ## Install
 
-{/* <Install name="@legendapp/state" uid="introduction" /> */}
+import Install from "../../../Components/Install/Install.mdx";
+
+<Install />
 
 ## Highlights
 
@@ -120,7 +121,7 @@ persistObservable(state$, {
 
 The core is platform agnostic so you can use it in vanilla JS or any framework to create and listen to observables. It includes support for React and React Native, and has plugins for automatically persisting to storage.
 
-[Read more](./why) about why you'll love Legend-State ❤️
+[Read more](../4-why) about why you'll love Legend-State ❤️
 
 ## Example
 
@@ -172,7 +173,7 @@ function Component() {
 
 ## Getting Started
 
-Continue on to [Getting Started](./getting-started) to get started!
+Continue on to [Getting Started](../2-getting-started) to get started!
 
 ## Community
 
@@ -181,7 +182,3 @@ Join us on [Slack](https://join.slack.com/t/legendappcommunity/shared_invite/zt-
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-state) on Github
-
-```
-
-```

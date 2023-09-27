@@ -13,18 +13,8 @@ export default defineConfig({
       github: 'https://github.com/LegendApp/legend-state'
     },
     sidebar: [{
-      label: 'Guides',
-      items: [
-      // Each item here is one entry in the navigation menu.
-      {
-        label: 'Example Guide',
-        link: '/guides/example/'
-      }]
-    }, {
-      label: 'Reference',
-      autogenerate: {
-        directory: 'reference'
-      }
+      label: 'Introduction',
+      autogenerate: { directory: '1-introduction' },
     }]
   }), react(), tailwind({applyBaseStyles: false})],
   // Process images with sharp: https://docs.astro.build/en/guides/assets/#using-sharp
