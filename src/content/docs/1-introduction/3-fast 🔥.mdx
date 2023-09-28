@@ -1,7 +1,9 @@
 ---
-title: Getting Started with Legend State
+title: Fast 🔥
 description: Legend State Basic
 ---
+
+import MemoExample from "../../../Components/Introduction/MemoExample.astro";
 
 Legend-State is the result of years of iteration and dozens of experiments and rewrites to build the fastest possible state system. The primary reason it's so fast is that it optimizes for the fewest number of renders - components are only re-rendered when the state they truly care about is changed.
 
@@ -11,23 +13,32 @@ We'll show results of the popular [krausest](https://github.com/krausest/js-fram
 
 ## Benchmark
 
-<img src="/img/dev/state/times.png" style={{ borderRadius: "1rem" }} />
+<img
+  src="https://legendapp.com/img/dev/state/times.png"
+  style={{ borderRadius: "1rem" }}
+/>
 
 Legend-State's **optimized** mode (on the left) optimizes for rendering each row when it changes, but not the entire list, which is reflected in the fast **partial update** and **select row** benchmarks. That typically incurs an extra upfront cost to set up the listeners in each row, but Legend-State is so optimized that even so it's actually still among the fastest in the **create many rows** benchmark.
 
 Legend-State really shines in the **replace all rows** and **swap rows** benchmarks. When the number of elements is unchaged, it does not need to re-render the list and can only render the individual rows that changed. That brings a big speed improvement for drag/drop or when items are moved around in a list.
 
-You can opt into the fast array rendering with the `optimized` prop on the [For](../fine-grained-reactivity#for) component. Note that this optimization reuses React nodes rather than replacing them as usual, so it may have unexpected behavior with some types of animations or if you are modifying the DOM externally. For that reason the benchmark considers usage of the `optimized` props as "non-keyed".
+You can opt into the fast array rendering with the `optimized` prop on the [For](../../3-react/3-fine-grained-reactivity#for) component. Note that this optimization reuses React nodes rather than replacing them as usual, so it may have unexpected behavior with some types of animations or if you are modifying the DOM externally. For that reason the benchmark considers usage of the `optimized` props as "non-keyed".
 
 ### Startup metrics
 
-<img src="/img/dev/state/startup.png" style={{ borderRadius: "1rem" }} />
+<img
+  src="https://legendapp.com/img/dev/state/startup.png"
+  style={{ borderRadius: "1rem" }}
+/>
 
 In these benchmarks you can see that Legend-State has the fastest TTI (time to interactive) because Legend-State doesn't do much processing up front. Creating observables and adding thousands of listeners does very little work. Because observables don't have to modify the underlying data at all, creating an observable just creates a tiny amount of metadata.
 
 ### Memory
 
-<img src="/img/dev/state/memory.png" style={{ borderRadius: "1rem" }} />
+<img
+  src="https://legendapp.com/img/dev/state/memory.png"
+  style={{ borderRadius: "1rem" }}
+/>
 
 The memory usage is lower than the others because Legend-State does not modify the underlying data or keep a lot of extra metadata, and it does not create many objects or closures.
 
@@ -47,44 +58,21 @@ Each node keeps a `Set` of listeners so that you can listen to changes to any va
 
 ### Granular renders
 
-Extensive care is taken to ensure that components are rendered only when their state truly changes. Legend-State provides [functions](../tracking) to be extra specific about when it tracks changes and [useSelector](../hooks#useselector) to isolate a tracking computation to return one value. The best thing for your app's performance is to render less, less often.
+Extensive care is taken to ensure that components are rendered only when their state truly changes. Legend-State provides [functions](../../2-usage/2-reactivity) to be extra specific about when it tracks changes and [useSelector](../../3-react/1-react-introduction/#2-useselector) to isolate a tracking computation to return one value. The best thing for your app's performance is to render less, less often.
 
 ### Easy fine-grained reactivity
 
-Legend-State has [built-in helpers](../reactivity) to easily extract children so that their changes do not affect the parent. This keeps large parent components from rendering often just because their children change.
+Legend-State has [built-in helpers](../../2-usage/2-reactivity) to easily extract children so that their changes do not affect the parent. This keeps large parent components from rendering often just because their children change.
 
-<Example name="Memo">
-```jsx
-function MemoExample() {
-    const renderCount = ++useRef(0).current
-    const state = useObservable({ count: 0 })
-
-    useInterval(() => {
-        state.count.set(c => c + 1)
-    }, 500)
-
-    return (
-        <div>
-            <div>Renders: {renderCount}</div>
-            <Memo>
-                <div>Count: {state.count}</div>
-            </Memo>
-        </div>
-    )
-
-}
-
-```
-</Example>
-
+<MemoExample />
 
 ### Shallow listeners
 
-[Shallow listeners](../tracking#shallow-modifier) are called on objects only when keys are added or removed, but not when children are changed. This lets the child components manage their own rendering and large parent components don't need to render.
+[Shallow listeners](../../2-usage/2-reactivity/#shallow-modifier) are called on objects only when keys are added or removed, but not when children are changed. This lets the child components manage their own rendering and large parent components don't need to render.
 
 ### Array optimizations
 
-Optimizing list rendering is a primary goal because Legend-State is built for [Legend](https://www.legendapp.com) and its huge documents and lists, so it aims to render parent list components as little as possible. When changes to an array only modify children or transpose elements, and do not add or remove elements, it can render only the changed elements and skip rendering the parent list. See [Arrays](../arrays) for more details.
+Optimizing list rendering is a primary goal because Legend-State is built for [Legend](https://www.legendapp.com) and its huge documents and lists, so it aims to render parent list components as little as possible. When changes to an array only modify children or transpose elements, and do not add or remove elements, it can render only the changed elements and skip rendering the parent list. See [Arrays](../../2-usage/1-observable/#arrays) for more details.
 
 ### Minimal closures and object creation
 
@@ -107,4 +95,3 @@ Beyond the architecture optimization, Legend-State also does a lot of micro-opti
 - **Proxy vs. Object.defineProperty**: We also tried using `Object.defineProperty` to add properties to objects, but Proxy is much faster.
 - **Cloning is slow**: Change handlers have a `getPrevious()` function to opt-in to computing the previous state because cloning objects unnecessarily was wasteful.
 - **for of in Set/Map**: `for of` loops are the fastest way to iterate through Set and Map values.
-```
