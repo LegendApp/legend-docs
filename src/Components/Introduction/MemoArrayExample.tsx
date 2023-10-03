@@ -30,7 +30,6 @@ const MEMO_ARRAY_EXAMPLE_CODE = `
 `;
 
 export function MemoArrayExampleComponent() {
-  Memo;
   return (
     <Editor
       code={MEMO_ARRAY_EXAMPLE_CODE}

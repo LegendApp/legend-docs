@@ -4,6 +4,7 @@ description: Basic intro to Legend State.
 ---
 
 import Primitives from "../../../Components/Introduction/Primitives.astro";
+import Intro from "../../../Components/Introduction/Intro.astro";
 
 Legend-State is a super fast and powerful state library for modern JavaScript apps with four primary goals:
 
@@ -125,51 +126,9 @@ The core is platform agnostic so you can use it in vanilla JS or any framework t
 
 ## Example
 
-This example shows an overview of what using Legend-State looks like. See [Getting Started](./getting-started) to dive into how it works.
+This example shows an overview of what using Legend-State looks like. See [Getting Started](./2-getting-started) to dive into how it works.
 
-{/* <Example name="Intro"> */}
-
-```jsx
-import { observable, observe } from "@legendapp/state";
-import { persistObservable } from "@legendapp/state/persist";
-
-// Create an observable object
-const state$ = observable({ settings: { theme: "dark" } });
-
-// get() returns the raw data
-state$.settings.theme.get() === "dark";
-
-// observe re-runs when any observables change
-observe(() => {
-  console.log(state$.settings.theme.get());
-});
-
-// Assign to state$ with set
-state$.settings.theme.set("light");
-
-// Automatically persist state$. Refresh this page to try it.
-persistObservable(state$, { local: "exampleState" });
-
-// Components re-render only when accessed observables change
-// This is the code for the example on your right ----->
-function Component() {
-  const theme = state$.settings.theme.use();
-  // state$.settings.theme is automatically tracked for changes
-
-  const toggle = () => {
-    state$.settings.theme.set((theme) => (theme === "dark" ? "light" : "dark"));
-  };
-
-  return (
-    <div className={theme === "dark" ? "theme-dark" : "theme-light"}>
-      <div>Theme: {theme}</div>
-      <Button onClick={toggle}>Toggle theme</Button>
-    </div>
-  );
-}
-```
-
-{/* </Example> */}
+<Intro />
 
 ## Getting Started
 
