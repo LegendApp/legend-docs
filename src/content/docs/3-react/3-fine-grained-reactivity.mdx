@@ -1,13 +1,18 @@
 ---
-title: Getting Started with Legend State
-description: Legend State Basic
+title: Fine Grained Reactivity
 ---
+
+import Computed from "../../../Components/React/ComputedExample.astro";
+import Memo from "../../../Components/React/MemoExample.astro";
+import Switch from "../../../Components/React/SwitchExample.astro";
+import Show from "../../../Components/React/ShowExample.astro";
 
 Legend-State enables a new way of thinking about how React components update: to **observe state changing** rather than observing renders. In this pattern, components render once and individual elements re-render themselves. This enables what we call a "render once" style - components render only the first time and state changes trigger only the tiniest possible re-renders.
 
 You can render observable primitives directly in mini self-updating components, use reactive props to update props based on state, or use a set of control-flow components to optimize conditional rendering and arrays to re-render as little as possible.
 
 Some teams may prefer to use Legend-State in a way that's more canonically React and skip some or all of these concepts, at least at first. But the fine-grained reactivity features can improve performance and reduce the amount of code you need to write. See [Making React fast by default and truly reactive](../../legend-state) for more details.
+{/* TODO: fix above link */}
 
 ## Render an observable/selector directly
 
@@ -120,39 +125,7 @@ function Component() {
 
 In this example see that clicking the "Render parent" button renders the parent and increments `value` and the computed children are updated too.
 
-<Example name="Computed">
-```jsx
-import { useRef, useState } from "react"
-import { Computed, useObservable } from "@legendapp/state/react"
-
-function ComputedExample() {
-const renderCount = ++useRef(0).current
-const state = useObservable({ count: 0 })
-const [value, setValue] = useState(1)
-
-    const onClick = () => setValue(v => v + 1)
-    useInterval(() => {
-        state.count.set(c => c + 1)
-    }, 500)
-
-    return (
-        <div>
-            <div>Renders: {renderCount}</div>
-            <div>Value: {value}</div>
-
-            <Computed>
-                {() => <>
-                    <div>Value: {value}</div>
-                    <div>Count: {state.count}</div>
-                </>}
-            </Computed>
-        </div>
-    )
-
-}
-
-````
-</Example>
+<Computed />
 
 ### Memo
 
@@ -162,51 +135,23 @@ The child needs to be a function to be able to extract it into a separate tracki
 
 ```jsx
 function Component() {
-    return (
-        <Computed>
-            {() => state.messages.map(message => (
-                <div key={message.id}>{message.text} {localVar}</div>
-            ))}
-        </Computed>
-    )
+  return (
+    <Computed>
+      {() =>
+        state.messages.map((message) => (
+          <div key={message.id}>
+            {message.text} {localVar}
+          </div>
+        ))
+      }
+    </Computed>
+  );
 }
-````
+```
 
 This is the same as the Computed example, except that the memoized children are not updated with the parent's value.
 
-<Example name="Memo">
-```jsx
-import { useRef, useState } from "react"
-import { Memo, useObservable } from "@legendapp/state/react"
-
-function MemoExample() {
-const renderCount = ++useRef(0).current
-const state = useObservable({ count: 0 })
-const [value, setValue] = useState(1)
-
-    const onClick = () => setValue(v => v + 1)
-    useInterval(() => {
-        state.count.set(c => c + 1)
-    }, 500)
-
-    return (
-        <div>
-            <div>Renders: {renderCount}</div>
-            <div>Value: {value}</div>
-
-            <Memo>
-                {() => <>
-                    <div>Value: {value}</div>
-                    <div>Count: {state.count}</div>
-                </>}
-            </Memo>
-        </div>
-    )
-
-}
-
-````
-</Example>
+<Memo />
 
 ### Show
 
@@ -215,6 +160,7 @@ Show renders child components conditionally based on the if/else props, and does
 Passing children as a function can prevent the JSX from being created until it needs to render. That's done automatically if you use the [babel plugin](#optionally-add-the-babel-plugin).
 
 Props:
+
 - `if`: A computed function or an observable
 - `ifReady`: A computed function or an observable. This will not render if the value is an empty object or empty array.
 - `else`: Optionally provide a component to render if the condition is not met
@@ -223,13 +169,13 @@ Props:
 
 ```jsx
 <Show
-    if={state.show}
-    else={() => <div>Nothing to see here</div>}
-    wrap={AnimatePresence}
+  if={state.show}
+  else={() => <div>Nothing to see here</div>}
+  wrap={AnimatePresence}
 >
-    {() => <Modal />}
+  {() => <Modal />}
 </Show>
-````
+```
 
 <br />
 
@@ -251,91 +197,37 @@ function ShowExampleWithSelector() {
 }
 ```
 
-<Example name="Show">
-```jsx
-import { Show } from "@legendapp/state/react"
-
-function ShowExample() {
-const renderCount = ++useRef(0).current
-const state = useObservable({ show: false })
-
-    const onClick = () => state.show.set(show => !show)
-
-    return (
-        <div>
-            <div>Renders: {renderCount}</div>
-            <button onClick={onClick}>Toggle</button>
-
-            <Show
-                if={state.show}
-                else={<div>Nothing to see here</div>}
-            >
-                {() => <Modal />}
-            </Show>
-        </div>
-    )
-
-}
-
-````
-</Example>
+<Show />
 
 ### Switch
 
 Switch renders one child component conditionally based on the `value` prop, and does not re-render the parent when the condition changes.
 
 Props:
+
 - `value`: A computed function or an observable
 - `children`: An object with the possible cases of `value` as keys. If `value` doesn't match any of the cases it will use the `default` case if available.
 
 ```jsx
 <Switch value={state.index}>
-    {{
-        0: () => <div>Tab 1</div>,
-        1: () => <div>Tab 2</div>,
-        default: () => <div>Error</div>
-    }}
+  {{
+    0: () => <div>Tab 1</div>,
+    1: () => <div>Tab 2</div>,
+    default: () => <div>Error</div>,
+  }}
 </Switch>
-````
+```
 
-<Example name="Switch">
-```jsx
-import { Switch } from "@legendapp/state/react"
-
-function SwitchExample() {
-const renderCount = ++useRef(0).current
-const tabIndex = useObservable(0)
-
-    const onClick = () => tabIndex.set(v => v > 2 ? 0 : v + 1)
-
-    return (
-        <div>
-            <div>Renders: {renderCount}</div>
-            <button onClick={onClick}>Next tab</button>
-
-            <Switch value={tabIndex}>
-                {{
-                    0: () => <Tab1 />,
-                    1: () => <Tab2 />,
-                    2: () => <Tab3 />,
-                    default: () => <Error />
-                }}
-            </Switch>
-        </div>
-    )
-
-}
-
-````
-</Example>
+<Switch />
 
 ### For
 
 The `For` component is optimized for rendering arrays of observable objects so that they are extracted into a separate tracking context and don't re-render the parent.
 
-An `optimized` prop adds additional optimizations, but in an unusual way by re-using React nodes. See [Optimized rendering](../performance#optimized-rendering) for more details.
+An `optimized` prop adds additional optimizations, but in an unusual way by re-using React nodes. See [Optimized rendering](../../4-guides/2-performance#optimized-rendering) for more details.
 
 Props:
+
 - `each`: An observable (array, object, or Map)
 - `item`: A render function which receives the item id, and item observable or undefined
 - `itemProps`: Extra props to pass down to each item
@@ -366,7 +258,7 @@ function List() {
         </div>
     )
 }
-````
+```
 
 ## Optionally add the Babel plugin
 
@@ -400,7 +292,7 @@ If you're using typescript you can add a `.d.ts` file to your project with this 
 
 You can wrap external components in `reactive` to create reactive versions of all of their props, prefixed with `$`. This makes it so that the reactive component can accept reactive props but the target receives regular props as usual. `reactive` creates an HOC that extracts all reactive props and observes them for changes, passing the regular prop down to the component.
 
-In this example, `reactive` adds a `$message` prop which takes a [Selector](../getting-started#Selectors), while the target component receives a normal `message` prop and is only re-rendered when `message` changes.
+In this example, `reactive` adds a `$message` prop which takes a [Selector](../../1-introduction/2-getting-started#selectors), while the target component receives a normal `message` prop and is only re-rendered when `message` changes.
 
 ```js
 import { observable } from "@legendapp/state";

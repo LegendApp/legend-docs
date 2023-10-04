@@ -9,11 +9,11 @@ export const Editor = ({
 }) => {
   return (
     <LiveProvider code={code} scope={scope} noInline={true} enableTypeScript>
-      <div className="grid lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="col-span-3">
           <LiveEditor />
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 rounded">
           <LivePreview />
         </div>
       </div>
