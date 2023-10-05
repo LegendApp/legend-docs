@@ -1,7 +1,8 @@
 ---
-title: Getting Started with Legend State
-description: Legend State Basic
+title: Performance
 ---
+
+import TodosExample from "../../../Components/Performance/TodosExample.astro";
 
 Legend-State is already quite optimized by default, but there are some things to keep in mind to make sure it's as optimized as possible.
 
@@ -153,50 +154,7 @@ function List() {
 
 In this more complex example you can see that as elements are added to and update the array, the parent component does not re-render.
 
-<Example name="Todos">
-```jsx
-import { observable } from "@legendapp/state"
-import { For } from "@legendapp/state/react"
-
-function Item({ item }) {
-useEffect(() => {
-item.renders.set(r => r + 1);
-})
-return (
-<div>
-{item.text}
-</div>
-)
-}
-function TodosExample() {
-const renderCount = ++useRef(0).current
-const todos = useObservable([])
-
-    const onClickAdd = () =>
-        todos.push({
-            id: ++total,
-            text: 'Item ' + total,
-            renders: 1
-        })
-
-    const onClickUpdate = () => {
-        todos[todos.length - 1].text.set(text => text + '!')
-    }
-
-    return (
-        <div className="flex">
-            <button onClick={onClickAdd}>Add</button>
-            <button onClick={onClickUpdate}>Update</button>
-            <div>Renders: {renderCount}</div>
-
-            <For each={todos} item={Item}>
-        </div>
-    )
-
-})
-
-````
-</Example>
+<TodosExample />
 
 ### Don't get() observables while mapping
 
@@ -205,27 +163,25 @@ The `map` function automatically sets up a shallow listener, so it will only re-
 Make sure that you don't access any observable properties while mapping, like accessing the id for the key, so use `peek()` to prevent tracking. If you do `get()` inside an `observer` component would trigger the outer component to observe every list element.
 
 ```jsx
-import { observable } from "@legendapp/state"
-import { For } from "@legendapp/state/react"
+import { observable } from "@legendapp/state";
+import { For } from "@legendapp/state/react";
 
-const state$ = observable({ arr: [{ id: 1, text: 'hi' }]})
+const state$ = observable({ arr: [{ id: 1, text: "hi" }] });
 
 function Row({ item }) {
-    return <div>{item.text}</div>
+  return <div>{item.text}</div>;
 }
 function List() {
-    // Be sure to use peek() to make sure you don't track any observable fields here
-    return state$.arr.map(item =>
-        <Row key={item.peek().id} item={item} />
-    )
+  // Be sure to use peek() to make sure you don't track any observable fields here
+  return state$.arr.map((item) => <Row key={item.peek().id} item={item} />);
 }
-````
+```
 
 ### Optimized rendering
 
 The `For` component has an `optimized` prop which takes the optimizations even further. It prevents re-rendering the parent component when possible, so if the array length doesn't change it updates React elements in place instead of the whole list rendering. This massively reduces the rendering time when swapping elements, sorting an array, or replacing some individual elements. But because it reuses React nodes rather than replacing them as usual, it may have unexpected behavior with some types of animations or if you are modifying the DOM externally.
 
-This is how the fast "replace all rows" and "swap rows" speeds in the [benchmark](../fast#benchmark) are achieved.
+This is how the fast "replace all rows" and "swap rows" speeds in the [benchmark](../../1-introduction/3-fast-#benchmark) are achieved.
 
 ```jsx
 import { For } from "@legendapp/state/react"
