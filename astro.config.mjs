@@ -20,24 +20,24 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: "Introduction",
-          autogenerate: { directory: "1-introduction" },
+          label: "Intro",
+          autogenerate: { directory: "intro" },
         },
         {
           label: "Usage",
-          autogenerate: { directory: "2-usage" },
+          autogenerate: { directory: "usage" },
         },
         {
           label: "React",
-          autogenerate: { directory: "3-react" },
+          autogenerate: { directory: "react" },
         },
         {
           label: "Guides",
-          autogenerate: { directory: "4-guides" },
+          autogenerate: { directory: "guides" },
         },
         {
           label: "Other",
-          autogenerate: { directory: "5-other" },
+          autogenerate: { directory: "other" },
         },
       ],
       components: isPublish
