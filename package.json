@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "testpublish": "astro dev --publishlegend",
     "build": "astro build",
-    "publish": "astro build --base /open-source/state",
+    "publish": "astro build --base /open-source/state --publishlegend",
     "preview": "astro preview",
     "astro": "astro"
   },

@@ -4,6 +4,8 @@ import react from "@astrojs/react";
 
 import tailwind from "@astrojs/tailwind";
 
+const isPublish = process.argv[process.argv.length - 1] === "--publishlegend";
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -35,6 +37,10 @@ export default defineConfig({
           autogenerate: { directory: "5-other" },
         },
       ],
+      components: isPublish ? {
+        // Override the default `SocialLinks` component.
+        Header: "./src/Components/Overrides/Header.astro",
+      } : undefined,
     }),
     react(),
     tailwind({ applyBaseStyles: false }),
