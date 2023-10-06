@@ -27,7 +27,7 @@ render(<EasyExample />)
 export function EasyExampleComponent() {
   return (
     <Editor
-      code={EASY_EXAMPLE_CODE}
+      code={EASY_EXAMPLE_CODE.trim()}
       scope={{
         useRef,
         useObservable,
