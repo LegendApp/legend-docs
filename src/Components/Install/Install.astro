@@ -1,0 +1,6 @@
+---
+import { Install } from "./Install";
+const { name } = Astro.props;
+---
+
+<Install name={name} client:only />
