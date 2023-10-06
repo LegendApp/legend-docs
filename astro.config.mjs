@@ -15,6 +15,9 @@ export default defineConfig({
       social: {
         github: "https://github.com/LegendApp/legend-state",
       },
+      editLink: {
+        baseUrl: "https://github.com/LegendApp/legend-docs/edit/main/",
+      },
       sidebar: [
         {
           label: "Introduction",
@@ -37,10 +40,12 @@ export default defineConfig({
           autogenerate: { directory: "5-other" },
         },
       ],
-      components: isPublish ? {
-        // Override the default `SocialLinks` component.
-        Header: "./src/Components/Overrides/Header.astro",
-      } : undefined,
+      components: isPublish
+        ? {
+            // Override the default `SocialLinks` component.
+            Header: "./src/Components/Overrides/Header.astro",
+          }
+        : undefined,
     }),
     react(),
     tailwind({ applyBaseStyles: false }),
