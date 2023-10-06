@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "publish": "astro build --base /open-source/state",
     "preview": "astro preview",
     "astro": "astro"
   },
