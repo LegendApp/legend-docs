@@ -66,7 +66,7 @@ export default function App() {
 
 ### useObserve
 
-`useObserve` creates an [observe](../../2-usage/2-reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
+`useObserve` creates an [observe](../../usage/reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
 
 Like `observe`, `useObserve` has an optional second callback parameter which will run after the selector, and does not track changes. This can be useful for observing an `event` or a single `observable`.
 
@@ -141,7 +141,7 @@ const Component = observer(function Component() {
 
 The `useObservable` hook can be used to create an observable within a React component. This can be useful when state is specific to the lifetime of the component, or to hold multiple values in local state.
 
-Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](../1-react-introduction#use-observable-state).
+Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](../react-introduction#use-observable-state).
 
 As with
 
@@ -171,7 +171,7 @@ const Component = function Component() {
 
 ### useComputed
 
-`useComputed` is like `useObservable` and creates a [computed](../../2-usage/2-reactivity#computed) observable.
+`useComputed` is like `useObservable` and creates a [computed](../../usage/reactivity#computed) observable.
 
 ```jsx
 import { observable } from "@legendapp/state";
