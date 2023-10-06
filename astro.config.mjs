@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
 
@@ -41,8 +41,6 @@ export default defineConfig({
   ],
   // Process images with sharp: https://docs.astro.build/en/guides/assets/#using-sharp
   image: {
-    service: {
-      entrypoint: "astro/assets/services/sharp",
-    },
+    service: passthroughImageService()
   },
 });
