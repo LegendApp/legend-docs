@@ -2,4 +2,13 @@
 import { EasyExampleComponent } from "./EasyExample";
 ---
 
+<style is:global>
+  .p_easy > div > div {
+    @apply bg-gray-800 p-5 rounded-md;
+    width: 200px;
+  }
+  .p_easy > div > div > div:nth-child(2){
+    @apply pt-4
+  }
+</style>
 <EasyExampleComponent client:only />
