@@ -96,6 +96,7 @@ export function PersistenceComponent() {
         motion,
         Reactive,
       }}
+      noInline={true}
     />
   );
 }

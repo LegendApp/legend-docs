@@ -110,6 +110,7 @@ export function FormValidationComponent() {
         Memo,
         Show,
       }}
+      noInline={true}
     />
   );
 }

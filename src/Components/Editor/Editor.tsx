@@ -1,29 +1,27 @@
-import classNames from 'classnames'
+import classNames from "classnames";
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import { Highlight, themes } from "prism-react-renderer";
+import { themes } from "prism-react-renderer";
 
-themes.vsDark.plain.backgroundColor = '#222224';
-
-const noTheme: EditorProps["theme"] = {
-  plain: {},
-  styles: [],
-};
+themes.vsDark.plain.backgroundColor = "#222224";
 
 export const Editor = ({
   code,
   scope,
-  name
+  name,
+  noInline = false,
 }: {
   code: string;
   scope?: Record<string, unknown>;
-  name?: string
+  name?: string;
+  noInline?: boolean;
 }) => {
   return (
     <LiveProvider
       code={code}
       scope={scope}
-      enableTypeScript
+      enableTypeScript={true}
       theme={themes.vsDark}
+      noInline={noInline}
     >
       <div className="grid grid-cols-1 gap-4">
         <div className="col-span-3">

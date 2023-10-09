@@ -43,6 +43,7 @@ export function SwitchComponent() {
         useObservable,
         Switch,
       }}
+      noInline={true}
     />
   );
 }

@@ -69,6 +69,7 @@ export function TodosComponent() {
         enableReactComponents,
         useEffect,
       }}
+      noInline={true}
     />
   );
 }

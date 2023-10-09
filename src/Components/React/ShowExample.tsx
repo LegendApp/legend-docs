@@ -36,6 +36,7 @@ export function ShowComponent() {
         useObservable,
         Show,
       }}
+      noInline={true}
     />
   );
 }

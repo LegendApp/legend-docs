@@ -93,6 +93,7 @@ export function AutoSavingFormComponent() {
         Memo,
         axios,
       }}
+      noInline={true}
     />
   );
 }

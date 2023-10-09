@@ -61,6 +61,7 @@ export function MemoExampleComponent() {
         FlashingDiv,
         useState,
       }}
+      noInline={true}
     />
   );
 }

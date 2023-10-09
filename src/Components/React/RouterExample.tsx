@@ -61,6 +61,7 @@ export function RouterComponent() {
     <Editor
       code={ROUTER_CODE}
       scope={{ useRef, Memo, pageHash, pageHashParams, Switch }}
+      noInline={true}
     />
   );
 }

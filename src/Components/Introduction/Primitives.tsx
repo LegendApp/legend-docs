@@ -62,8 +62,6 @@ const NORMAL_CODE = `
       </div>
     );
   }
-
-  render(<Normal />)
 `;
 
 const FINE_GRAINED = `
@@ -96,8 +94,6 @@ const FINE_GRAINED = `
       </div>
     );
   }
-
-  render(<FineGrained />)
 `;
 
 export function Primitive() {

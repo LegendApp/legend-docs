@@ -97,6 +97,7 @@ export function MessageListComponent() {
         Memo,
         For,
       }}
+      noInline={true}
     />
   );
 }

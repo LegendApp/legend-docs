@@ -48,6 +48,7 @@ export function MemoComponent() {
         Memo,
         useInterval,
       }}
+      noInline={true}
     />
   );
 }

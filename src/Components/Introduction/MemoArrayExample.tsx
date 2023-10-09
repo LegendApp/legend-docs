@@ -25,8 +25,6 @@ const MEMO_ARRAY_EXAMPLE_CODE = `
         </div>
     );
   }
-
-  render(<MemoArrayExample />)
 `;
 
 export function MemoArrayExampleComponent() {

@@ -44,6 +44,7 @@ export function IntroExampleComponent() {
     <Editor
       code={INTRO_EXAMPLE_CODE}
       scope={{ observable, classNames, enableReactUse }}
+      noInline={true}
     />
   );
 }

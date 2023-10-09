@@ -66,6 +66,7 @@ export function AnimatedSwitchComponent() {
         useComputed,
         Memo,
       }}
+      noInline={true}
     />
   );
 }

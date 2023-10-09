@@ -122,6 +122,7 @@ export function ModalComponent() {
         Switch,
         useComputed,
       }}
+      noInline={true}
     />
   );
 }
