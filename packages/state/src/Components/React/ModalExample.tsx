@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 import { observable } from "@legendapp/state";
 import { AnimatePresence } from "framer-motion";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 const MODAL_CODE = `const MotionDiv = reactive(motion.div)
 const MotionButton$ = reactive(motion.button)

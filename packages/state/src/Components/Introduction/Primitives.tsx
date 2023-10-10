@@ -7,7 +7,7 @@ import {
   useObservable,
   enableLegendStateReact,
 } from "@legendapp/state/react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 export function OptimizedPrimitive() {
   const count$ = useObservable(0);

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import { For, observer, useObservable } from "@legendapp/state/react";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 

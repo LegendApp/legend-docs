@@ -1,6 +1,6 @@
 import { observable } from "@legendapp/state";
 import { enableReactUse } from "@legendapp/state/config/enableReactUse";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import classNames from "classnames";
 
 const INTRO_EXAMPLE_CODE = `

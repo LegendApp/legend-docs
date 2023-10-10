@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import { Computed, useObservable } from "@legendapp/state/react";
 import { useInterval } from "usehooks-ts";
 

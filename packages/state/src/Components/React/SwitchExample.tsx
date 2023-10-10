@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import { Switch, useObservable } from "@legendapp/state/react";
 
 const SWITCH_EXAMPLE_CODE = `const SwitchExample = () => {

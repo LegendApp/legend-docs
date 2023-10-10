@@ -1,7 +1,6 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
-
 import tailwind from "@astrojs/tailwind";
 
 const isPublish = process.argv[process.argv.length - 1] === "--publishlegend";

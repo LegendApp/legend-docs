@@ -10,7 +10,7 @@ import {
 } from "@legendapp/state/react";
 import { useFetch } from "@legendapp/state/react-hooks/useFetch";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 const MESSAGE_LIST_CODE = `enableReactComponents()
 

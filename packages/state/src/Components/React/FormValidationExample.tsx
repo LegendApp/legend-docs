@@ -7,7 +7,7 @@ import {
   Show,
 } from "@legendapp/state/react";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 const FORM_VALIDATION_CODE = `enableReactComponents()
 

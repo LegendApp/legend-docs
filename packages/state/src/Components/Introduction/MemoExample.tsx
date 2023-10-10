@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import {
   Memo,
   enableLegendStateReact,

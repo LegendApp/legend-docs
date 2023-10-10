@@ -1,0 +1,67 @@
+---
+title: Linear Gradient
+sidebar:
+  order: 3
+---
+
+To use Linear Gradients you'll also need to install a `linear-gradient` library. There are different libraries for React Native vs. Expo, so choose the right import for your platform:
+
+## Installation
+
+### React Native
+
+<Install name="react-native-linear-gradient" />
+
+then import
+
+```js
+import { MotionLinearGradient } from "@legendapp/motion/linear-gradient";
+```
+
+### Expo
+
+<Install name="expo-linear-gradient" />
+
+then import
+
+```js
+import { MotionLinearGradient } from "@legendapp/motion/linear-gradient-expo";
+```
+
+### React Native Web
+
+<Install name="react-native-web-linear-gradient" />
+
+Alias the package in your webpack config:
+
+```js
+resolve: {
+    alias: {
+        'react-native': 'react-native-web',
+        ...
+        'react-native-linear-gradient': 'react-native-web-linear-gradient',
+    }
+}
+```
+
+then import
+
+```js
+import { MotionLinearGradient } from "@legendapp/motion/linear-gradient";
+```
+
+## Usage
+
+`MotionLinearGradient` has `colors`, `start`, and `end` props that you can animate.
+
+<Example name="LinearGradient">
+  ```jsx
+  <MotionLinearGradient
+    animateProps={{
+      colors: [value ? "#F81FEC" : "blue", value ? "#59B0F8" : "yellow"],
+      start: { x: 0, y: 0 },
+      end: { x: value ? 1 : 0, y: 1 },
+    }}
+  />
+  ```
+</Example>

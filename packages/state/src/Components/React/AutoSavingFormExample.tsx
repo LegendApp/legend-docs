@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useObservable, Reactive, Memo } from "@legendapp/state/react";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 const AUTO_SAVING_FORM_CODE = `let timeout = 0
 function debounce(fn, time) {

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 import { observable } from "@legendapp/state";
 import { useComputed, Memo } from "@legendapp/state/react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 const ANIMATED_SWITCH_CODE = `const MotionDiv = reactive(motion.div)
 

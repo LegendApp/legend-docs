@@ -1,5 +1,5 @@
 {
-  "name": "legend-state-docs",
+  "name": "state-docs",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -26,7 +26,7 @@
     "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-live": "^4.1.5",
+    "shared": "workspace:*",
     "tailwindcss": "^3.3.3",
     "usehooks-ts": "^2.9.1"
   }
