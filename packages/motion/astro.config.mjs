@@ -35,4 +35,11 @@ export default defineConfig({
     react(),
     tailwind({ applyBaseStyles: false }),
   ],
+  vite: {
+    resolve: {
+      alias: {
+        "react-native": "react-native-web",
+      },
+    },
+  },
 });

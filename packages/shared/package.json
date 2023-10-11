@@ -6,9 +6,6 @@
   "files": [
     "src"
   ],
-  "exports": {
-    ".": "./"
-  },
   "dependencies": {
     "@astrojs/react": "^3.0.3",
     "astro": "^3.2.4",

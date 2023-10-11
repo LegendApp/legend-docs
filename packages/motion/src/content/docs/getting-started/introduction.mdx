@@ -4,8 +4,6 @@ sidebar:
   order: 1
 ---
 
-import Intro from "../../../Components/Introduction/Intro";
-
 Legend-Motion is a declarative animations library for React Native, to make it easy to transition between styles without needing to manage animations.
 
 ```jsx
@@ -18,7 +16,9 @@ Legend-Motion is a declarative animations library for React Native, to make it e
 />
 ```
 
-{/* <Intro /> */}
+import Intro from "../../../Components/Introduction/Intro.astro";
+
+<Intro />
 
 ## Highlights
 
@@ -38,8 +38,6 @@ Legend-Motion can be installed in React Native or React Native Web.
 
 ### Installation
 
-<Install name="@legendapp/motion" />
-
 ### Importing
 
 <div className="max-w-lg">
@@ -50,7 +48,6 @@ Legend-Motion can be installed in React Native or React Native Web.
 
 Then set values on the `animate` prop to animate as the value changes.
 
-<Example name="IntroUsage">
 ```jsx
 <Motion.View
     animate={{
@@ -72,11 +69,9 @@ Then set values on the `animate` prop to animate as the value changes.
         colors: value ?
             ["#F81FEC", "#59B0F8"] :
             ["blue", "yellow"]
-        ],
     }}
 />
 ```
-</Example>
 
 See the [Overview page](./overview) for a more detailed usage guide.
 
