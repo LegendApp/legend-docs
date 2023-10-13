@@ -1,8 +1,7 @@
-import { useObservable, observer } from "@legendapp/state/react";
+import { observer, useObservable } from "@legendapp/state/react";
 import classNames from "classnames";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import { themes } from "prism-react-renderer";
 import { BiPencil } from "react-icons/bi";
+import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 interface Props {
   code: string;
@@ -13,7 +12,7 @@ interface Props {
   renderCode?: string;
   previewWidth?: number;
 }
-const theme = {plain: {}, styles: []}
+const emptyTheme = { plain: {}, styles: [] };
 
 export const Editor = observer(function Editor({
   code,
@@ -36,7 +35,7 @@ export const Editor = observer(function Editor({
       }
       scope={scope}
       enableTypeScript={true}
-      theme={theme}
+      theme={emptyTheme}
       noInline={noInline}
       disabled={!isEditing}
       language="javascript"
