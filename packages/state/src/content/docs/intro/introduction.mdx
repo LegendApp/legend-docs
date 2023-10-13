@@ -52,33 +52,6 @@ See [Fast 🔥](../fast-) for more details of why Legend-State is so fast.
 
 Legend-State lets you make your renders super fine-grained allowing only the leaves of your component tree to re-render when required, thus making your apps go faster 🔥, and removing unnecessary overhead from React's render cycle.
 
-```jsx
-function Normal() {
-  const [count, setCount] = useState(0);
-
-  useInterval(() => {
-    setCount((v) => v + 1);
-  }, 600);
-
-  // This re-renders when count changes
-  return <div>Count: {count}</div>;
-}
-
-function FineGrained() {
-  const count$ = useObservable(0);
-
-  useInterval(() => {
-    count$.set((v) => v + 1);
-  }, 600);
-
-  // The text updates itself so the component doesn't re-render
-  return (
-    <div>
-      Count: <Memo>{count$}</Memo>
-    </div>
-  );
-}
-```
 
 <Primitives />
 

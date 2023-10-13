@@ -5,7 +5,6 @@ import { observable } from "@legendapp/state";
 import {
   Memo,
   useObservable,
-  enableLegendStateReact,
 } from "@legendapp/state/react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
@@ -64,6 +63,23 @@ const NORMAL_CODE = `
   }
 `;
 
+const NORMAL_CODE_SIMPLE = `
+function Normal() {
+    const [count, setCount] = useState(0);
+
+    useInterval(() => {
+        setCount(v => v + 1)
+    }, 600)
+
+    // This re-renders when count changes
+    return (
+        <div>
+            Count: {count}
+        </div>
+    )
+}
+`;
+
 const FINE_GRAINED = `
   function FineGrained() {
     const count$ = useObservable(0);
@@ -101,6 +117,7 @@ export function Primitive() {
     <div>
       <Editor
         code={NORMAL_CODE}
+        simpleCode={NORMAL_CODE_SIMPLE}
         scope={{ useState, useRef, useInterval, FlashingDiv }}
       />
       <Editor
@@ -112,7 +129,6 @@ export function Primitive() {
           FlashingDiv,
           Memo,
           observable,
-          enableLegendStateReact,
         }}
       />
     </div>

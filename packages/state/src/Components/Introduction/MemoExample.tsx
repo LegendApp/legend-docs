@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import {
   Memo,
-  enableLegendStateReact,
   observer,
   useObservable,
 } from "@legendapp/state/react";
@@ -54,7 +53,6 @@ export function MemoExampleComponent() {
         useObservable,
         Memo,
         observable,
-        enableLegendStateReact,
         useInterval,
         observer,
         React,
