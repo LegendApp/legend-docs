@@ -35,7 +35,7 @@ export const Editor = observer(
             <LiveEditor />
             {simpleCode && (
               <div
-                className="absolute top-2 right-2 !mt-0 flex items-center bg-gray-700 px-2 py-1 rounded-md text-sm cursor-pointer hover:bg-gray-600"
+                className="absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm cursor-pointer hover:bg-blue-600"
                 onClick={isEditing$.toggle}
               >
                 <BiPencil className="mr-2" />
