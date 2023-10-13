@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "devlegend": "astro dev --publishlegend",
     "start": "astro dev",
     "testpublish": "astro dev --publishlegend",
     "build": "astro build",
