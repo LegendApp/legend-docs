@@ -1,5 +1,4 @@
 :root {
-    --sl-content-width: 52rem;
     --sl-text-code: var(--sl-text-xs);
     --color-fg-default: #c9d1d9;
     --color-bg-code-block: #0E1218;
@@ -200,9 +199,12 @@ pre[class*="language-"] {
     color: var(--color-blue);
 }
 
-.language-jsx .token.attr-name,
 .language-jsx .token.class-name {
     color: var(--color-green);
+}
+
+.language-jsx .token.attr-name {
+    color: var(--color-blue);
 }
 
 .language-jsx .token.string {

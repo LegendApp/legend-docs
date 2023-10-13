@@ -83,7 +83,7 @@ function FineGrained() {
 
 const NORMAL_CODE_SIMPLE = `
 function Normal() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
 
   useInterval(() => {
     setCount(v => v + 1)
@@ -97,7 +97,7 @@ function Normal() {
   )
 }
 function FineGrained() {
-  const count$ = useObservable(0)
+  const count$ = useObservable(1)
 
   useInterval(() => {
     count$.set(v => v + 1)
@@ -119,7 +119,7 @@ export function Primitives() {
         code={NORMAL_CODE}
         simpleCode={NORMAL_CODE_SIMPLE}
         noInline
-        renderCode="render(<div><Normal /><FineGrained /></div>)"
+        renderCode=";render(<div><Normal /><FineGrained /></div>)"
         previewWidth={150}
         scope={{
           useState,
