@@ -16,7 +16,7 @@
 
     --astro-code-color-text: var(--color-fg-default);
     --astro-code-color-background: var(--color-bg-code-block);
-    --astro-code-token-constant: var(--color-fg-default);
+    --astro-code-token-constant: var(--color-green);
     --astro-code-token-string: var(--color-light-blue);
     --astro-code-token-comment: var(--color-gray);
     --astro-code-token-keyword: var(--color-red);

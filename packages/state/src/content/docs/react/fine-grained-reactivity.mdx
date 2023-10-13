@@ -138,7 +138,7 @@ The child needs to be a function to be able to extract it into a separate tracki
 ```jsx
 function Component() {
   return (
-    <Computed>
+    <Memo>
       {() =>
         state.messages.map((message) => (
           <div key={message.id}>
@@ -146,7 +146,7 @@ function Component() {
           </div>
         ))
       }
-    </Computed>
+    </Memo>
   );
 }
 ```

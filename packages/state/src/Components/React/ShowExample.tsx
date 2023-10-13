@@ -1,30 +1,37 @@
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
 import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { Show, useObservable } from "@legendapp/state/react";
 
-const SHOW_EXAMPLE_CODE = `const ShowExample = () => {
-  const renderCount = ++useRef(-1).current;
+function Modal() {
+    return (
+        <div className="p-6 my-4 font-bold text-center bg-gray-700 rounded-lg shadow">Modal</div>
+    )
+}
+function Nothing() {
+    return <div className="text-xs text-gray-500">Nothing to see here</div>
+}
+
+const SHOW_EXAMPLE_CODE = `
+const ShowExample = () => {
+  const renderCount = ++useRef(0).current;
   const state = useObservable({ show: false });
 
-  const onClick = () => state.show.set(show => !show);
-
   return (
-      <div className="p-4 text-md bg-slate-800" style={{ width: 260, height: 300 }}>
-          <div>Renders: {Math.max(renderCount, 1)}</div>
-          <button
-              className="block px-4 py-2 my-8 font-bold bg-gray-700 rounded shadow text-2xs hover:bg-gray-600 active:bg-gray-500"
-              onClick={onClick}
-          >
-              Toggle
-          </button>
-          <Show if={state.show} else={<div className="text-xs text-gray-500">Nothing to see here</div>}>
-              <div className="p-6 my-4 font-bold text-center bg-gray-700 rounded-lg shadow">Modal</div>
-          </Show>
-      </div>
+    <Box width={160}>
+      <div>Renders: {renderCount}</div>
+      <Button
+        onClick={state.show.toggle}
+      >
+        Toggle
+      </Button>
+      <Show if={state.show} else={<Nothing />}>
+        {() => <Modal />}
+      </Show>
+    </Box>
   );
-};
-
-render(<ShowExample />)
+}
 `;
 
 export function ShowComponent() {
@@ -35,8 +42,14 @@ export function ShowComponent() {
         useRef,
         useObservable,
         Show,
+        Box,
+        Button,
+        Modal,
+        Nothing,
       }}
       noInline={true}
+      previewWidth={160}
+      renderCode=";render(<ShowExample />)"
     />
   );
 }
