@@ -27,7 +27,7 @@ const MemoExample = () => {
   const onClick = () => setValue((v) => v + 1);
 
   return (
-    <Box>
+    <Box center>
       <h5>Normal</h5>
       <div>Renders: {renderCount}</div>
       <Button onClick={onClick}>

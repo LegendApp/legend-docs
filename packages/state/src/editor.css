@@ -32,6 +32,10 @@
     border-color: var(--color-border-code-block) !important;
 }
 
+.prism-code {
+
+}
+
 code {
     border-radius: 0.25rem;
 }
@@ -59,7 +63,7 @@ pre[class*="language-"] {
 
 /* Code blocks */
 pre[class*="language-"] {
-    font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
     padding: 1em;
     margin: 0.5em 0;
     overflow: auto;

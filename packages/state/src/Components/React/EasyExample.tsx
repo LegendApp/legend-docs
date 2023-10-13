@@ -1,3 +1,4 @@
+import { Box } from "shared/src/Components/Box";
 import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { Memo, useObservable } from "@legendapp/state/react";
@@ -12,12 +13,12 @@ const EASY_EXAMPLE_CODE = `function EasyExample() {
   }, 500);
 
   return (
-      <div>
+      <Box>
           <div>Renders: {renderCount}</div>
           <Memo>
               {() => <div>Count: {state.count.get()}</div>}
           </Memo>
-      </div>
+      </Box>
   );
 }
 `;
@@ -32,6 +33,7 @@ export function EasyExampleComponent() {
         useObservable,
         useInterval,
         Memo,
+        Box,
       }}
     />
   );

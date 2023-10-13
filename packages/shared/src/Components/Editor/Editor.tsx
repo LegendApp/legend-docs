@@ -12,6 +12,7 @@ interface Props {
   noInline?: boolean;
   renderCode?: string;
   previewWidth?: number;
+  transformCode?: (code: string) => string;
 }
 const emptyTheme = { plain: {}, styles: [] };
 
@@ -26,6 +27,7 @@ export const Editor = observer(function Editor({
   name,
   previewWidth,
   renderCode,
+  transformCode,
   noInline = false,
 }: Props) {
   code = code.trim();
@@ -38,7 +40,9 @@ export const Editor = observer(function Editor({
     <LiveProvider
       code={isEditing ? code : simpleCode}
       transformCode={(output) =>
-        removeImports((isEditing ? output : code) + (renderCode || ""))
+        removeImports(
+          (isEditing ? transformCode ? transformCode(output) : output : code) + (renderCode || "")
+        )
       }
       scope={scope}
       enableTypeScript={true}
@@ -49,16 +53,14 @@ export const Editor = observer(function Editor({
     >
       <div className="flex gap-4 text-sm mt-6 items-center">
         <div className="relative flex-1">
-          <div
-            style={{
-              fontFamily:
-                "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;",
-            }}
-          >
+          <div>
             <LiveEditor />
           </div>
           <div
-            className={classNames("absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm", isButton ? "cursor-pointer hover:bg-blue-600" : 'cursor-default')}
+            className={classNames(
+              "absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm",
+              isButton ? "cursor-pointer hover:bg-blue-600" : "cursor-default"
+            )}
             onClick={() => isButton && isEditing$.toggle()}
           >
             <BiPencil className="mr-2" />
