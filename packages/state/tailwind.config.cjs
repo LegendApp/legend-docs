@@ -3,7 +3,10 @@ const starlightPlugin = require("@astrojs/starlight-tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  content: [
+    "./src/**/*.{astro,html,md,mdx,ts,tsx}",
+    "../shared/src/**/*.{astro,html,md,mdx,ts,tsx}",
+  ],
   theme: {
     extend: {},
     colors: {
