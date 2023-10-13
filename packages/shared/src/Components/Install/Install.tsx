@@ -1,5 +1,5 @@
 import { observable, type Observable } from "@legendapp/state";
-import { enableReactUse } from "@legendapp/state/config/enableReactUse";
+import { observer } from "@legendapp/state/react";
 import {
   configureObservablePersistence,
   persistObservable,
@@ -12,8 +12,7 @@ interface PropsTab {
   name: string;
   layoutId: string;
   text?: string;
-  activeTab: string;
-  setActiveTab: (value: string) => void;
+  activeTab$: Observable<string>;
 }
 const TransitionTab: Transition = {
   type: "spring",
@@ -29,9 +28,9 @@ interface Props<T extends string> {
   className?: string;
 }
 
+type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 const tabs: PackageManager[] = ["npm", "yarn", "pnpm", "bun"];
 
-enableReactUse();
 export const state = observable({
   packageManager: "npm" as PackageManager,
   exampleCount: 0,
@@ -40,25 +39,19 @@ export const state = observable({
 
 if (typeof window !== "undefined") {
   configureObservablePersistence({
-    persistLocal: ObservablePersistLocalStorage,
+    pluginLocal: ObservablePersistLocalStorage,
   });
   persistObservable(state, {
     local: "state",
   });
 }
 
-const Tab = function ({
-  name,
-  layoutId,
-  text,
-  activeTab,
-  setActiveTab,
-}: PropsTab) {
-  const isActive = name === activeTab;
+const Tab = observer(function ({ name, layoutId, text, activeTab$ }: PropsTab) {
+  const isActive = name === activeTab$.get();
   return (
     <div
       className="relative px-1 pb-1 mx-2 !mt-0 cursor-pointer "
-      onClick={() => setActiveTab(name)}
+      onClick={() => activeTab$.set(name)}
     >
       <div
         data-text={text}
@@ -78,16 +71,16 @@ const Tab = function ({
       )}
     </div>
   );
-};
+});
 
-export const Tabs = function <T extends string>({
+export const Tabs = observer(function <T extends string>({
   name,
   tabs,
   tabTexts,
   activeTab$,
   className,
 }: Props<T>) {
-  const activeTab = activeTab$.use() || tabs[0];
+  const activeTab = activeTab$.get() || tabs[0];
 
   return (
     <motion.div className={classNames("flex items-center", className)} layout>
@@ -97,15 +90,14 @@ export const Tabs = function <T extends string>({
           key={tab}
           name={tab}
           text={tabTexts?.[i] || tab}
-          activeTab={activeTab}
-          setActiveTab={activeTab$.set as (tab: T) => void}
+          activeTab$={activeTab$}
         />
       ))}
     </motion.div>
   );
-};
+});
 
-export const Install = function ({
+export const Install = observer(function ({
   name,
   className,
   uid,
@@ -114,7 +106,7 @@ export const Install = function ({
   className?: string;
   uid?: string;
 }) {
-  const manager = state.packageManager.use();
+  const manager = state.packageManager.get();
 
   return (
     <div className={classNames("mt-6", className)}>
@@ -126,8 +118,8 @@ export const Install = function ({
       <pre
         className="!mt-4 astro-code css-variables"
         style={{
-          "background-color": "var(--astro-code-color-background)",
-          "overflow-x": "auto",
+          "backgroundColor": "var(--astro-code-color-background)",
+          "overflowX": "auto",
         }}
       >
         <code className="language-bash code-highlight">
@@ -142,4 +134,4 @@ export const Install = function ({
       </pre>
     </div>
   );
-};
+});
