@@ -3,51 +3,9 @@ import { observer } from "@legendapp/state/react";
 import { persistObservable } from "@legendapp/state/persist";
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 import { Editor } from "shared/src/Components/Editor/Editor";
+import { Button } from "shared/src/Components/Button";
+import { Box } from "shared/src/Components/Box";
 import classNames from "classnames";
-
-const Button = ({
-  onClick,
-  theme,
-  children,
-}: {
-  theme: "light" | "dark";
-  onClick: () => void;
-  children: any;
-}) => {
-  return (
-    <button
-      className={classNames(
-        "block px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500",
-      )}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
-
-const Box = ({
-  className,
-  theme,
-  children,
-}: {
-  className: string;
-  theme: "light" | "dark";
-  children: any;
-}) => {
-  console.log(className);
-  return (
-    <button
-      className={classNames(
-        "rounded-lg p-4",
-        theme === "dark" ? "bg-gray-800" : "bg-gray-50 text-gray-900",
-        className
-      )}
-    >
-      {children}
-    </button>
-  );
-};
 
 const INTRO_EXAMPLE_CODE = `
 import { observable, observe } from "@legendapp/state"

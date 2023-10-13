@@ -8,6 +8,7 @@
     --color-red: #ff7b72;
     --color-green: #7ee787;
     --color-blue: #79c0ff;
+    --color-light-blue: #a5d6ff;
     --color-indigo: #a5d6ff;
     --color-purple: #d2a8ff;
     --color-brown: #ffa657;
@@ -16,7 +17,7 @@
     --astro-code-color-text: var(--color-fg-default);
     --astro-code-color-background: var(--color-bg-code-block);
     --astro-code-token-constant: var(--color-fg-default);
-    --astro-code-token-string: var(--color-blue);
+    --astro-code-token-string: var(--color-light-blue);
     --astro-code-token-comment: var(--color-gray);
     --astro-code-token-keyword: var(--color-red);
     --astro-code-token-parameter: var(--color-purple);
@@ -29,6 +30,10 @@
 .astro-code {
     border-radius: var(--code-border-radius);
     border-color: var(--color-border-code-block) !important;
+}
+
+code {
+    border-radius: 0.25rem;
 }
 
 /**
@@ -116,7 +121,7 @@ pre[class*="language-"] {
 .token.regex,
 .token.attr-value,
 .token.attr-value>.token.punctuation {
-    color: var(--color-blue);
+    color: var(--color-light-blue);
 }
 
 .token.variable,
