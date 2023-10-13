@@ -12,10 +12,12 @@ interface Props {
   scope?: Record<string, unknown>;
   name?: string;
   noInline?: boolean;
+  renderCode?: string;
+  previewWidth?: number;
 }
 
 export const Editor = observer(
-  ({ code, simpleCode, scope, name, noInline = false }: Props) => {
+  function Editor({ code, simpleCode, scope, name, previewWidth, renderCode, noInline = false }: Props) {
     code = code.trim();
     simpleCode = simpleCode?.trim();
     const isEditing$ = useObservable(!simpleCode);
@@ -23,15 +25,15 @@ export const Editor = observer(
     return (
       <LiveProvider
         code={isEditing ? code : simpleCode}
-        transformCode={(output) => (isEditing ? output : code)}
+        transformCode={(output) => (isEditing ? output : code) + (renderCode || '')}
         scope={scope}
         enableTypeScript={true}
         theme={themes.vsDark}
         noInline={noInline}
         disabled={!isEditing}
       >
-        <div className="grid grid-cols-1 gap-4">
-          <div className="col-span-3 relative">
+        <div className="flex gap-4">
+          <div className="relative flex-1">
             <LiveEditor />
             {simpleCode && (
               <div
@@ -45,6 +47,7 @@ export const Editor = observer(
           </div>
           <div
             className={classNames(name ? `p_${name}` : "col-span-1 rounded")}
+            style={{ width: previewWidth }}
           >
             <LivePreview />
           </div>
