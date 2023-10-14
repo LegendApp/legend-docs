@@ -6,7 +6,6 @@
     "dev": "astro dev",
     "devlegend": "astro dev --publishlegend",
     "start": "astro dev",
-    "testpublish": "astro dev --publishlegend",
     "build": "astro build",
     "publish": "astro build --base /open-source/state --publishlegend",
     "preview": "astro preview",

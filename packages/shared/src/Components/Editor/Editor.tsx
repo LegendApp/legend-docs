@@ -1,8 +1,7 @@
-import { useObservable, observer } from "@legendapp/state/react";
+import { observer } from "@legendapp/state/react";
 import classNames from "classnames";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import { themes } from "prism-react-renderer";
 import { BiPencil } from "react-icons/bi";
+import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 interface Props {
   code: string;

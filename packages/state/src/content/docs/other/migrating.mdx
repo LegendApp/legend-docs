@@ -119,7 +119,7 @@ function Component() {
 
 In version 2 we locked down and cleaned up the interfaces for the remote persistence APIs.
 
-#### persistObservable returns an object with { state }
+#### persistObservable returns an object with sync state
 
 To support taking an initial state or an observable, `persistObservable` needs to return both an observable and the syncState, so it now the observable with a `state` property on it, matching the Promise behavior.
 

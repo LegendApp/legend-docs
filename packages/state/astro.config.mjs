@@ -10,7 +10,11 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Legend State",
-      customCss: ["./src/tailwind.css", "./src/editor.css", "./src/overrides.css"],
+      customCss: [
+        "./src/tailwind.css",
+        "./src/editor.css",
+        "./src/overrides.css",
+      ],
       social: {
         github: "https://github.com/LegendApp/legend-state",
       },
@@ -53,4 +57,5 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
+  vite: { ssr: { noExternal: [ 'usehooks-ts', 'react-icons' ] } } ,
 });
