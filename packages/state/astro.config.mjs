@@ -19,7 +19,8 @@ export default defineConfig({
         github: "https://github.com/LegendApp/legend-state",
       },
       editLink: {
-        baseUrl: "https://github.com/LegendApp/legend-docs/edit/main/",
+        baseUrl:
+          "https://github.com/LegendApp/legend-docs/edit/main/packages/state/",
       },
       sidebar: [
         {
@@ -57,5 +58,5 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
-  vite: { ssr: { noExternal: [ 'usehooks-ts', 'react-icons' ] } } ,
+  vite: { ssr: { noExternal: ["usehooks-ts", "react-icons"] } },
 });
