@@ -1,67 +1,60 @@
 import { useRef } from "react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import { Memo, Switch } from "@legendapp/state/react";
 import { pageHash } from "@legendapp/state/helpers/pageHash";
 import { pageHashParams } from "@legendapp/state/helpers/pageHashParams";
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
 
-const ROUTER_CODE = `function RouterExample() {
-  const renderCount = ++useRef(0).current;
+const ROUTER_CODE = `
+import { useRef } from "react"
+import { Memo, Switch } from "@legendapp/state/react"
+import { pageHash } from "@legendapp/state/helpers/pageHash"
+import { pageHashParams } from "@legendapp/state/helpers/pageHashParams"
+
+function RouterExample() {
+  const renderCount = ++useRef(0).current
 
   return (
-      <div className="text-md bg-slate-800 p-4" style={{ width: 300 }}>
-          <div>Renders: {renderCount}</div>
-          <div className="">
-              <button
-                  className="block px-4 py-2 my-2 font-bold bg-gray-700 rounded shadow text-2xs hover:bg-gray-600 active:bg-gray-500"
-                  onClick={() => pageHashParams.page.delete()}
-              >
-                  Go to root
-              </button>
-              <button
-                  className="block px-4 py-2 my-2 font-bold bg-gray-700 rounded shadow text-2xs hover:bg-gray-600 active:bg-gray-500"
-                  onClick={() => pageHashParams.page.set('')}
-              >
-                  Go to Page
-              </button>
-              <button
-                  className="block px-4 py-2 my-2 font-bold bg-gray-700 rounded shadow text-2xs hover:bg-gray-600 active:bg-gray-500"
-                  onClick={() => pageHashParams.page.set('Home')}
-              >
-                  Go Home
-              </button>
-              <button
-                  className="block px-4 py-2 my-2 font-bold bg-gray-700 rounded shadow text-2xs hover:bg-gray-600 active:bg-gray-500"
-                  onClick={() => pageHashParams.page.set('asdf')}
-              >
-                  Go to unknown
-              </button>
-          </div>
-          <div className="my-4 text-xs">
-              <div className='py-4'>Hash: <Memo>{pageHash}</Memo></div>
-              <div className="p-4 bg-gray-600 rounded-xl">
-                  <Switch value={pageHashParams.page}>
-                      {{
-                          undefined: () => <div>Root</div>,
-                          '': () => <div>Page</div>,
-                          Home: () => <div>Home</div>,
-                          default: () => <div>Unknown page</div>,
-                      }}
-                  </Switch>
-              </div>
-          </div>
+    <Box width={240}>
+      <div>Renders: {renderCount}</div>
+      <div>
+        <Button onClick={() => pageHashParams.page.delete()}>
+          Go to root
+        </Button>
+        <Button onClick={() => pageHashParams.page.set('')}>
+          Go to Page
+        </Button>
+        <Button onClick={() => pageHashParams.page.set('Home')}>
+          Go Home
+        </Button>
+        <Button onClick={() => pageHashParams.page.set('asdf')}>
+          Go to unknown
+        </Button>
       </div>
-  );
+        <div>Hash: <Memo>{pageHash}</Memo></div>
+        <div className="p-4 bg-gray-600 rounded-xl">
+          <Switch value={pageHashParams.page}>
+            {{
+              undefined: () => <div>Root</div>,
+              '': () => <div>Page</div>,
+              Home: () => <div>Home</div>,
+              default: () => <div>Unknown page</div>,
+            }}
+          </Switch>
+        </div>
+    </Box>
+  )
 }
-
-render(<RouterExample />)
 `;
 
 export function RouterComponent() {
   return (
     <Editor
       code={ROUTER_CODE}
-      scope={{ useRef, Memo, pageHash, pageHashParams, Switch }}
+      scope={{ useRef, Memo, pageHash, pageHashParams, Switch, Box, Button }}
       noInline={true}
+      renderCode=";render(<RouterExample />)"
     />
   );
 }

@@ -33,16 +33,15 @@ export function FlashingDiv({
   });
 
   return (
-    <span className={classNames("relative", span ? "p-1" : "block p-1")}>
+    <span className={classNames("relative", span ? "p-1" : "block p-1", className)}>
       <motion.div
         animate={controls}
         className="absolute inset-0 rounded-lg opacity-0 bg-blue-100"
       />
       <span
         className={classNames(
-          "relative z-10",
-          span ? "px-2 rounded-lg" : "block",
-          className
+          "relative z-10 bg-gray-800 rounded-lg",
+          span ? "px-2" : "block p-4",
         )}
       >
         {children}

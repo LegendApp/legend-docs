@@ -1,9 +1,10 @@
 {
-  "name": "legend-state-docs",
+  "name": "state-docs",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "devlegend": "astro dev --publishlegend",
     "start": "astro dev",
     "testpublish": "astro dev --publishlegend",
     "build": "astro build",
@@ -16,7 +17,7 @@
     "@astrojs/starlight": "^0.11.0",
     "@astrojs/starlight-tailwind": "^2.0.0",
     "@astrojs/tailwind": "^5.0.1",
-    "@legendapp/state": "^1.11.3",
+    "@legendapp/state": "beta",
     "@tanstack/react-query": "^4.35.7",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.10",
@@ -26,7 +27,8 @@
     "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-live": "^4.1.5",
+    "react-icons": "^4.11.0",
+    "shared": "workspace:*",
     "tailwindcss": "^3.3.3",
     "usehooks-ts": "^2.9.1"
   }

@@ -1,54 +1,74 @@
+import { observable } from "@legendapp/state";
+import
+    {
+        Memo,
+        observer,
+        useObservable,
+    } from "@legendapp/state/react";
 import { useRef, useState } from "react";
-import { Editor } from "../Editor/Editor";
-import { Memo, useObservable } from "@legendapp/state/react";
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import { useInterval } from "usehooks-ts";
 
-const MEMO_EXAMPLE_CODE = `const MemoExample = () => {
-  const renderCount = ++useRef(-1).current;
-  const state$ = useObservable({ count: 0 });
-  const [value, setValue] = useState(1);
+const MEMO_CODE = `
+import { useInterval } from "usehooks-ts"
+import { observable } from "@legendapp/state"
+import { useRef, useState } from "react"
+import { Memo, observer, useObservable } from "@legendapp/state/react"
 
+const MemoExample = () => {
+  const renderCount = ++useRef(0).current
+
+  const [value, setValue] = useState(1)
+
+  // Only the Memo'd component tracks this
+  const state$ = useObservable({ count: 1 })
   useInterval(() => {
-      state$.count.set((v) => v + 1);
-  }, 500);
+    state$.count.set((v) => v + 1)
+  }, 500)
 
-  const onClick = () => setValue((v) => v + 1);
+  // Force a render
+  const onClick = () => setValue((v) => v + 1)
 
   return (
-      <div className="p-4 text-md bg-slate-800" style={{ width: 240 }}>
-          <div>Renders: {Math.max(renderCount, 1)}</div>
+    <Box center>
+      <h5>Normal</h5>
+      <div>Renders: {renderCount}</div>
+      <div>Value: {value}</div>
+      <Button onClick={onClick}>
+        Render
+      </Button>
+      <Memo>
+        {() => <>
+          <h5>Memo'd</h5>
           <div>Value: {value}</div>
-          <button
-              className="block px-4 py-2 my-8 font-bold bg-gray-700 rounded shadow text-2xs hover:bg-gray-600 active:bg-gray-500"
-              onClick={onClick}
-          >
-              Render parent
-          </button>
-          <Memo>
-              {() => <>
-                  <div>Value: {value}</div>
-                  <div className="pt-4">Count: {state$.count.get()}</div>
-              </>}
-          </Memo>
-      </div>
-  );
-};
-
-render(<MemoExample />)
+          <div>Count: {state$.count.get()}</div>
+        </>}
+      </Memo>
+    </Box>
+  )
+}
 `;
 
-export function MemoComponent() {
+export function MemoExampleComponent() {
   return (
     <Editor
-      code={MEMO_EXAMPLE_CODE}
+      code={MEMO_CODE}
       scope={{
+        Box,
         useRef,
         useObservable,
-        useState,
         Memo,
+        observable,
         useInterval,
+        observer,
+        useState,
+        Button,
       }}
-      noInline={true}
+      noInline
+      previewWidth={180}
+      renderCode=";render(<MemoExample />)"
     />
   );
 }

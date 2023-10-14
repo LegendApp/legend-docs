@@ -2,32 +2,31 @@
 import type { Props } from "@astrojs/starlight/props";
 
 import Search from "@astrojs/starlight/components/Search.astro";
-import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro";
 import SocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
 import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
 import LanguageSelect from "@astrojs/starlight/components/LanguageSelect.astro";
 ---
 
 <div class="header sl-flex">
-  <div class="sl-flex">
-    <a class="flex items-center pr-3 mr-8 text-lg" href="/">
-      <img src="https://legendapp.com/img/Logomark_(White).svg" width="36" height="36" />
-      <span class="pl-3 text-white">Legend Open Source</span>
+  <div class="sl-flex items-center">
+    <a class="flex items-center pr-6 text-xl font-semibold" href="/">
+      <img src="https://legendapp.com/img/Logomark_(White).svg" width="36" height="36" class="opacity-60" />
+      <span class="pl-3">Legend Open Source</span>
     </a>
-    <a class="flex items-center pr-3 mr-8 text-lg" href="/">
-      <span class="pl-3 text-white">Home</span>
+    <a class="px-4" href="/">
+      Home
+    </a>
+    <a class="px-4" href="/open-source/blog">
+      Blog
+    </a>
+    <a class="px-4 text-white" href="/open-source/state">
+      State
+    </a>
+    <a class="px-4 mr-4" href="/open-source/motion">
+      Motion
     </a>
   </div>
   <div class="sl-flex items-center justify-end pr-4">
-    <a class="px-4" href="/open-source/blog">
-      <span class="text-white">Blog</span>
-    </a>
-    <a class="px-4" href="/open-source/state">
-      <span class="text-white">State</span>
-    </a>
-    <a class="px-4 mr-4" href="/open-source/motion">
-      <span class="text-white">Motion</span>
-    </a>
     <Search {...Astro.props} />
   </div>
   <div class="sl-hidden md:sl-flex right-group">
@@ -56,6 +55,16 @@ import LanguageSelect from "@astrojs/starlight/components/LanguageSelect.astro";
     content: "";
     height: 2rem;
     border-inline-end: 1px solid var(--sl-color-gray-5);
+  }
+  a {
+    text-decoration: none;
+    color: #A1A1A4;
+  }
+  a:hover {
+    color: var(--sl-color-text);
+  }
+  a:hover img {
+    opacity: 100;
   }
 
   @media (min-width: 50rem) {

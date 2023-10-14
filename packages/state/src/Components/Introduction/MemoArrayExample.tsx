@@ -1,30 +1,37 @@
-import { useRef } from "react";
-import { Editor } from "../Editor/Editor";
 import { Memo, useObservable } from "@legendapp/state/react";
+import { useRef } from "react";
+import { Box } from "shared/src/Components/Box";
+import { Editor } from "shared/src/Components/Editor/Editor";
 import { useInterval } from "usehooks-ts";
 
 const MEMO_ARRAY_EXAMPLE_CODE = `
-  function MemoArrayExample() {
-    const renderCount = ++useRef(0).current;
-    const messages = useObservable([]);
+import { useRef } from "react"
+import { useInterval } from "usehooks-ts"
+import { Memo, useObservable } from "@legendapp/state/react"
 
-    useInterval(() => {
-        messages.splice(0, 0, \`Message \${messages.length + 1}\`);
-    }, 1000);
+function MemoArrayExample() {
+  const renderCount = ++useRef(0).current
+  const messages = useObservable([])
 
-    return (
-        <div className="p-4 text-md bg-gray-800" style={{ width: 150 }}>
-            <div>Renders: {renderCount}</div>
-            <Memo>
-                {() => <div className="pt-4 h-[300px] overflow-auto">
-                    {messages.map((m, i) => (
-                        <div key={i}>{m}</div>
-                    ))}
-                </div>}
-            </Memo>
-        </div>
-    );
-  }
+  useInterval(() => {
+    messages.splice(0, 0, \`Message \${messages.length + 1}\`)
+  }, 600)
+
+  return (
+    <Box>
+      <h5 className="renders">Renders: {renderCount}</h5>
+      <div className="messages">
+        <Memo>
+          {() => (
+            messages.map((m, i) => (
+              <div key={i}>{m}</div>
+            ))
+          )}
+        </Memo>
+      </div>
+    </Box>
+  )
+}
 `;
 
 export function MemoArrayExampleComponent() {
@@ -36,7 +43,22 @@ export function MemoArrayExampleComponent() {
         useObservable,
         Memo,
         useInterval,
+        Box,
       }}
+      noInline
+      previewWidth={180}
+      renderCode=";render(<MemoArrayExample />)"
+      transformCode={(code) =>
+        code
+          .replace(
+            /className="renders"/g,
+            'className="border-b w-full pb-3 border-gray-500"'
+          )
+          .replace(
+            /className="messages"/g,
+            'className="h-[300px] overflow-auto w-full"'
+          )
+      }
     />
   );
 }

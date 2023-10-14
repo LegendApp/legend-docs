@@ -3,55 +3,60 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 import { observable } from "@legendapp/state";
 import { useComputed, Memo } from "@legendapp/state/react";
-import { Editor } from "../Editor/Editor";
+import { Editor } from "shared/src/Components/Editor/Editor";
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
 
-const ANIMATED_SWITCH_CODE = `const MotionDiv = reactive(motion.div)
+const ANIMATED_SWITCH_CODE = `
+import { reactive } from "@legendapp/state/react"
+import { motion } from "framer-motion"
+import { useRef } from "react"
+import { observable } from "@legendapp/state"
+import { useComputed, Memo } from "@legendapp/state/react"
 
-function Toggle({ value }) {
+const MotionDiv = reactive(motion.div)
+
+function Toggle({ $value }) {
   return (
     <MotionDiv
-      className="border border-gray-200 rounded-full select-none"
+      className="toggle"
       $animate={() => ({
-        backgroundColor: value.get() ? '#6ACB6C' : '#C4D1E3'
+        backgroundColor: $value.get() ? '#6ACB6C' : '#515153'
       })}
       style={{ width: 64, height: 32 }}
-      onClick={value.toggle}
+      onClick={$value.toggle}
     >
       <MotionDiv
-        className="bg-white rounded-full shadow"
+        className="thumb"
         style={{ width: 24, height: 24, marginTop: 3 }}
         $animate={() => ({
-          x: value.get() ? 32 : 6
+          x: $value.get() ? 34 : 4
         })}
       />
     </MotionDiv>
   )
 }
 
-const settings = observable({ enabled: false })
+const settings$ = observable({ enabled: false })
 
 function App() {
   const renderCount = ++useRef(0).current
 
   // Computed text value
-  const text = useComputed(() =>
-    settings.enabled.get() ? 'Yes' : 'No'
+  const text = () => (
+    settings$.enabled.get() ? 'Yes' : 'No'
   )
 
   return (
-    <div className="p-4 bg-slate-800">
-      <div className="text-gray-500 text-sm">
-        Renders: {renderCount}
-      </div>
-      <div className="pt-8 pb-4">
+    <Box>
+      <div>Renders: {renderCount}</div>
+      <div>
         Enabled: <Memo>{text}</Memo>
       </div>
-      <Toggle value={settings.enabled} />
-    </div>
+      <Toggle $value={settings$.enabled} />
+    </Box>
   )
 }
-
-render(<App />)
 `;
 
 export function AnimatedSwitchComponent() {
@@ -65,8 +70,23 @@ export function AnimatedSwitchComponent() {
         motion,
         useComputed,
         Memo,
+        Box,
+        Button,
       }}
       noInline={true}
+      renderCode=";render(<App />)"
+      previewWidth={128}
+      transformCode={(code) =>
+        code
+          .replace(
+            /className="toggle"/g,
+            'className="border border-[#717173] rounded-full select-none"'
+          )
+          .replace(
+            /className="thumb"/g,
+            'className="bg-white rounded-full shadow"'
+          )
+      }
     />
   );
 }

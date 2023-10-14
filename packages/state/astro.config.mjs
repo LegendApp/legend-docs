@@ -1,7 +1,6 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
-
 import tailwind from "@astrojs/tailwind";
 
 const isPublish = process.argv[process.argv.length - 1] === "--publishlegend";
@@ -11,7 +10,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Legend State",
-      customCss: ["./src/tailwind.css"],
+      customCss: ["./src/tailwind.css", "./src/editor.css", "./src/overrides.css"],
       social: {
         github: "https://github.com/LegendApp/legend-state",
       },

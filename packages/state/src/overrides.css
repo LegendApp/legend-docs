@@ -1,0 +1,8 @@
+:root {
+    --sl-color-accent-high: #09d;
+    --sl-content-width: 52rem;
+}
+
+.content a:hover {
+    color: #0AE !important;
+}
