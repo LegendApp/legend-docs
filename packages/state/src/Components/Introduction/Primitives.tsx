@@ -6,18 +6,18 @@ import { useInterval } from "usehooks-ts";
 import { FlashingDiv } from "../FlashingDiv/FlashingDiv";
 
 const PRIMITIVES_CODE = `
-import { observable } from "@legendapp/state";
-import { Memo, useObservable } from "@legendapp/state/react";
-import { useRef, useState } from "react";
-import { useInterval } from "usehooks-ts";
+import { observable } from "@legendapp/state"
+import { Memo, useObservable } from "@legendapp/state/react"
+import { useRef, useState } from "react"
+import { useInterval } from "usehooks-ts"
 
 function NormalComponent() {
-  const [count, setCount] = useState(1);
-  const renderCount = useRef(1).current++;
+  const [count, setCount] = useState(1)
+  const renderCount = useRef(1).current++
 
   useInterval(() => {
-    setCount((v) => v + 1);
-  }, 600);
+    setCount((v) => v + 1)
+  }, 600)
 
   // This re-renders when count changes
   return (
@@ -29,12 +29,12 @@ function NormalComponent() {
   )
 }
 function FineGrained() {
-  const count$ = useObservable(1);
-  const renderCount = useRef(1).current++;
+  const count$ = useObservable(1)
+  const renderCount = useRef(1).current++
 
   useInterval(() => {
-    count$.set((v) => v + 1);
-  }, 600);
+    count$.set((v) => v + 1)
+  }, 600)
 
   // The text updates itself so the component doesn't re-render
   return (

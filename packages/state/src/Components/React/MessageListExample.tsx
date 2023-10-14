@@ -14,9 +14,9 @@ import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const MESSAGE_LIST_CODE = `
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { For, Reactive, Show, useComputed, useObservable } from "@legendapp/state/react";
-import { useFetch } from "@legendapp/state/react-hooks/useFetch";
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
+import { For, Reactive, Show, useComputed, useObservable } from "@legendapp/state/react"
+import { useFetch } from "@legendapp/state/react-hooks/useFetch"
 
 // Enable Reactive.input
 enableReactComponents()

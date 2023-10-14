@@ -40,15 +40,15 @@ export const Footer = ({
 
 
 const PERSISTENCE_CODE = `
-import { observable } from "@legendapp/state";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { persistObservable } from "@legendapp/state/persist";
-import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
-import { reactive, Reactive } from "@legendapp/state/react";
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { observable } from "@legendapp/state"
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
+import { persistObservable } from "@legendapp/state/persist"
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
+import { reactive, Reactive } from "@legendapp/state/react"
+import { motion } from "framer-motion"
+import { useRef } from "react"
 
-enableReactComponents();
+enableReactComponents()
 
 const State = observable({
   settings: { showSidebar: false, theme: 'light' },
@@ -65,10 +65,10 @@ persistObservable(State, {
 })
 
 // Create a reactive Framer-Motion div
-const MotionDiv = reactive(motion.div);
+const MotionDiv = reactive(motion.div)
 
 function App() {
-  const renderCount = ++useRef(0).current;
+  const renderCount = ++useRef(0).current
 
   const sidebarHeight = () => (
     State.settings.showSidebar.get() ? 96 : 0
@@ -95,7 +95,7 @@ function App() {
         <div className="p-4">Footer</div>
       </MotionDiv>
     </Box>
-  );
+  )
 }
 `;
 

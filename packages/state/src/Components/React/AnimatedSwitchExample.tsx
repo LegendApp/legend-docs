@@ -8,11 +8,11 @@ import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 
 const ANIMATED_SWITCH_CODE = `
-import { reactive } from "@legendapp/state/react";
-import { motion } from "framer-motion";
-import { useRef } from "react";
-import { observable } from "@legendapp/state";
-import { useComputed, Memo } from "@legendapp/state/react";
+import { reactive } from "@legendapp/state/react"
+import { motion } from "framer-motion"
+import { useRef } from "react"
+import { observable } from "@legendapp/state"
+import { useComputed, Memo } from "@legendapp/state/react"
 
 const MotionDiv = reactive(motion.div)
 

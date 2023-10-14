@@ -14,12 +14,12 @@ function Nothing() {
 }
 
 const SHOW_EXAMPLE_CODE = `
-import { Show, useObservable } from "@legendapp/state/react";
-import { useRef } from "react";
+import { Show, useObservable } from "@legendapp/state/react"
+import { useRef } from "react"
 
 const ShowExample = () => {
-  const renderCount = ++useRef(0).current;
-  const state = useObservable({ show: false });
+  const renderCount = ++useRef(0).current
+  const state = useObservable({ show: false })
 
   return (
     <Box width={160}>
@@ -33,7 +33,7 @@ const ShowExample = () => {
         {() => <Modal />}
       </Show>
     </Box>
-  );
+  )
 }
 `;
 

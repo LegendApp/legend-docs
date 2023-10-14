@@ -12,24 +12,24 @@ import { Editor } from "shared/src/Components/Editor/Editor";
 import { useInterval } from "usehooks-ts";
 
 const MEMO_CODE = `
-import { useInterval } from "usehooks-ts";
-import { observable } from "@legendapp/state";
-import { useRef, useState } from "react";
-import { Memo, observer, useObservable } from "@legendapp/state/react";
+import { useInterval } from "usehooks-ts"
+import { observable } from "@legendapp/state"
+import { useRef, useState } from "react"
+import { Memo, observer, useObservable } from "@legendapp/state/react"
 
 const MemoExample = () => {
-  const renderCount = ++useRef(0).current;
+  const renderCount = ++useRef(0).current
 
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(1)
 
   // Only the Memo'd component tracks this
-  const state$ = useObservable({ count: 1 });
+  const state$ = useObservable({ count: 1 })
   useInterval(() => {
-    state$.count.set((v) => v + 1);
-  }, 500);
+    state$.count.set((v) => v + 1)
+  }, 500)
 
   // Force a render
-  const onClick = () => setValue((v) => v + 1);
+  const onClick = () => setValue((v) => v + 1)
 
   return (
     <Box center>
@@ -47,7 +47,7 @@ const MemoExample = () => {
         </>}
       </Memo>
     </Box>
-  );
+  )
 }
 `;
 

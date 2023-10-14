@@ -13,11 +13,11 @@ function debounce(fn: () => void, time: number) {
   timeout = setTimeout(fn, time)
 }
 const AUTO_SAVING_FORM_CODE = `
-import axios from "axios";
-import { useRef } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useObservable, Reactive, Memo } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
+import axios from "axios"
+import { useRef } from "react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { useObservable, Reactive, Memo } from "@legendapp/state/react"
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
 
 enableReactComponents()
 

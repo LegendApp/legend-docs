@@ -5,17 +5,17 @@ import { Editor } from "shared/src/Components/Editor/Editor";
 import { useInterval } from "usehooks-ts";
 
 const MEMO_ARRAY_EXAMPLE_CODE = `
-import { useRef } from "react";
-import { useInterval } from "usehooks-ts";
-import { Memo, useObservable } from "@legendapp/state/react";
+import { useRef } from "react"
+import { useInterval } from "usehooks-ts"
+import { Memo, useObservable } from "@legendapp/state/react"
 
 function MemoArrayExample() {
-  const renderCount = ++useRef(0).current;
-  const messages = useObservable([]);
+  const renderCount = ++useRef(0).current
+  const messages = useObservable([])
 
   useInterval(() => {
-    messages.splice(0, 0, \`Message \${messages.length + 1}\`);
-  }, 600);
+    messages.splice(0, 0, \`Message \${messages.length + 1}\`)
+  }, 600)
 
   return (
     <Box>
@@ -30,7 +30,7 @@ function MemoArrayExample() {
         </Memo>
       </div>
     </Box>
-  );
+  )
 }
 `;
 

@@ -7,13 +7,13 @@ import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 
 const ROUTER_CODE = `
-import { useRef } from "react";
-import { Memo, Switch } from "@legendapp/state/react";
-import { pageHash } from "@legendapp/state/helpers/pageHash";
-import { pageHashParams } from "@legendapp/state/helpers/pageHashParams";
+import { useRef } from "react"
+import { Memo, Switch } from "@legendapp/state/react"
+import { pageHash } from "@legendapp/state/helpers/pageHash"
+import { pageHashParams } from "@legendapp/state/helpers/pageHashParams"
 
 function RouterExample() {
-  const renderCount = ++useRef(0).current;
+  const renderCount = ++useRef(0).current
 
   return (
     <Box width={240}>
@@ -44,7 +44,7 @@ function RouterExample() {
           </Switch>
         </div>
     </Box>
-  );
+  )
 }
 `;
 

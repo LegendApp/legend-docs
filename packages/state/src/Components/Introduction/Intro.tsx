@@ -8,10 +8,10 @@ import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const INTRO_EXAMPLE_CODE = `
-import { observable, observe } from "@legendapp/state";
-import { persistObservable } from "@legendapp/state/persist";
-import { observer } from "@legendapp/state/react";
-import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import { observable, observe } from "@legendapp/state"
+import { persistObservable } from "@legendapp/state/persist"
+import { observer } from "@legendapp/state/react"
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
 
 // Create an observable object
 const state$ = observable({ settings: { theme: 'dark' } })

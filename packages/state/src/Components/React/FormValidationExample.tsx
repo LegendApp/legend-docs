@@ -12,9 +12,9 @@ import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 
 const FORM_VALIDATION_CODE = `
-import { useRef } from "react";
-import { useObservable, useObserve, Reactive, Memo, Show } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
+import { useRef } from "react"
+import { useObservable, useObserve, Reactive, Memo, Show } from "@legendapp/state/react"
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
 
 enableReactComponents()
 
@@ -51,7 +51,7 @@ function App() {
 
     if (!usernameError.get() && !passwordError.get()) {
       console.log('Submit form')
-      passwordError.delete();
+      passwordError.delete()
       successMessage.set('Saved!')
     }
   }

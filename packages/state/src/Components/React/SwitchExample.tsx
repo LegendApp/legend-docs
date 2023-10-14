@@ -5,8 +5,8 @@ import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const SWITCH_EXAMPLE_CODE = `
-import { Switch, useObservable } from "@legendapp/state/react";
-import { useRef } from "react";
+import { Switch, useObservable } from "@legendapp/state/react"
+import { useRef } from "react"
 
 function SwitchExample() {
   const renderCount = ++useRef(0).current
