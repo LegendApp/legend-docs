@@ -90,15 +90,14 @@ function Component() {
 In addition to using global state, you can create local state with `useObservable` to use immediately or pass down through children or context.
 
 ```jsx
-import { observable } from "@legendapp/state";
-import { useObservable } from "@legendapp/state/react";
+import { observer, useObservable } from "@legendapp/state/react";
 
 function App() {
   const store$ = useObservable({
     profile: { name: "hi" },
   });
 
-  // This component does not use() the store so only Profile will re-render on changes
+  // This component does not get() the store so only Profile will re-render on changes
 
   return (
     <div>
@@ -107,11 +106,11 @@ function App() {
   );
 }
 
-function Profile({ profile$ }) {
-  const name = profile$.name.use();
+const Profile = observer(function Profile({ profile$ }) {
+  const name = profile$.name.get();
 
   return <div>Name: {name}</div>;
-}
+})
 ```
 
 ## Fine-grained reactivity

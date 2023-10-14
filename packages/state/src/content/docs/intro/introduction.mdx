@@ -14,7 +14,7 @@ Legend-State is a super fast and powerful state library for modern JavaScript ap
 
 There is no boilerplate and there are no contexts, actions, reducers, dispatchers, sagas, thunks, or epics. It doesn't modify your data at all, and you can just call `get()` to get the raw data and `set()` to change it.
 
-In React components you can call `use()` on any observable to get the raw data and automatically re-render whenever it changes.
+React components can track access to `get()` on any observable and automatically re-render whenever it changes.
 
 ```jsx
 // Create an observable object
@@ -29,9 +29,12 @@ observe(() => {
   console.log(state.settings.theme.get());
 });
 
+// Enable React components to automatically track observables
+enableReactTracking({ auto: true });
+
 const Component = function Component() {
-  // use() makes this component re-render whenever it changes
-  const theme = state$.settings.theme.use();
+  // get() makes this component re-render whenever theme changes
+  const theme = state$.settings.theme.get();
 
   return <div>Theme: {theme}</div>;
 };

@@ -86,11 +86,12 @@ await when(() => isSignedIn$.get() && isOnline$.get());
 
 ### 1. Configure your options
 
-Legend-State is designed to have a lean core that allows you and your team to add additional features, so it has configuration functions to add features as you like. If you are using React we recommend at least adding the `use()` function - it is the recommended way to use observables in React as you will see in the examples. You only need to do this once in your app's entry point.
+Legend-State is designed to have a lean core that allows you and your team to add additional features, so it has configuration functions to add features as you like. If you're getting started with React we recommend using `enableReactTracking()` - it's the easiest way to use observables in React. You only need to use configuration functions once in your app's entry point.
 
 ```jsx
-import { enableReactUse } from "@legendapp/state/config/enableReactUse";
-enableReactUse(); // This adds the use() function to observables
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+// This makes React components automatically track get() calls to re-render
+enableReactTracking({ auto: true });
 ```
 
 There are also more options such as enabling getting/setting values directly with a `$` property. See [configuring](../../usage/configuring) for more details.
