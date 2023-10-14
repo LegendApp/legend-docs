@@ -37,7 +37,7 @@ function WithObservable() {
 function WithSelector() {
   return (
     <div>
-      <Memo>{() => `Count: ${count$.get()}`}</Memo>
+      <Memo>{() => <div>Count: {count$.get()}</div>}</Memo>
     </div>
   );
 }
