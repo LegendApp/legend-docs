@@ -6,7 +6,6 @@ import { BiPencil } from "react-icons/bi";
 
 interface Props {
   code: string;
-  simpleCode?: string;
   scope?: Record<string, unknown>;
   name?: string;
   noInline?: boolean;
@@ -22,7 +21,6 @@ function removeImports(code: string) {
 
 export const Editor = observer(function Editor({
   code,
-  simpleCode,
   scope,
   name,
   previewWidth,
@@ -31,24 +29,18 @@ export const Editor = observer(function Editor({
   noInline = false,
 }: Props) {
   code = code.trim();
-  simpleCode = simpleCode?.trim();
-  const isEditing$ = useObservable(!simpleCode);
-  const isEditing = isEditing$.get();
-  const isButton = !!simpleCode;
-
   return (
     <LiveProvider
-      code={isEditing ? code : simpleCode}
+      code={code}
       transformCode={(output) =>
         removeImports(
-          (isEditing ? transformCode ? transformCode(output) : output : code) + (renderCode || "")
+          (transformCode ? transformCode(output) : output) + (renderCode || "")
         )
       }
       scope={scope}
       enableTypeScript={true}
       theme={emptyTheme}
       noInline={noInline}
-      disabled={!isEditing}
       language="jsx"
     >
       <div className="flex gap-4 text-sm mt-6 items-center">
@@ -58,13 +50,11 @@ export const Editor = observer(function Editor({
           </div>
           <div
             className={classNames(
-              "absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm",
-              isButton ? "cursor-pointer hover:bg-blue-600" : "cursor-default"
+              "absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm cursor-default"
             )}
-            onClick={() => isButton && isEditing$.toggle()}
           >
             <BiPencil className="mr-2" />
-            {isEditing ? "Editing" : "Edit"}
+            Editing
           </div>
         </div>
         <div
