@@ -1,10 +1,13 @@
+import { Switch, useObservable } from "@legendapp/state/react";
+import { useRef } from "react";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
-import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
-import { Switch, useObservable } from "@legendapp/state/react";
 
 const SWITCH_EXAMPLE_CODE = `
+import { Switch, useObservable } from "@legendapp/state/react";
+import { useRef } from "react";
+
 function SwitchExample() {
   const renderCount = ++useRef(0).current
   const index = useObservable(0)

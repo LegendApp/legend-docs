@@ -1,8 +1,8 @@
+import { Show, useObservable } from "@legendapp/state/react";
+import { useRef } from "react";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
-import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
-import { Show, useObservable } from "@legendapp/state/react";
 
 function Modal() {
     return (
@@ -14,6 +14,9 @@ function Nothing() {
 }
 
 const SHOW_EXAMPLE_CODE = `
+import { Show, useObservable } from "@legendapp/state/react";
+import { useRef } from "react";
+
 const ShowExample = () => {
   const renderCount = ++useRef(0).current;
   const state = useObservable({ show: false });

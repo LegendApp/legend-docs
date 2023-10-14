@@ -1,15 +1,17 @@
 import { observable, observe } from "@legendapp/state";
-import { observer } from "@legendapp/state/react";
-import { persistObservable } from "@legendapp/state/persist";
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
-import { Editor } from "shared/src/Components/Editor/Editor";
-import { Button } from "shared/src/Components/Button";
-import { Box } from "shared/src/Components/Box";
+import { persistObservable } from "@legendapp/state/persist";
+import { observer } from "@legendapp/state/react";
 import classNames from "classnames";
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 const INTRO_EXAMPLE_CODE = `
-import { observable, observe } from "@legendapp/state"
-import { persistObservable } from "@legendapp/state/persist"
+import { observable, observe } from "@legendapp/state";
+import { persistObservable } from "@legendapp/state/persist";
+import { observer } from "@legendapp/state/react";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 
 // Create an observable object
 const state$ = observable({ settings: { theme: 'dark' } })

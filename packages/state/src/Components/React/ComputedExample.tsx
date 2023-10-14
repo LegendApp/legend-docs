@@ -1,12 +1,17 @@
 import { observable } from "@legendapp/state";
 import { Computed, observer, useObservable } from "@legendapp/state/react";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { useInterval } from "usehooks-ts";
 
 const COMPUTED_CODE = `
+import { useInterval } from "usehooks-ts";
+import { useRef, useState } from "react";
+import { observable } from "@legendapp/state";
+import { Computed, observer, useObservable } from "@legendapp/state/react";
+
 const ComputedExample = () => {
   const renderCount = ++useRef(0).current;
 
@@ -53,7 +58,6 @@ export function ComputedExampleComponent() {
         observable,
         useInterval,
         observer,
-        React,
         useState,
         Button,
       }}

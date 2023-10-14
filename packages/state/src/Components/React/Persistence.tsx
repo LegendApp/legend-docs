@@ -1,14 +1,14 @@
-import { Box } from "shared/src/Components/Box";
-import { Button } from "shared/src/Components/Button";
-import { useRef } from "react";
-import { Editor } from "shared/src/Components/Editor/Editor";
 import { observable } from "@legendapp/state";
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { persistObservable } from "@legendapp/state/persist";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { reactive, Reactive } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { motion } from "framer-motion";
 import classNames from "classnames";
+import { motion } from "framer-motion";
+import { useRef } from "react";
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
+import { Editor } from "shared/src/Components/Editor/Editor";
 
 export const Footer = ({
   className,
@@ -40,11 +40,13 @@ export const Footer = ({
 
 
 const PERSISTENCE_CODE = `
-import { useRef } from "react";
-import { reactive, Reactive } from "@legendapp/state/react";
+import { observable } from "@legendapp/state";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
+import { persistObservable } from "@legendapp/state/persist";
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
+import { reactive, Reactive } from "@legendapp/state/react";
 import { motion } from "framer-motion";
-import { State } from "./State";
+import { useRef } from "react";
 
 enableReactComponents();
 

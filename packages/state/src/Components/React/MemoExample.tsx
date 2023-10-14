@@ -1,17 +1,22 @@
-import React, { useRef, useState } from "react";
-import { Editor } from "shared/src/Components/Editor/Editor";
-import {
-  Memo,
-  observer,
-  useObservable,
-} from "@legendapp/state/react";
-import { useInterval } from "usehooks-ts";
 import { observable } from "@legendapp/state";
-import classNames from "classnames";
-import { Button } from "shared/src/Components/Button";
+import
+    {
+        Memo,
+        observer,
+        useObservable,
+    } from "@legendapp/state/react";
+import { useRef, useState } from "react";
 import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
+import { Editor } from "shared/src/Components/Editor/Editor";
+import { useInterval } from "usehooks-ts";
 
 const MEMO_CODE = `
+import { useInterval } from "usehooks-ts";
+import { observable } from "@legendapp/state";
+import { useRef, useState } from "react";
+import { Memo, observer, useObservable } from "@legendapp/state/react";
+
 const MemoExample = () => {
   const renderCount = ++useRef(0).current;
 
@@ -58,7 +63,6 @@ export function MemoExampleComponent() {
         observable,
         useInterval,
         observer,
-        React,
         useState,
         Button,
       }}
