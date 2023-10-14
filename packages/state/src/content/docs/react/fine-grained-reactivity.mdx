@@ -237,13 +237,14 @@ Props:
 
 ```jsx
 import { observable } from "@legendapp/state"
-import { For } from "@legendapp/state/react"
+import { For, observer } from "@legendapp/state/react"
 
 const state$ = observable({ arr: [{ id: 1, text: 'hi' }]})
 
-function Row({ item }) {
-    return <div>{item.text}</div>
-}
+const Row = observer(function Row({ item$ }) {
+    const text = item$.text.get()
+    return <div>{text}</div>
+})
 function List() {
     // 1. Use the For component with an item prop
     return <For each={state$.arr} item={Row} />
@@ -251,9 +252,9 @@ function List() {
     // 2. Use the For component with a render function as the child
     return (
         <For each={list} optimized>
-            {item => (
+            {item$ => (
                 <div>
-                    {item.text}
+                    {item$.text.get()}
                 </div>
             )}
         </div>
