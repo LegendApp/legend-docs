@@ -8,6 +8,7 @@ import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/
 import { reactive, Reactive } from "@legendapp/state/react";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { motion } from "framer-motion";
+import classNames from "classnames";
 
 export const Footer = ({
   className,
@@ -123,7 +124,7 @@ export function PersistenceComponent() {
           )
           .replace(
             /className="input"/g,
-            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 text-black"'
+            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"'
           )
       }
     />

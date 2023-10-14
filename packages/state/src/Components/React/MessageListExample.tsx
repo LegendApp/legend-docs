@@ -1,18 +1,30 @@
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import
-    {
-        For,
-        Memo,
-        Reactive,
-        Show,
-        useComputed,
-        useObservable
-    } from "@legendapp/state/react";
+import {
+  For,
+  Memo,
+  Reactive,
+  Show,
+  useComputed,
+  useObservable,
+} from "@legendapp/state/react";
 import { useFetch } from "@legendapp/state/react-hooks/useFetch";
 import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
-const MESSAGE_LIST_CODE = `enableReactComponents()
+const MESSAGE_LIST_CODE = `
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
+import { For, Reactive, Show, useComputed, useObservable } from "@legendapp/state/react";
+import { useFetch } from "@legendapp/state/react-hooks/useFetch";
+
+// Enable Reactive.input
+enableReactComponents()
+
+let nextID = 0
+function generateID() {
+  return nextID ++
+}
 
 function App() {
   const renderCount = ++useRef(0).current
@@ -46,40 +58,30 @@ function App() {
   }
 
   return (
-    <div className="p-4 bg-slate-800">
-      <div className="text-gray-500 text-sm pb-4">
-        Renders: {renderCount}
-      </div>
+    <Box>
+      <div>Renders: {renderCount}</div>
       <Show if={userName} else={<div>Loading...</div>}>
         <div>Chatting with <Memo>{userName}</Memo></div>
       </Show>
-      <div className="h-64 p-2 my-3 overflow-auto border border-gray-300 rounded">
-        <For each={messages}>{(message) => <div><Memo>{message.text}</Memo></div>}</For>
+      <div className="messages">
+        <For each={messages}>
+          {(message) => <div>{message.text.get()}</div>}
+        </For>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Reactive.input
-          className="flex-1 px-2 border border-gray-300 rounded min-w-0"
+          className="input"
           placeholder="Enter message"
           $value={currentMessage}
           onKeyDown={e => e.key === 'Enter' && onClickAdd()}
         />
-        <button
-          className="bg-gray-300 rounded-lg px-4 py-2"
-          onClick={onClickAdd}
-        >
+        <Button onClick={onClickAdd}>
           Send
-        </button>
+        </Button>
       </div>
-    </div>
+    </Box>
   )
 }
-
-let nextID = 0
-function generateID() {
-  return nextID ++
-}
-
-render(<App />)
 `;
 
 export function MessageListComponent() {
@@ -96,8 +98,22 @@ export function MessageListComponent() {
         Show,
         Memo,
         For,
+        Box,
+        Button,
       }}
       noInline={true}
+      renderCode=";render(<App />)"
+      transformCode={(code) =>
+        code
+          .replace(
+            /className="input"/g,
+            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1"'
+          )
+          .replace(
+            /className="messages"/g,
+            'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"'
+          )
+      }
     />
   );
 }

@@ -8,8 +8,15 @@ import {
 } from "@legendapp/state/react";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { Editor } from "shared/src/Components/Editor/Editor";
+import { Box } from "shared/src/Components/Box";
+import { Button } from "shared/src/Components/Button";
 
-const FORM_VALIDATION_CODE = `enableReactComponents()
+const FORM_VALIDATION_CODE = `
+import { useRef } from "react";
+import { useObservable, useObserve, Reactive, Memo, Show } from "@legendapp/state/react";
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
+
+enableReactComponents()
 
 function App() {
   const renderCount = ++useRef(0).current
@@ -27,7 +34,6 @@ function App() {
         'Username must be > 3 characters' :
         ''
       )
-
       const pass = password.get()
       passwordError.set(
         pass.length < 10 ?
@@ -40,7 +46,7 @@ function App() {
   })
 
   const onClickSave = () => {
-    // changing didSave runs useObserve immediately, updating error messages
+    // setting triggers useObserve, updating error messages
     didSave.set(true)
 
     if (!usernameError.get() && !passwordError.get()) {
@@ -51,25 +57,23 @@ function App() {
   }
 
   return (
-    <div className="p-4 bg-slate-800">
-      <div className="text-gray-500 text-sm pb-4">
-        Renders: {renderCount}
-      </div>
+    <Box>
+      <div>Renders: {renderCount}</div>
       <div>Username:</div>
       <Reactive.input
-        className={classNameInput}
+        className="input"
         $value={username}
       />
-      <div className={classNameError}>
+      <div className="error">
         <Memo>{usernameError}</Memo>
       </div>
       <div>Password:</div>
       <Reactive.input
         type="password"
-        className={classNameInput}
+        className="input"
         $value={password}
       />
-      <div className={classNameError}>
+      <div className="error">
         <Memo>{passwordError}</Memo>
       </div>
       <Show if={successMessage}>
@@ -79,22 +83,12 @@ function App() {
           </div>
         )}
       </Show>
-      <div>
-        <button
-          className="bg-gray-300 rounded-lg px-4 py-2 mt-6"
-          onClick={onClickSave}
-        >
-          Save
-        </button>
-      </div>
-    </div>
+      <Button onClick={onClickSave}>
+        Save
+      </Button>
+    </Box>
   )
 }
-
-const classNameInput = "border rounded border-gray-300 px-2 py-1 mt-2"
-const classNameError = "text-sm text-red-500 mb-2 h-5 pt-1"
-
-render(<App />)
 `;
 
 export function FormValidationComponent() {
@@ -109,8 +103,23 @@ export function FormValidationComponent() {
         useObserve,
         Memo,
         Show,
+        Box,
+        Button
       }}
       noInline={true}
+      previewWidth={200}
+      renderCode=";render(<App />)"
+      transformCode={(code) =>
+        code
+          .replace(
+            /className="input"/g,
+            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"'
+          )
+          .replace(
+            /className="error"/g,
+            'className="text-sm text-red-500 mb-2 h-10 pt-1"'
+          )
+      }
     />
   );
 }

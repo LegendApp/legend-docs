@@ -5,12 +5,19 @@ import { useObservable, Reactive, Memo } from "@legendapp/state/react";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
 import { Editor } from "shared/src/Components/Editor/Editor";
+import { Box } from "shared/src/Components/Box";
 
-const AUTO_SAVING_FORM_CODE = `let timeout = 0
-function debounce(fn, time) {
+let timeout: any;
+function debounce(fn: () => void, time: number) {
   clearTimeout(timeout)
   timeout = setTimeout(fn, time)
 }
+const AUTO_SAVING_FORM_CODE = `
+import axios from "axios";
+import { useRef } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useObservable, Reactive, Memo } from "@legendapp/state/react";
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 
 enableReactComponents()
 
@@ -26,8 +33,7 @@ function App() {
 
 function Example() {
   const renderCount = ++useRef(0).current
-  const { data } = useObservableQuery(
-    {
+  const { data } = useObservableQuery({
       queryKey: ["data"],
       queryFn: () =>
         axios.get("https://reqres.in/api/users/1")
@@ -52,30 +58,26 @@ function Example() {
   const lastSaved = useObservable(0)
 
   return (
-    <div className="p-4 bg-slate-800">
-      <div className="text-gray-500 text-sm pb-4">
+    <Box>
+      <div>
         Renders: {renderCount}
       </div>
       <div>Name:</div>
       <Reactive.input
-        className={classNameInput}
+        className="input"
         $value={data.first_name}
       />
       <div>Email:</div>
       <Reactive.input
-        className={classNameInput}
+        className="input"
         $value={data.email}
       />
       <div>
         Last saved: <Memo>{lastSaved}</Memo>
       </div>
-    </div>
+    </Box>
   )
 }
-
-const classNameInput = "border rounded border-gray-300 px-2 py-1 mt-2 mb-4"
-
-render(<App />)
 `;
 
 export function AutoSavingFormComponent() {
@@ -92,8 +94,17 @@ export function AutoSavingFormComponent() {
         useObservable,
         Memo,
         axios,
+        Box,
+        debounce,
       }}
       noInline={true}
+      renderCode=";render(<App />)"
+      transformCode={(code) =>
+        code.replace(
+          /className="input"/g,
+          'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"'
+        )
+      }
     />
   );
 }

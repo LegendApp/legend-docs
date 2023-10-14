@@ -5,6 +5,7 @@ export const Box = ({
   theme,
   children,
   width,
+  height,
   center
 }: {
   className?: string;
@@ -12,16 +13,17 @@ export const Box = ({
   center?: boolean;
   children: any;
   width?: number;
+  height?: number;
 }) => {
   return (
     <div
       className={classNames(
-        "rounded-lg p-4",
+        "rounded-lg p-4 relative",
         center && 'flex flex-col items-center',
         theme === "light" ? "bg-gray-50 text-gray-900" : "bg-gray-800",
         className
       )}
-      style={{ width }}
+      style={{ width, height }}
     >
       {children}
     </div>
