@@ -10,28 +10,36 @@ These functions add features and augment the TypeScript interface to add the new
 
 These configuration functions only need to be called once, before their effects are used, and then they will work anywhere. It should generally be at the top of the file that's the entry point of your app or is imported everywhere, or it could be at the top of a global state file.
 
-### enableReactUse
+### enableReactTracking
 
-This adds a `use()` function to all observables, which gets the value and makes the component reactive to the observable changing. It simply runs `useSelector(obs)` under the hood.
+This makes React components auto-track observables, so all you need to do is `get()` an observable and the component will re-render when it changes.
 
 ```js
-import { enableReactUse } from "@legendapp/state/config/enableReactUse";
-enableReactUse();
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
+enableReactTracking({
+    auto: true,
+})
 ```
 
-Now you can use `use()`.
+Now you can just `get()` and components will be automatically reactive.
 
 ```jsx
-import { observable } from "@legendapp/state";
-const state$ = observable({ test: "hi" });
+import { observable } from "@legendapp/state"
+const state$ = observable({ test: "hi" })
 
 function Component() {
   // This makes this component responsive to test changing
-  const test = state$.test.use();
+  const test = state$.test.get()
 
-  return <div>{test}</div>;
+  return <div>{test}</div>
 }
 ```
+
+:::caution[Caution: Rules of hooks]
+Under the hood this replaces the `get()` with a `useSelector` hook so it is subject to the rules of hooks. That means it can cause problems if you use `get()` conditionally or within a dynamic loop.
+
+We recommend that you use this while getting started and for rapid prototyping. Then wrap your components with [observer](../react-api/#observer) for improved performance and safety.
+:::
 
 ### enableReactComponents, enableReactNativeComponents
 
@@ -39,18 +47,18 @@ Legend-State provides reactive versions of all platform components with reactive
 
 ```js
 // React
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-enableReactComponents();
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
+enableReactComponents()
 
 // React Native
-import { enableReactNativeComponents } from "@legendapp/state/config/enableReactNativeComponents";
-enableReactNativeComponents();
+import { enableReactNativeComponents } from "@legendapp/state/config/enableReactNativeComponents"
+enableReactNativeComponents()
 ```
 
 Now you can use `Reactive`.
 
 ```jsx
-import { Reactive } from "@legendapp/state/react";
+import { Reactive } from "@legendapp/state/react"
 
 function Component() {
   return (
@@ -60,7 +68,7 @@ function Component() {
       })}
       $className={() => (state.age.get() > 5 ? "kid" : "baby")}
     />
-  );
+  )
 }
 ```
 
@@ -71,28 +79,28 @@ See [Reactive components](../../react/fine-grained-reactivity/#reactive-componen
 This enables accessing and setting the raw value of an observable directly. It's a shorthand for `get()` and `set(...)`.
 
 ```js
-import { enableDirectAccess } from "@legendapp/state/config/enableDirectAccess";
-enableDirectAccess();
+import { enableDirectAccess } from "@legendapp/state/config/enableDirectAccess"
+enableDirectAccess()
 ```
 
 Now you can access/modify observables directly.
 
 ```js
-import { observable } from "@legendapp/state";
+import { observable } from "@legendapp/state"
 
-const state = observable({ test: "hi", num: 0 });
+const state = observable({ test: "hi", num: 0 })
 
 // $ is a shorthand for get()
-const testValue = state.test.$;
+const testValue = state.test.$
 
 // Assign to $ as a shorthand for set()
-state.test.$ = "hello";
+state.test.$ = "hello"
 
 // Assign objects too just like you can with set()
-state.$ = { test: "hello" };
+state.$ = { test: "hello" }
 
 // Incrementing works as you'd expect
-state.num.$++;
+state.num.$++
 ```
 
 ### enableDirectPeek
@@ -100,23 +108,50 @@ state.num.$++;
 This enables accessing and setting the raw value of an observable directly without tracking or notifying listeners. Getting with `._` is a shorthand for `peek()` and assigning to `._` modifies the underlying data without notifying. Modifying data without notifying is likely necessary in only very specific scenarios so use it with care.
 
 ```js
-import { enableDirectPeek } from "@legendapp/state/config/enableDirectPeek";
-enableDirectPeek();
+import { enableDirectPeek } from "@legendapp/state/config/enableDirectPeek"
+enableDirectPeek()
 ```
 
 Now you can access/modify observables directly without notifying.
 
 ```js
-import { observable } from "@legendapp/state";
+import { observable } from "@legendapp/state"
 
-const state = observable({ test: "hi", num: 0 });
+const state = observable({ test: "hi", num: 0 })
 
 // _ is a shorthand for peek()
-const testValue = state.test._;
+const testValue = state.test._
 
 // Assign to _ to modify the underlying object without notifying listeners
-state.test._ = "hello";
+state.test._ = "hello"
 
 // Assign objects too
-state._ = { test: "hello" };
+state._ = { test: "hello" }
+```
+
+### enableReactUse (deprecated)
+
+:::caution
+This was recommended before the introduction enableReactTracking. It is now deprecated and will be removed in version 3.0.
+:::
+
+This adds a `use()` function to all observables, which gets the value and makes the component reactive to the observable changing. It simply runs `useSelector(obs)` under the hood.
+
+```js
+import { enableReactUse } from "@legendapp/state/config/enableReactUse"
+enableReactUse()
+```
+
+Now you can use `use()`.
+
+```jsx
+import { observable } from "@legendapp/state"
+const state$ = observable({ test: "hi" })
+
+function Component() {
+  // This makes this component responsive to test changing
+  const test = state$.test.use()
+
+  return <div>{test}</div>
+}
 ```

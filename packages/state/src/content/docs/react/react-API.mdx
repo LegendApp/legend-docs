@@ -4,7 +4,36 @@ sidebar:
     order: 2
 ---
 
-## Hooks for reading state
+## Reading state
+
+### observer
+
+`observer` is the suggested way of consuming observables for the best performance and safety.
+
+It makes the whole component into an observing context - it automatically tracks observables for changes when `get()` is called, even from within hooks or helper functions.
+
+:::note[The best option]
+Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. So it is much more efficient than using multiple hooks, and much more efficient and safer than [enableReactTracking](../../usage/configuring#enablereacttracking).
+
+`enableReactTracking` and `observer` can be used together - observer will optimize away the auto tracking behavior in favor of its more efficient tracking.
+:::
+
+See [Tracking](../reactivity#observing-contexts) for more about when it tracks.
+
+```jsx
+import { observable } from "@legendapp/state"
+import { observer } from "@legendapp/state/react"
+
+const state = observable({ count: 0 })
+
+const Component = observer(function Component() {
+  // Accessing state automatically makes this component track changes to re-render
+  const count = state.count.get()
+
+  // Re-renders whenever count changes
+  return <div>{count}</div>
+});
+```
 
 ### useSelector
 
@@ -13,7 +42,7 @@ sidebar:
 Props:
 
 - `selector`: Observable or computation function that listens to observables accessed while running
-- `options`: `{ suspend: boolean }`: Enable suspend when the value is a Promise and you're using it within React.Suspense.
+- `options`: `{ suspense: boolean }`: Enable suspense when the value is a Promise and you're using it within React.Suspense.
 
 ```jsx
 import { observable } from "@legendapp/state"
@@ -34,14 +63,14 @@ const Component = ({ id }) => {
 
 #### Using with React Suspense
 
-Using `{ suspend: true }` as the second parameter makes the component work with Suspense. If the observable is a Promise, Suspense will render the fallback until it resolves to a value.
+Using `{ suspense: true }` as the second parameter makes the component work with Suspense. If the observable is a Promise, Suspense will render the fallback until it resolves to a value.
 
 ```jsx
 import { useObservable, useSelector } from "@legendapp/state/react";
 import { Suspense } from "react";
 
 function Test({ state$ }) {
-  const value = useSelector(state$, { suspend: true });
+  const value = useSelector(state$, { suspense: true });
   return <div>{value}</div>;
 }
 
@@ -108,32 +137,6 @@ function ProfilePage() {
 ### useObserveEffect
 
 `useObserveEffect` is the same as [useObserve](#useobserve) except that it doesn't run until the component is mounted.
-
-## observer HOC
-
-The `observer` HOC has two benefits:
-
-1. It makes the whole component into an observing context - it automatically tracks observables for changes when `get()` is called, even from within hooks. This can be useful if you don't want to use `use()` or if you want to reuse existing functions in your code that use `get()`, to make them track for changes.
-2. Performance: It groups multiple calls to `use()` and `useSelector` into a single hook, which can be a big performance optimization in heavy components with lots of state.
-
-Although you may have heard that HOCs are slow or bad, there is actually no real downside. The performance cost of `observer` and a single `use()` or `useSelector` is exactly the same (and tiny), and `observer` makes components faster with two or more `use()` or `useSelector` calls.
-
-See [Tracking](../reactivity#observing-contexts) for more about when it tracks.
-
-```jsx
-import { observable } from "@legendapp/state";
-import { observer } from "@legendapp/state/react";
-
-const state = observable({ count: 0 });
-
-const Component = observer(function Component() {
-  // Accessing state automatically makes this component track changes to re-render
-  const count = state.count.get();
-
-  // Re-renders whenever count changes
-  return <div>{count}</div>;
-});
-```
 
 ## Hooks for creating local state
 
@@ -215,14 +218,14 @@ import { observer, useObservable } from "@legendapp/state/react";
 const StateContext = createContext();
 
 function App() {
-  const state = useObservable({
+  const state$ = useObservable({
     profile: {
       name: "",
     },
   });
 
   return (
-    <StateContext.Provider value={state}>
+    <StateContext.Provider value={state$}>
       <div>
         <Sidebar />
         <Main />
@@ -238,7 +241,7 @@ const Sidebar = function Sidebar() {
   // This component never re-renders, but name re-renders itself
   return (
     <div>
-      Name: <Memo>{state.profile.name}</Memo>
+      Name: <Memo>{state$.profile.name}</Memo>
     </div>
   );
 };

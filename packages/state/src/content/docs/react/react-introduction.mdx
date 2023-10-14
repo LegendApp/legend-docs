@@ -13,29 +13,56 @@ This is a high level overview for how to work with Legend-State in React. See [R
 
 The first step to working with observables in React is to make your components re-render when observable values change. Legend-State has three ways for your components to update themselves based on observables. This applies to all observables, whether in global state or local within a component.
 
-### 1. use()
+### enableReactTracking
 
-We recommend adding the `use()` function to your observables - it is the easiest way to work with observables in React as you will see in the examples. You only need to do this once in your app's entry point.
+To get started we recommend [enableReactTracking](../../usage/configuring#enablereacttracking) - it's the easiest way to work with observables in React. You only need to enable this once in your app's entry point.
 
 ```jsx
-import { enableReactUse } from "@legendapp/state/config/enableReactUse";
 import { observable } from "@legendapp/state";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 
-enableReactUse(); // This adds the use() function to observables
+enableReactTracking({
+    auto: true,
+});
 
 const name$ = observable("Annyong");
 
 function Component() {
   // The component re-renders when name changes
-  const name = name$.use();
+  const name = name$.get();
 
   return <div>{name}</div>;
 }
 ```
 
-### 2. useSelector()
+We recommend using this to get started and for rapid prototyping, but it's always better to use `observer`. Under the hood, when called from a React component, it replaces `get()` with a `useSelector` hook. So keep in mind that it acts like a hook, so it is subject to the rules of hooks. So it can cause errors when used conditionally or within loops.
 
-`useSelector` returns the value of an observable or a function and updates the component when its value changes. You can use it for more complex cases to compute a value based on observables, or if you prefer it to `.use()` or . See [useSelector](../react-api#useselector) for more in-depth details.
+### observer
+
+[observer](../react-api/#observer) turns the component into an [observing context](../reactivity#observing-contexts) so that `.get()` will trigger re-render when observable change. This is the best and most efficient way to use observables in React. Just wrap your components in `observer` to make them efficiently track all accessed observables.
+
+:::note[Not an HOC]
+Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost, so it is extremely efficient.
+:::
+
+```jsx
+import { observable } from "@legendapp/state";
+import { observer } from "@legendapp/state/react";
+
+const state$ = observable({ count: 0 });
+
+const Component = observer(function Component() {
+  // Accessing state$ automatically makes this component track changes to re-render
+  const count = state$.count.get();
+
+  // Re-renders whenever count changes
+  return <div>{count}</div>;
+});
+```
+
+### useSelector
+
+`useSelector` returns the value of an observable or a function and updates the component when its value changes. You can use it for more complex cases to compute a value based on observables, and only re-render when its return value changes. See [useSelector](../react-api#useselector) for more in-depth details.
 
 ```jsx
 import { observable } from "@legendapp/state";
@@ -56,27 +83,6 @@ function Component() {
     </div>
   );
 }
-```
-
-### 3. observer HOC
-
-The [observer HOC](../react-api/#observer-hoc) turns the component into an [observing context](../reactivity#observing-contexts) so that any `.get()` calls will be observed to trigger re-render when they change. That can be useful for reusing existing functions that use `.get()`. It also optimizes by grouping all `use()` calls together instead of creating multiple hooks. In practice that's a micro-optimization that's only really useful in huge components.
-
-This is a more advanced feature so we suggest that you start with `use()` and `useSelector`, and return to `observer` as you're getting more comfortable with Legend-State.
-
-```jsx
-import { observable } from "@legendapp/state";
-import { observer } from "@legendapp/state/react";
-
-const state = observable({ count: 0 });
-
-const Component = observer(function Component() {
-  // Accessing state automatically makes this component track changes to re-render
-  const count = state.count.get();
-
-  // Re-renders whenever count changes
-  return <div>{count}</div>;
-});
 ```
 
 ## Local state
