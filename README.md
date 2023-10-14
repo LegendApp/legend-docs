@@ -1,51 +1,17 @@
-# Starlight Starter Kit: Basics
+# Legend open-source docs
 
-```
-npm create astro@latest -- --template starlight
-```
+This is the documentation for all of [Legend's](https://legendapp.com) open-source projects. Currently the Legend-State docs are here and we're in the process of migrating over the Legend-Motion docs.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/starlight/tree/main/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/starlight/tree/main/examples/basics)
+The documentation uses [Starlight by Astro](https://starlight.astro.build/), with live editing using [React-Live](https://github.com/FormidableLabs/react-live), and example components built in React.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+# Running
 
-## 🚀 Project Structure
+You can run everything locally with Astro to edit the examples yourself. It uses [bun](https://bun.sh/), though it would probably work with a different package manager.
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+First cd into the state folder, `bun i` to install the packages and `bun dev` to get started.
 
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   ├── docs/
-│   │   └── config.ts
-│   └── env.d.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
+# Contributing
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+We welcome any contributions you'd like to make! If there are any typos or mistakes, additional explanation needed, or you'd like to add more examples, we would love your help.
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
-
-Static assets, like favicons, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+If you want to make a larger change like adding a page or restructuring, it would be good to have a discussion about that first, so please post an issue or discussion.
