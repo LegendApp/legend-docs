@@ -206,21 +206,14 @@ import { observable, proxy } from "@legendapp/state"
 const state$ = observable({
     selector: 'text',
     items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
-    itemText: proxy((key): Observable<string> => {
+    itemText: proxy((key) => {
         return obs.items[key][obs.selector.get()];
     }),
 });
 
-const onClosed = event()
-
-// Simply pass a callback to the `on` function
-onClosed.on(() => { ... })
-
-// Or use it with 'onChange' like other observables
-onClosed.onChange(() => { ... })
-
-// Dispatch the event to call listeners
-onClosed.fire()
+// Now these reference the same thing:
+state$.items.test1.text.get()
+state$.itemText.test1.get()
 ```
 
 ## Notes
@@ -287,7 +280,7 @@ state.user.profile.name.set("Annyong");
 
 Observable arrays have all of the normal array functions as you'd expect, but some are modified for observables.
 
-All looping functions set up [shallow tracking](./reactivity#shallow-modifier) automatically, as well as provide the observable in the callback. This includes:
+All looping functions set up [shallow tracking](../reactivity#shallow-modifier) automatically, as well as provide the observable in the callback. This includes:
 
 - every
 - filter
