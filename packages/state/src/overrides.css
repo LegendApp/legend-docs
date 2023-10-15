@@ -1,6 +1,11 @@
 :root {
     --sl-color-accent-high: #09d;
-    --sl-content-width: 52rem;
+    @media (min-width: 80rem) {
+            --sl-content-width: 48rem;
+        }
+    @media (min-width: 85rem) {
+        --sl-content-width: 52rem;
+    }
 }
 
 .content a:hover {
