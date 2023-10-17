@@ -146,9 +146,9 @@ The given observables will be populated with their persisted state immediately a
 // Global configuration
 configureObservablePersistence({
     // Use Local Storage on web
-    persistLocal: ObservablePersistLocalStorage
+    pluginLocal: ObservablePersistLocalStorage
     // Use react-native-mmkv in React Native
-    persistLocal: ObservablePersistMMKV
+    pluginLocal: ObservablePersistMMKV
 })
 
 const state$ = observable({ store: { bigObject: { ... } } })

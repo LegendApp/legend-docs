@@ -120,8 +120,8 @@ import { persistObservable } from "@legendapp/state/persist"
 import { ObservablePersistLocalIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
 
 configureObservablePersistence({
-  persistLocal: ObservablePersistIndexedDB,
-  persistLocalOptions: {
+  pluginLocal: ObservablePersistIndexedDB,
+  local: {
     indexedDB: {
       databaseName: "Legend",
       version: 1,
@@ -262,11 +262,17 @@ persistObservable(state$, {
 
 ### TanStack Query Plugin
 
+`persistPluginQuery` includes all of the normal Query parameters, but instead of updates triggering a re-render, it updates an observable. The queryKey can be a function that returns a key array dependent on some observabes. If those observables change it will update the queryKey and re-run with the new key. That makes it super easy to do pagination, for example.
+
 Try it in a [sandbox](https://codesandbox.io/s/legend-state-persist-query-dh4j59?file=/src/App.tsx).
 
 ```js
+import { observable } from "@legendapp/state"
 import { persistObservable } from "@legendapp/state/persist"
 import { persistPluginQuery } from "@legendapp/state/persist-plugins/query"
+import { QueryClient } from "@tanstack/react-query"
+
+const queryClient = new QueryClient();
 
 const page$ = observable(1)
 
@@ -276,7 +282,8 @@ const obs$ = persistObservable(
     pluginRemote: persistPluginQuery({
       queryClient,
       query: {
-        queryKey: ["key", page$.get()],
+        // queryKey is a computed function that updates the query when page$ changes
+        queryKey: () => ["key", page$.get()],
         queryFn: () => {
           return fetch("https://url.to.get?page=" + page$.get()).then((res) =>
             res.json()

@@ -10,8 +10,8 @@ Version 2.0 removes old deprecated features to reduce bundle size and encourage 
 
 So there are two migration strategies:
 
-1. Runtime: Upgrade to version 1.11 and check the console for warnings whenever using deprecated features. This can give you time to do the migration slowly without breaking anything.
-2. Build time: Upgrade to version 2.0 and use TypeScript warnings to find errors
+1. **Runtime**: Upgrade to version 1.11 and check the console for warnings whenever using deprecated features. This can give you time to do the migration slowly without breaking anything.
+2. **Build time**: Upgrade to version 2.0 and use TypeScript warnings to find errors
 
 These are all things that were changed over time between 1.0 and 2.0 so depending on when you started using Legend-State you may already be doing it the new way.
 
@@ -25,9 +25,9 @@ So if you had logic to check whether a Promise errored by checking the `error` p
 
 The direct rendering enabled by `enableLegendStateReact` and `enableReactDirectRender` was fragile, hard to find in files, and the React team advised against it. So instead we are using the `Memo` component. See [Render an observable directly](../../react/fine-grained-reactivity/#render-an-observableselector-directly) for more details.
 
-To migrate you can remove usage of `enableLegendStateReact()` or `enableReactDirectRender` as well as any usage of direct rendering, and replace it with `Memo`. When you remove those it will stop overriding the types so rendering observables directly will result in TypeScript errors.
+To migrate you can remove usage of `enableLegendStateReact()` or `enableReactDirectRender()` as well as any usage of direct rendering, and replace it with `Memo`. When you remove those imports it will stop overriding the types so rendering observables directly will result in TypeScript errors.
 
-If you were using `enableLegendStateReact` to render direct observables heavily, [enableReactDirectRender](../../usage/configuring#enablereactdirectrender-deprecated) is still usable, though it will cause TypeScript errors to help you migrate away.
+If you were using `enableLegendStateReact` to render direct observables heavily, [enableReactDirectRender](../../usage/configuring#enablereactdirectrender-deprecated) is still usable to ease migration, though it will throw TypeScript errors to help you migrate away. It will be fully removed in version 3.0.
 
 ```jsx
 // Remove these:
