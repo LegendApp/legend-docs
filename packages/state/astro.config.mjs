@@ -15,6 +15,7 @@ export default defineConfig({
         "./src/editor.css",
         "./src/overrides.css",
       ],
+      favicon: '/favicon.ico',
       social: {
         github: "https://github.com/LegendApp/legend-state",
       },
