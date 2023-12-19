@@ -1,7 +1,7 @@
 ---
 title: Observable
 sidebar:
-    order: 1
+  order: 1
 ---
 
 You can put anything in an observable: primitives, deeply nested objects, arrays, functions, etc... Observables work just like normal objects so you can interact with them without any extra complication. Just call `get()` to get a value and `set(...)` to modify it.
@@ -70,7 +70,7 @@ const { data } = state$.get();
 processData(data);
 ```
 
-Calling `get()` within a tracking context tracks the observable automatically. You can change that behavior with a parameter `true` to track only when keys are added/removed. See [observing contexts](./reactivity/#observing-contexts) for more details.
+Calling `get()` within a tracking context tracks the observable automatically. You can change that behavior with a parameter `true` to track only when keys are added/removed. See [observing contexts](../reactivity/#observing-contexts) for more details.
 
 ```js
 state$.get(true); // Create a shallow listener
@@ -99,7 +99,7 @@ state$.otherKey.otherProp.set("hi");
 
 ### assign()
 
-Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](./helper-functions/#mergeintoobservable).
+Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](../helper-functions/#mergeintoobservable).
 
 ```js
 const state$ = observable({ text: "hi" });
@@ -204,11 +204,11 @@ onClosed.fire()
 import { observable, proxy } from "@legendapp/state"
 
 const state$ = observable({
-    selector: 'text',
-    items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
+  selector: 'text',
+  items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
     itemText: proxy((key) => {
-        return obs.items[key][obs.selector.get()];
-    }),
+    return obs.items[key][obs.selector.get()];
+  }),
 });
 
 // Now these reference the same thing:
