@@ -70,7 +70,7 @@ const { data } = state$.get();
 processData(data);
 ```
 
-Calling `get()` within a tracking context tracks the observable automatically. You can change that behavior with a parameter `true` to track only when keys are added/removed. See [observing contexts](./reactivity#observing-contexts) for more details.
+Calling `get()` within a tracking context tracks the observable automatically. You can change that behavior with a parameter `true` to track only when keys are added/removed. See [observing contexts](./reactivity/#observing-contexts) for more details.
 
 ```js
 state$.get(true); // Create a shallow listener
@@ -99,7 +99,7 @@ state$.otherKey.otherProp.set("hi");
 
 ### assign()
 
-Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](./helper-functions#mergeintoobservable).
+Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](./helper-functions/#mergeintoobservable).
 
 ```js
 const state$ = observable({ text: "hi" });
