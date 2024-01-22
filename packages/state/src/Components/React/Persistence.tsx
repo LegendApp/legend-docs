@@ -50,7 +50,7 @@ import { useRef } from "react"
 
 enableReactComponents()
 
-const State = observable({
+const state$ = observable({
   settings: { showSidebar: false, theme: 'light' },
   user: {
     profile: { name: '', avatar: '' },
@@ -59,7 +59,7 @@ const State = observable({
 })
 
 // Persist state
-persistObservable(State, {
+persistObservable(state$, {
   local: 'persistenceExample',
   pluginLocal: ObservablePersistLocalStorage,
 })

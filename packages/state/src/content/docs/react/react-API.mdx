@@ -26,11 +26,11 @@ See [Tracking](../reactivity#observing-contexts) for more about when it tracks.
 import { observable } from "@legendapp/state"
 import { observer } from "@legendapp/state/react"
 
-const state = observable({ count: 0 })
+const state$ = observable({ count: 0 })
 
 const Component = observer(function Component() {
   // Accessing state automatically makes this component track changes to re-render
-  const count = state.count.get()
+  const count = state$.count.get()
 
   // Re-renders whenever count changes
   return <div>{count}</div>
@@ -50,14 +50,14 @@ Props:
 import { observable } from "@legendapp/state"
 import { useSelector } from "@legendapp/state/react"
 
-const state = observable({ selected: 1, theme })
+const state$ = observable({ selected: 1, theme })
 
 const Component = ({ id }) => {
     // Only re-renders if the return value changes
-    const isSelected = useSelector(() => id === state.selected.get())
+    const isSelected = useSelector(() => id === state$.selected.get())
 
     // Get the raw value of an observable and listen to it
-    const theme = useSelector(state.theme)
+    const theme = useSelector(state$.theme)
 
     ...
 }
@@ -110,27 +110,27 @@ import { useObserve, useObservable, Reactive } from "@legendapp/state/react";
 const eventUpdateTitle = event();
 
 function ProfilePage() {
-  const profile = useObservable({ name: "" });
+  const profile$ = useObservable({ name: "" });
 
   // This runs whenever profile changes
   useObserve(() => {
-    document.title = `${profile.name.get()} - Profile`;
+    document.title = `${profile$.name.get()} - Profile`;
   });
 
   // Observe a single observable with a callback when it changes
-  useObserve(profile.name, ({ value }) => {
+  useObserve(profile$.name, ({ value }) => {
     document.title = `${value} - Profile`;
   });
 
   // Observe an event with a callback when it changes
   useObserve(eventUpdateTitle, () => {
-    document.title = `${profile.name.get()} - Profile`;
+    document.title = `${profile$.name.get()} - Profile`;
   });
 
   return (
     <div>
       <span>Name:</span>
-      <Reactive.input $value={profile.name} />
+      <Reactive.input $value={profile$.name} />
     </div>
   );
 }
@@ -200,10 +200,10 @@ import { useObservableReducer } from "@legendapp/state/react"
 
 const Component = () => {
     // Only re-renders if the return value changes
-    const isSelected = useObservableReducer()
+    const isSelected$ = useObservableReducer()
 
     // Get the value of the reducer
-    const theme = isSelected.get()
+    const theme = isSelected$.get()
 
     ...
 }
