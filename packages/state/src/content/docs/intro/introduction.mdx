@@ -16,6 +16,8 @@ There is no boilerplate and there are no contexts, actions, reducers, dispatcher
 
 React components can track access to `get()` on any observable and automatically re-render whenever it changes.
 
+In this documentation, we use `state$` as a convention to indicate an observable. However, you can use any variable name of your preference.
+
 ```jsx
 // Create an observable object
 const state$ = observable({ settings: { theme: "dark" } });
@@ -26,7 +28,7 @@ state$.settings.theme.set("light");
 
 // observe re-runs when accessed observables change
 observe(() => {
-  console.log(state.settings.theme.get());
+  console.log(state$.settings.theme.get());
 });
 
 // Enable React components to automatically track observables
