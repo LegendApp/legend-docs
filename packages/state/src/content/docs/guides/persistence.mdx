@@ -53,11 +53,11 @@ configureObservablePersistence({
 
 ```js
 import { configureObservablePersistence } from '@legendapp/state/persist'
-import { ObservablePersistLocalIndexedDB } from '@legendapp/state/persist-plugins/indexeddb'
+import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb'
 
 // Global configuration
 configureObservablePersistence({
-    pluginLocal: ObservablePersistLocalIndexedDB
+    pluginLocal: ObservablePersistIndexedDB
 })
 ```
 
@@ -117,7 +117,7 @@ IndexedDB requires changing the version whenever the tables change, so you can s
 
 ```js
 import { persistObservable } from "@legendapp/state/persist"
-import { ObservablePersistLocalIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
+import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistIndexedDB,
