@@ -31,7 +31,7 @@ interface Props<T extends string> {
 type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 const tabs: PackageManager[] = ["npm", "yarn", "pnpm", "bun"];
 
-export const state = observable({
+export const state$ = observable({
   packageManager: "npm" as PackageManager,
   exampleCount: 0,
   exampleTheme: "light",
@@ -41,7 +41,7 @@ if (typeof window !== "undefined") {
   configureObservablePersistence({
     pluginLocal: ObservablePersistLocalStorage,
   });
-  persistObservable(state, {
+  persistObservable(state$, {
     local: "state",
   });
 }
@@ -106,14 +106,14 @@ export const Install = observer(function ({
   className?: string;
   uid?: string;
 }) {
-  const manager = state.packageManager.get();
+  const manager = state$.packageManager.get();
 
   return (
     <div className={classNames("mt-6", className)}>
       <Tabs
         name={name + (uid || "")}
         tabs={tabs}
-        activeTab$={state.packageManager}
+        activeTab$={state$.packageManager}
       />
       <pre
         className="!mt-4 astro-code css-variables"

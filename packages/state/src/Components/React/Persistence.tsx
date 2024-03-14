@@ -50,7 +50,7 @@ import { useRef } from "react"
 
 enableReactComponents()
 
-const State = observable({
+const state$ = observable({
   settings: { showSidebar: false, theme: 'light' },
   user: {
     profile: { name: '', avatar: '' },
@@ -59,7 +59,7 @@ const State = observable({
 })
 
 // Persist state
-persistObservable(State, {
+persistObservable(state$, {
   local: 'persistenceExample',
   pluginLocal: ObservablePersistLocalStorage,
 })
@@ -71,7 +71,7 @@ function App() {
   const renderCount = ++useRef(0).current
 
   const sidebarHeight = () => (
-    State.settings.showSidebar.get() ? 96 : 0
+    state$.settings.showSidebar.get() ? 96 : 0
   )
 
   return (
@@ -80,15 +80,15 @@ function App() {
       <div>Username:</div>
       <Reactive.input
         className="input"
-        $value={State.user.profile.name}
+        $value={state$.user.profile.name}
       />
-      <Button onClick={State.settings.showSidebar.toggle}>
+      <Button onClick={state$.settings.showSidebar.toggle}>
         Toggle footer
       </Button>
       <MotionDiv
         className="footer"
         $animate={() => ({
-           height: State.settings.showSidebar.get() ?
+           height: state$.settings.showSidebar.get() ?
              96 : 0
         })}
       >

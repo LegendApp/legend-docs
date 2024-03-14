@@ -23,13 +23,13 @@ Most functions in Legend-State take what we call a "Selector", which either a si
 
 These operation do not track:
 
-1. Accessing through an observable: `state.settings`
+1. Accessing through an observable: `state$.settings`
 2. Call `peek()` on an observable: `settings.peek()`
 
 ### Observing examples
 
 ```js
-const state = observable({
+const state$ = observable({
   settings: {
     theme: "dark",
   },
@@ -40,27 +40,27 @@ const state = observable({
 
 observe(() => {
   // Example 1:
-  const theme = state.settings.theme.get();
-  // ✅ Tracking [state.settings.theme] because of get()
+  const theme = state$.settings.theme.get();
+  // ✅ Tracking [state$.settings.theme] because of get()
 
   // Example 2:
-  const settings = state.settings;
+  const settings = state$.settings;
   // ❌ Not tracking because it's an object
 
   const theme = settings.theme.get();
-  // ✅ Tracking [state.settings.theme] because of get()
+  // ✅ Tracking [state$.settings.theme] because of get()
 
   // Example 3:
-  const theme$ = state.settings.theme;
+  const theme$ = state$.settings.theme;
   // ❌ Not tracking with no get()
 
   // Example 4:
-  state.chats.messages.map((m) => <Message key={m.get().id} message={m} />);
-  // ✅ Tracking [state.chats.messages (shallow)] because of map()
+  state$.chats.messages.map((m) => <Message key={m.get().id} message={m} />);
+  // ✅ Tracking [state$.chats.messages (shallow)] because of map()
 
   // Example 5:
-  Object.keys(state.settings);
-  // ✅ Tracking [state.settings (shallow)]
+  Object.keys(state$.settings);
+  // ✅ Tracking [state$.settings (shallow)]
 });
 ```
 
@@ -91,11 +91,11 @@ const theme = state.settings.theme.get();
 `get()` observes recursively by default, so any child changing will cause an update. You can modify it to be a shallow listener by just adding a `true` parameter. This can be useful when a component only needs to re-render if an object's keys or an array's items change.
 
 ```jsx
-const state = observable({ messages: [] });
+const state$ = observable({ messages: [] });
 
 observe(() => {
   // Only need this to update when messages added/removed
-  const messages = state.messages.get(true);
+  const messages = state$.messages.get(true);
 
   console.log("Latest message", messages[0]);
 });
@@ -118,17 +118,17 @@ The callback parameter has some useful properties:
 
 ```js
 import { observe, observable } from "@legendapp/state";
-const state = observable({ isOnline: false, toasts: [] });
+const state$ = observable({ isOnline: false, toasts: [] });
 
 const dispose = observe((e) => {
   // This observe will automatically track state.isOnline for changes
-  if (!state.isOnline.get()) {
+  if (!state$.isOnline.get()) {
     // Show an "Offline" toast when offline
     const toast = { id: "offline", text: "Offline", color: "red" };
-    state.toasts.push(toast);
+    state$.toasts.push(toast);
 
     // Remove the toast when the observe is re-run, which will be when isOnline becomes true
-    e.onCleanup = () => state.toasts.splice(state.toasts.indexOf(toast), 1);
+    e.onCleanup = () => state$.toasts.splice(state$.toasts.indexOf(toast), 1);
   }
 });
 
@@ -140,12 +140,12 @@ Or use the second parameter to run a reaction when a selector changes. It has an
 
 ```js
 // Observe the return value of a selector and observe all accessed observables
-observe(state.isOnline, (e) => {
+observe(state$.isOnline, (e) => {
   console.log("Online status", e.value);
 });
 // Observe the return value of a selector and observe all accessed observables
 observe(
-  () => state.isOnline.get() && state.user.get(),
+  () => state$.isOnline.get() && state$.user.get(),
   (e) => {
     console.log("Signed in status", e.value);
   }

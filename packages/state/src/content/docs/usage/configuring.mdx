@@ -88,19 +88,19 @@ Now you can access/modify observables directly.
 ```js
 import { observable } from "@legendapp/state"
 
-const state = observable({ test: "hi", num: 0 })
+const state$ = observable({ test: "hi", num: 0 })
 
 // $ is a shorthand for get()
-const testValue = state.test.$
+const testValue = state$.test.$
 
 // Assign to $ as a shorthand for set()
-state.test.$ = "hello"
+state$.test.$ = "hello"
 
 // Assign objects too just like you can with set()
-state.$ = { test: "hello" }
+state$.$ = { test: "hello" }
 
 // Incrementing works as you'd expect
-state.num.$++
+state$.num.$++
 ```
 
 ### enableDirectPeek
@@ -117,16 +117,16 @@ Now you can access/modify observables directly without notifying.
 ```js
 import { observable } from "@legendapp/state"
 
-const state = observable({ test: "hi", num: 0 })
+const state$ = observable({ test: "hi", num: 0 })
 
 // _ is a shorthand for peek()
-const testValue = state.test._
+const testValue = state$.test._
 
 // Assign to _ to modify the underlying object without notifying listeners
-state.test._ = "hello"
+state$.test._ = "hello"
 
 // Assign objects too
-state._ = { test: "hello" }
+state$._ = { test: "hello" }
 ```
 
 ### enableReactUse (deprecated)

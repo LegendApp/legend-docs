@@ -254,9 +254,9 @@ Because observables track nodes [by path](../../intro/fast/#proxy-to-path) and n
 You could to do this to set up a listener to a field whenever it becomes available.
 
 ```jsx
-const state = observable({ user: undefined });
+const state$ = observable({ user: undefined });
 
-when(state.user.uid, (uid) => {
+when(state$.user.uid, (uid) => {
   // Handle login
 });
 ```
@@ -264,14 +264,14 @@ when(state.user.uid, (uid) => {
 Or you could set a value inside an undefined object, and it will fill out the object tree to make it work.
 
 ```jsx
-const state = observable({ user: undefined });
+const state$ = observable({ user: undefined });
 
 observe(() => {
   // This will be undefined until the full user profile is set
-  console.log(`Name: ${state.user.profile.name.get()}`);
+  console.log(`Name: ${state$.user.profile.name.get()}`);
 });
 
-state.user.profile.name.set("Annyong");
+state$.user.profile.name.set("Annyong");
 
 // state == { user: { profile: { name: 'Annyong' } } }
 ```
