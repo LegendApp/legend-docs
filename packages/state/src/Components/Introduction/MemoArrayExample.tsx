@@ -11,10 +11,10 @@ import { Memo, useObservable } from "@legendapp/state/react"
 
 function MemoArrayExample() {
   const renderCount = ++useRef(0).current
-  const messages = useObservable([])
+  const messages$ = useObservable([])
 
   useInterval(() => {
-    messages.splice(0, 0, \`Message \${messages.length + 1}\`)
+    messages$.splice(0, 0, \`Message \${messages$.length + 1}\`)
   }, 600)
 
   return (
@@ -23,7 +23,7 @@ function MemoArrayExample() {
       <div className="messages">
         <Memo>
           {() => (
-            messages.map((m, i) => (
+            messages$.map((m, i) => (
               <div key={i}>{m}</div>
             ))
           )}

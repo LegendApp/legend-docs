@@ -10,9 +10,9 @@ import { useRef } from "react"
 
 function SwitchExample() {
   const renderCount = ++useRef(0).current
-  const index = useObservable(0)
+  const index$ = useObservable(0)
 
-  const onClick = () => index.set((v) => (v > 2 ? 0 : v + 1))
+  const onClick = () => index$.set((v) => (v > 2 ? 0 : v + 1))
 
   return (
     <Box>
@@ -20,7 +20,7 @@ function SwitchExample() {
       <Button onClick={onClick}>
         Next tab
       </Button>
-      <Switch value={index}>
+      <Switch value={index$}>
         {{
           0: () => <div>Tab 1</div>,
           1: () => <div>Tab 2</div>,

@@ -37,23 +37,23 @@ Batching is important in a few key situations:
 Use `batch` to delay computations/renders until all dependent changes are complete or you might get weird intermediary states.
 
 ```js
-const name = observable({ first: "", last: "" });
+const name$ = observable({ first: "", last: "" });
 
-const fullName = computed(() => `${name.first} ${name.last}`);
+const fullName = computed(() => `${name$.first} ${name$.last}`);
 
 observe(() => console.log("fullName = ", fullName.get()));
 
 // Not batched:
-name.first.set("First");
-name.last.set("Last");
+name$.first.set("First");
+name$.last.set("Last");
 // ❌ fullName notifies its listeners with incomplete state
 // fullName = "First "
 // fullName = "First Last"
 
 // Batched:
 batch(() => {
-  name.first.set("First");
-  name.last.set("Last");
+  name$.first.set("First");
+  name$.last.set("Last");
 });
 // ✅ fullName notifies only with final state
 // fullName = "First Last"
@@ -110,7 +110,7 @@ Legend-State is especially optimized for arrays since it was built for [Legend](
 To optimize rendering of arrays of objects, Legend-State requires a unique `id` or `key` field on each object. If your data needs to have a different id field, you can use a `${arrayName}_keyExtractor` function next to the array object:
 
 ```js
-const data = observable({
+const data$ = observable({
   arr: [],
   arr_keyExtractor: (item) => item.idObject._id,
 });

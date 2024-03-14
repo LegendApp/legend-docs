@@ -122,11 +122,11 @@ Or if you prefer to have multiple individual atoms in multiple files, you can do
 
 ```js
 // settings.ts
-export const theme = observable('light')
-export const fontSize = observable(14)
+export const theme$ = observable('light')
+export const fontSize$ = observable(14)
 
 // UIState.ts
-export const uiState = observable({
+export const uiState$ = observable({
     windowSize: undefined as { width: number, height: number },
     activeTab: 'home' as 'home' | 'user' | 'profile',
 })

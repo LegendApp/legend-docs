@@ -21,21 +21,21 @@ enableReactComponents()
 function App() {
   const renderCount = ++useRef(0).current
 
-  const username = useObservable('')
-  const password = useObservable('')
-  const usernameError = useObservable('')
-  const passwordError = useObservable('')
-  const didSave = useObservable(false)
-  const successMessage = useObservable('')
+  const username$ = useObservable('')
+  const password$ = useObservable('')
+  const usernameError$ = useObservable('')
+  const passwordError$ = useObservable('')
+  const didSave$ = useObservable(false)
+  const successMessage$ = useObservable('')
 
   useObserve(() => {
-    if (didSave.get()) {
-      usernameError.set(username.get().length < 3 ?
+    if (didSave$.get()) {
+      usernameError$.set(username$.get().length < 3 ?
         'Username must be > 3 characters' :
         ''
       )
-      const pass = password.get()
-      passwordError.set(
+      const pass = password$.get()
+      passwordError$.set(
         pass.length < 10 ?
           'Password must be > 10 characters' :
           !pass.match(/\d/) ?
@@ -47,12 +47,12 @@ function App() {
 
   const onClickSave = () => {
     // setting triggers useObserve, updating error messages
-    didSave.set(true)
+    didSave$.set(true)
 
-    if (!usernameError.get() && !passwordError.get()) {
+    if (!usernameError$.get() && !passwordError$.get()) {
       console.log('Submit form')
-      passwordError.delete()
-      successMessage.set('Saved!')
+      passwordError$.delete()
+      successMessage$.set('Saved!')
     }
   }
 
@@ -62,24 +62,24 @@ function App() {
       <div>Username:</div>
       <Reactive.input
         className="input"
-        $value={username}
+        $value={username$}
       />
       <div className="error">
-        <Memo>{usernameError}</Memo>
+        <Memo>{usernameError$}</Memo>
       </div>
       <div>Password:</div>
       <Reactive.input
         type="password"
         className="input"
-        $value={password}
+        $value={password$}
       />
       <div className="error">
-        <Memo>{passwordError}</Memo>
+        <Memo>{passwordError$}</Memo>
       </div>
-      <Show if={successMessage}>
+      <Show if={successMessage$}>
         {() => (
           <div>
-            {successMessage.get()}
+            {successMessage$.get()}
           </div>
         )}
       </Show>

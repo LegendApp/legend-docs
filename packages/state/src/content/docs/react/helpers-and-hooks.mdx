@@ -26,10 +26,10 @@ You can use it just like you would use fetch:
 ```js
 import { observableFetch } from "@legendapp/state/helpers/fetch";
 
-const obsData = observableFetch(url);
+const obsData$ = observableFetch(url);
 
 observe(() => {
-  const { loading, data, error, errorStr } = obsData.get();
+  const { loading, data, error, errorStr } = obsData$.get();
   if (loading) console.log("Loading...");
   else if (error) console.log("Error: ", errorStr);
   else console.log("Data:", data);
@@ -246,7 +246,7 @@ Additionally it can automatically mutate when the observable is changed. The sec
 import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
 
 function Component() {
-  const mutateResult = useObservable("");
+  const mutateResult$ = useObservable("");
   const query$ = useObservableQuery(
     {
       queryKey: ["mutatingData"],
@@ -257,7 +257,7 @@ function Component() {
         axios
           .post(url, newData)
           .then((res) =>
-            mutateResult.set(`Mutated: ${JSON.stringify(res, null, 4)}`)
+            mutateResult$.set(`Mutated: ${JSON.stringify(res, null, 4)}`)
           ),
     }
   );
@@ -291,7 +291,7 @@ See [an interactive CodeSandbox](https://codesandbox.io/s/legend-state-useobserv
 import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable";
 
 function Component() {
-  const state = usePersistedObservable(
+  const state$ = usePersistedObservable(
     {
       title: "Title",
     },
@@ -300,9 +300,10 @@ function Component() {
     }
   );
 
+
   return (
     <div>
-      <div>{state.title}</div>
+      <Memo>{state$.title}</Memo>
     </div>
   );
 }

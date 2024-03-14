@@ -185,10 +185,10 @@ import { Show, useObservable } from "@legendapp/state/react";
 import { AnimatePresence } from "framer-motion";
 
 function ShowExampleWithSelector() {
-  const state = useObservable({ collection: [] });
+  const state$ = useObservable({ collection: [] });
   return (
     <Show
-      if={() => state.collection.get().length > 0}
+      if={() => state$.collection.get().length > 0}
       else={() => <div>Nothing to see here</div>}
       wrap={AnimatePresence}
     >

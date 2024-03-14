@@ -11,7 +11,7 @@ Legend-State can be used however you want. If your team prefers one large state 
 ### One large global state
 
 ```js
-const store = observable({
+const store$ = observable({
     UI: {
         windowSize: undefined as { width: number, height: number },
         activeTab: 'home' as 'home' | 'user' | 'profile',
@@ -30,11 +30,11 @@ const store = observable({
 
 ```js
 // settings.ts
-export const theme = observable('light')
-export const fontSize = observable(14)
+export const theme$ = observable('light')
+export const fontSize$ = observable(14)
 
 // UIState.ts
-export const uiState = observable({
+export const uiState$ = observable({
     windowSize: undefined as { width: number, height: number },
     activeTab: 'home' as 'home' | 'user' | 'profile',
 })
@@ -46,13 +46,13 @@ You can use `useObservable` to create state objects within React components, the
 
 ```js
 function App() {
-  const store = useObservable({
+  const store$ = useObservable({
     profile: { name: "hi" },
   });
 
   return (
     <div>
-      <Profile profile={store.profile} />
+      <Profile profile={store$.profile} />
     </div>
   );
 }

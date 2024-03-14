@@ -141,9 +141,9 @@ persistObservable(state$, {
 })
 
 // Mode 2: Persist an object with itemId
-const settings = observable({ theme: "light" })
+const settings$ = observable({ theme: "light" })
 
-persistObservable(settings, {
+persistObservable(settings$, {
   local: {
     name: "store", // IndexedDB table name
     indexedDB: {

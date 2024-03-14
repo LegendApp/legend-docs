@@ -25,7 +25,7 @@ const TransitionBounce = {
 
 function Modal({ show }) {
   const renderCount = ++useRef(0).current
-  const page = useObservable(0)
+  const page$ = useObservable(0)
 
   return (
     <motion.div
@@ -50,7 +50,7 @@ function Modal({ show }) {
           Renders: {renderCount}
         </div>
         <div className="pageText">
-          <Switch value={page}>
+          <Switch value={page$}>
             {{
               0: () => <div>First Page</div>,
               1: () => <div>Second Page</div>,
@@ -61,18 +61,18 @@ function Modal({ show }) {
         <div className="modalButtons">
           <MotionButton
             className="pageButton"
-            animate={() => ({ opacity: page.get() === 0 ? 0.5 : 1 })}
-            $disabled={() => page.get() === 0}
-            onClick={() => page.set(p => p - 1)}
+            animate={() => ({ opacity: page$.get() === 0 ? 0.5 : 1 })}
+            $disabled={() => page$.get() === 0}
+            onClick={() => page$.set(p => p - 1)}
             transition={{ duration: 0.15 }}
           >
             Prev
           </MotionButton>
           <MotionButton
             className="pageButton"
-            animate={() => ({ opacity: page.get() === 2 ? 0.5 : 1 })}
-            $disabled={() => page.get() === 2}
-            onClick={() => page.set(p => p + 1)}
+            animate={() => ({ opacity: page$.get() === 2 ? 0.5 : 1 })}
+            $disabled={() => page$.get() === 2}
+            onClick={() => page$.set(p => p + 1)}
             transition={{ duration: 0.15 }}
           >
             Next

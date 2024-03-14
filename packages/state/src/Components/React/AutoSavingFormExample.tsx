@@ -55,7 +55,7 @@ function Example() {
       }
     }
   )
-  const lastSaved = useObservable(0)
+  const lastSaved$ = useObservable(0)
 
   return (
     <Box>
@@ -73,7 +73,7 @@ function Example() {
         $value={data.email}
       />
       <div>
-        Last saved: <Memo>{lastSaved}</Memo>
+        Last saved: <Memo>{lastSaved$}</Memo>
       </div>
     </Box>
   )

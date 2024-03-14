@@ -11,16 +11,16 @@ import { Memo, useObservable } from "@legendapp/state/react"
 
 function EasyExample() {
   const renderCount = ++useRef(0).current
-  const state = useObservable({ count: 0 })
+  const state$ = useObservable({ count: 0 })
 
   useInterval(() => {
-      state.count.set((c) => c + 1)
+      state$.count.set((c) => c + 1)
   }, 500)
 
   return (
       <Box>
           <div>Renders: {renderCount}</div>
-          <div>Count: <Memo>{state.count}</Memo></div>
+          <div>Count: <Memo>{state$.count}</Memo></div>
       </Box>
   )
 }

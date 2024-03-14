@@ -19,17 +19,17 @@ import { useRef } from "react"
 
 const ShowExample = () => {
   const renderCount = ++useRef(0).current
-  const state = useObservable({ show: false })
+  const state$ = useObservable({ show: false })
 
   return (
     <Box width={160}>
       <div>Renders: {renderCount}</div>
       <Button
-        onClick={state.show.toggle}
+        onClick={state$.show.toggle}
       >
         Toggle
       </Button>
-      <Show if={state.show} else={<Nothing />}>
+      <Show if={state$.show} else={<Nothing />}>
         {() => <Modal />}
       </Show>
     </Box>

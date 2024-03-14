@@ -15,13 +15,13 @@ enableReactComponents()
 let total = 0
 const TodosExample = () => {
   const renderCount = ++useRef(0).current
-  const todos = useObservable([])
+  const todos$ = useObservable([])
 
   const onClickAdd = () => (
-    todos.push({ id: ++total, text: total + '. Item', renders: 1 })
+    todos$.push({ id: ++total, text: total + '. Item', renders: 1 })
   )
   const onClickUpdate = () => {
-    todos[todos.length - 1].text.set((t) => t + '!')
+    todos$[todos$.length - 1].text.set((t) => t + '!')
   }
 
   return (
@@ -35,7 +35,7 @@ const TodosExample = () => {
       <div>Renders: {renderCount}</div>
       <div className="messages">
         <div className="hint">(text) - (renders)</div>
-        <For each={todos}>
+        <For each={todos$}>
           {(item) => {
             useEffect(() => {
               item.renders.set((r) => r + 1)
