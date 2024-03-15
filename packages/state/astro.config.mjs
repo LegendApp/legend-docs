@@ -2,6 +2,7 @@ import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
+import tailwindcssNesting from "tailwindcss/nesting";
 
 const isPublish = process.argv[process.argv.length - 1] === "--publishlegend";
 
@@ -15,7 +16,7 @@ export default defineConfig({
         "./src/editor.css",
         "./src/overrides.css",
       ],
-      favicon: '/favicon.ico',
+      favicon: "/favicon.ico",
       social: {
         github: "https://github.com/LegendApp/legend-state",
       },
@@ -59,5 +60,12 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
-  vite: { ssr: { noExternal: ["usehooks-ts", "react-icons"] } },
+  vite: {
+    css: {
+      postcss: {
+        plugins: [tailwindcssNesting()],
+      },
+    },
+    ssr: { noExternal: ["usehooks-ts", "react-icons"] },
+  }
 });

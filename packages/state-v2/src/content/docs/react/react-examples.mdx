@@ -1,0 +1,61 @@
+---
+title: React Examples
+sidebar:
+    order: 6
+---
+
+import Persistence from "../../../Components/React/Persistence.astro";
+import AutoSavingFormExample from "../../../Components/React/AutoSavingFormExample.astro";
+import FormValidationExample from "../../../Components/React/FormValidationExample.astro";
+import MessageListExample from "../../../Components/React/MessageListExample.astro";
+import AnimatedSwitchExample from "../../../Components/React/AnimatedSwitchExample.astro";
+import ModalExample from "../../../Components/React/ModalExample.astro";
+import RouterExample from "../../../Components/React/RouterExample.astro";
+
+The examples on this page use [Tailwind CSS](https://tailwindcss.com) for styling and [Framer Motion](https://www.framer.com/motion) for animations. These examples all use the [fine-grained-reactivity](../fine-grained-reactivity) components so that the parent component renders only once and all renders are optimized to be as small as possible.
+
+## Persisted global state
+
+This example creates a global state object and persists it to Local Storage. Try changing the username and toggling the sidebar and refreshing - it will restore it to the previous state.
+
+<Persistence />
+
+## Auto-saving Form
+
+This example uses the [useObservableQuery](../helpers-and-hooks#useobservablequery) hook to create an observable using [TanStack Query](https://tanstack.com/query/) that automatically sends mutations back to the server whenever the observable changes.
+
+It then uses the `Reactive` [two-way binding components](../fine-grained-reactivity#reactive-components) to bind those observable directly to the inputs.
+
+So in effect this binds the inputs directly to your server data.
+
+<AutoSavingFormExample />
+
+## Form validating
+
+This example uses [useObserve](../react-api#useobserve) to listen to changes in the form state to update the error messages as you type. It waits for the first click of the Save button for a better user experience.
+
+<FormValidationExample />
+
+## List of messages
+
+This example uses the [useFetch](../helpers-and-hooks#usefetch) hook to get data from a server as an observable, [useComputed](../react-api#usecomputed) to create a computed observable, and [For](../fine-grained-reactivity#for) to display the array of messages in a high-performance way.
+
+<MessageListExample />
+
+## Animations with reactive props
+
+This example uses [reactive](../fine-grained-reactivity#reactive) to make a version of `motion.div` with [reactive props](../fine-grained-reactivity#reactive-components) that can animate using observable values. Animating with reactive props is faster than re-rendering the whole component because when the tracked observable changes it triggers a render of only the `motion.div`, so it doesn't need to re-render the parent or children.
+
+This example also creates a [computed observable](../observable#computed) text value from the boolean and renders it directly in JSX, which (under the hood) creates a reactive text element that re-renders itself when it changes.
+
+<AnimatedSwitchExample />
+
+## Show a modal with multiple pages
+
+This example uses [Show](../fine-grained-reactivity#show) to show/hide a modal based on an observable value, and [Switch](../fine-grained-reactivity#switch) to render the active page in the modal.
+
+<ModalExample />
+
+## Router
+
+<RouterExample />
