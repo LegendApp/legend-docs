@@ -34,6 +34,29 @@ state$.text.set((text) => text + " there");
 
 [Read more](../../usage/observable)
 
+### Computeds
+
+You can create an observable with a function at the root or in any child. The computed function is activated when you call `get()` on it.
+
+```js
+import { observable } from "@legendapp/state";
+
+const state$ = observable({
+    fname: 'Annyong',
+    lname: 'Bluth',
+    // A child is computed
+    fullName: () => state$.fname.get() + ' ' + state$.lname.get()
+});
+
+// Or create a fully computed observable
+const name$ = observable(() => state$.fname.get() + ' ' + state$.lname.get());
+
+// Accessing a computed activates it
+const name = state$.fullName.get();
+```
+
+[Read more](../../usage/observable)
+
 ### Observing observables
 
 You can subscribe to changes anywhere in the hierarchy of an object with `onChange(...)`, and then any change to that node will call the listener.
@@ -78,7 +101,7 @@ const isOnline$ = observable(false);
 // A selector can be just an observable, which will be tracked for changes
 await when(isSignedIn$);
 
-// Or selector can be a function which tracks all get() callschanges
+// Or selector can be a function which tracks all get() calls for changes
 await when(() => isSignedIn$.get() && isOnline$.get());
 ```
 
@@ -124,7 +147,8 @@ Or if you prefer to have multiple individual atoms in multiple files, you can do
 // settings.ts
 export const theme$ = observable('light')
 export const fontSize$ = observable(14)
-
+```
+```js
 // UIState.ts
 export const uiState$ = observable({
     windowSize: undefined as { width: number, height: number },

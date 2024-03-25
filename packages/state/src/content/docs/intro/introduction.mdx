@@ -1,9 +1,13 @@
 ---
-title: Introductionv3
+title: Introduction v3
 description: Basic intro to Legend State
 sidebar:
     order: 1
 ---
+
+:::caution
+Version 3 is still in development. You can use it by installing the @next version but the APIs may change before release.
+:::
 
 import Primitives from "../../../Components/Introduction/Primitives.astro";
 import Intro from "../../../Components/Introduction/Intro.astro";
@@ -20,29 +24,7 @@ React components can track access to `get()` on any observable and automatically
 We use a `$` suffix on variables as a convention to indicate an observable but it's not required.
 :::
 
-```jsx
-// Create an observable object
-const state$ = observable({ settings: { theme: "dark" } });
-
-// Just get and set
-const theme = state$.settings.theme.get();
-state$.settings.theme.set("light");
-
-// observe re-runs when accessed observables change
-observe(() => {
-  console.log(state$.settings.theme.get());
-});
-
-// Enable React components to automatically track observables
-enableReactTracking({ auto: true });
-
-const Component = function Component() {
-  // get() makes this component re-render whenever theme changes
-  const theme = state$.settings.theme.get();
-
-  return <div>Theme: {theme}</div>;
-};
-```
+<Intro />
 
 ### 2. <span className="text-lg">⚡️</span> The fastest React state library
 
@@ -59,35 +41,42 @@ See [Fast 🔥](../fast) for more details of why Legend-State is so fast.
 
 Legend-State lets you make your renders super fine-grained allowing only the leaves of your component tree to re-render when required, thus making your apps go faster 🔥, and removing unnecessary overhead from React's render cycle.
 
+:::note[Live editable]
+All examples in these docs are editable so you can play around with the code and see how it works.
+:::
 
 <Primitives />
 
 ### 4. 💾 Powerful persistence
 
-Legend-State includes a powerful [persistence plugin system](../../guides/persistence) for local caching and remote sync. It easily enables offline-first apps by tracking changes made while offline that save when coming online, managing conflict resolution, and syncing only small diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
+Legend-State includes a powerful [persistence plugin system](../../guides/persistence) for local caching and remote sync. It easily enables local-first apps by optimistically applying and caching all changes to ensure they sync, managing conflict resolution, and syncing only changes. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
 
 Local persistence plugins for the browser and React Native are included, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
 
 ```js
+import { configureObservablePersistence, synced } from '@legendapp/state/persist'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-import { ObservablePersistFirebase } from "@legendapp/state/persist-plugins/firebase"
-import { persistObservable } from '@legendapp/state/persist'
-import { observable } from '@legendapp/state'
 
-const state$ = observable({ store: { bigObject: { ... } } })
-
-// Persist this observable
-persistObservable(state$, {
+// Setup global sync options, also configurable per observable
+configureObservablePersistence({
     pluginLocal: ObservablePersistLocalStorage,
-    local: 'store',
-    pluginRemote: ObservablePersistFirebase,
-    remote: {
-        firebase: {
-            refPath: (uid) => `/users/${uid}/`,
-            requireAuth: true,
-        },
-    }
+});
+
+const state$ = synced({
+    // Two-way bind this observable to a remote server
+    get: () => fetch(url).then(r => r.json()),
+    set: ({ value }) => fetch(url, { method: 'POST', data: JSON.stringify(value) }),
+    // Cache data locally
+    cache: {
+        local: 'store'
+    },
 })
+
+// Getting the value activates it to start syncing
+state$.store.user.name.get()
+
+// Setting a value automatically syncs with the server
+state$.store.user.name.set('Annyong')
 ```
 
 [Read more](../../guides/persistence)
@@ -96,7 +85,7 @@ persistObservable(state$, {
 
 import Install from "shared/src/Components/Install/Install.astro";
 
-<Install name="@legendapp/state" />
+<Install name="@legendapp/state@next" />
 
 ## Highlights
 
@@ -115,11 +104,6 @@ The core is platform agnostic so you can use it in vanilla JS or any framework t
 
 [Read more](../why) about why you'll love Legend-State ❤️
 
-## Example
-
-This example shows an overview of what using Legend-State looks like. See [Getting Started](./getting-started) to dive into how it works.
-
-<Intro />
 
 ## Getting Started
 
@@ -127,7 +111,7 @@ Continue on to [Getting Started](../getting-started) to get started!
 
 ## Community
 
-Join us on [Slack](https://join.slack.com/t/legendappcommunity/shared_invite/zt-1mfjknpna-vUL2s1qOuNeZL12~t2RruQ) to get involved with the Legend community.
+Join us on [Slack](https://join.slack.com/t/legendappcommunity/shared_invite/zt-1mfjknpna-vUL2s1qOuNeZL12~t2RruQ) or [Github](https://github.com/LegendApp/legend-state) to get involved with the Legend community.
 
 ## Contributing
 

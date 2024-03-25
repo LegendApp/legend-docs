@@ -38,26 +38,6 @@ mergeIntoObservable(state$, newValue);
 state$.store === newValue.store; // ✅ true
 ```
 
-## lockObservable
-
-To ensure that observables are only modified within certain actions, you can lock observables so that they cannot be modified, then unlock them temporarily in your actions. This is used under the hood by `computed`.
-
-```js
-import { lockObservable, observable } from '@legendapp/state'
-
-const state$ = observable({ store: { ... } })
-lockObservable(state$, true)
-
-function safeAction() {
-    // Unlock it to modify it
-    lockObservable(state$, false)
-    // Modify it
-    state$.set({ store: { ... } })
-    // Lock it back
-    lockObservable(state$, true)
-}
-```
-
 ## trackHistory
 
 `trackHistory` creates an observable that tracks all changes in the target observable, with the previous value at the time it was changed.

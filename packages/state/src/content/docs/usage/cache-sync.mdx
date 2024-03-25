@@ -1,0 +1,335 @@
+---
+title: Cache and Sync
+sidebar:
+  order: 5
+---
+
+import Install from "shared/src/Components/Install/Install.astro"
+
+A primary goal of Legend-State is to make automatic caching and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local-first apps: any changes made while offline can be persisted between sessions to be retried in a future session when connected. To do this, the sync system simply subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted.
+
+1. Save the pending changes to the metadata table in local persistence
+2. Save the changes to local persistence
+3. Save the changes to remote persistence
+4. On remote save, set any needed changes (like dateModified) back into the observable
+5. Clear the pending changes in the metadata table in local persistence
+
+## Caching and Syncing
+
+First you most likely want to set a global cache/sync configuration, which can be configured or overriden per observable.
+
+This is a very basic example uses localStorage for web, but see the [configuring](#configuring) section for more options.
+
+```js
+import { configureObservablePersistence } from '@legendapp/state/persist'
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+
+// Global configuration
+configureObservablePersistence({
+    pluginLocal: ObservablePersistLocalStorage,
+    remoteOptions: {
+        retry: { infinite: true }
+    }
+})
+```
+
+### synced
+
+Use `synced` to create an observable bound to remote data and/or cached locally. To simply set up caching, just create `get` and `set` functions along with a `cache` option.
+
+```js
+import { synced } from '@legendapp/state/persist'
+
+const state$ = synced({
+    get: () =>
+        fetch('https://url.to.get').then((res) => res.json()),
+    set: ({ value }) =>
+        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) }),
+    cache: {
+        name: 'test',
+    },
+})
+```
+
+Or a more advanced example with all of the possible options:
+
+```js
+import { synced } from '@legendapp/state/persist'
+import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv'
+
+const state$ = synced({
+    get: () => {
+        // get is an observing function which will re-run whenever any accessed observables
+        // change. You can use that for paging getting data for a specific user.
+        return fetch('https://url.to.get/page=' + page.get())
+                .then((res) => res.json())
+    },
+    set: ({ value }) => {
+        // set is run when the observable changes, debounced by the debounceSet option
+        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) })
+    }
+    cache: {
+        // The name to be saved in the local cache
+        name: 'test',
+        // Set the plugin to override the global setting
+        plugin: ObservablePersistMMKV,
+        options: {
+            // Customize the cache plugin options
+        }
+    },
+    initial: {
+        // The initial value before the remote data loads or if it doesn't exist.
+        // Set up your default values here.
+        numUsers: 0, messages: []
+    },
+    subscribe: (refresh) => {
+        // The subscribe function is called once to give you an opportunity to
+        // subscribe to another service to trigger refresh
+        pusher.subscribe({ /*...*/ })
+    },
+    // Options for retrying in case of error. Applies to both get and set.
+    retry: {
+        infinite: true,
+        backoff: 'exponential',
+        maxDelay: 30
+    },
+    // "retry" will cache pending changes to be retried even if the app restarts
+    offlineBehavior: false | 'retry';
+    // A time to debounce changes before sending them to the server. Use this to
+    // batch multiple changes together or preventing saving every keystroke.
+    debounceSet: number;
+})
+```
+
+### syncState
+
+Each synced observable has a `syncState` observable that you can get to check its status or do some actions.
+
+```ts
+import { synced, syncState } from '@legendapp/state/persist'
+
+const obs$ = synced({ /*...*/ })
+const state$ = syncState(obs$)
+```
+
+- `isLoadedLocal: boolean`: Whether it has loaded from the local cache
+- `isEnabledLocal: boolean`: Enable/disable the local cache
+- `isLoaded: boolean`: Whether the get function has returned
+- `isEnabledRemote: boolean`: Enable/disable remote sync
+- `lastSync: number`: Timestamp of the latest sync
+- `syncCount: number`: Number of times it's synced
+- `clearLocal: () => Promise<void>`: Clear the local cache
+- `sync: () => Promise<void>`: Re-run the get function
+- `getPendingChanges: () => Record<string, object>`: Get all unsaved changed
+- `error: Error`: The latest error
+
+
+### useSynced
+
+`useSynced` is a React hook that returns a `synced`.
+
+```ts
+import { useSynced } from '@legendapp/state/react-hooks/useSynced'
+
+function Component() {
+    const user$ = useSynced({
+        get: fetch('https://url.to.get').then((res) => res.json()),
+        cache: {
+            name: 'test
+        }
+    })
+}
+```
+
+## Caching plugins
+
+First choose and configure the storage plugin for your platform.
+
+##### Local Storage (React)
+
+```js
+import { configureObservablePersistence } from '@legendapp/state/persist'
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+
+// Global configuration
+configureObservablePersistence({
+    pluginLocal: ObservablePersistLocalStorage
+})
+```
+
+##### IndexedDB (React)
+
+```js
+import { configureObservablePersistence } from '@legendapp/state/persist'
+import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb'
+
+// Global configuration
+configureObservablePersistence({
+    pluginLocal: ObservablePersistIndexedDB
+})
+```
+
+##### MMKV (React Native)
+```js
+import { configureObservablePersistence } from '@legendapp/state/persist'
+import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv'
+
+// Global configuration
+configureObservablePersistence({
+    // Use react-native-mmkv in React Native
+    pluginLocal: ObservablePersistMMKV
+})
+```
+
+##### AsyncStorage (React Native)
+```js
+import { configureObservablePersistence } from '@legendapp/state/persist'
+import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
+
+// Global configuration
+configureObservablePersistence({
+    // Use AsyncStorage in React Native
+    pluginLocal: ObservablePersistAsyncStorage,
+    localOptions: {
+        asyncStorage: {
+            // The AsyncStorage plugin needs to be given the implementation of AsyncStorage
+            AsyncStorage
+        }
+    }
+})
+```
+
+Then call `persistObservable` for each observable you want to persist.
+
+```js
+import { persistObservable } from '@legendapp/state/persist'
+
+const store$ = observable({ store: { bigObject: { ... } } })
+
+// Persist this observable
+persistObservable(store$, {
+    local: 'store' // Unique name
+})
+```
+
+### IndexedDB
+
+The IndexedDB plugin can be used in two ways:
+
+1. Persisting a dictionary where each value has an `id` field, and each value will create a row in the table
+2. Persisting multiple observables to their own rows in the table with the `itemID` option
+
+It requires some extra configuration for the database name, the table names, and the version.
+
+IndexedDB requires changing the version whenever the tables change, so you can start with version 1 and increment the version whenever you add/change tables.
+
+```js
+import { persistObservable } from "@legendapp/state/persist"
+import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
+
+configureObservablePersistence({
+  pluginLocal: ObservablePersistIndexedDB,
+  local: {
+    indexedDB: {
+      databaseName: "Legend",
+      version: 1,
+      tableNames: ["documents", "store"],
+    },
+  },
+})
+
+// Mode 1: Persist a dictionary
+const state$ = observable({
+  obj1: { id: "obj1", text: "..." },
+  obj2: { id: "obj2", text: "..." },
+})
+
+persistObservable(state$, {
+  local: "store", // IndexedDB table name
+})
+
+// Mode 2: Persist an object with itemId
+const settings$ = observable({ theme: "light" })
+
+persistObservable(settings$, {
+  local: {
+    name: "store", // IndexedDB table name
+    indexedDB: {
+      itemID: "settings",
+    },
+  },
+})
+```
+
+Because IndexedDB is an asynchronous API, you'll need to wait for it to load before you start reading from it. `persistObservable` returns an Observable with load statuses that you can wait for.
+
+```js
+const status = persistObservable(state$, {
+    local: 'store' // IndexedDB table name
+})
+await when(status.isLoadedLocal)
+...
+```
+
+### React Native
+
+If you are on React Native you will need to install `react-native-mmkv` or `@react-native-async-storage/async-storage`, depending on which one you choose to use.
+
+<Install name="react-native-mmkv" />
+
+<Install name="@react-native-async-storage/async-storage" />
+
+## Configuring
+
+TODO: More details of configuring
+
+## Making a sync plugin
+
+Most apps will likely not want to use `synced` directly, but create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a `synced`.
+
+```ts
+import { synced } from '@legendapp/state/persist'
+
+const customSynced = ({ name }) => {
+    const basePath = 'https://legendapp.com/api/v1/';
+    const doFetch = (path) => {
+        return fetch(basePath + path).then((res) => res.json())
+    }
+
+    return synced({
+        get: () => doFetch('list-' + name),
+        set: ({ value }) => {
+            if (value === null || value === undefined) {
+                return doFetch('delete-' + name)
+            } else {
+                return doFetch('upsert-' + name)
+            }
+        },
+        retry: { infinite: true },
+        cache: {
+            name
+        },
+        waitFor: isAuthed$,
+        subscribe: ({ refresh }) => {
+            // Subscribe to realtime service
+        },
+    });
+}
+```
+
+TODO: More details
+
+## persistObservable (Deprecated)
+
+`persistObservable` can be used to automatically persist an observable, both locally and remotely. It will be saved whenever you change anything anywhere within the observable, and the observable will be filled with the local state right after calling `persistObservable`.
+
+The second parameter to `persistObservable` provides some options:
+
+- `local`: A unique name for this observable in storage or options to configure it
+- `pluginLocal`: The local persistence plugin to use. This defaults to use the globally configured pluginLocal.
+- `remote`: Options to configure remote persistence
+- `pluginRemote`: The persistence plugin to use. This defaults to use the globally configured pluginRemote.
+
+`persistObservable` returns the observable with an additional `state` child that can be used to check it's loading state.
+
+First you most likely want to set a global configuration for which plugins to use, though it can also be configured per observable.

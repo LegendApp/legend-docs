@@ -11,3 +11,7 @@
 .content a:hover {
     color: #0AE !important;
 }
+
+aside {
+    @apply rounded;
+}

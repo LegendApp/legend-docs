@@ -1,18 +1,11 @@
 import { observable, observe } from "@legendapp/state";
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
-import { persistObservable } from "@legendapp/state/persist";
-import { observer } from "@legendapp/state/react";
 import classNames from "classnames";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const INTRO_EXAMPLE_CODE = `
-import { observable, observe } from "@legendapp/state"
-import { persistObservable } from "@legendapp/state/persist"
-import { observer } from "@legendapp/state/react"
-import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
-
 // Create an observable object
 const state$ = observable({ settings: { theme: 'dark' } })
 
@@ -26,9 +19,6 @@ observe(() => {
 
 // Assign to state$ with set
 state$.settings.theme.set('light')
-
-// Automatically persist state$. Refresh this page to try it.
-persistObservable(state$, { local: 'exampleState' })
 
 // Automatically re-render components when observables change
 enableReactTracking({ auto: true })
@@ -65,9 +55,7 @@ export function IntroExampleComponent() {
       scope={{
         observable,
         classNames,
-        observer,
         observe,
-        persistObservable,
         Button,
         enableReactTracking,
         Box,
@@ -75,6 +63,7 @@ export function IntroExampleComponent() {
       noInline
       renderCode=";render(<Component />)"
       previewWidth={180}
+      transformCode={(code) => code.replace('zzz', '')}
     />
   );
 }

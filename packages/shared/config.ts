@@ -3,4 +3,4 @@ export const versions = [
   ["v2", "v2"],
 ];
 
-export const defaultVersion = "v3";
+export const defaultVersion = "v2";

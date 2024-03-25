@@ -53,7 +53,7 @@ export const Editor = observer(function Editor({
             )}
           >
             <BiPencil className="mr-2" />
-            Editing
+            Live Preview
           </div>
         </div>
         <div

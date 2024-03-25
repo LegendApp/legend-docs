@@ -8,11 +8,11 @@ import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/
 import classNames from "classnames";
 import { motion, type Transition } from "framer-motion";
 
-interface PropsTab {
+interface PropsTab<T extends string> {
   name: string;
   layoutId: string;
   text?: string;
-  activeTab$: Observable<string>;
+  activeTab$: Observable<T>;
 }
 const TransitionTab: Transition = {
   type: "spring",
@@ -29,7 +29,7 @@ interface Props<T extends string> {
 }
 
 type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
-const tabs: PackageManager[] = ["npm", "yarn", "pnpm", "bun"];
+const tabs: PackageManager[] = ["bun", "npm", "yarn", "pnpm"];
 
 export const state$ = observable({
   packageManager: "npm" as PackageManager,
@@ -46,7 +46,7 @@ if (typeof window !== "undefined") {
   });
 }
 
-const Tab = observer(function ({ name, layoutId, text, activeTab$ }: PropsTab) {
+const Tab = observer(function Tab<T extends string>({ name, layoutId, text, activeTab$ }: PropsTab<T>) {
   const isActive = name === activeTab$.get();
   return (
     <div
@@ -73,15 +73,13 @@ const Tab = observer(function ({ name, layoutId, text, activeTab$ }: PropsTab) {
   );
 });
 
-export const Tabs = observer(function <T extends string>({
+export const Tabs = function <T extends string>({
   name,
   tabs,
   tabTexts,
   activeTab$,
   className,
 }: Props<T>) {
-  const activeTab = activeTab$.get() || tabs[0];
-
   return (
     <motion.div className={classNames("flex items-center", className)} layout>
       {tabs.map((tab, i) => (
@@ -95,7 +93,7 @@ export const Tabs = observer(function <T extends string>({
       ))}
     </motion.div>
   );
-});
+};
 
 export const Install = observer(function ({
   name,

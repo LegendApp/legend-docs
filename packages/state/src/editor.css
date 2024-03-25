@@ -1,5 +1,7 @@
 :root {
     --sl-text-code: var(--sl-text-xs);
+    --sl-sidebar-width: 14rem;
+
     --color-fg-default: #c9d1d9;
     --color-bg-code-block: #0E1218;
     --color-border-code-block: #2E3238;
@@ -13,6 +15,8 @@
     --color-purple: #d2a8ff;
     --color-brown: #ffa657;
     --code-border-radius: 0.5em;
+
+    --code-background: var(--astro-code-color-background) !important;
 
     --astro-code-color-text: var(--color-fg-default);
     --astro-code-color-background: var(--color-bg-code-block);
@@ -47,10 +51,11 @@ code {
  */
 
 code[class*="language-"],
-pre[class*="language-"] {
-    background-color: var(--color-bg-code-block);
-    color: var(--color-fg-default);
-    border-color: var(--color-border-code-block);
+pre[class*="language-"],
+.expressive-code pre {
+    background-color: var(--color-bg-code-block) !important;
+    color: var(--color-fg-default) !important;
+    border-color: var(--color-border-code-block) !important;
     direction: ltr;
     text-align: left;
     white-space: pre;
@@ -59,6 +64,7 @@ pre[class*="language-"] {
     line-height: 1.5;
     tab-size: 2;
     hyphens: none;
+    border-radius: var(--code-border-radius) !important;
 }
 
 /* Code blocks */
