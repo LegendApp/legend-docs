@@ -7,7 +7,7 @@
     "devlegend": "astro dev --publishlegend",
     "start": "astro dev",
     "build": "astro build",
-    "publish": "astro build --base /open-source/state/v3 --publishlegend --outDir distv3",
+    "publish": "astro build --base /open-source/state/v3 --publishlegend",
     "preview": "astro preview",
     "astro": "astro"
   },
