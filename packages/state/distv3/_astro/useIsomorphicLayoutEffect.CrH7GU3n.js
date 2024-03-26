@@ -1,1 +1,0 @@
-import{r as t}from"./index.SSXOyoI7.js";function o(e,n){const f=t.useRef(e);c(()=>{f.current=e},[e]),t.useEffect(()=>{if(!n&&n!==0)return;const u=setInterval(()=>f.current(),n);return()=>clearInterval(u)},[n])}const c=typeof window<"u"?t.useLayoutEffect:t.useEffect;export{o as u};

@@ -1,1 +1,0 @@
-import{j as o,c as x}from"./index.BSHcnaqT.js";const c=({className:e,theme:s,children:t,width:r,height:a,center:l})=>o.jsx("div",{className:x("rounded-lg p-4 relative",l&&"flex flex-col items-center",s==="light"?"bg-gray-50 text-gray-900":"bg-gray-800",e),style:{width:r,height:a},children:t});export{c as B};

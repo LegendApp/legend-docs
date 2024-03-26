@@ -1,1 +1,0 @@
-import{H as a}from"./index.BSHcnaqT.js";function c(){const e={value:{handler:"onChange",getValue:n=>n.target.value,defaultValue:""}},t=Object.assign({checked:{handler:"onChange",getValue:n=>n.target.checked}},e);a({binders:{input:t,textarea:e,select:e}})}export{c as e};

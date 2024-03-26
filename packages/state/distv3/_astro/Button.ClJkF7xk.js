@@ -1,1 +1,0 @@
-import{j as t,c as r}from"./index.BSHcnaqT.js";const n=({onClick:o,theme:e,children:s})=>t.jsx("button",{className:r("block px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500"),onClick:o,children:s});export{n as B};
