@@ -121,7 +121,7 @@ import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/ind
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistIndexedDB,
-  local: {
+  localOptions: {
     indexedDB: {
       databaseName: "Legend",
       version: 1,
@@ -159,7 +159,7 @@ Because IndexedDB is an asynchronous API, you'll need to wait for it to load bef
 const status = persistObservable(state$, {
     local: 'store' // IndexedDB table name
 })
-await when(status.isLoadedLocal)
+await when(status.state.isLoadedLocal)
 ...
 ```
 
