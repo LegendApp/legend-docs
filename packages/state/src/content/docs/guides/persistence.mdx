@@ -16,7 +16,6 @@ A primary goal of Legend-State is to make automatic persistence easy and very ro
 
 It also includes options to transform data in and/or out, and has event handlers for every step in the lifecycle.
 
-
 ## persistObservable
 
 `persistObservable` can be used to automatically persist an observable, both locally and remotely. It will be saved whenever you change anything anywhere within the observable, and the observable will be filled with the local state right after calling `persistObservable`.
@@ -136,7 +135,7 @@ const state$ = observable({
 })
 
 persistObservable(state$, {
-  local: "store", // IndexedDB table name
+  local: "documents", // IndexedDB table name
 })
 
 // Mode 2: Persist an object with itemId

@@ -55,7 +55,7 @@ observe(() => {
   // ❌ Not tracking with no get()
 
   // Example 4:
-  state$.chats.messages.map((m) => <Message key={m.get().id} message={m} />);
+  state$.chats.messages.map((m) => <Message key={m.peek().id} message={m} />);
   // ✅ Tracking [state$.chats.messages (shallow)] because of map()
 
   // Example 5:
