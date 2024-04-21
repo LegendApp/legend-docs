@@ -6,7 +6,6 @@ import {
   Memo,
   Reactive,
   Show,
-  useComputed,
   useObservable,
 } from "@legendapp/state/react";
 import { useFetch } from "@legendapp/state/react-hooks/useFetch";
@@ -15,7 +14,7 @@ import { Editor } from "shared/src/Components/Editor/Editor";
 
 const MESSAGE_LIST_CODE = `
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-import { For, Reactive, Show, useComputed, useObservable } from "@legendapp/state/react"
+import { For, Reactive, Show, useObservable, useObservable } from "@legendapp/state/react"
 import { useFetch } from "@legendapp/state/react-hooks/useFetch"
 
 // Enable Reactive.input
@@ -35,7 +34,7 @@ function App() {
   } = useFetch('https://reqres.in/api/users/1')
 
   // Username
-  const userName = useComputed(() => {
+  const userName = useObservable(() => {
     const p = profile.get()
     return p ?
         p.first_name + ' ' + p.last_name :
@@ -93,7 +92,7 @@ export function MessageListComponent() {
         enableReactComponents,
         Reactive,
         useFetch,
-        useComputed,
+        useObservable,
         useObservable,
         Show,
         Memo,

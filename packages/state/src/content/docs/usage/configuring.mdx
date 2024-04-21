@@ -1,7 +1,7 @@
 ---
 title: Configuring
 sidebar:
-    order: 3
+    order: 4
 ---
 
 Legend-State is designed to have a lean core that allows you and your team to add additional features, so it has configuration functions to add features as you like.
@@ -74,13 +74,13 @@ function Component() {
 
 See [Reactive components](../../react/fine-grained-reactivity/#reactive-components) for more details.
 
-### enableDirectAccess
+### enable$get
 
 This enables accessing and setting the raw value of an observable directly. It's a shorthand for `get()` and `set(...)`.
 
 ```js
-import { enableDirectAccess } from "@legendapp/state/config/enableDirectAccess"
-enableDirectAccess()
+import { enable$get } from "@legendapp/state/config/enable$get"
+enable$get()
 ```
 
 Now you can access/modify observables directly.
@@ -103,13 +103,13 @@ state$.$ = { test: "hello" }
 state$.num.$++
 ```
 
-### enableDirectPeek
+### enable_peek
 
 This enables accessing and setting the raw value of an observable directly without tracking or notifying listeners. Getting with `._` is a shorthand for `peek()` and assigning to `._` modifies the underlying data without notifying. Modifying data without notifying is likely necessary in only very specific scenarios so use it with care.
 
 ```js
-import { enableDirectPeek } from "@legendapp/state/config/enableDirectPeek"
-enableDirectPeek()
+import { enable_peek } from "@legendapp/state/config/enable_peek"
+enable_peek()
 ```
 
 Now you can access/modify observables directly without notifying.

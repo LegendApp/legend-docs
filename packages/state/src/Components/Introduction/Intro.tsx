@@ -6,30 +6,19 @@ import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const INTRO_EXAMPLE_CODE = `
-// Create an observable object
-const state$ = observable({ settings: { theme: 'dark' } })
-
-// get() returns the raw data
-state$.settings.theme.get() === 'dark'
-
-// observe re-runs when any observables change
-observe(() => {
-  console.log(state$.settings.theme.get())
-})
-
-// Assign to state$ with set
-state$.settings.theme.set('light')
-
 // Automatically re-render components when observables change
 enableReactTracking({ auto: true })
+
+// Create an observable object
+const settings$ = observable({ theme: 'dark' })
 
 // This is the code for the example on your right ----->
 function Component() {
   // theme is automatically tracked for changes
-  const theme = state$.settings.theme.get()
+  const theme = settings$.theme.get()
 
   const toggle = () => {
-    state$.settings.theme.set(theme =>
+    settings$.theme.set(theme =>
       theme === 'dark' ? 'light' : 'dark'
     )
   }
@@ -37,10 +26,7 @@ function Component() {
   return (
     <Box theme={theme}>
       <div>Theme: {theme}</div>
-      <Button
-        theme={theme}
-        onClick={toggle}
-      >
+      <Button theme={theme} onClick={toggle}>
         Toggle theme
       </Button>
     </Box>

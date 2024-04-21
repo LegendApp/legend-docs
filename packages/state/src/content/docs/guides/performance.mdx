@@ -1,7 +1,7 @@
 ---
 title: Performance
 sidebar:
-    order: 2
+    order: 1
 ---
 
 import TodosExample from "../../../Components/Performance/TodosExample.astro";
@@ -39,7 +39,7 @@ Use `batch` to delay computations/renders until all dependent changes are comple
 ```js
 const name$ = observable({ first: "", last: "" });
 
-const fullName = computed(() => `${name$.first} ${name$.last}`);
+const fullName = observable(() => `${name$.first} ${name$.last}`);
 
 observe(() => console.log("fullName = ", fullName.get()));
 

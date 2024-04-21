@@ -1,6 +1,6 @@
 import { observable } from "@legendapp/state";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { persistObservable } from "@legendapp/state/persist";
+import { syncObservable } from "@legendapp/state/sync";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { reactive, Reactive } from "@legendapp/state/react";
 import classNames from "classnames";
@@ -42,7 +42,7 @@ export const Footer = ({
 const PERSISTENCE_CODE = `
 import { observable } from "@legendapp/state"
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-import { persistObservable } from "@legendapp/state/persist"
+import { syncObservable } from "@legendapp/state/sync"
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 import { reactive, Reactive } from "@legendapp/state/react"
 import { motion } from "framer-motion"
@@ -59,7 +59,7 @@ const state$ = observable({
 })
 
 // Persist state
-persistObservable(state$, {
+syncObservable(state$, {
   local: 'persistenceExample',
   pluginLocal: ObservablePersistLocalStorage,
 })
@@ -106,7 +106,7 @@ export function PersistenceComponent() {
       scope={{
         useRef,
         observable,
-        persistObservable,
+        syncObservable,
         enableReactComponents,
         ObservablePersistLocalStorage,
         reactive,

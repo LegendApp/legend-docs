@@ -4,7 +4,7 @@ sidebar:
     order: 2
 ---
 
-import PauseExample from "../../../Components/React/PauseExample.astro";
+import PauseExample from "../../../Components/React/PauseExample.astro"
 
 ## Reading state
 
@@ -34,7 +34,7 @@ const Component = observer(function Component() {
 
   // Re-renders whenever count changes
   return <div>{count}</div>
-});
+})
 ```
 
 ### useSelector
@@ -68,22 +68,22 @@ const Component = ({ id }) => {
 Using `{ suspense: true }` as the second parameter makes the component work with Suspense. If the observable is a Promise, Suspense will render the fallback until it resolves to a value.
 
 ```jsx
-import { useObservable, useSelector } from "@legendapp/state/react";
-import { Suspense } from "react";
+import { useObservable, useSelector } from "@legendapp/state/react"
+import { Suspense } from "react"
 
 function Test({ state$ }) {
-  const value = useSelector(state$, { suspense: true });
-  return <div>{value}</div>;
+  const value = useSelector(state$, { suspense: true })
+  return <div>{value}</div>
 }
 
 export default function App() {
   const state$ = useObservable(
     new Promise((resolve) => {
       setTimeout(() => {
-        resolve("hello");
-      }, 1000);
+        resolve("hello")
+      }, 1000)
     })
-  );
+  )
   return (
     <div>
       <div>Suspense test</div>
@@ -91,7 +91,7 @@ export default function App() {
         <Test state$={state$} />
       </Suspense>
     </div>
-  );
+  )
 }
 ```
 
@@ -104,35 +104,35 @@ Like `observe`, `useObserve` has an optional second callback parameter which wil
 Note that `useObserve` runs during component render, not after render like `useEffect`. If you want an observer that runs after render, see [useObserveEffect](#useobserveeffect).
 
 ```jsx
-import { event } from "@legendapp/state";
-import { useObserve, useObservable, Reactive } from "@legendapp/state/react";
+import { event } from "@legendapp/state"
+import { useObserve, useObservable, Reactive } from "@legendapp/state/react"
 
-const eventUpdateTitle = event();
+const eventUpdateTitle = event()
 
 function ProfilePage() {
-  const profile$ = useObservable({ name: "" });
+  const profile$ = useObservable({ name: "" })
 
   // This runs whenever profile changes
   useObserve(() => {
-    document.title = `${profile$.name.get()} - Profile`;
-  });
+    document.title = `${profile$.name.get()} - Profile`
+  })
 
   // Observe a single observable with a callback when it changes
   useObserve(profile$.name, ({ value }) => {
-    document.title = `${value} - Profile`;
-  });
+    document.title = `${value} - Profile`
+  })
 
   // Observe an event with a callback when it changes
   useObserve(eventUpdateTitle, () => {
-    document.title = `${profile$.name.get()} - Profile`;
-  });
+    document.title = `${profile$.name.get()} - Profile`
+  })
 
   return (
     <div>
       <span>Name:</span>
       <Reactive.input $value={profile$.name} />
     </div>
-  );
+  )
 }
 ```
 
@@ -148,7 +148,7 @@ The `useObservable` hook can be used to create an observable within a React comp
 
 Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](../react-introduction#use-observable-state).
 
-As with
+As with normal observables you can create a [computed observable](../../usage/observable/#computed-observables) by just using a function.
 
 ```jsx
 import { observer, useObservable } from "@legendapp/state/react"
@@ -174,22 +174,6 @@ const Component = function Component() {
 }
 ```
 
-### useComputed
-
-`useComputed` is like `useObservable` and creates a [computed](../../usage/reactivity#computed) observable.
-
-```jsx
-import { observable } from "@legendapp/state";
-import { useComputed } from "@legendapp/state/react";
-
-const state$ = observable({ test: 10, test2: 20 });
-
-function Component() {
-  const sum = useComputed(() => state$.test.get() + state$.test2.get());
-
-  return <div>Sum: {sum}</div>;
-}
-```
 
 ### useObservableReducer
 
@@ -198,33 +182,40 @@ function Component() {
 ```jsx
 import { useObservableReducer } from "@legendapp/state/react"
 
+function reducer(state, action) {
+    if (action.type === 'incremented_age') {
+        return {
+            age: state.age + 1
+        }
+    }
+}
 const Component = () => {
     // Only re-renders if the return value changes
-    const isSelected$ = useObservableReducer()
+    const [age$, dispatch] = useObservableReducer(reducer, { age: 42 })
 
     // Get the value of the reducer
-    const theme = isSelected$.get()
-
-    ...
+    const theme = age$.get()
 }
 ```
 
 ### Using with Context
 
-You may prefer passing local state through Context rather than (or in addition to) having a global state. To do that you can simply add the observable to your Context as usual, and consume the Context from child component. The observable itself is a stable object so changing the value of an observable will not cause a re-render.
+Passing an observable object through Context gives you all the benfits of Context without the downsides, like any change to context normally re-renders all consumers.
+
+Simply set an observable as a Context value and consume it from a child component as usual. The observable itself is a stable object so useContext will never cause a re-render - only observing contexts will be updated as usual.
 
 ```jsx
-import { createContext, useContext } from "react";
-import { observer, useObservable } from "@legendapp/state/react";
+import { createContext, useContext } from "react"
+import { observer, useObservable } from "@legendapp/state/react"
 
-const StateContext = createContext();
+const StateContext = createContext()
 
 function App() {
   const state$ = useObservable({
     profile: {
       name: "",
     },
-  });
+  })
 
   return (
     <StateContext.Provider value={state$}>
@@ -233,91 +224,63 @@ function App() {
         <Main />
       </div>
     </StateContext.Provider>
-  );
+  )
 }
 
 const Sidebar = function Sidebar() {
   // StateContext will never change so this will never cause a render
-  const state$ = useContext(StateContext);
+  const state$ = useContext(StateContext)
 
   // This component never re-renders, but name re-renders itself
   return (
     <div>
       Name: <Memo>{state$.profile.name}</Memo>
     </div>
-  );
-};
+  )
+}
 ```
 
 ## Miscellaneous hooks
-
-### useMount
-
-Using observable hooks we generally avoid the built-in hooks and dependency arrays, so we have a `useMount` hook for convenience, which is just `useEffect` under the hood.
-
-```jsx
-import { useMount } from "@legendapp/state/react";
-
-const Component = () => {
-  useMount(() => console.log("mounted"));
-};
-```
-
-### useUnmount
-
-Like the `useMount` hook, `useUnmount` is just `useEffect` under the hood.
-
-```jsx
-import { useUnmount } from "@legendapp/state/react";
-
-const Component = () => {
-  useUnmount(() => console.log("mounted"));
-};
-```
 
 ### useEffectOnce
 
 This is `useEffect` with a workaround in development mode to make sure it only runs once.
 
 ```jsx
-import { useEffectOnce } from "@legendapp/state/react";
+import { useEffectOnce } from "@legendapp/state/react"
 
 const Component = () => {
   useEffectOnce(() => {
-    console.log("mounted");
-  }, []);
-};
+    console.log("mounted")
+  }, [])
+}
 ```
 
-### useMountOnce
+### useMount
 
-This is `useMount` with a workaround in development mode to make sure it only runs once.
+Using observable hooks we generally avoid the built-in hooks and dependency arrays, so we have `useMount` and `useUnmount` hooks for convenience, which are just `useEffectOnce` under the hood.
 
 ```jsx
-import { useMountOnce } from "@legendapp/state/react";
+import { useMount } from "@legendapp/state/react"
 
 const Component = () => {
-  useMountOnce(() => console.log("mounted"));
-};
+  useMount(() => console.log("mounted"))
+}
 ```
 
-### useUnmountOnce
+### useUnmount
 
-This is `useEffect` with a workaround in development mode to make sure it only runs once.
+Like the `useMount` hook, `useUnmount` is just `useEffectOnce` under the hood.
 
 ```jsx
-import { useUnmountOnce } from "@legendapp/state/react";
+import { useUnmount } from "@legendapp/state/react"
 
 const Component = () => {
-  useUnmountOnce(() => console.log("mounted"));
-};
+  useUnmount(() => console.log("mounted"))
+}
 ```
 
 ### usePauseProvider
-
-:::note
-Version >= 2.1.1
-:::
 
 This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useSelector, Reactive, Memo, etc... But normal renders coming from React or other state is not affected.
 

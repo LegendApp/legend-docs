@@ -6,48 +6,28 @@ sidebar:
 
 You can put anything in an observable: primitives, deeply nested objects, arrays, functions, etc... Observables work just like normal objects so you can interact with them without any extra complication. Just call `get()` to get a value and `set(...)` to modify it.
 
+:::note
+We use a `$` suffix on variables as a convention to indicate an observable but it's not required.
+:::
+
 ```js
 import { observable } from "@legendapp/state"
 
-const state$ = observable({ text: "hello" })
-
-console.log(state$.get())
-// { text: 'hello' }
-```
-
-An observable's constructor can include functions or [computed](#computed)/[lookup](#lookup) observables.
-
-```js
-import { computed, observable } from "@legendapp/state"
-
 const state$ = observable({
-  fname: "",
-  lname: "",
-  setName: (name: string) => {
-    // Create Actions by just adding a function
-    const [fname, lname] = name.split(name)
-    state$.assign({
-      fname,
-      lname,
-    })
-  },
-  fullName: () => {
-    // Set up computed observables within your state object
-    // or if you prefer them elsewhere that's cool too 🤟
-    return `${state$.fname.get()} ${state$.lname.get()}`
-  }
+    fname: 'Annyong',
+    lname: 'Bluth',
+    name: () => state$.fname.get() + ' ' + state$.lname.get()
 })
 
-// Call setName as a function
-state$.setName('Hello there')
-
-// Treat fullName as an observable
-
-console.log(state$.fullName.get())
-// hello there
+// get
+const value = state$.get()
+// set
+state$.fname.set('Hello')
+// assign to an object
+state$.assign({ fname: 'Maebe' })
+// any function can be used as a computed observable
+const name = state$.name.get()
 ```
-
-> Note: In TypeScript, you need to type the return value of nested `computed` functions or the observable will have a type of `any`.
 
 ## Observable methods
 
@@ -104,7 +84,7 @@ state$.otherKey.otherProp.set("hi")
 
 ### assign()
 
-Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](../helper-functions/#mergeintoobservable).
+Assign is a shallow operation matching `Object.assign` to set multiple properties at once. If you want a deep merge, see [mergeIntoObservable](../helper-functions/#mergeintoobservable). These batch all individual set operations so that observers only update once.
 
 ```js
 const state$ = observable({ text: "hi" })
@@ -127,12 +107,22 @@ state$.text.delete()
 state$.delete()
 ```
 
+`delete` works on array elements as well, removing the element from the array.
+
+```js
+const state$ = observable([ 'apple', 'orange' ])
+
+// Delete from the array
+state$[0].delete()
+// state === ['orange']
+```
+
 
 ## Computed Observables
 
 ### Action Functions
 
-Observables can have functions anywhere within them. You can use these for whatever you want, such as adding behavior to a set function. Some teams prefer to only set variables from within action functions.
+Observables can have functions anywhere within them. You can use these for whatever you want, such as adding extra behavior when setting.
 
 ```js
 const state$ = observable({
@@ -144,11 +134,26 @@ const state$ = observable({
 })
 ```
 
+Because [observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, any functions you call within an observer will also be reactive.
+
+```jsx
+const state$ = observable({
+    fname: 'Annyong',
+    lname: 'Bluth',
+    // A child function
+    fullName: () => state$.fname.get() + ' ' + state$.lname.get()
+})
+
+const Name = observer(function Name() {
+    // Tracks [state$.fname, state$.lname]
+    const name = state$.fullName()
+    return <div>{name}</div>
+})
+```
+
 ### Computed Functions
 
-Any function in an observable can used a computed observable, whether it's at the root or in any child. The computed is only activated and turned into an observable when you access it as an observable.
-
-The computed observable will re-compute itself whenever the observables it accesses with `get()` are changed.
+Any function in an observable can be used a computed observable, whether at the root or in any child. A function is turned into an observable when you first call `get()` on it. It will then re-compute itself whenever the observables it accesses with `get()` are changed.
 
 ```js
 const state$ = observable({
@@ -168,17 +173,59 @@ const name = state$.fullName.get()
 const name$ = observable(() => state$.fname.get() + ' ' + state$.lname.get())
 ```
 
-## computed
+The difference between using it as a function vs. as a computed observable is that a computed observable is an object that caches the value. So `fullName()` will re-compute whenever you call it, but `fullName.get()` creates a computed observable that re-computes itself whenever its dependencies change.
 
-### Two-Way Computed
+## Async Observables
 
-Use `computed` to create an observable bound to both `get` and `set` functions. This lets you pass state changes onto the target observables, so the computed observable is bound to the target(s).
+Creating an observable with a Promise or async function will initialize it to `undefined`, and it will be updated with the value of the Promise when it resolves.
 
 ```js
-import { computed, observable } from "@legendapp/state"
+const serverState$ = observable(() => fetch('url').then(res => res.json()))
+
+observe(() => {
+    // Getting the value activates the observable to fetch, and it
+    //  updates its value when it resolves.
+    const data = serverState$.get()
+    if (data) {
+        ...
+    }
+})
+```
+
+Asynchronous observables pair very well with [when](usage/reactivity/#when) to activate the function and resolve when the observable's Promise is resolved.
+
+```js
+// Await the promise to resolve and then get the data from it
+const data = await when(serverState$)
+console.log(data)
+```
+
+You can access the status of an async observable with the [syncState](usage/cache-sync/#syncstate) helper, which is an observable itself. The most common usage is to check its loaded or error states:
+
+```js
+const status$ = syncState(serverState$)
+observe(() => {
+    // This will re-run as the status changes
+    const { isLoaded, error } = status$.get()
+    if (error) {
+        // Handle error
+    } else if (isLoaded) {
+        // Do the thing
+    }
+})
+```
+
+## Linked observables
+
+### Two-Way Linked
+
+`linked` creates an observable bound to both `get` and `set` functions. This lets you bind or transform a single or multiple other observable values. For example it could be used to create a "Select All" checkbox.
+
+```js
+import { linked, observable } from "@legendapp/state"
 
 const selected$ = observable([false, false, false])
-const selectedAll$ = computed({
+const selectedAll$ = linked({
   // selectedAll is true when every element is selected
   get: () => selected$.every((val$) => val$.get()),
 
@@ -190,14 +237,24 @@ selectedAll$.set(true)
 // selected.get() === [true, true, true]
 ```
 
-### Initial value
-
-When creating an asynchronouse observable with a Promise you may want it to have an initial default value until the promise resolves. You can use the `initial` property of `computed` to do that.
+Or it could be used to automatically deserialize/serialize a string value.
 
 ```js
-import { computed } from "@legendapp/state"
+const str$ = observable('[1,2,3]')
+const arr$ = linked({
+  get: () => JSON.parse(arr$.get())
+  set: (value) => arr$.set(JSON.stringify(value))
+})
+```
 
-const state$ = computed({
+#### Initial value
+
+When creating an asynchronous observable with a Promise you may want it to have an initial default value until the promise resolves. You can use the `initial` property of `linked` to do that.
+
+```js
+import { linked } from "@legendapp/state"
+
+const state$ = linked({
     get: () => fetch('url').then(res => res.json()),
     initial: { numUsers: 0, messages: [] }
 })
@@ -205,37 +262,13 @@ const state$ = computed({
 
 ## Advanced Computeds
 
-### Promises
+### Link to another observable
 
-Creating an observable with a Promise or a function returning a Promise will initialize it to `undefined`, and it will be updated with the value of the Promise when it resolves.
+If you return an observable from a computed function, it will create a two-way link to the target observable. Interacting with that observable will then pass through to the target.
 
-```js
-const state$ = observable(() => fetch('url').then(res => res.json()))
+Observing contexts tracking the linking observable will be re-run both when the linked observable's value changes and when the link itself changes.
 
-observe(() => {
-    // Getting the value activates the observable, and updates its
-    // value when it resolves.
-    const data = state$.get()
-    if (data) {
-        ...
-    }
-})
-```
-
-Asynchronous observables pair very well with [when](usage/reactivity/#when) to activate the function and resolve when the observable's Promise is resolved.
-
-```js
-// Await the promise to resolve and then get the data from it
-const data = await when(state$)
-console.log(data)
-
-// Wait for the promise to resolve and then get the data from it
-when(state$, (data) => { console.log(data) })
-```
-
-### Linked observables
-
-If you return an observable from a computed function, it will create a two-way link to the target observable. Any observable operations and listeners on the link will work the same as interacting with the target.
+In this example, the observable that `selectedItem` points to is changed by setting `selectedIndex`. And because it's a direct link to the target observable, `set` operations will pass through to the target observable.
 
 ```js
 const state$ = observable({
@@ -244,25 +277,30 @@ const state$ = observable({
   selectedItem: () => state$.items[state$.selectedIndex.get()],
 })
 
-state$.selectedItem.get() === "hi" // true
+observe(() => {
+    console.log('observe:' + state$.selectedItem.get())
+})
+// observe: 'hi'
 
 state$.selectedIndex.set(2)
+// observe: 'hello'
 
-state$.selectedItem.get() === "hello" // true
+state$.selectedItem.set('HELLO!')
+// observe: 'HELLO!'
 ```
 
 ### Lookup table
 
-A function with a single `string` key can be used as a lookup table, an observable object that is indexable by that key whose values are return by the function.
+A function with a single `string` key can be used as a lookup table (an object with a string key). Accessing it by index will call the function to create a computed observable by that key.
 
 ```ts
 const state$ = observable({
   selector: 'text',
   items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
   // Return a link to the [selector] property in the given item
-  texts: ((key: string) => {
+  texts: (key: string) => {
     return obs.items[key][obs.selector.get()]
-  }),
+  },
 })
 
 // Now these reference the same thing:
@@ -320,6 +358,18 @@ state$.text.assign({ value: "hello there" })
 // ❌ Error. Cannot call assign on a primitive.
 ```
 
+If you really want to assign directly to observables, there is an extension to add `$` as a property you can get/set. See [configuration](../configuring#enable$get) for details.
+
+```js
+const testValue = state$.test.$
+
+// Assign to $ as a shorthand for set()
+state$.test.$ = "hello"
+
+// Assign objects too just like you can with set()
+state$.$ = { test: "hello" }
+```
+
 ### undefined
 
 Because observables track nodes [by path](../../intro/fast/#proxy-to-path) and not the underlying data, an observable points to a path within an object regardless of its actual value. So it is perfectly fine to access observables when they are currently undefined in the object.
@@ -368,3 +418,70 @@ All looping functions set up [shallow tracking](../reactivity#shallow-modifier) 
 Additionally, `filter` returns an array of observables and `find` returns an observable (or undefined).
 
 If you don't want this extra observable behavior, `get()` or `peek()` the observable to get the raw array to act on.
+
+### Observables are mutable
+
+Legend-State does not use immutability because immutability is slow. It needs to do deep equality checking of changes to know which nodes to notify anyway, so immutability just isn't needed. So there are two things to be careful of.
+
+#### 1. Modifying raw data breaks notifying of changes.
+
+Observables are just wrappers around the underlying data, so if you modify the raw data you're actually modifying the observable data without notifying of changes. Then if you set it back onto the observable, that just sets it to itself so nothing happens.
+
+```js
+// ❌ This sets it to itself, nothing happens
+const value = state$.get()
+value.key = 'newValue'
+state$.set(value)
+
+// ✅ Set the value directly in the observable
+state$.key.set('newValue')
+
+// ✅ Assign the key/value to the observable
+state$.assign({ key: 'newValue' })
+```
+
+#### 2. Don't need to clone
+
+A common pattern in React is to set state with a clone of the previous value, which is required because of immutability constraints in React. Legend-State does not have that constraint, and cloning is bad for performance, so it's better to do operations directly on the observables.
+
+```js
+// ❌ Setting with a cloned object creates a new object unnecessarily
+const record = record$.get()
+const newRecord = { ...record, key: 'value' }
+record$.set(newRecord)
+
+// ✅ Set the key directly in the observable
+record$.key.set('value')
+```
+
+```js
+// ❌ Setting with a cloned array creates a new array unnecessarily
+const list = list$.get()
+const newList = [ ...list, 'value' ]
+list$.set(newList)
+
+// ✅ Just push it
+list$.push('value')
+```
+
+```js
+// ❌ Delete by clone and destructure creates a new object unnecessarily
+const record = record$.get()
+const { key, ...rest } = record
+record$.set(rest)
+
+// ✅ Delete the key directly in the observable
+record$.key.delete()
+```
+
+```js
+// ❌ Setting a filtered array creates a new array unnecessarily
+const list = list$.get()
+const newList = list.filter((item) => item.id != itemId)
+list$.set(newList)
+
+// ✅ Delete it from the array directly
+const list = list$.get()
+const idx = list.findIndex((item) => item.id === itemId)
+list$[idx].delete()
+```
