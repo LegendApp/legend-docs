@@ -120,7 +120,7 @@ state$[0].delete()
 
 ## Computed Observables
 
-### Action Functions
+### Functions
 
 Observables can have functions anywhere within them. You can use these for whatever you want, such as adding extra behavior when setting.
 
@@ -134,13 +134,12 @@ const state$ = observable({
 })
 ```
 
-Because [observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, any functions you call within an observer will also be reactive.
+[Observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, including within any called functions.
 
 ```jsx
 const state$ = observable({
     fname: 'Annyong',
     lname: 'Bluth',
-    // A child function
     fullName: () => state$.fname.get() + ' ' + state$.lname.get()
 })
 
@@ -153,7 +152,7 @@ const Name = observer(function Name() {
 
 ### Computed Functions
 
-Any function in an observable can be used a computed observable, whether at the root or in any child. A function is turned into an observable when you first call `get()` on it. It will then re-compute itself whenever the observables it accesses with `get()` are changed.
+Any function in an observable can be used a computed observable, whether at the root or in any child. A function is turned into an observable when you first call `get()` or `peek()` on it. It will then re-compute itself whenever the observables it accesses with `get()` are changed.
 
 ```js
 const state$ = observable({
@@ -162,18 +161,21 @@ const state$ = observable({
     // A child is computed
     fullName: () => state$.fname.get() + ' ' + state$.lname.get()
 })
-
-// It acts normally when used as a function
-state$.fullName()
-
-// Accessing it as an observable activates it as a computed observable
-const name = state$.fullName.get()
-
-// A function at the root makes the observable a computed
+// An observable with a function is a computed
 const name$ = observable(() => state$.fname.get() + ' ' + state$.lname.get())
 ```
 
-The difference between using it as a function vs. as a computed observable is that a computed observable is an object that caches the value. So `fullName()` will re-compute whenever you call it, but `fullName.get()` creates a computed observable that re-computes itself whenever its dependencies change.
+```js
+// A normal function returns the value and computes when called.
+const fullName = state$.fullName()
+
+// Calling .get() activates a computed observable that recomputes itself on changes
+const reactiveFullName = state$.fullName.get()
+```
+
+The difference between using it as a function vs. as a computed observable is that a computed observable is an object that caches the value.
+- `fullName()` is a function that re-compute whenever you call it.
+- `fullName.get()` creates a computed observable that re-computes itself whenever its dependencies change.
 
 ## Async Observables
 
@@ -192,7 +194,7 @@ observe(() => {
 })
 ```
 
-Asynchronous observables pair very well with [when](usage/reactivity/#when) to activate the function and resolve when the observable's Promise is resolved.
+Asynchronous observables pair very well with [when](../../usage/reactivity/#when) to activate the function and resolve when the observable's Promise is resolved.
 
 ```js
 // Await the promise to resolve and then get the data from it
@@ -200,7 +202,7 @@ const data = await when(serverState$)
 console.log(data)
 ```
 
-You can access the status of an async observable with the [syncState](usage/cache-sync/#syncstate) helper, which is an observable itself. The most common usage is to check its loaded or error states:
+You can access the status of an async observable with the [syncState](../../usage/persist-sync/#syncstate) helper, which is an observable itself. The most common usage is to check its loaded or error states:
 
 ```js
 const status$ = syncState(serverState$)
@@ -225,13 +227,13 @@ observe(() => {
 import { linked, observable } from "@legendapp/state"
 
 const selected$ = observable([false, false, false])
-const selectedAll$ = linked({
+const selectedAll$ = observable(linked({
   // selectedAll is true when every element is selected
   get: () => selected$.every((val$) => val$.get()),
 
   // setting selectedAll sets the value of every element
   set: (value) => selected$.forEach((val$) => val$.set(value))
-})
+}))
 
 selectedAll$.set(true)
 // selected.get() === [true, true, true]
@@ -241,10 +243,10 @@ Or it could be used to automatically deserialize/serialize a string value.
 
 ```js
 const str$ = observable('[1,2,3]')
-const arr$ = linked({
+const arr$ = observable(linked({
   get: () => JSON.parse(arr$.get())
   set: (value) => arr$.set(JSON.stringify(value))
-})
+}))
 ```
 
 #### Initial value
@@ -254,10 +256,10 @@ When creating an asynchronous observable with a Promise you may want it to have 
 ```js
 import { linked } from "@legendapp/state"
 
-const state$ = linked({
+const state$ = observable(linked({
     get: () => fetch('url').then(res => res.json()),
     initial: { numUsers: 0, messages: [] }
-})
+}))
 ```
 
 ## Advanced Computeds

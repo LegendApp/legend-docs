@@ -135,9 +135,10 @@ syncObservable(state$, {
 Each synced observable has a `syncState` observable that you can get to check its status or do some actions.
 
 ```ts
+import { observable } from '@legendapp/state'
 import { synced, syncState } from '@legendapp/state/sync'
 
-const obs$ = synced({ /*...*/ })
+const obs$ = observable(synced({ /*...*/ }))
 const state$ = syncState(obs$)
 const error = state$.error.get();
 const isLoaded = state$.isLoaded.get();
@@ -259,7 +260,7 @@ It requires some extra configuration for the database name, the table names, and
 IndexedDB requires changing the version whenever the tables change, so you can start with version 1 and increment the version whenever you add/change tables.
 
 ```js
-import { persistObservable } from "@legendapp/state/persist"
+import { syncObservable } from "@legendapp/state/sync"
 import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
 
 configureObservableSync({
@@ -298,7 +299,7 @@ syncObservable(settings$, {
 })
 ```
 
-Because IndexedDB is an asynchronous API, you'll need to wait for it to load before you start reading from it. `persistObservable` returns an Observable with load statuses that you can wait for.
+Because IndexedDB is an asynchronous API, you'll need to wait for it to load before you start reading from it. `syncObservable` returns an Observable with load statuses that you can wait for.
 
 ```js
 const status$ = syncObservable(state$, {

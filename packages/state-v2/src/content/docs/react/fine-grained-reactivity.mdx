@@ -264,14 +264,18 @@ function List() {
 
 ## Optionally add the Babel plugin
 
-The Babel plugin can make the syntax for Computed and Memo less verbose. But they work fine without Babel if you don't want to or can't use it. The Babel plugin converts the JSX under the hood so you don't need to use functions as children. It basically does this:
+The Babel plugin can make the syntax for Computed, Memo, and Show less verbose. But they work fine without Babel if you don't want to or can't use it. The Babel plugin converts the JSX under the hood so you don't need to use functions as children. It converts inline elements to functions so that they can be treated reactively:
 
 ```jsx
 // You write
-<Computed><div>Count: {state.count.get()}</div></Computed>
+<Computed><div>Count: {state$.count.get()}</div></Computed>
+<Memo><div>Count: {state$.count.get()}</div></Memo>
+<Show if={state$.visible}><Modal /></Show>
 
 // Babel transforms it to
 <Computed>{() => <div>Count: {state.count.get()}</div>}</Computed>
+<Memo>{() => <div>Count: {state$.count.get()}</div>}</Memo>
+<Show if={state$.visible}>{() => <Modal />}</Show>
 ```
 
 To install it, add `@legendapp/state/babel` to the plugins in your `babel.config.js`:

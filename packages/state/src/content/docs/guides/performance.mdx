@@ -81,7 +81,7 @@ batch(addItems);
 
 ### When persisting
 
-If you are using `persistObservable` to automatically persist your changes, you can prevent excessive writes by delaying persistence until changes are complete. Pushing to an array 1000 times could save to storage 1000 times, which could be very slow!
+If you are using `synced` or `syncObservable` to automatically persist your changes, you can prevent excessive writes by delaying persistence until changes are complete. Pushing to an array 1000 times could save to storage 1000 times, which could be very slow!
 
 ## Iterating through observables creates Proxies
 

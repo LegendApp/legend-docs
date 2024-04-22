@@ -68,10 +68,11 @@ Legend-State includes a powerful [sync and persistence system](../../guides/pers
 Local persistence plugins for the browser and React Native are included, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
 
 ```js
+import { observable } from '@legendapp/state'
 import { synced } from '@legendapp/state/sync'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
-const store$ = synced({
+const store$ = observable(synced({
     // Two-way bind this observable to a remote server
     get: () => fetch(url).then(r => r.json()),
     set: ({ value }) => fetch(url, { method: 'POST', data: JSON.stringify(value) }),
@@ -80,7 +81,7 @@ const store$ = synced({
         local: 'store',
         plugin: ObservablePersistLocalStorage
     },
-})
+}))
 
 // Getting the value activates it to fetch
 store$.user.name.get()

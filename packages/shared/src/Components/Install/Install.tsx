@@ -1,10 +1,7 @@
-import { observable, type Observable } from "@legendapp/state";
-import { observer } from "@legendapp/state/react";
-import {
-  configureObservablePersistence,
-  persistObservable,
-} from "@legendapp/state/persist";
+import { observable, type ObservableParam } from "@legendapp/state";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
+import { observer } from "@legendapp/state/react";
+import { configureObservableSync, syncObservable } from "@legendapp/state/sync";
 import classNames from "classnames";
 import { motion, type Transition } from "framer-motion";
 
@@ -12,7 +9,7 @@ interface PropsTab<T extends string> {
   name: string;
   layoutId: string;
   text?: string;
-  activeTab$: Observable<T>;
+  activeTab$: ObservableParam<T>;
 }
 const TransitionTab: Transition = {
   type: "spring",
@@ -24,7 +21,7 @@ interface Props<T extends string> {
   name: string;
   tabs: T[];
   tabTexts?: string[];
-  activeTab$: Observable<T>;
+  activeTab$: ObservableParam<T>;
   className?: string;
 }
 
@@ -38,15 +35,24 @@ export const state$ = observable({
 });
 
 if (typeof window !== "undefined") {
-  configureObservablePersistence({
-    pluginLocal: ObservablePersistLocalStorage,
+  configureObservableSync({
+    persist: {
+      plugin: ObservablePersistLocalStorage,
+    },
   });
-  persistObservable(state$, {
-    local: "state",
+  syncObservable(state$, {
+    persist: {
+      name: "state",
+    },
   });
 }
 
-const Tab = observer(function Tab<T extends string>({ name, layoutId, text, activeTab$ }: PropsTab<T>) {
+const Tab = observer(function Tab<T extends string>({
+  name,
+  layoutId,
+  text,
+  activeTab$,
+}: PropsTab<T>) {
   const isActive = name === activeTab$.get();
   return (
     <div
@@ -116,8 +122,8 @@ export const Install = observer(function ({
       <pre
         className="!mt-4 astro-code css-variables"
         style={{
-          "backgroundColor": "var(--astro-code-color-background)",
-          "overflowX": "auto",
+          backgroundColor: "var(--astro-code-color-background)",
+          overflowX: "auto",
         }}
       >
         <code className="language-bash code-highlight">
