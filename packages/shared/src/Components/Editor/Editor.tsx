@@ -40,7 +40,7 @@ export const Editor = observer(function Editor({
       enableTypeScript={true}
       theme={emptyTheme}
       noInline={noInline}
-      language="jsx"
+      language="tsx"
     >
       <div className="flex gap-4 text-sm mt-6 items-center">
         <div className="relative flex-1">
@@ -53,7 +53,7 @@ export const Editor = observer(function Editor({
             )}
           >
             <BiPencil className="mr-2" />
-            Live Preview
+            Live Editing
           </div>
         </div>
         <div

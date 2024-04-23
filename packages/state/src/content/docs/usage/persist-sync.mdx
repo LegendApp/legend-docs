@@ -240,10 +240,7 @@ configureObservableSync({
     // Use AsyncStorage in React Native
     persist: {
         plugin: ObservablePersistAsyncStorage,
-        asyncStorage: {
-            // The AsyncStorage plugin needs to be given the implementation of AsyncStorage
-            AsyncStorage
-        }
+        asyncStorage: { AsyncStorage }
     }
 })
 ```

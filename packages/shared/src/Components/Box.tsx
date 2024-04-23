@@ -19,8 +19,10 @@ export const Box = ({
     <div
       className={classNames(
         "rounded-lg p-4 relative",
-        center && 'flex flex-col items-center',
-        theme === "light" ? "bg-gray-50 text-gray-900" : "bg-gray-800",
+        center && "flex flex-col items-center",
+        theme === "light"
+          ? "bg-gray-50 text-gray-900"
+          : "bg-gray-800 text-gray-100",
         className
       )}
       style={{ width, height }}

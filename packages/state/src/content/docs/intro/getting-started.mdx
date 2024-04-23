@@ -1,186 +1,177 @@
 ---
 title: Getting Started
-description: Legend State Basic
+description: Legend State Getting Started
 sidebar:
     order: 2
 ---
 
-import Install from "shared/src/Components/Install/Install.astro";
+This guide will help you get started with Legend-State in a React or React Native App.
 
-## Install Legend-State
+import InstallFrameworks from "shared/src/Components/InstallFrameworks/InstallFrameworks.astro";
+import SelectFramework from "shared/src/Components/SelectFramework/SelectFramework.astro";
+import ReactOrNativeCode from "shared/src/Components/ReactOrNativeCode/ReactOrNativeCode.astro";
+import GettingStarted from "../../../Components/Introduction/GettingStarted.astro";
 
-<Install name="@legendapp/state" />
+<ReactOrNativeCode />
 
-## Core concepts
+## Which Platform?
 
-### Observables
+Select React or React Native to customize this guide for your platform.
 
-You can put anything in an observable: primitives, deeply nested objects, arrays, functions, etc... Observables work just like normal objects so you can interact with them without any extra complication. Just call `get()` to get a value and `set(...)` to modify it.
+<SelectFramework />
+<br />
 
-```js
+### Install Legend-State
+
+<InstallFrameworks />
+
+## Quick Start
+
+We'll build a little Todo example app to show what a Legend-State app looks like. It works a bit differently than normal React apps - components re-render themselves when the state they care about changes. And Legend-State includes many helpful components to reduce the amount of boilerplate code you have to right, like components that two-way bind directly to state.
+
+### Create our first observable
+
+First we'll create an observable store for the example. An observable can be a single primitive or a massive tree of all of your state - it's up to you. It can infer its type from the data you initialize it with, or you can type it with an interface if you prefer, which we do in this example.
+
+We'll set up the example with a Record of todos, some computed functions to track counts, and an action function to add a todo. These functions can be within an observable or separate, it doesn't matter, but we will include it all together in this example.
+
+```ts
 import { observable } from "@legendapp/state";
 
-const state$ = observable({ text: "hello", obj: { value: 10 } });
+// Type your Store interface
+interface Todo {
+  id: number;
+  text: string;
+  completed?: boolean;
+}
 
-const text = state$.text.get(); // 'hello'
-state$.obj.value.get() === 10; // true
+interface Store {
+  todos: Todo[];
+  total: number;
+  numCompleted: number;
+  addTodo: () => void;
+}
 
-// Use the set function anywhere
-state$.text.set("hi");
-
-// Easily modify the previous value
-state$.text.set((text) => text + " there");
-```
-
-[Read more](../../usage/observable)
-
-### Computeds
-
-You can create an observable with a function at the root or in any child. The computed function is activated when you call `get()` on it.
-
-```js
-import { observable } from "@legendapp/state";
-
-const state$ = observable({
-    fname: 'Annyong',
-    lname: 'Bluth',
-    // A child is computed
-    fullName: () => state$.fname.get() + ' ' + state$.lname.get()
+// Create a global observable for the Todos
+let nextId = 0;
+const store$ = observable<Store>({
+  todos: [],
+  // Computeds
+  total: (): number => {
+    return store$.todos.length;
+  },
+  numCompleted: (): number => {
+    return store$.todos.get().filter((todo) => todo.completed).length;
+  },
+  addTodo: () => {
+    const todo: Todo = {
+      id: nextId++,
+      text: "",
+    };
+    store$.todos[todo.id].set(todo);
+  },
 });
-
-// Or create a fully computed observable
-const name$ = observable(() => state$.fname.get() + ' ' + state$.lname.get());
-
-// Accessing a computed activates it
-const name = state$.fullName.get();
 ```
 
-[Read more](../../usage/observable)
+Now that we have an observable for our Todos, let's hook it up to React.
 
-### Observing observables
+### Observables in React
 
-You can subscribe to changes anywhere in the hierarchy of an object with `onChange(...)`, and then any change to that node will call the listener.
+The easiest and most optimized way to use Legend-State in React is to wrap components in [observer](../react-api/#observer). Then whenever you call `get()` on an observable, it is tracked automatically so that the component re-renders whenever it changes. So since the `App` component is getting some computed values we wrap that in `observer`.
 
-```js
-const state$ = observable({
-  settings: { theme: "light" },
-  array: [{ text: "hi" }],
-});
+Legend-State also includes `Reactive` components for both React and React Native. You just need to enable them once and then you can use them throughout your app.
 
-// Listen to observable directly
-state$.settings.theme.onChange(({ value }) => console.log("Theme is", value));
+```tsx
+import { observer, Reactive, useObservable } from "@legendapp/state/react"
+import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
+
+// Enable the Reactive components, only need to do this once
+enableReactComponents();
+
+export const App = observer(function App() {
+    // Consume the computed observables from the global store$
+    const total = store$.total.get()
+    const completed = store$.numCompleted.get()
+    // Create a local observable
+    const theme$ = useObservable<'light' | 'dark'>('dark')
+    const theme = theme$.get()
+
+    const onClickClear = () => store$.todos.set({})
+
+    return (
+        <Box theme={theme}>
+            <ThemeButton $value={theme$} />
+            <Text>Total: {total}</Text>
+            <Text>Completed: {completed}</Text>
+            <For each={store$.todos} item={TodoItem} />
+            <View className="flex justify-between">
+                <Button onClick={store$.addTodo}>Add</Button>
+                <Button onClick={onClickClear}>Clear</Button>
+            </View>
+        </Box>
+    )
+})
+
+// Receives item$ prop from the For component
+function TodoItem({ item$ }: { item$: Observable<Todo> }) {
+    const onKeyDown = (e) => {
+        // Call addTodo from the global store$
+        if (e.key === 'Enter') store$.addTodo()
+    }
+
+    // The child components are bound directly to the observable properties
+    // so this component never has to re-render.
+    return (
+        <View className="row">
+            <Checkbox $value={item$.completed} />
+            <Reactive.TextInput
+                $value={item$.text}
+                onKeyDown={onKeyDown}
+            />
+        </View>
+    );
+}
 ```
 
-The core power of Legend-State is the "observing contexts" in which any call to `get()` will subscribe the observer to that node, and the observer will re-run whenever it changes. This includes `observe`, `when`, `computed`, `useSelector`, `observer`, `<Memo>`, `<Computed>`, and reactive props (we'll get to all of that later).
+Now that our Todo app is rendering nicely, let's persist its state to storage.
 
-```js
-// This will re-run whenever accessed observables change
-observe(() => {
-  console.log("Theme is", state$.settings.theme.get());
-});
+### Persistence
 
-// when waits for a value to become truthy.
-await when(() => state$.settings.theme.get() === "dark");
+Legend-State has a built-in full-featured sync and persistence layer. In this example we'll show basic persistence and you can read [persist and sync](../../usage/persist-sync) for details.
 
-// an observable can be computed based on other observables
-const isDark$ = observable(() => state$.settings.theme.get() === "dark");
-```
+In this example we first set up a global configuration for sync and persistence. These options can also be set or overriden in each individual observable. Since most apps will use the same persistence for everything it's easiest to set that up once in a global configuration.
 
-[Read more](../../usage/reactivity)
+Then all you have to do is `syncObservable` with the name you want it to have in storage. Any changes made after that will be saved to storage automatically.
 
-### Selectors
+```ts
+import { observable } from "@legendapp/state"
+import { configureObservableSync, syncObservable } from '@legendapp/state/sync'
+import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
 
-Many of the functions in Legend-State take a Selector, which can be either an observable or a function that returns a value based on observables. The selector is run in an observing context so that `get()` tracks an observable for changes. Whenever an observable changes, it re-runs the function.
+// Setup global persist configuration
+configureObservableSync({
+    persist: {
+        plugin: ObservablePersistAsyncStorage,
+        asyncStorage: { AsyncStorage }
+    }
+})
 
-Using `when` as an example of using Selectors:
+const store$ = observable<Store>({
+    todos: {},
+})
 
-```js
-const isSignedIn$ = observable(false);
-const isOnline$ = observable(false);
-
-// A selector can be just an observable, which will be tracked for changes
-await when(isSignedIn$);
-
-// Or selector can be a function which tracks all get() calls for changes
-await when(() => isSignedIn$.get() && isOnline$.get());
-```
-
-## Getting started
-
-### 1. Configure your options
-
-Legend-State is designed to have a lean core that allows you and your team to add additional features, so it has configuration functions to add features as you like. If you're getting started with React we recommend using `enableReactTracking()` - it's the easiest way to use observables in React. You only need to use configuration functions once in your app's entry point.
-
-```jsx
-import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
-// This makes React components automatically track get() calls to re-render
-enableReactTracking({ auto: true });
-```
-
-There are also more options such as enabling getting/setting values directly with a `$` property. See [configuring](../../usage/configuring) for more details.
-
-### 2. Create global state
-
-Observables are designed to contain large hierarchy, and many teams like to have one large global store.
-
-```js
-import { observable } from '@legendapp/state';
-
-export const state$ = observable({
-    UI: {
-        windowSize: undefined as { width: number, height: number },
-        activeTab: 'home' as 'home' | 'user' | 'profile',
-        ...
-    },
-    settings: {
-        theme: 'light' as 'light' | 'dark',
-        fontSize: 14,
-        ...
-    },
-    todos: []
+// Persist the observable to the named key of the global persist plugin
+syncObservable(store$, {
+    persist: {
+        name: 'gettingStarted'
+    }
 })
 ```
 
-Or if you prefer to have multiple individual atoms in multiple files, you can do that too.
+And that's it! Now we have a full React app that persists its changes.
 
-```js
-// settings.ts
-export const theme$ = observable('light')
-export const fontSize$ = observable(14)
-```
-```js
-// UIState.ts
-export const uiState$ = observable({
-    windowSize: undefined as { width: number, height: number },
-    activeTab: 'home' as 'home' | 'user' | 'profile',
-})
-```
+### Full Example
 
-### 3. Use in React
+Now let's put it all together into a live editable example. Feel free to play around in this sandbox on the left and see it running to the right.
 
-Head over to [React Introduction](../../react/react-introduction) for a detailed guide to getting started in React.
-
-### 4. Persistence plugins
-
-Use `persistObservable` to automatically persist state using any kind of local or remote storage. Legend-State includes local providers for Local Storage on web and [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) in React Native, with more local and remote providers coming soon. Use `configureObservablePersistence` to set default providers for all persisted observables, or you can set them individually if they need to be different.
-
-The given observables will be populated with their persisted state immediately after calling `persistObservable`.
-
-```js
-// Global configuration
-configureObservablePersistence({
-    // Use Local Storage on web
-    pluginLocal: ObservablePersistLocalStorage
-    // Use react-native-mmkv in React Native
-    pluginLocal: ObservablePersistMMKV
-})
-
-const state$ = observable({ store: { bigObject: { ... } } })
-
-// Persist this observable
-persistObservable(state$, {
-    local: 'store' // Unique name
-})
-```
-
-[Read more](../../guides/persistence)
+<GettingStarted />

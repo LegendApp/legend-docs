@@ -1,38 +1,13 @@
-import { observable, type ObservableParam } from "@legendapp/state";
+import { type ObservableParam } from "@legendapp/state";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { observer } from "@legendapp/state/react";
 import { configureObservableSync, syncObservable } from "@legendapp/state/sync";
 import classNames from "classnames";
 import { motion, type Transition } from "framer-motion";
+import { state$, type PackageManager } from "../../state";
+import { Tabs } from "../Tabs";
 
-interface PropsTab<T extends string> {
-  name: string;
-  layoutId: string;
-  text?: string;
-  activeTab$: ObservableParam<T>;
-}
-const TransitionTab: Transition = {
-  type: "spring",
-  duration: 0.4,
-  bounce: 0.21,
-};
-
-interface Props<T extends string> {
-  name: string;
-  tabs: T[];
-  tabTexts?: string[];
-  activeTab$: ObservableParam<T>;
-  className?: string;
-}
-
-type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 const tabs: PackageManager[] = ["bun", "npm", "yarn", "pnpm"];
-
-export const state$ = observable({
-  packageManager: "npm" as PackageManager,
-  exampleCount: 0,
-  exampleTheme: "light",
-});
 
 if (typeof window !== "undefined") {
   configureObservableSync({
@@ -47,59 +22,33 @@ if (typeof window !== "undefined") {
   });
 }
 
-const Tab = observer(function Tab<T extends string>({
-  name,
-  layoutId,
-  text,
-  activeTab$,
-}: PropsTab<T>) {
-  const isActive = name === activeTab$.get();
-  return (
-    <div
-      className="relative px-1 pb-1 mx-2 !mt-0 cursor-pointer "
-      onClick={() => activeTab$.set(name)}
-    >
-      <div
-        data-text={text}
-        className={classNames(
-          "bold-consistent-width",
-          isActive && "text-blue-accent font-bold"
-        )}
-      >
-        {text}
-      </div>
-      {isActive && (
-        <motion.div
-          layoutId={layoutId}
-          className="absolute inset-x-0 bottom-0 h-1 rounded bg-blue-accent"
-          transition={TransitionTab}
-        />
-      )}
-    </div>
-  );
+export const InstallTabs = observer(function ({ name }: { name: string }) {
+  return <Tabs name={name} tabs={tabs} activeTab$={state$.packageManager} />;
 });
 
-export const Tabs = function <T extends string>({
-  name,
-  tabs,
-  tabTexts,
-  activeTab$,
-  className,
-}: Props<T>) {
+export const InstallCode = observer(function ({ name }: { name: string }) {
+  const manager = state$.packageManager.get();
+
   return (
-    <motion.div className={classNames("flex items-center", className)} layout>
-      {tabs.map((tab, i) => (
-        <Tab
-          layoutId={name}
-          key={tab}
-          name={tab}
-          text={tabTexts?.[i] || tab}
-          activeTab$={activeTab$}
-        />
-      ))}
-    </motion.div>
+    <pre
+      className="!mt-4 astro-code css-variables"
+      style={{
+        backgroundColor: "var(--astro-code-color-background)",
+        overflowX: "auto",
+      }}
+    >
+      <code className="language-bash code-highlight">
+        <span className="code-line">
+          <span className="token function">{manager}</span>{" "}
+          <span className="token function">
+            {manager === "npm" ? "i" : "add"}
+          </span>
+          {" " + name}
+        </span>
+      </code>
+    </pre>
   );
-};
+});
 
 export const Install = observer(function ({
   name,
@@ -110,32 +59,10 @@ export const Install = observer(function ({
   className?: string;
   uid?: string;
 }) {
-  const manager = state$.packageManager.get();
-
   return (
     <div className={classNames("mt-6", className)}>
-      <Tabs
-        name={name + (uid || "")}
-        tabs={tabs}
-        activeTab$={state$.packageManager}
-      />
-      <pre
-        className="!mt-4 astro-code css-variables"
-        style={{
-          backgroundColor: "var(--astro-code-color-background)",
-          overflowX: "auto",
-        }}
-      >
-        <code className="language-bash code-highlight">
-          <span className="code-line">
-            <span className="token function">{manager}</span>{" "}
-            <span className="token function">
-              {manager === "npm" ? "i" : "add"}
-            </span>
-            {" " + name}
-          </span>
-        </code>
-      </pre>
+      <InstallTabs name={name || uid!} />
+      <InstallCode name={name} />
     </div>
   );
 });

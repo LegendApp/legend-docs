@@ -301,7 +301,7 @@ const state$ = observable({
   items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
   // Return a link to the [selector] property in the given item
   texts: (key: string) => {
-    return obs.items[key][obs.selector.get()]
+    return state$.items[key][obs.selector.get()]
   },
 })
 

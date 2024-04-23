@@ -93,7 +93,6 @@ export function MessageListComponent() {
         Reactive,
         useFetch,
         useObservable,
-        useObservable,
         Show,
         Memo,
         For,

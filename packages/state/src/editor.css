@@ -198,31 +198,31 @@ pre[class*="language-"] {
 }
 
 /* JSX overrides */
-.language-jsx .token.keyword {
+.language-jsx .token.keyword, .language-tsx .token.keyword {
     color: var(--color-red);
 }
 
-.language-jsx .token.function {
+.language-jsx .token.function, .language-tsx .token.function {
     color: var(--color-purple);
 }
 
-.language-jsx .token.function-variable {
+.language-jsx .token.function-variable, .language-tsx .token.function-variable {
     color: var(--color-brown);
 }
 
-.language-jsx .token.punctuation {
+.language-jsx .token.punctuation, .language-tsx .token.punctuation {
     color: var(--color-blue);
 }
 
-.language-jsx .token.class-name {
+.language-jsx .token.class-name, .language-tsx .token.class-name {
     color: var(--color-green);
 }
 
-.language-jsx .token.attr-name {
+.language-jsx .token.attr-name, .language-tsx .token.attr-name {
     color: var(--color-blue);
 }
 
-.language-jsx .token.string {
+.language-jsx .token.string, .language-tsx .token.string {
     color: var(--color-indigo);
 }
 

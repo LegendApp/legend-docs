@@ -109,6 +109,23 @@ observe(() => {
 });
 ```
 
+### Selectors
+
+Many of the functions in Legend-State take a Selector, which can be either an observable or a function that returns a value based on observables. The selector is run in an observing context so that `get()` tracks an observable for changes. Whenever an observable changes, it re-runs the function.
+
+Using `when` as an example of using Selectors:
+
+```js
+const isSignedIn$ = observable(false);
+const isOnline$ = observable(false);
+
+// A selector can be just an observable, which will be tracked for changes
+await when(isSignedIn$);
+
+// Or selector can be a function which tracks all get() calls for changes
+await when(() => isSignedIn$.get() && isOnline$.get());
+```
+
 ### observe
 
 `observe` can run arbitrary code when observables change, and automatically tracks the observables accessed while running, so it will update whenever any accessed observable changes.

@@ -1,0 +1,6 @@
+---
+import { ReactOrNativeCode } from "./ReactOrNativeCode";
+const { value } = Astro.props;
+---
+
+<ReactOrNativeCode client:only value={value} />
