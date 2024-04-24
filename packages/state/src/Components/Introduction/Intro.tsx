@@ -1,19 +1,19 @@
 import { observable, observe } from "@legendapp/state";
-import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import { observer } from "@legendapp/state/react";
 import classNames from "classnames";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const INTRO_EXAMPLE_CODE = `
-// Automatically re-render components when observables change
-enableReactTracking({ auto: true })
+import { observable } from "@legendapp/state"
+import { observer } from "@legendapp/state/react"
 
 // Create an observable object
 const settings$ = observable({ theme: 'dark' })
 
 // This is the code for the example on your right ----->
-function Component() {
+const Component = observer(function Component() {
   // theme is automatically tracked for changes
   const theme = settings$.theme.get()
 
@@ -31,7 +31,7 @@ function Component() {
       </Button>
     </Box>
   )
-}
+})
 `;
 
 export function IntroExampleComponent() {
@@ -40,16 +40,15 @@ export function IntroExampleComponent() {
       code={INTRO_EXAMPLE_CODE}
       scope={{
         observable,
+        observer,
         classNames,
         observe,
         Button,
-        enableReactTracking,
         Box,
       }}
       noInline
       renderCode=";render(<Component />)"
       previewWidth={180}
-      transformCode={(code) => code.replace('zzz', '')}
     />
   );
 }

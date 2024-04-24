@@ -6,43 +6,46 @@ sidebar:
 
 You can put anything in an observable: primitives, deeply nested objects, arrays, functions, etc... Observables work just like normal objects so you can interact with them without any extra complication. Just call `get()` to get a value and `set(...)` to modify it.
 
+Observables do not modify the underlying data all. They use [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) to expose observable functions and track changes, so an observable is a Proxy pointing to the actual data.
+
 :::note
-We use a `$` suffix on variables as a convention to indicate an observable but it's not required.
+We use a `$` suffix on variables as a naming convention to indicate an observable but it's not required. It just helps differentiate between observables and regular variables.
 :::
 
 ```js
 import { observable } from "@legendapp/state"
 
+// Create observable objects as large and deep as you want. They can include computed functions
+// and action functions.
 const state$ = observable({
     fname: 'Annyong',
     lname: 'Bluth',
-    name: () => state$.fname.get() + ' ' + state$.lname.get()
+    // Computeds
+    name: () => state$.fname.get() + ' ' + state$.lname.get(),
+    // Actions
+    setName: (name: string) => {
+        const [fname, lname] = name.split(' ');
+        state$.assign({ fname, lname })
+    }
 })
 
-// get
-const value = state$.get()
-// set
-state$.fname.set('Hello')
-// assign to an object
-state$.assign({ fname: 'Maebe' })
-// any function can be used as a computed observable
-const name = state$.name.get()
+// Or create small individual atoms if you prefer
+const fname$ = observable('Annyong')
+const lname$ = observable('Bluth')
 ```
 
 ## Observable methods
 
 ### get()
 
-Observables use [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) to expose observable functions and track changes, so an observable is a Proxy pointing to the actual data. You can use `get()` to get the actual value of any observable.
+You can use `get()` to get the actual value of any observable.
 
 ```js
 const profile = { name: "Test user" }
-const state$ = observable({ profile: profile, test: 0 })
+const state$ = observable({ profile, test: 0 })
 
-// The raw value is unchanged
-state$.profile.get() // { name: 'Test user' }
-state$.profile === profile // ❌ false. The observable is not strictly equal to profile.
-state$.profile.get() === profile // ✅ true. The raw data is exactly what was set.
+// get the underlying value from the observable
+const name = state$.profile.name.get()
 ```
 
 Accessing properties through the observable will create a Proxy for every property accessed, but it will not do that while accessing the raw data. So you may want to retrieve the raw data before doing expensive computations that do not need to notify.
@@ -65,6 +68,13 @@ state$.get(true) // Create a shallow listener
 
 `peek()` returns the raw value in the same way as `get()`, but it does not automatically track it. Use this when you don't want the component/observing context to update when the value changes.
 
+```js
+const state$ = observable({ name: 'Test user' })
+
+// get the underlying value from the observable
+const name = state$.name.peek()
+```
+
 ### set()
 
 You can use `set()` to modify the observable, at any path within it. You can even `set()` on a node that is currently undefined, and it will fill in the object tree to make it work.
@@ -82,15 +92,20 @@ state$.text.set((prev) => prev + " there")
 state$.otherKey.otherProp.set("hi")
 ```
 
+Note that `set` sets the given value into the raw data without modifying it. Legend-State does deep equality checking to notify of changes to each property, so setting with a clone of an object will not notify of any changes because all properties are the same.
+
 ### assign()
 
 Assign is a shallow operation matching `Object.assign` to set multiple properties at once. If you want a deep merge, see [mergeIntoObservable](../helper-functions/#mergeintoobservable). These batch all individual set operations so that observers only update once.
 
 ```js
-const state$ = observable({ text: "hi" })
+const state$ = observable({ text: "hi", text2: "there" })
 
 // Assign
-state$.assign({ text: "hi2" })
+state$.assign({
+    text: "hi!" ,
+    text2: "there!"
+})
 ```
 
 ### delete()
@@ -134,7 +149,7 @@ const state$ = observable({
 })
 ```
 
-[Observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, including within any called functions.
+Note that [observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, including within any called functions. So if a function called from within an observer calls `get()` that will be tracked too.
 
 ```jsx
 const state$ = observable({
@@ -166,15 +181,15 @@ const name$ = observable(() => state$.fname.get() + ' ' + state$.lname.get())
 ```
 
 ```js
-// A normal function returns the value and computes when called.
+// Calling it like a function returns the value and computes when called.
 const fullName = state$.fullName()
 
-// Calling .get() activates a computed observable that recomputes itself on changes
+// Calling .get() activates it as a computed observable that recomputes itself on changes
 const reactiveFullName = state$.fullName.get()
 ```
 
 The difference between using it as a function vs. as a computed observable is that a computed observable is an object that caches the value.
-- `fullName()` is a function that re-compute whenever you call it.
+- `fullName()` is a function that re-computes whenever you call it.
 - `fullName.get()` creates a computed observable that re-computes itself whenever its dependencies change.
 
 ## Async Observables
@@ -186,7 +201,7 @@ const serverState$ = observable(() => fetch('url').then(res => res.json()))
 
 observe(() => {
     // Getting the value activates the observable to fetch, and it
-    //  updates its value when it resolves.
+    // updates its value when it resolves.
     const data = serverState$.get()
     if (data) {
         ...
@@ -194,7 +209,7 @@ observe(() => {
 })
 ```
 
-Asynchronous observables pair very well with [when](../../usage/reactivity/#when) to activate the function and resolve when the observable's Promise is resolved.
+Asynchronous observables can be paired with [when](../../usage/reactivity/#when) to activate the function and resolve when the observable's Promise is resolved.
 
 ```js
 // Await the promise to resolve and then get the data from it
@@ -266,9 +281,9 @@ const state$ = observable(linked({
 
 ### Link to another observable
 
-If you return an observable from a computed function, it will create a two-way link to the target observable. Interacting with that observable will then pass through to the target.
+If you return an observable from a computed function, it will create a two-way link to the target observable. Interaction with the linked observable will then pass through to the target.
 
-Observing contexts tracking the linking observable will be re-run both when the linked observable's value changes and when the link itself changes.
+Observing contexts tracking the linking observable will re-run both when the linked observable's value changes and when the link itself changes.
 
 In this example, the observable that `selectedItem` points to is changed by setting `selectedIndex`. And because it's a direct link to the target observable, `set` operations will pass through to the target observable.
 
@@ -289,6 +304,8 @@ state$.selectedIndex.set(2)
 
 state$.selectedItem.set('HELLO!')
 // observe: 'HELLO!'
+
+// items = ["hi", "there", "HELLO!"]
 ```
 
 ### Lookup table
@@ -297,12 +314,15 @@ A function with a single `string` key can be used as a lookup table (an object w
 
 ```ts
 const state$ = observable({
-  selector: 'text',
-  items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
-  // Return a link to the [selector] property in the given item
-  texts: (key: string) => {
-    return state$.items[key][obs.selector.get()]
-  },
+    selector: 'text',
+    items: {
+        test1: { text: 'hi', othertext: 'bye' },
+        test2: { text: 'hello', othertext: 'goodbye' }
+    },
+    // Return a link to the [selector] property in the given item
+    texts: (key: string) => {
+        return state$.items[key][state$.selector.get()]
+    },
 })
 
 // Now these reference the same thing:
@@ -317,26 +337,26 @@ state$.texts['test1'].get()
 ```js
 import { event } from "@legendapp/state"
 
-const onClosed = event()
+const onClosed$ = event()
 
-// Simply pass a callback to the `on` function
-onClosed.on(() => { ... })
+// Simply pass a callback to the `onChange` function
+onClosed$.onChange(() => { ... })
 
-// Or use it with 'onChange' like other observables
-onClosed.onChange(() => { ... })
+// Or use 'on' which is an alias of `onChange`
+onClosed$.on(() => { ... })
 
 // Dispatch the event to call listeners
-onClosed.fire()
+onClosed$.fire()
 ```
 
 ## Notes
 
 ### Safety
 
-Observables are safe so that you cannot directly assign to them, which prevents accidentally overwriting state or accidentally assigning huge objects into an observable.
+Modifying an observable can have a large effect such as re-rendering or syncing with a database, so it uses a purposeful `set` rather than simple assignments. This prevents potentially catastrophic mistakes and looks visually different than a variable assignment so that it is clear what is happening.
 
 ```js
-const state$ = observable({ text: "hello", num: 10, obj: {} }, /*safe*/ true)
+const state$ = observable({ text: "hello", num: 10, obj: {} })
 
 state$.text = "hi"
 // ❌ Can't set directly
@@ -363,6 +383,10 @@ state$.text.assign({ value: "hello there" })
 If you really want to assign directly to observables, there is an extension to add `$` as a property you can get/set. See [configuration](../configuring#enable$get) for details.
 
 ```js
+import { enable$get } from "@legendapp/state/config/enable$get"
+enable$get()
+
+// Now you can use $ as a shorthand for get()
 const testValue = state$.test.$
 
 // Assign to $ as a shorthand for set()
@@ -405,7 +429,7 @@ state$.user.profile.name.set("Annyong")
 
 Observable arrays have all of the normal array functions as you'd expect, but some are modified for observables.
 
-All looping functions set up [shallow tracking](../reactivity#shallow-modifier) automatically, as well as provide the observable in the callback. This includes:
+All looping functions set up [shallow tracking](../reactivity#shallow-tracking) automatically, as well as provide the observable in the callback. This includes:
 
 - every
 - filter
@@ -444,7 +468,7 @@ state$.assign({ key: 'newValue' })
 
 #### 2. Don't need to clone
 
-A common pattern in React is to set state with a clone of the previous value, which is required because of immutability constraints in React. Legend-State does not have that constraint, and cloning is bad for performance, so it's better to do operations directly on the observables.
+A common pattern in React is to set state with a clone of the previous value, which is required because of immutability constraints in React. Legend-State does not have that constraint and cloning is bad for performance, so it's better to do operations directly on the observables.
 
 ```js
 // ❌ Setting with a cloned object creates a new object unnecessarily

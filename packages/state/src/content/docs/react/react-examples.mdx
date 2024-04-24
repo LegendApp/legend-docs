@@ -1,7 +1,7 @@
 ---
 title: React Examples
 sidebar:
-    order: 6
+    order: 5
 ---
 
 import Persistence from "../../../Components/React/Persistence.astro";
@@ -49,6 +49,16 @@ This example uses [reactive](../fine-grained-reactivity#reactive) to make a vers
 This example also creates a [computed observable](../observable#computed) text value from the boolean and renders it directly in JSX, which (under the hood) creates a reactive text element that re-renders itself when it changes.
 
 <AnimatedSwitchExample />
+
+## Persistence with animations
+
+This example shows:
+
+1. State persisted to local storage
+2. Reactive components
+
+<Persistence />
+
 
 ## Show a modal with multiple pages
 

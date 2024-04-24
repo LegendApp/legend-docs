@@ -31,7 +31,7 @@ observe(() => {
 
 ## 🔥 Fine-grained reactivity
 
-Using features like [Memo](../../react/fine-grained-reactivity#Memo) it's easy to isolate renders to the smallest possible change.
+Using features like [Memo](../../react/fine-grained-reactivity#memo) it's easy to isolate renders to the smallest possible change.
 
 <Primitives />
 
@@ -55,32 +55,30 @@ Some state libraries are for global state while some want state to reside within
 
 See [Patterns](../../guides/patterns) for more examples of different ways to use Legend-State.
 
-## 💾 Persistence built in
+## 💾 Persistence and sync
 
 > There are only two hard things in Computer Science: cache invalidation and naming things. - Phil Karlton
 
-We don't want developers to have to worry about persisting and syncing state, because it's often very complicated and error-prone. So we've built [persistence](../../guides/persistence) plugins using Legend-State's listeners, with extensive tests to make sure it's absolutely correct.
+We built Legend-State to be both the state and sync systems shared between both [Legend](https://www.legendapp.com) and [Bravely](https://www.bravely.io). So it includes a very full-featured sync and persistence system that we've iterated on and optimized for years in production. It’s designed to support local-first apps: any changes made while offline are persisted between sessions to be retried whenever connected.
 
-It currently includes plugins for local persistence with Local Storage and IndexedDB on web and [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) in React Native, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
+It currently includes plugins for local persistence with Local Storage or IndexedDB on web and [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) or AsyncStorage in React Native.
+
+It has a flexible sync API for all types of backends, and a growing library of plugins for backends like Keel and Firebase Realtime Database.
 
 ```js
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-import { ObservablePersistFirebase } from "@legendapp/state/persist-plugins/firebase"
-import { persistObservable } from '@legendapp/state/persist'
+import { synced } from '@legendapp/state/persist'
 import { observable } from '@legendapp/state'
 
-const state$ = observable({ store: { bigObject: { ... } } })
-
-// Persist this observable
-persistObservable(state$, {
-    pluginLocal: ObservablePersistLocalStorage,
-    local: 'store',
-    pluginRemote: ObservablePersistFirebase,
-    remote: {
-        firebase: {
-            refPath: (uid) => `/users/${uid}/`,
-            requireAuth: true,
-        },
+const state$ = observable({
+    initial: {
+        { bigObject: { ... } }
+    },
+    get: () => fetch('url').then(res => res.json()),
+    set: ({ value }) =>
+        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) }),
+    persist: {
+        name: 'test'
     }
 })
 ```

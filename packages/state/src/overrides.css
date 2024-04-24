@@ -1,10 +1,16 @@
 :root {
     --sl-color-accent-high: #09d;
     @media (min-width: 80rem) {
-            --sl-content-width: 48rem;
-        }
+        --sl-content-width: 48rem;
+    }
     @media (min-width: 85rem) {
         --sl-content-width: 52rem;
+    }
+    .starlight-aside__title {
+        font-size: var(--sl-text-h6);
+    }
+    .starlight-aside__content {
+        @apply text-base;
     }
 }
 

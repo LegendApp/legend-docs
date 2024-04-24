@@ -36,10 +36,6 @@
     border-color: var(--color-border-code-block) !important;
 }
 
-.prism-code {
-
-}
-
 code {
     border-radius: 0.25rem;
 }

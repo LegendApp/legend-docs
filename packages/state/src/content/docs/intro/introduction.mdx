@@ -9,8 +9,8 @@ sidebar:
 Version 3 is still in development. You can use it by installing the @next version but the APIs may change before release.
 :::
 
-import Primitives from "../../../Components/Introduction/Primitives.astro";
-import Intro from "../../../Components/Introduction/Intro.astro";
+import Primitives from "../../../Components/Introduction/Primitives.astro"
+import Intro from "../../../Components/Introduction/Intro.astro"
 
 Legend-State is a super fast all-in-one state and sync library that lets you write less code to make faster apps. Legend-State has four primary goals:
 
@@ -19,6 +19,8 @@ Legend-State is a super fast all-in-one state and sync library that lets you wri
 There is no boilerplate and there are no contexts, actions, reducers, dispatchers, sagas, thunks, or epics. You can structure your data however you want in local or global stores. It doesn't modify your data at all, and you can just call `get()` to get the raw data and `set()` to change it.
 
 ```js
+import { observable, observe } from "@legendapp/state"
+
 const settings$ = observable({ theme: 'dark' })
 
 // get returns the raw data
@@ -27,7 +29,7 @@ settings$.theme.get() === 'dark'
 settings$.theme.set('light')
 
 // Computed observables with just a function
-const isDark$ = observable(() => settings$.theme.get() === 'dark');
+const isDark$ = observable(() => settings$.theme.get() === 'dark')
 
 // observing contexts re-run when tracked observables change
 observe(() => {
@@ -36,7 +38,7 @@ observe(() => {
 
 ```
 
-React components can track access to `get()` on observables and automatically re-render whenever they change.
+React components track access to `get()` on observables and automatically re-render whenever they change.
 
 :::note[Live editable]
 Many examples in these docs are editable so you can play around with the code and see how it works.
@@ -46,7 +48,7 @@ Many examples in these docs are editable so you can play around with the code an
 
 ### 2. ⚡️ The fastest React state library
 
-Legend-State beats every other state library on just about every metric and is so optimized for arrays that it even beats vanilla JS on the "swap" and "replace all rows" benchmarks. At only `4kb` and with the massive reduction in boilerplate code, you'll have big savings in file size too.
+Legend-State beats every other state library on just about every metric and is so optimized for arrays that it even beats vanilla JS in some benchmarks. At only `4kb` and with the massive reduction in boilerplate code, you'll have big savings in file size too.
 
 <img
   src="https://legendapp.com/img/dev/state/times.png"
@@ -63,7 +65,7 @@ Legend-State helps your components re-render less, less often, making your apps 
 
 ### 4. 💾 Powerful sync and persistence
 
-Legend-State includes a powerful [sync and persistence system](../../guides/persistence). It easily enables local-first apps by optimistically applying all changes locally first, ensuring they eventually sync, managing conflict resolution, and syncing minimal diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
+Legend-State includes a powerful [sync and persistence system](../../usage/persist-sync). It easily enables local-first apps by optimistically applying all changes locally first, ensuring they eventually sync, managing conflict resolution, and syncing minimal diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
 
 Local persistence plugins for the browser and React Native are included, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
 
@@ -90,11 +92,13 @@ store$.user.name.get()
 store$.user.name.set('Annyong')
 ```
 
-[Read more](../../guides/persistence)
+[Read more](../../usage/persist-sync)
 
 ## Install
 
 import Install from "shared/src/Components/Install/Install.astro";
+
+Version 3 is currently available in the @next version and may change before the final release.
 
 <Install name="@legendapp/state@next" />
 

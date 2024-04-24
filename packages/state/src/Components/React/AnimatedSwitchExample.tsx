@@ -43,7 +43,7 @@ function App() {
   const renderCount = ++useRef(0).current
 
   // Computed text value
-  const text = () => (
+  const text$ = () => (
     settings$.enabled.get() ? 'Yes' : 'No'
   )
 
@@ -51,7 +51,7 @@ function App() {
     <Box>
       <div>Renders: {renderCount}</div>
       <div>
-        Enabled: <Memo>{text}</Memo>
+        Enabled: <Memo>{text$}</Memo>
       </div>
       <Toggle $value={settings$.enabled} />
     </Box>
@@ -80,7 +80,7 @@ export function AnimatedSwitchComponent() {
         code
           .replace(
             /className="toggle"/g,
-            'className="border border-[#717173] rounded-full select-none"'
+            'className="border border-[#717173] rounded-full select-none cursor-pointer"'
           )
           .replace(
             /className="thumb"/g,

@@ -10,7 +10,7 @@ Listening for changes is the core purpose of observables, so Legend-State provid
 
 The core power of Legend-State is the "observing contexts". Calling `get()` within an observing context will track changes in that node, and re-run itself whenever it changes.
 
-Most functions in Legend-State take what we call a "Selector", which either a single observable or a function that calls `get()` on some observables and returns a value.
+Most functions in Legend-State take what we call a "Selector", which is either a single observable or a function that calls `get()` on some observables and returns a value.
 
 Most functions in Legend-State are observing contexts, including computed observables, `observe`, `when`, linked/synced `get` functions, as well as `observer` and Reactive components in React. When you call `get()` on an observable inside an observing context it will track it for changes and re-run whenever it changes.
 
@@ -28,6 +28,7 @@ observe(() => {
 2. Array looping functions (shallow listener): `arr.map(settings.accounts, () => ...)`
 3. Accessing array length (shallow listener): `if (arr.length > 0) ...`
 4. Object.keys (shallow listener): `Object.keys(settings)`
+4. Object.values (shallow listener): `Object.values(settings)`
 
 These operation do not track:
 
@@ -47,28 +48,23 @@ const state$ = observable({
 });
 
 observe(() => {
-  // Example 1:
   const theme = state$.settings.theme.get();
   // ✅ Tracking [state$.settings.theme] because of get()
 
-  // Example 2:
-  const settings = state$.settings;
-  // ❌ Not tracking because it's an object
+  const theme = state$.settings.theme.peek();
+  // ❌ Not tracking because of peek()
 
-  const theme = settings.theme.get();
-  // ✅ Tracking [state$.settings.theme] because of get()
+  const theme = state$.settings.get(true);
+  // ✅ Tracking [state$.settings (shallow)] because of get(true)
 
-  // Example 3:
-  const theme$ = state$.settings.theme;
-  // ❌ Not tracking with no get()
+  const settings$ = state$.settings;
+  // ❌ Not tracking, just a reference to an observable
 
-  // Example 4:
   state$.chats.messages.map((m) => <Message key={m.peek().id} message={m} />);
   // ✅ Tracking [state$.chats.messages (shallow)] because of map()
 
-  // Example 5:
-  Object.keys(state$.settings);
-  // ✅ Tracking [state$.settings (shallow)]
+  const keys = Object.keys(state$.settings);
+  // ✅ Tracking [state$.settings (shallow)] because of Object.keys
 });
 ```
 
@@ -78,8 +74,12 @@ The automatic behavior can be modified with two observable functions:
   |Function | Tracked |
  | ----------- | ------- |
  | `get()` | yes |
- | `get(true)` | shallow |
  | `peek()` | no |
+ | `get(true)` | shallow |
+ | `arr$.map(...)` | shallow |
+ | `arr$.length` | shallow |
+ | `Object.keys(state$)` | shallow |
+ | `Object.values(state$)` | shallow |
 </div>
 
 ### get()
@@ -94,9 +94,9 @@ const theme = state.settings.theme.get();
 // ✅ Tracking [state.settings.theme]
 ```
 
-### shallow modifier
+### Shallow tracking
 
-`get()` observes recursively by default, so any child changing will cause an update. You can modify it to be a shallow listener by just adding a `true` parameter. This can be useful when a component only needs to re-render if an object's keys or an array's items change.
+`get()` observes recursively by default, so any child changing will cause an update. You can modify it to be a shallow listener by just adding a `true` parameter. This can be useful when a component only needs to re-render if an object's keys or an array's items change. Array and Object functions also track shallowly - see [What tracks](#what-tracks) above.
 
 ```jsx
 const state$ = observable({ messages: [] });
@@ -179,9 +179,9 @@ observe(
 
 ### when
 
-`when` runs the given function **only once** when the predicate returns a truthy value, and automatically tracks the observables accessed while running the predicate so it will update whenever one of them changes. When the value becomes truthy it will call the function and dispose the listeners. If not given a callback function it will return a promise that resolves when the predicate returns a truthy value.
+`when` runs the given callback **only once** when the Selector returns a truthy value, and automatically tracks the observables accessed while running the Selector so it will update whenever one of them changes. When the value becomes truthy it will call the callback function and dispose the listeners.
 
-The predicate can either be an observable or a function.
+It also returns a Promise that resolves when the Selector returns a truthy value that can be used instead of the callback function.
 
 ```js
 import { when } from "@legendapp/state";
