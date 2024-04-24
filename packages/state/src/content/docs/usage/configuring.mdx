@@ -18,6 +18,8 @@ These configuration functions only need to be called once, before their effects 
 
 This makes React components warn if using `get()` without being wrapped in `observer`. This is a very helpful way to catch the easy mistake of forgetting `observer`.
 
+It only runs when `process.env.NODE_ENV === 'development'` so it won't disrupt your app in production.
+
 ```js
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
 enableReactTracking({

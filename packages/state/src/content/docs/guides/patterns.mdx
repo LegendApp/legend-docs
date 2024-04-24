@@ -28,12 +28,12 @@ const store$ = observable({
 
 ### Multiple individual atoms
 
-```js
-// settings.ts
+```ts
+// Settings
 export const theme$ = observable('light')
 export const fontSize$ = observable(14)
 
-// UIState.ts
+// UIState
 export const uiState$ = observable({
     windowSize: undefined as { width: number, height: number },
     activeTab: 'home' as 'home' | 'user' | 'profile',

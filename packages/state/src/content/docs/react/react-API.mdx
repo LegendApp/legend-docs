@@ -18,7 +18,7 @@ It makes the whole component into an observing context - it automatically tracks
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. It tracks all overable access with a single hook so it is much more efficient than using multiple hooks.
 :::
 
-See [Tracking](../reactivity#observing-contexts) for more about when it tracks.
+See [Observing Contexts](../../usage/reactivity#observing-contexts) for more about when it tracks.
 
 ```jsx
 import { observable } from "@legendapp/state"
@@ -34,6 +34,8 @@ const Component = observer(function Component() {
   return <div>{count}</div>
 })
 ```
+
+It's sometimes easy to forget to wrap every component in `observer` so we have an optional extension that can warn you when using `get()` in a component that's not an observer: [enableReactTracking](../../usage/configuring/#enablereacttracking).
 
 ### useSelector
 
@@ -136,15 +138,15 @@ function ProfilePage() {
 
 ### useObserveEffect
 
-`useObserveEffect` is the same as [useObserve](#useobserve) except that it doesn't run until the component is mounted.
+`useObserveEffect` is the same as [useObserve](#useobserve) except that it runs after the component is mounted.
 
 ## Hooks for creating local state
 
 ### useObservable
 
-The `useObservable` hook can be used to create an observable within a React component. This can be useful when state is specific to the lifetime of the component, or to hold multiple values in local state.
+The `useObservable` hook creates an observable within a React component. This can be useful when state is specific to the lifetime of the component, or to hold multiple values in local state.
 
-Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](../react-introduction#use-observable-state).
+Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](#reading-state).
 
 As with normal observables you can create a [computed observable](../../usage/observable/#computed-observables) by just using a function.
 
@@ -268,7 +270,7 @@ const Component = () => {
 
 ### useUnmount
 
-Like the `useMount` hook, `useUnmount` is just `useEffectOnce` under the hood.
+Like the `useMount` hook, `useUnmount` just uses `useEffectOnce` under the hood.
 
 ```jsx
 import { useUnmount } from "@legendapp/state/react"
@@ -281,5 +283,7 @@ const Component = () => {
 ### usePauseProvider
 
 This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useSelector, Reactive, Memo, etc... But normal renders coming from React or other state is not affected.
+
+This can be very useful to stop all updating when UI is not even visible, such as when a fullscreen modal is covering app UI or in inactivate tabs in React Native.
 
 <PauseExample />
