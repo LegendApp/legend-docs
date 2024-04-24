@@ -2,26 +2,25 @@ import { observer } from "@legendapp/state/react";
 import classNames from "classnames";
 import { state$ } from "shared/src/state";
 import { Tabs } from "../Tabs";
+import {ReactOrNativeCode} from "../ReactOrNativeCode/ReactOrNativeCode";
 
 export const SelectFramework = observer(function ({
-  name,
   className,
-  uid,
+  onlyFirst
 }: {
-  name: string;
   className?: string;
-  uid?: string;
+  onlyFirst?: string
 }) {
-  const framework = state$.framework.get();
-  const tabs = ['React', 'React Native']
+  const tabs = ['React', 'React Native'];
 
   return (
     <div className={classNames("mt-6", className)}>
       <Tabs
-        name={name + (uid || "")}
+        name={'SelectFramework'}
         tabs={tabs}
         activeTab$={state$.framework}
       />
+      <ReactOrNativeCode onlyFirst={onlyFirst} />
     </div>
   );
 });

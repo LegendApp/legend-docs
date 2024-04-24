@@ -1,5 +1,6 @@
 ---
 import { SelectFramework } from "./SelectFramework";
+const { onlyFirst } = Astro.props;
 ---
 
-<SelectFramework client:only />
+<SelectFramework onlyFirst={onlyFirst} client:only />

@@ -12,7 +12,6 @@ import SelectFramework from "shared/src/Components/SelectFramework/SelectFramewo
 import ReactOrNativeCode from "shared/src/Components/ReactOrNativeCode/ReactOrNativeCode.astro";
 import GettingStarted from "../../../Components/Introduction/GettingStarted.astro";
 
-<ReactOrNativeCode />
 
 ## Which Platform?
 
@@ -146,13 +145,12 @@ Then all you have to do is `syncObservable` with the name you want it to have in
 ```ts
 import { observable } from "@legendapp/state"
 import { configureObservableSync, syncObservable } from '@legendapp/state/sync'
-import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
+import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv"
 
 // Setup global persist configuration
 configureObservableSync({
     persist: {
-        plugin: ObservablePersistAsyncStorage,
-        asyncStorage: { AsyncStorage }
+        plugin: ObservablePersistMMKV
     }
 })
 
