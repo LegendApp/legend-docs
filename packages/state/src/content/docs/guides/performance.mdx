@@ -10,58 +10,9 @@ Legend-State is already quite optimized by default, but there are some things to
 
 ## Batching
 
-You may want to modify multiple observables at once without triggering callbacks for each change. Batching postpones renders and listeners until the end of the batch.
+Making multiple changes in a row can cause React components and observers to re-run multiple times when they should wait until changes are complete. So if you're setting a lot of observables at once, it's good to batch them together into one operation.
 
-Batching can be done in two ways, wrapping between `beginBatch()` and `endBatch()` or in a callback with `batch(callback)`.
-
-```js
-import { batch, beginBatch, endBatch } from "@legendapp/state";
-
-// Wrap in begin and end
-beginBatch();
-doManyChanges();
-endBatch();
-
-// Or batch with a callback
-batch(() => {
-  doManyChanges();
-});
-```
-
-As we all know, you generally shouldn't optimize pre-emptively. `observable` functions like `assign` already batch changes under the hood, so listeners don't get called until the full change is complete. In many cases like setting unrelated observables you don't need to worry about it.
-
-Batching is important in a few key situations:
-
-### When observables depend on each other
-
-Use `batch` to delay computations/renders until all dependent changes are complete or you might get weird intermediary states.
-
-```js
-const name$ = observable({ first: "", last: "" });
-
-const fullName = observable(() => `${name$.first} ${name$.last}`);
-
-observe(() => console.log("fullName = ", fullName.get()));
-
-// Not batched:
-name$.first.set("First");
-name$.last.set("Last");
-// ❌ fullName notifies its listeners with incomplete state
-// fullName = "First "
-// fullName = "First Last"
-
-// Batched:
-batch(() => {
-  name$.first.set("First");
-  name$.last.set("Last");
-});
-// ✅ fullName notifies only with final state
-// fullName = "First Last"
-```
-
-### To prevent excessive renders
-
-Making multiple changes in a row can cause the React hook to re-render multiple times when it should wait until changes are complete.
+See [Batching](../../usage/reactivity/#batching) for more.
 
 ```js
 const state$ = observable({ items: [] });

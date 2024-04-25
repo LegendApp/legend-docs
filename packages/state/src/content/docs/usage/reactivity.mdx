@@ -269,3 +269,78 @@ const dispose = state$.text.onChange(onChange)
 // Cancel listening manually
 dispose()
 ```
+
+## Batching
+
+You may want to modify multiple observables at once without triggering callbacks for each change. Batching postpones renders and listeners until the end of the batch.
+
+Batching can be done in two ways, wrapping between `beginBatch()` and `endBatch()` or in a callback with `batch(callback)`.
+
+```js
+import { batch, beginBatch, endBatch } from "@legendapp/state";
+
+// Wrap in begin and end
+beginBatch();
+doManyChanges();
+endBatch();
+
+// Or batch with a callback
+batch(() => {
+  doManyChanges();
+});
+```
+
+As we all know, you generally shouldn't optimize pre-emptively. `observable` functions like `assign` already batch changes under the hood, so listeners don't get called until the full change is complete. In many cases like setting unrelated observables you don't need to worry about it.
+
+Batching is important in a few key situations:
+
+### When observables depend on each other
+
+Use `batch` to delay computations/renders until all dependent changes are complete or you might get weird intermediary states.
+
+```js
+const name$ = observable({ first: "", last: "" });
+
+const fullName = observable(() => `${name$.first} ${name$.last}`);
+
+observe(() => console.log("fullName = ", fullName.get()));
+
+// Not batched:
+name$.first.set("First");
+name$.last.set("Last");
+// ❌ fullName notifies its listeners with incomplete state
+// fullName = "First "
+// fullName = "First Last"
+
+// Batched:
+batch(() => {
+  name$.first.set("First");
+  name$.last.set("Last");
+});
+// ✅ fullName notifies only with final state
+// fullName = "First Last"
+```
+
+### To prevent excessive renders
+
+Making multiple changes in a row can cause React components and observers to re-run multiple times when they should wait until changes are complete.
+
+```js
+const state$ = observable({ items: [] });
+
+function addItems() {
+  for (let i = 0; i < 1000; i++) {
+    state$.items.push({ text: `Item ${i}` });
+  }
+}
+
+// ❌ This can render 1000 times while pushing to the array
+addItems();
+
+// ✅ Batching delays until complete and renders once
+batch(addItems);
+```
+
+### When persisting
+
+If you are using `synced` or `syncObservable` to automatically persist your changes, you can prevent excessive writes by delaying persistence until changes are complete. Pushing to an array 1000 times could save to storage 1000 times, which could be very slow!
