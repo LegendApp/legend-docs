@@ -118,7 +118,9 @@ const store$ = observable({
     users: synced({
         initial: [],
         // When the get() promise resolves it will update the observable
-        get: () => fetch('https://reqres.in/api/users').then(r => r.json()),
+        get: () => fetch('https://reqres.in/api/users')
+                  .then(r => r.json())
+                  .then(r => r.data),
         // When the observable is changed it will send the changes back to the server.
         set: ({ value, changes }) => (
             // Use either the changes or the full value to send to your server
@@ -140,6 +142,34 @@ observe(() => {
 
 // Any changes will be saved
 store$.users.push({ id: 0, name: 'name' })
+```
+
+### Sync with paging
+
+`get()` is an observing context, so if you get an observable's value it will re-run if it changes. We can use that to created a paging query by setting the query mode to "append" (or "assign" if it's a record) to append new pages into the observable array.
+
+```ts
+import { observable, observe } from "@legendapp/state"
+import { synced } from "@legendapp/state/sync"
+
+// Create an observable with "users" synced
+const store$ = observable({
+    usersPage: 1,
+    users: synced({
+        get: () => fetch(`https://reqres.in/api/users?page=${store$.usersPage.get()}`)
+                  .then(r => r.json())
+                  .then(r => r.data),
+        mode: 'append'
+    }),
+})
+
+// Activate the synced to get the first page
+store$.users.get()
+// gets from https://reqres.in/api/users?page=1
+
+// Get the next page
+store$.usersPage.set(page => page + 1)
+// gets from https://reqres.in/api/users?page=2
 ```
 
 ### Sync and persist
@@ -180,6 +210,10 @@ configureObservableSync({
 The easiest way to create a synced observable is to use `synced` when creating an observable to bind it to remote data and/or persist it locally. To simply set up persistence, just create `get` and `set` functions along with a `persist` option.
 
 `synced` creates a lazy computed function which will not activate until you `get()` it. So you can set up your observables' sync/persist options and they will only activate on demand.
+
+:::note
+get() is an observing context, so if you get an observable's value it will re-run if it changes. You can use that for paging or updating your queries.
+:::
 
 ```js
 import { observable } from '@legendapp/state'
