@@ -167,7 +167,7 @@ const Name = observer(function Name() {
 
 ### Computed Functions
 
-Any function in an observable can be used a computed observable, whether at the root or in any child. A function is turned into an observable when you first call `get()` or `peek()` on it. It will then re-compute itself whenever the observables it accesses with `get()` are changed.
+Any function in an observable can be used a computed observable, whether at the root or in any child. Computed functions are lazy: a function is turned into an observable when you first call `get()` or `peek()` on it. It will then re-compute itself whenever the observables it accesses with `get()` are changed.
 
 ```js
 const state$ = observable({

@@ -6,6 +6,7 @@ sidebar:
 
 import Install from "shared/src/Components/Install/Install.astro"
 import SelectFramework from "shared/src/Components/SelectFramework/SelectFramework.astro";
+import PersistSync from "../../../Components/PersistSync/PersistSync.astro";
 
 A primary goal of Legend-State is to make automatic persisting and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local-first apps: any changes made while offline are persisted between sessions to be retried whenever connected. To do this, the sync system subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted and synced.
 
@@ -79,6 +80,10 @@ const store$ = observable({
 store$.todos.push({ id: 0 })
 ```
 
+:::note
+The key difference between syncObservable and synced is that syncObservable starts syncing when you call it, while synced creates a lazy computed function that activates when you `get()` it.
+:::
+
 #### Async persistence
 
 Some persistences like IndexedDB and AsyncStorage are asynchronous, so you'll need to wait for it to load before you start reading from it. `syncState` returns an observable with load statuses that you can wait for.
@@ -96,11 +101,56 @@ await when(status$.isPersistLoaded)
 // Proceed with load
 ```
 
-
 ### Sync with a server
 
-TODO
+Legend-State makes syncing remote data very easy, while being very powerful under the hood. You can setup your sync system directly in the observable itself, so that your application code only interacts with observables, and the observables handle the sync for you.
 
+This is a great way to isolate your syncing code in one place away from your UI, and then your UI code justs gets/sets observables.
+
+Like with [persistence](#persist-data-locally) you can use either `syncObservable` or `synced` but we'll just focus on `synced` for this example.
+
+```ts
+import { observable, observe } from "@legendapp/state"
+import { synced } from "@legendapp/state/sync"
+
+// Create an observable with "users" synced
+const store$ = observable({
+    users: synced({
+        initial: [],
+        // When the get() promise resolves it will update the observable
+        get: () => fetch('https://reqres.in/api/users').then(r => r.json()),
+        // When the observable is changed it will send the changes back to the server.
+        set: ({ value, changes }) => (
+            // Use either the changes or the full value to send to your server
+            fetch(
+                'https://reqres.in/api/users',
+                { method: 'POST', data: JSON.stringify(changes) }
+            ),
+    })
+})
+
+observe(() => {
+    // The first get() activates the synced get function to fetch the data
+    // observe is re-run when the data comes in
+    const users = store$.users.get()
+    if (users) {
+        processUsers(users)
+    }
+})
+
+// Any changes will be saved
+store$.users.push({ id: 0, name: 'name' })
+```
+
+### Sync and persist
+
+Now let's put both persistence and sync together. This is where Legend-State enables local-first applications that can work completely offline with eventual consistency and are resistent to bad network conditions.
+
+All you have to do is just work with observables. That immediately updates the UI optimistically, persists changes, and syncs to your database with eventual consistency.
+
+This example binds inputs directly to the remote data and shows you when the changes save. Try going offline and making some changes, then refresh and the changes are still there. Then go back online and watch the saved time update. You may want to open the Network panel of the dev tools to see it in action.
+
+<PersistSync />
 
 ## API
 
@@ -128,6 +178,8 @@ configureObservableSync({
 ### synced
 
 The easiest way to create a synced observable is to use `synced` when creating an observable to bind it to remote data and/or persist it locally. To simply set up persistence, just create `get` and `set` functions along with a `persist` option.
+
+`synced` creates a lazy computed function which will not activate until you `get()` it. So you can set up your observables' sync/persist options and they will only activate on demand.
 
 ```js
 import { observable } from '@legendapp/state'
@@ -191,10 +243,10 @@ const state$ = observable(synced({
         maxDelay: 30
     },
     // "retry" will persist pending changes to be retried even if the app restarts
-    offlineBehavior: false | 'retry';
+    offlineBehavior: false | 'retry',
     // A time to debounce changes before sending them to the server. Use this to
     // batch multiple changes together or preventing saving every keystroke.
-    debounceSet: number;
+    debounceSet: 500,
 }))
 ```
 
