@@ -107,6 +107,8 @@ For convenience, we also export `undos$` and `redos$` which are observables that
 you track how many undos/redos you have available on the undo stack. This is especially
 useful when rendering UI elements.
 
+Hint: use [batching](../../usage/reactivity/#batching) to group sets of changes into one history state.
+
 ```jsx
 import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
