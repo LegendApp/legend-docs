@@ -1,7 +1,7 @@
 ---
 title: Helper Functions
 sidebar:
-    order: 5
+  order: 5
 ---
 
 ## opaqueObject
@@ -42,7 +42,7 @@ state$.store === newValue.store; // ✅ true
 
 `trackHistory` creates an observable that tracks all changes in the target observable, with the previous value at the time it was changed.
 
-Since the history is an observable you can observe it or persist it like any other observable. This can be useful for saving a version history for a text editor or creating an undo stack.
+Since the history is an observable you can observe it or persist it like any other observable. This can be useful for saving a version history for a text editor. If you'd like to create an undo stack, check out the [undoRedo](#undoRedo) helper.
 
 An optional second parameter lets you use an existing observable for storing the history, which can be useful to save history into an existing state object.
 
@@ -66,4 +66,70 @@ state$.profile.name.set('Annyong')
         }
     }
 }
+```
+
+## undoRedo
+
+`undoRedo` is similar to [trackHistory](#trackHistory) in that it tracks changes to an observable. However,
+`undoRedo` also provides helpers for undo / redo (as the name suggests) and does the tracking for you.
+
+An optional second parameter lets you specify how deep you're willing to save an undo stack. By default, it
+will track changes forever, which means your memory will grow unbounded, so it's recommended to set that.
+
+When you undo, you can redo -- unless you make new changes to the observable, in which case the redo stack
+will be removed and the new state will take its place. This is similar to how other undo/redo systems commonly work.
+
+```js
+import { observable } from "@legendapp/state";
+import { undoRedo } from "@legendapp/state/history";
+
+const state$ = observable({ todos: ["Get milk"] });
+
+const { undo, redo, getHistory } = undoRedo(state$.todos, { limit: 100 });
+
+state$.todos.push("Pick up bread");
+// todos is now ["Get milk", "Pick up bread"]
+
+undo();
+// todos is now back to ["Get milk"]
+
+redo();
+// todos is restored to ["Get milk", "Pick up bread"]
+
+getHistory(); // returns an array of all the different states it contains
+
+state$.todos.set(getHistory()[0]); // reset to the original state in history
+
+undo(); // now back to where it was just prior to resetting
+```
+
+For convenience, we also export `undos$` and `redos$` which are observables that let
+you track how many undos/redos you have available on the undo stack. This is especially
+useful when rendering UI elements.
+
+```jsx
+import { observable } from "@legendapp/state";
+import { observer } from "@legendapp/state/react";
+import { undoRedo } from "@legendapp/state/history";
+
+const state$ = observable({ todos: ["Get milk"] });
+
+const { undo, redo, undos$, redos$ } = undoRedo(state$.todos, { limit: 100 });
+
+export const UndoUI = observer(function UndoUI() {
+  return (
+    <div>
+      {undos$.get() > 0 ? (
+        <button onClick={undo}>Undo</button>
+      ) : (
+        <button disabled={true}>Undo</button>
+      )}
+      {redos$.get() > 0 ? (
+        <button onClick={undo}>Redo</button>
+      ) : (
+        <button disabled={true}>Redo</button>
+      )}
+    </div>
+  );
+});
 ```
