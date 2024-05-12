@@ -8,6 +8,8 @@ There are a few extra steps to get Legend-Motion working on Next.js.
 
 First, Legend-Motion and its dependencies need to be added to the transpile list.
 
+import Install from "shared/src/Components/Install/Install.astro";
+
 <Install name="next-transpile-modules" className="mb-8" />
 
 Then wrap your export in `next.config.js` with `withTM`. This is the full config needed to setup Legend-Motion including Linear Gradient and SVG features. You can remove those lines if you don't need them.
