@@ -1,0 +1,210 @@
+---
+title: Supabase plugin
+sidebar:
+  order: 3
+  hidden: true
+---
+
+## Set up Supabase types
+
+The first step to getting strongly typed observables from Supabase is to follow their instructions to create a typed client.
+
+https://supabase.com/docs/guides/api/rest/generating-types
+
+The examples on this page will use the `supabase` client from the generated types:
+
+```ts
+import { createClient } from '@supabase/supabase-js'
+import { Database } from './database.types'
+
+const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+```
+
+## Full Example
+
+We'll start with a full example to see what a full setup looks like, then go into specific details.
+
+```ts
+import { createClient } from '@supabase/supabase-js'
+import { Database } from './database.types'
+import { observable } from '@legendapp/state'
+import { syncedSupabase } from '@legendapp/state/sync-plugins/supabase'
+
+const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Optional:
+    // Select only id and text fields
+    select: (from) => from.select('id,text')
+    // Filter by the current user
+    filter: (select) => select.eq('user_id', 'uid'),
+    // Don't allow delete
+    actions: ['read', 'create', 'update'],
+    // Realtime
+    realtime: true,
+    // Persist locally
+    persist: { name: 'messages' },
+}))
+
+// get() activates and starts syncing
+const messages = messages$.get()
+```
+
+## filter
+
+By default it will use `select()` on the collection. If you want to filter the data, use the `filter` parameter. See the [Using Filters docs](https://supabase.com/docs/reference/javascript/using-filters) for details.
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Filter by the current user
+    filter: (select) => select.eq('user_id', 'uid')
+}))
+```
+
+## select
+
+By default it will use `select()` on the collection. If you want to be more specific, use the `select` parameter to customize how you want to select. See the [Select docs](https://supabase.com/docs/reference/javascript/select) for details.
+
+You can also add filters here if you want.
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Select only id and text fields
+    select: (from) => from.select('id,text')
+    // Or select and filter together
+    select: (from) => from.select('id,text').eq('user_id', 'uid')
+}))
+```
+
+## actions
+
+By default it will support create, read, update, and delete. But you can specify which actions you want to support with the `actions` parameter.
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Only read and create, no update or delete
+    actions: ['read', 'create'],
+}))
+```
+
+## as
+
+The shape of the observable object can be changed with the `as` parameter, which supports three options:
+
+1. `object`: The default, an object keyed by the row's `id` field.
+2. `Map`: A Map, which can be more efficient for accessing rows by key
+3. `first`: Return the first result of the query and treat it as a single object
+
+Note that `array` is not an option because arrays make it hard to to efficiently and correctly add, update, and remove elements by id.
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Make messages$ a Map
+    as: 'Map'
+}))
+```
+
+## Realtime
+
+Enable realtime on the observable with the `realtime` option. This will update the observable immediately whenever any realtime changes come in. You can optionally set the `schema` and `filter` for the realtime listener.
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Simply enable it
+    realtime: true,
+    // Or set options
+    realtime: { schema: 'public', filter: `user_id=eq.${uid}`},
+}))
+```
+
+## Sync only diffs
+
+An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce badwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
+
+1. Save the maximum updatedAt to the local persistence
+2. In subsquent syncs or after refresh it will list by `updated_at: lastSync + 1` to get only recent changes
+3. The new changes will be merged into the observable
+
+Enabling this on the Supabase side requires adding `created_at` and `updated_at` columns and a trigger to your table. You can run this snippet to set it up, just replace the two instances of YOUR_TABLE_NAME.
+
+Note that it's not possible to catch deleted rows with this method, so you will have to use [soft deletes](#soft-deletes) described in the next session. If you don't need to delete you can remove that column from the script.
+
+```sql
+-- Add new columns to table named `created_at` and `updated_at`
+ALTER TABLE YOUR_TABLE_NAME
+ADD COLUMN created_at timestamptz default now(),
+ADD COLUMN updated_at timestamptz default now();
+-- Add column for soft deletes, remove this if you don't need that
+ADD COLUMN deleted boolean default false;
+
+-- This will set the `created_at` column on create and `updated_at` column on every update
+CREATE OR REPLACE FUNCTION handle_times()
+    RETURNS trigger AS
+    $$
+    BEGIN
+    IF (TG_OP = 'UPDATE') THEN
+        NEW.created_at = OLD.created_at;
+        NEW.updated_at = now();
+    END IF;
+    RETURN NEW;
+    END;
+    $$ language plpgsql;
+
+CREATE TRIGGER handle_times
+    BEFORE INSERT OR UPDATE ON YOUR_TABLE_NAME
+    FOR EACH ROW
+EXECUTE PROCEDURE handle_times();
+```
+
+And to enable this feature in Legend-State, use the `changesSince` option and set the `fieldCreatedAt` and `fieldUpdatedAt` options to match the Supabase column names.
+
+```ts
+// Sync diffs of a list
+syncedSupabase({
+    supabase,
+    collection: 'messages',
+    persist: {
+        name: 'messages'
+    },
+    // Enable syncing only changes since last-sync
+    changesSince: 'last-sync',
+    fieldCreatedAt: 'created_at',
+    fieldUpdatedAt: 'updated_at',
+    // Optionally enable soft deletes
+    fieldDeleted: 'deleted'
+})
+
+// Or you can configure this optional globally so it will apply to every instance of syncedSupabase.
+configureSyncedSupabase({
+    changesSince: 'last-sync',
+    fieldCreatedAt: 'created_at',
+    fieldUpdatedAt: 'updated_at',
+    // Optionally enable soft deletes
+    fieldDeleted: 'deleted'
+});
+```
+
+## Soft deletes
+
+The delete parameter does not need to be an actual `delete` action in Supabase. You could also implement it as a soft delete if you prefer, just setting a `deleted` field to true. To change the plugin to set that field instead of deleting the row, just set the `fieldDeleted` option to the column name.
+
+```ts
+// Sync diffs of a list
+syncedSupabase({
+    supabase,
+    collection: 'messages',
+    fieldDeleted: 'deleted'
+})
+```

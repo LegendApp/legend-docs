@@ -24,7 +24,7 @@ import { observable, observe } from "@legendapp/state"
 const settings$ = observable({ theme: 'dark' })
 
 // get returns the raw data
-settings$.theme.get() === 'dark'
+settings$.theme.get() // 'dark'
 // set sets
 settings$.theme.set('light')
 

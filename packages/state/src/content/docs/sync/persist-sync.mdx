@@ -1,7 +1,7 @@
 ---
 title: Persist and Sync
 sidebar:
-  order: 3
+  order: 1
 ---
 
 import Install from "shared/src/Components/Install/Install.astro"
@@ -16,7 +16,35 @@ A primary goal of Legend-State is to make automatic persisting and syncing both 
 4. On remote save, set any needed changes (like updatedAt) back into the observable and local persistence
 5. Clear the pending changes in local persistence
 
+## Plugins
+
+The sync features are designed to be used through a plugin for your backend of choice. The plugins are all built on top of [synced](TODO) and are configurable with their own options as well as general sync and persist options.
+
+### SQL plugins
+
+- [Keel](TODO): The backend we use for Bravely
+- [Supabase](TODO): Popular PostgreSQL backend
+
+These are built on top of the CRUD plugin.
+
+### General
+
+- [CRUD](TODO): Supports any backend with list, get, create, update, delete actions
+- [Fetch](TODO): A wrapper around fetch to reduce boilerplate
+
+## Example
+
+We'll start with an example to give you an idea of how Legend-State's sync works. Because sync and persistence are defined in the observables, your app and UI just needs to work with observables. That immediately updates the UI optimistically, persists changes, and syncs to your database with eventual consistency.
+
+This example binds inputs directly to the remote data and shows you when the changes save. Try going offline and making some changes, then refresh and the changes are still there. Then go back online and watch the saved time update. You may want to open the Network panel of the dev tools to see it in action.
+
+This is a live playground you can experiment with the different options.
+
+<PersistSync />
+
 ## Guides
+
+This page will show how you use the core [synced](TODO). The plugins are built on top of `synced` so everything on this page applies to the plugins as well.
 
 #### Which Platform?
 
@@ -109,25 +137,19 @@ This is a great way to isolate your syncing code in one place away from your UI,
 
 Like with [persistence](#persist-data-locally) you can use either `syncObservable` or `synced` but we'll just focus on `synced` for this example.
 
+
 ```ts
 import { observable, observe } from "@legendapp/state"
-import { synced } from "@legendapp/state/sync"
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
 
 // Create an observable with "users" synced
 const store$ = observable({
-    users: synced({
+    users: syncedFetch({
         initial: [],
-        // When the get() promise resolves it will update the observable
-        get: () => fetch('https://reqres.in/api/users')
-                  .then(r => r.json())
-                  .then(r => r.data),
+        // When the fetch resolves it will update the observable
+        get: 'https://reqres.in/api/users'
         // When the observable is changed it will send the changes back to the server.
-        set: ({ value, changes }) => (
-            // Use either the changes or the full value to send to your server
-            fetch(
-                'https://reqres.in/api/users',
-                { method: 'POST', data: JSON.stringify(changes) }
-            ),
+        set: 'https://reqres.in/api/users'
     })
 })
 
@@ -146,19 +168,17 @@ store$.users.push({ id: 0, name: 'name' })
 
 ### Sync with paging
 
-`get()` is an observing context, so if you get an observable's value it will re-run if it changes. We can use that to created a paging query by setting the query mode to "append" (or "assign" if it's a record) to append new pages into the observable array.
+`get()` is an observing context, so if you get an observable's value it will re-run if it changes. We can use that to created a paging query by setting the query mode to "append" (or "assign" if it's an object) to append new pages into the observable array.
 
 ```ts
 import { observable, observe } from "@legendapp/state"
-import { synced } from "@legendapp/state/sync"
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
 
 // Create an observable with "users" synced
 const store$ = observable({
     usersPage: 1,
-    users: synced({
-        get: () => fetch(`https://reqres.in/api/users?page=${store$.usersPage.get()}`)
-                  .then(r => r.json())
-                  .then(r => r.data),
+    users: syncedFetch({
+        get: () => `https://reqres.in/api/users?page=${store$.usersPage.get()}`,
         mode: 'append'
     }),
 })
@@ -171,16 +191,6 @@ store$.users.get()
 store$.usersPage.set(page => page + 1)
 // gets from https://reqres.in/api/users?page=2
 ```
-
-### Sync and persist
-
-Now let's put both persistence and sync together. This is where Legend-State enables local-first applications that can work completely offline with eventual consistency and are resistent to bad network conditions.
-
-All you have to do is just work with observables. That immediately updates the UI optimistically, persists changes, and syncs to your database with eventual consistency.
-
-This example binds inputs directly to the remote data and shows you when the changes save. Try going offline and making some changes, then refresh and the changes are still there. Then go back online and watch the saved time update. You may want to open the Network panel of the dev tools to see it in action.
-
-<PersistSync />
 
 ## API
 
@@ -253,6 +263,8 @@ const state$ = observable(synced({
         name: 'test',
         // Set the plugin to override the global setting
         plugin: ObservablePersistMMKV,
+        // persist pending changes to be retried after the app restarts
+        retrySync: true,
         options: {
             // Customize the persist plugin options
         }
@@ -267,8 +279,13 @@ const state$ = observable(synced({
     mode: 'set' | 'assign' | 'merge' | 'append' | 'prepend',
     // The subscribe function is called once to give you an opportunity to
     // subscribe to another service to trigger refresh
-    subscribe: (refresh) => {
-        pusher.subscribe({ /*...*/ })
+    subscribe: ({ refresh, update }) => {
+        pusher.subscribe({ /*...*/ }, (data) => {
+            // Either update with the received data
+            update(data)
+            // Or trigger a refresh of the get function
+            refresh()
+        })
     },
     // Options for retrying in case of error. Applies to both get and set.
     retry: {
@@ -276,8 +293,6 @@ const state$ = observable(synced({
         backoff: 'exponential',
         maxDelay: 30
     },
-    // "retry" will persist pending changes to be retried even if the app restarts
-    offlineBehavior: false | 'retry',
     // A time to debounce changes before sending them to the server. Use this to
     // batch multiple changes together or preventing saving every keystroke.
     debounceSet: 500,
@@ -286,7 +301,7 @@ const state$ = observable(synced({
 
 ### syncObservable
 
-If you prefer to set up sync/persistence after the observable is already created, you can use `syncObservable` with the same options as `synced`. It's effectively the same as using `synced` with an initial value.
+If you prefer to set up sync/persistence after the observable is already created, you can use `syncObservable` with the same options as `synced`. It's effectively the same as using `synced` with an initial value. You can also pass any of the plugins as the second option.
 
 ```js
 import { observable } from '@legendapp/state'
@@ -518,7 +533,9 @@ await when(status$.isPersistLoaded)
 
 ## Making a sync plugin
 
-Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a `synced`.
+Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a `synced`. If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of `syncedCrud` which encapsulates a lot of logic for those specifics for you.
+
+It may be easiest to look at [the source of the built-in sync plugins](https://github.com/LegendApp/legend-state/tree/main/src/persist-plugins) to see what they look like.
 
 This is a simple contrived example to give you an easy of what that could look like.
 

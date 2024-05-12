@@ -38,6 +38,10 @@ export default defineConfig({
           autogenerate: { directory: "react" },
         },
         {
+          label: "Persist and Sync",
+          autogenerate: { directory: "sync" },
+        },
+        {
           label: "Guides",
           autogenerate: { directory: "guides" },
         },
@@ -67,5 +71,5 @@ export default defineConfig({
       },
     },
     ssr: { noExternal: ["usehooks-ts", "react-icons"] },
-  }
+  },
 });

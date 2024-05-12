@@ -3,6 +3,7 @@ import { enableReactComponents } from "@legendapp/state/config/enableReactCompon
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { Memo, Reactive, observer, useIsMounted } from "@legendapp/state/react";
 import { configureObservableSync, syncObservable, synced } from "@legendapp/state/sync";
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
 import { Box } from "shared/src/Components/Box";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { state$ } from "shared/src/state";
@@ -10,7 +11,8 @@ import { state$ } from "shared/src/state";
 const PERSIST_SYNC_CODE = `
 import { observable } from "@legendapp/state"
 import { observer } from "@legendapp/state/react"
-import { synced, configureObservableSync } from "@legendapp/state/sync"
+import { configureObservableSync } from "@legendapp/state/sync"
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
 import { ObservablePersistMMKV } from
     "@legendapp/state/persist-plugins/mmkv"
 import { enableReactNativeComponents } from
@@ -23,53 +25,49 @@ enableReactNativeComponents()
 // per observable.
 configureObservableSync({
     persist: {
-        plugin: ObservablePersistMMKV
+        plugin: ObservablePersistMMKV,
+        retrySync: true // Persist pending changes and retry
     },
-    // Retry changes with exponential backoff
     retry: {
-        infinite: true
-    },
-    // Persist pending changes and retry
-    offlineBehavior: 'retry'
+        infinite: true // Retry changes with exponential backoff
+    }
 })
 
 // Create a synced observable
-const profile$ = observable(synced({
-    // Get data from server
-    get: () => fetch('https://reqres.in/api/users/1')
-              .then(r => r.json())
-              .then(r => r.data),
+const profile$ = observable(syncedFetch({
+    get: 'https://reqres.in/api/users/1',
+    set: 'https://reqres.in/api/users/1',
+    setInit: { method: 'PUT' },
 
-    // Send data to server on change
-    set: async ({ update, value }) => {
-        const result = await fetch(
-            'https://reqres.in/api/users/1',
-            { method: 'PUT', data: JSON.stringify(value) }
-        ).then(r => r.json())
-
-        const updatedAt = +new Date(result.updatedAt)
-        // Update observable with updatedAt time from server
-        update({ value: { updatedAt } })
+    // Transform server data to local format
+    transform: {
+        load: (value, method) => method === 'get' ? value.data : value
     },
+
+    // Update observable with updatedAt time from server
+    onSaved: (result) => ({ updatedAt: new Date(result.updatedAt) }),
 
     // Persist in local storage
     persist: {
         name: 'persistSyncExample',
     },
+
     // Don't want to overwrite updatedAt
     mode: 'assign'
 }))
 
 const App = observer(function App() {
-    const lastSync$ = syncState(profile$).lastSync
-    const updatedAt = profile$.updatedAt.get() || 'Never'
+    const updatedAt = profile$.updatedAt.get();
+    const saved = updatedAt ? new Date(updatedAt).toLocaleString() : 'Never'
+
+    console.log(profile$.get())
 
     return (
         <Box>
             <Reactive.TextInput $value={profile$.first_name} />
             <Reactive.TextInput $value={profile$.last_name} />
             <Text>
-                Saved: {updatedAt}
+                Saved: {saved}
             </Text>
         </Box>
     )
@@ -102,6 +100,7 @@ export const PersistSync = observer(function PersistSync() {
         enableReactComponents,
         Reactive,
         Box,
+        syncedFetch,
         configureObservableSync,
         syncObservable,
         ObservablePersistLocalStorage,
