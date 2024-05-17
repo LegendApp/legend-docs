@@ -5,6 +5,8 @@ sidebar:
   hidden: true
 ---
 
+Supabase and Legend-State work very well together - all you need to do is provide a typed client and the observables will be fully typed and handle calling the correct action functions for you.
+
 ## Set up Supabase types
 
 The first step to getting strongly typed observables from Supabase is to follow their instructions to create a typed client.
@@ -29,8 +31,15 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 import { observable } from '@legendapp/state'
 import { syncedSupabase } from '@legendapp/state/sync-plugins/supabase'
+import { v4 as uuidv4 } from "uuid";
 
 const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+
+// provide a function to generate ids locally
+const generateId = () => uuidv4();
+configureSyncedSupabase({
+    generateId
+})
 
 const messages$ = observable(syncedSupabase({
     supabase,
@@ -50,6 +59,22 @@ const messages$ = observable(syncedSupabase({
 
 // get() activates and starts syncing
 const messages = messages$.get()
+
+function addMessage(text: string) {
+    const id = generateId()
+    // Add keyed by id to the messages$ observable to trigger a create in Supabase
+    messages$[id].set({
+        id,
+        text,
+        createdAt: undefined,
+        updatedAt: undefined
+    })
+}
+
+function updateMessage(id: string, text: string) {
+    // Just set values in the observable to trigger an update to Supabase
+    messages$[id].text.set(text)
+}
 ```
 
 ## filter
@@ -101,7 +126,7 @@ The shape of the observable object can be changed with the `as` parameter, which
 
 1. `object`: The default, an object keyed by the row's `id` field.
 2. `Map`: A Map, which can be more efficient for accessing rows by key
-3. `first`: Return the first result of the query and treat it as a single object
+3. `value`: Treat the result of a query as a single value like a `get`
 
 Note that `array` is not an option because arrays make it hard to to efficiently and correctly add, update, and remove elements by id.
 
@@ -109,14 +134,18 @@ Note that `array` is not an option because arrays make it hard to to efficiently
 const messages$ = observable(syncedSupabase({
     supabase,
     collection: 'messages',
-    // Make messages$ a Map
     as: 'Map'
 }))
+
+// messages$ is an observable Map
+messages$.get('messageId').text.set('hello')
 ```
 
 ## Realtime
 
 Enable realtime on the observable with the `realtime` option. This will update the observable immediately whenever any realtime changes come in. You can optionally set the `schema` and `filter` for the realtime listener.
+
+See [Supabase's Realtime Docs](https://supabase.com/docs/guides/realtime/postgres-changes#available-filters) for more details about realtime filters.
 
 ```ts
 const messages$ = observable(syncedSupabase({
@@ -139,13 +168,15 @@ An optional but very useful feature is the `changesSince: 'last-sync'` option. T
 
 Enabling this on the Supabase side requires adding `created_at` and `updated_at` columns and a trigger to your table. You can run this snippet to set it up, just replace the two instances of YOUR_TABLE_NAME.
 
-Note that it's not possible to catch deleted rows with this method, so you will have to use [soft deletes](#soft-deletes) described in the next session. If you don't need to delete you can remove that column from the script.
+:::caution[Requires soft deletes]
+It's not possible to list rows deleted in supabase to remove them from the local persistence, so you will have to use [soft deletes](#soft-deletes) described in the next session. If you don't need to delete you can remove that column from the script.
+:::
 
 ```sql
 -- Add new columns to table named `created_at` and `updated_at`
 ALTER TABLE YOUR_TABLE_NAME
 ADD COLUMN created_at timestamptz default now(),
-ADD COLUMN updated_at timestamptz default now();
+ADD COLUMN updated_at timestamptz default now(),
 -- Add column for soft deletes, remove this if you don't need that
 ADD COLUMN deleted boolean default false;
 
@@ -154,7 +185,10 @@ CREATE OR REPLACE FUNCTION handle_times()
     RETURNS trigger AS
     $$
     BEGIN
-    IF (TG_OP = 'UPDATE') THEN
+    IF (TG_OP = 'INSERT') THEN
+        NEW.created_at := now();
+        NEW.updated_at := now();
+    ELSEIF (TG_OP = 'UPDATE') THEN
         NEW.created_at = OLD.created_at;
         NEW.updated_at = now();
     END IF;
@@ -198,7 +232,9 @@ configureSyncedSupabase({
 
 ## Soft deletes
 
-The delete parameter does not need to be an actual `delete` action in Supabase. You could also implement it as a soft delete if you prefer, just setting a `deleted` field to true. To change the plugin to set that field instead of deleting the row, just set the `fieldDeleted` option to the column name.
+The delete parameter does not need to be an actual `delete` action in Supabase. You could also implement it as a soft delete if you prefer, just setting a `deleted` field to true. To do that you can provide `fieldDeleted` matching the field name in your table.
+
+Then when you delete an element it will internally update the row with `{ deleted: true }` instead of deleting it, and the list action will remove deleted elements from the observable.
 
 ```ts
 // Sync diffs of a list

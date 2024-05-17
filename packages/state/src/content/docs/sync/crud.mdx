@@ -4,4 +4,66 @@ sidebar:
   order: 4
 ---
 
-Coming soon
+Legend-State includes a `syncedCrud` plugin that runs on top of `synced` and encapsulates a lot of the behavior you'd expect from a CRUD database.
+
+You can use `syncedCrud` directly or you can build a plugin for your database on top of it. See the source of the [Keel](TODO) and [Supabase](TODO) for examples of plugins built on top of `syncedCrud`.
+
+## get and list
+
+The crud plugin has two slightly different patterns depending on whether you're using a `get` or a `list` action.
+
+The behavior when using `get` or `as: 'first'` is:
+- **get**: Observable value is the value returned from get
+- **create**: If get returned null, then setting any value on the observable will create
+- **update**: If get returned a value, then updating any value on the observable will update
+- **create**: Setting the value to null or undefined, or calling `delete()`, will delete
+
+```ts
+const { mutations, queries } = client.api
+
+const profile$ = observable(syncedKeel({
+    get: queries.getProfile,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    delete: mutations.deleteProfile,
+}))
+// profile$.get() is a Profile
+```
+
+The behavior when using `list` is:
+- **get**: Observable value is an object containing the listed values keyed by id
+- **create**: Adding a new value to the object will will create
+- **update**: Updating a child value will update it with the changed fields
+- **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
+
+```ts
+const { mutations, queries } = client.api
+
+const profiles$ = observable(syncedKeel({
+    list: queries.listProfiles,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    delete: mutations.deleteProfile,
+}))
+// profile$.get() is a Record<string, Profile>
+```
+
+## TODO
+```ts
+interface SyncedCrudPropsBase {
+    create?(input: TRemote, params: SyncedSetParams<TRemote>): Promise<CrudResult<TRemote> | null | undefined>;
+    update?(
+        input: Partial<TRemote>,
+        params: SyncedSetParams<TRemote>,
+    ): Promise<CrudResult<Partial<TRemote> | null | undefined>>;
+    delete?(input: { id: TRemote['id'] }, params: SyncedSetParams<TRemote>): Promise<CrudResult<any>>;
+    onSaved?(params: SyncedCrudOnSavedParams<TRemote, TLocal>): Partial<TLocal> | void;
+    onSavedUpdate?: 'createdUpdatedAt';
+    fieldUpdatedAt?: string;
+    fieldCreatedAt?: string;
+    fieldDeleted?: string;
+    updatePartial?: boolean;
+    changesSince?: 'all' | 'last-sync';
+    generateId?: () => string | number;
+}
+```

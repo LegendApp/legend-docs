@@ -93,15 +93,32 @@ const profile$ = observable(syncedKeel({
     delete: mutations.deleteProfile,
     persist: { name: 'profile' },
 }))
+
 // get() activates and starts syncing
 const profile = profile$.get()
+
+function addMessage(text: string) {
+    const id = generateId()
+    // Add keyed by id to the messages$ observable to trigger the create action
+    messages$[id].set({
+        id,
+        text,
+        createdAt: undefined,
+        updatedAt: undefined
+    })
+}
+
+function updateMessage(id: string, text: string) {
+    // Just set valudes in the observable to trigger the update action
+    messages$[id].text.set(text)
+}
 ```
 
 ## Configure globals
 
 The first step to using the Keel plugin is to set some global configuration options. The required options are:
 
-- **client**: It needs the client in order to set enable the keel realtime plugins.
+- **client**: It needs the client in order to set enable the Keel realtime plugins.
 - **generateId**: In order to create new rows locally the plugin needs to generate an ID locally. Keel uses `ksuid` for their IDs, so we suggest using that for best compatibility.
 - **enabled**: Set enabled to true after you've [authenticated](https://docs.keel.so/apis/client#authenticating) with Keel. You can set this option separately whenever it's ready.
 
@@ -147,7 +164,7 @@ TODO: Other config options
 
 The Keel plugin has two slightly different patterns depending on whether you're using a `get` or a `list` action.
 
-The behavior when using `get` or `as: 'first'` is:
+The behavior when using `get` or `as: 'value'` is:
 - **get**: Observable value is the value returned from get
 - **create**: If get returned null, then setting any value on the observable will create
 - **update**: If get returned a value, then updating any value on the observable will update
@@ -167,11 +184,9 @@ const profile$ = observable(syncedKeel({
 
 The behavior when using `list` is:
 - **get**: Observable value is an object containing the listed values keyed by id
-- **create**: Adding a new value to the object will will create with that value
-- **update**: Updating a value in the object will update with the changed fields
-- **create**: Setting the value to null or undefined, or calling `delete()`, will delete
-
-Using `list` will create an observable with an object containing the listed values keyed by id. Updating existing values in the object will call the `update` function, adding new values will call the `create` function, and deleting keys will call the `delete` funtion.
+- **create**: Adding a new value to the object will will create
+- **update**: Updating a child value will update it with the changed fields
+- **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
 
 ```ts
 const { mutations, queries } = client.api
@@ -189,13 +204,13 @@ The shape of the observable object can be changed with the `as` parameter, which
 
 1. `object`: The default, an object keyed by the row's `id` field.
 2. `Map`: A Map, which can be more efficient for accessing rows by key
-3. `first`: Treat the first result of a query like a `get`
+3. `value`: Treat the result of a query as a single value like a `get`
 
 Note that `array` is not an option because arrays make it hard to to efficiently and correctly add, update, and remove elements by id.
 
 ## where
 
-When using a `list` function you may want to provide more options to the `where` query. You can do that by [customizing actions](#customizing-actions), but it is most easily done with the `where` parameter because the plugin may add its own `where` parameter when using `changesSince: 'last-sync'`.
+When using a `list` function you may want to provide more options to the `where` query. You can do that by [customizing actions](#customizing-actions), but it is most easily done with the `where` parameter.
 
 In this example of using a [lookup table](TODO) by room, we can pass the `roomId` into the query:
 
@@ -214,25 +229,25 @@ const messages$ = observable({
 
 ## Action functions
 
-Using Legend-State with Keel puts two requirements on your model structure:
+Using Legend-State with Keel puts some requirements on your model structure:
 
 ##### 1. id parameter in create actions
 
-Because we generate ids locally, id needs to be include in create functions in your Keel models. You can make it optional if you may sometimes not give it an id.
+Because Legend-State generate ids locally, `id` needs to be include in create functions in your Keel models. You can make it optional if you may sometimes not create with an id.
 
 ##### 2. Include all possibly changeable fields as optional in create/update actions
 
-This plugin sends updates with only the changed fields, so having some fields as required in update could cause the update action to fail. And if it changes any field which is not included in the action, that will also fail.
+This plugin sends updates with only the changed fields, so having some fields as required in update could cause the update action to fail. And if it changes any field that's not included in the action, that will also fail.
 
-Additionally, using the debounceSet option may result in extra fields being set after it's initially created and before it sends the create action.
+Additionally, using the debounceSet option may result in the `create` action being delayed until after your code has added more fields to the initial value.
 
 So we suggest:
 - **create** actions should have required fields required and include all other fields as optional
 - **update** actions should include all changeable fields as optional
 
-##### 3. Include updatedAt? in list actions for changesSince: 'last-sync'
+##### 3. Include updatedAt? in list actions
 
-See [sync only diffs](#sync-only-diffs).
+This is only needed if you're using `changesSince: 'last-sync'`. See [sync only diffs](#sync-only-diffs).
 
 ##### Example model structure
 
@@ -256,7 +271,7 @@ model Message {
 
 ## Customizing actions
 
-In the previous examples we provided the keel function directly, but you can also provide your own function which calls the keel action. That can be useful for adding extra query or creation options, such as with a [lookup table](TODO).
+In the previous examples we provided the Keel function directly, but you can also provide your own function which calls the Keel action. That can be useful for adding extra query or creation options, such as with a [lookup table](TODO).
 
 ```ts
 import { mutations, queries, CreateProfileInput } from './keelClient'
@@ -292,7 +307,7 @@ model Message {
 }
 ```
 
-And to enable this feature in Legend-State, use the `changesSince` option in combination with `list`. It can not work with get, but you can emulate a get with a list by creating a `list` action with an `id` parameter and the `as: 'first'` option in `syncedKeel`.
+And to enable this feature in Legend-State, use the `changesSince` option in combination with `list`. It can not work with get, but you can emulate a get with a list by creating a `list` action with an `id` parameter and the `as: 'value'` option in `syncedKeel`.
 
 
 ```ts
@@ -308,6 +323,7 @@ syncedKeel({
 syncedKeel({
     list: queries.listUserById,
     where: { id: myId },
+    as: 'value',
     changesSince: 'last-sync',
     persist: {
         name: 'me'
@@ -315,23 +331,73 @@ syncedKeel({
 })
 ```
 
-## Soft deletes
+:::caution[Requires listing deletes]
+The list function needs to include rows deleted in Keel so they can be removed from the local persistence. So use one of these two options:
+:::
 
-The delete parameter does not need to be an actual `delete` action in Keel. You could also implement it as a soft delete if you prefer, just setting a `deleted` field to true. To do that you could set up your Keel model like this:
+### Soft deletes
 
+The delete parameter does not need to be an actual `delete` action in Keel. You could also implement it as a soft delete if you prefer, just setting a `deleted` field to true. To do that you can have a `deleted` field on your model, or provide a `fieldDeleted` with a custom field name.
+
+Then when you delete an element it will internally call the update action with `{ deleted: true }` and the list action will remove deleted elements from the observable.
+
+```ts
+const { mutations, queries } = client.api
+
+const profiles$ = observable(syncedKeel({
+    list: queries.listProfiles,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    fieldDeleted: 'deleted'
+}))
 ```
-model User {
-    fields {
-        deleted Boolean
-    }
 
-    actions {
-        list listUsers() {
-            @where(user.deleted != true)
-        }
-        update deleteUser(id) {
-            @set(user.deleted = true)
-        }
+### List deletes from audit table
+
+We have a helper function that we use in Keel code to get deleted rows from Keel's built-in audit log. If the query has an `updatedAt` timestamp, this will get all values updated since `updatedAt` as well as get all rows deleted since `updatedAt` and include them as `{ id, deleted: true }`. The plugin will internally remove those deleted rows from the observable for you.
+
+```ts
+export async function listTableWithDeletes<T extends keyof ModelsAPI>(
+    tableName: T,
+    inputs: { where: { updatedAt?: TimestampQueryInput } },
+): Promise<Awaited<ReturnType<ModelsAPI[T]['create']>>[]> {
+    const ret = await models[tableName].findMany(inputs);
+
+    return ret.concat(await listDeletes(tableName, inputs)) as any;
+}
+async function listDeletes(
+    tableName: keyof ModelsAPI,
+    inputs: { where: { updatedAt?: TimestampQueryInput } },
+): Promise<any[]> {
+    const {
+        where: { updatedAt },
+    } = inputs;
+    if (updatedAt) {
+        const db = useDatabase().withTables<{ keel_audit }>();
+        const res = await db
+            .selectFrom('keel_audit')
+            .selectAll()
+            .where('table_name', '=', camelCaseToSnakeCase(tableName))
+            .where('op', '=', 'delete')
+            .where('created_at', '>', updatedAt.after)
+            .execute();
+
+        return res.map((r) => ({ id: r.data.id, deleted: true }));
+    } else {
+        return [];
+    }
+}
+function camelCaseToSnakeCase(input: string) {
+    return input.replace(/([A-Z])/g, ' $1').split(' ').join('_').toLowerCase();
+}
+```
+
+Then you can use `listTableWithDeletes` in your `beforeQuery` hooks. You will need to add this to any `beforeQuery` hooks that you want to list with deletes.
+
+```ts
+const hooks: ListMessagesHooks = {
+    async beforeQuery(ctx, inputs, query) {
+        return listTableWithDeletes('message', inputs)
     }
 }
 ```
@@ -375,7 +441,7 @@ addMessage('test')
 
 #### Wait for remote load
 
-Because Keel automatically adds a `createdAt` field after it creates, you can know that data exists in Keel if it has a `createdAt` field.
+Because Keel automatically adds a `createdAt` field after it creates, you can know that data has been successfully saved to Keel if it has a `createdAt` field. Just make sure that you don't set `createdAt` yourself as it's automatically created by Keel.
 
 ```ts
 // Wait for profile to have saved
@@ -409,4 +475,3 @@ const roomMessages$ = observable(
     - transforms
 - Realtime
 - Persist in full example
-- Handling deletes
