@@ -93,7 +93,7 @@ function Component() {
 
 See [Reactive components](../../react/fine-grained-reactivity/#reactive-components) for more details.
 
-## enable$get
+## enable$GetSet
 
 This enables accessing and setting the raw value of an observable directly. It's a shorthand for `get()` and `set(...)`.
 
@@ -122,7 +122,7 @@ state$.$ = { test: "hello" }
 state$.num.$++
 ```
 
-## enable_peek
+## enable_PeekAssign
 
 This enables accessing and setting the raw value of an observable directly without tracking or notifying listeners. Getting with `._` is a shorthand for `peek()` and assigning to `._` modifies the underlying data without notifying. Modifying data without notifying is likely necessary in only very specific scenarios so use it with care.
 
