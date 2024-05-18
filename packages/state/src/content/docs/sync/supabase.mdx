@@ -7,21 +7,6 @@ sidebar:
 
 Supabase and Legend-State work very well together - all you need to do is provide a typed client and the observables will be fully typed and handle calling the correct action functions for you.
 
-## Set up Supabase types
-
-The first step to getting strongly typed observables from Supabase is to follow their instructions to create a typed client.
-
-https://supabase.com/docs/guides/api/rest/generating-types
-
-The examples on this page will use the `supabase` client from the generated types:
-
-```ts
-import { createClient } from '@supabase/supabase-js'
-import { Database } from './database.types'
-
-const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
-```
-
 ## Full Example
 
 We'll start with a full example to see what a full setup looks like, then go into specific details.
@@ -48,13 +33,15 @@ const messages$ = observable(syncedSupabase({
     // Select only id and text fields
     select: (from) => from.select('id,text')
     // Filter by the current user
-    filter: (select) => select.eq('user_id', 'uid'),
+    filter: (select) => select.eq('user_id', uid),
     // Don't allow delete
     actions: ['read', 'create', 'update'],
-    // Realtime
-    realtime: true,
-    // Persist locally
-    persist: { name: 'messages' },
+    // Realtime filter by user_id
+    realtime: { filter: `user_id=eq.${uid}` },
+    // Persist data and pending changes locally
+    persist: { name: 'messages', retrySync: true },
+    // Sync only diffs
+    changesSince: 'last-sync'
 }))
 
 // get() activates and starts syncing
@@ -75,6 +62,21 @@ function updateMessage(id: string, text: string) {
     // Just set values in the observable to trigger an update to Supabase
     messages$[id].text.set(text)
 }
+```
+
+## Set up Supabase types
+
+The first step to getting strongly typed observables from Supabase is to follow their instructions to create a typed client.
+
+https://supabase.com/docs/guides/api/rest/generating-types
+
+The examples on this page will use the `supabase` client from the generated types:
+
+```ts
+import { createClient } from '@supabase/supabase-js'
+import { Database } from './database.types'
+
+const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
 ```
 
 ## filter
