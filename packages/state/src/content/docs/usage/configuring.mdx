@@ -147,30 +147,3 @@ state$.test._ = "hello"
 // Assign objects too
 state$._ = { test: "hello" }
 ```
-
-## enableReactUse (deprecated)
-
-:::caution
-This was recommended before the introduction of enableReactTracking. It is now deprecated and will be removed in version 3.0.
-:::
-
-This adds a `use()` function to all observables, which gets the value and makes the component reactive to the observable changing. It simply runs `useSelector(obs)` under the hood.
-
-```js
-import { enableReactUse } from "@legendapp/state/config/enableReactUse"
-enableReactUse()
-```
-
-Now you can use `use()`.
-
-```jsx
-import { observable } from "@legendapp/state"
-const state$ = observable({ test: "hi" })
-
-function Component() {
-  // This makes this component responsive to test changing
-  const test = state$.test.use()
-
-  return <div>{test}</div>
-}
-```

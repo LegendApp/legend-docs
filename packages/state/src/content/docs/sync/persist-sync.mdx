@@ -5,8 +5,8 @@ sidebar:
 ---
 
 import Install from "shared/src/Components/Install/Install.astro"
-import SelectFramework from "shared/src/Components/SelectFramework/SelectFramework.astro";
-import PersistSync from "../../../Components/PersistSync/PersistSync.astro";
+import SelectFramework from "shared/src/Components/SelectFramework/SelectFramework.astro"
+import PersistSync from "../../../Components/PersistSync/PersistSync.astro"
 
 A primary goal of Legend-State is to make automatic persisting and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local-first apps: any changes made while offline are persisted between sessions to be retried whenever connected. To do this, the sync system subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted and synced.
 
@@ -88,21 +88,21 @@ syncObservable(store$, {
 store$.todos.push({ id: 0 })
 ```
 
-Alternatively we can setup the persistence in the constructor with `synced`. This example is a bit different than above, persisting only the "todos" child of the observable.
+Alternatively we can setup the persistence in the constructor with `synced`. This does exactly the same thing as above.
 
 ```ts
 import { observable } from "@legendapp/state"
 import { synced } from "@legendapp/state/sync"
 
 // Create an observable with "todos" persisted
-const store$ = observable({
-    todos: synced({
+const store$ = observable(
+    synced({
         initial: [],
         persist: {
             name: 'persistKey',
         }
     })
-});
+);
 
 // Any changes will be persisted
 store$.todos.push({ id: 0 })
@@ -121,7 +121,7 @@ import { syncObservable, syncState } from '@legendapp/state/sync'
 
 syncObservable(state$, {
     persist: {
-        name: 'store' // IndexedDB table name
+        name: 'store'
     }
 })
 const status$ = syncState(state$)
@@ -147,7 +147,7 @@ const store$ = observable({
     users: syncedFetch({
         initial: [],
         // When the fetch resolves it will update the observable
-        get: 'https://reqres.in/api/users'
+        get: 'https://reqres.in/api/users',
         // When the observable is changed it will send the changes back to the server.
         set: 'https://reqres.in/api/users'
     })
@@ -192,11 +192,60 @@ store$.usersPage.set(page => page + 1)
 // gets from https://reqres.in/api/users?page=2
 ```
 
+### Local first robust real-time sync
+
+The crud based plugins can be used to enable a robust offline-first sync system by setting a few options. These options will:
+
+- Persist all data locally so the app can work offline
+- Continually retry saves so that failure is not an option
+- Persist saves locally so that they retry even after refresh
+- Sync in realtime
+
+First set the general sync and persist options, then configure your sync plugin with its specific options. In the [Keel](../keel) and [Supabase](../supabase) plugins you can configure these in their global configuration, or you can set them in their `synced` variant.
+
+1. Persist data locally by using the `persist` option
+2. Set the `retrySync` persist option to persist unsynced changes and keep retrying them after restart
+3. Set the `retry` option to keep retrying saves until they succeed
+4. (optionally) set the `changesSince` option to `last-sync` to sync only diffs since the last sync, along with an `updatedAt` field.
+5. Set the `subscribe` option to subscribe to a realtime updater or set up polling.
+
+```ts
+import { configureObservableSync, synced } from '@legendapp/state/sync';
+import { syncedCrud } from '@legendapp/state/sync-plugins/crud';
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
+
+configureObservableSync({
+    persist: {
+        plugin: ObservablePersistLocalStorage,
+        retrySync: true,
+    },
+    debounceSet: 500,
+    retry: {
+        infinite: true,
+    },
+});
+
+const profile$ = observable(syncedCrud({
+    list: () => {/*...*/},
+    create: () => {/*...*/},
+    update: () => {/*...*/},
+    delete: () => {/*...*/},
+    changesSince: 'last-sync',
+    updatedAt: 'updatedAt',
+    subscribe: ({ refresh, update }) => {
+        return realtime.subscribe({ /*...*/ }, () => {
+            // Trigger a refresh of the list function
+            refresh()
+        })
+    }
+}));
+```
+
 ## API
 
 ### configureObservableSync
 
-First you most likely want to set a global persist/sync configuration with your perferred defaults. This is optional as these settings can be set or overriden per observable.
+First you most likely want to set a global persist/sync configuration with your preferred defaults. This is optional as these settings can be set or overriden per observable.
 
 This is a very basic example that uses localStorage for persistence web, but see [synced](#synced) for more options.
 
@@ -240,7 +289,7 @@ const state$ = observable(synced({
 }))
 ```
 
-Or a more advanced example with all of the possible options:
+Or a more advanced example with many of the possible options:
 
 ```js
 import { observable } from '@legendapp/state'
@@ -280,12 +329,14 @@ const state$ = observable(synced({
     // The subscribe function is called once to give you an opportunity to
     // subscribe to another service to trigger refresh
     subscribe: ({ refresh, update }) => {
-        pusher.subscribe({ /*...*/ }, (data) => {
+        const unsubscribe = pusher.subscribe({ /*...*/ }, (data) => {
             // Either update with the received data
             update(data)
             // Or trigger a refresh of the get function
             refresh()
         })
+        // return unsubscribe function
+        return unsubscribe
     },
     // Options for retrying in case of error. Applies to both get and set.
     retry: {
@@ -373,6 +424,84 @@ function Component() {
     }))
 }
 ```
+
+### Transform data
+
+It's very common to need to transform data into and out of your persistence or remote server. There is an option on `synced` to transform the remote data and an option within the `persist` option to transform to/from persistence.
+
+Legend-State includes helpers for easily stringifying data or you can create your own custom transformers.
+- `transformStringifyKeys`: JSON stringify/parse the data at the given keys, for when your backend stores objects as strings
+- `transformStringifyDates`: Transform dates to ISO string, with either the given keys or automatically scanning the object for dates
+- `combineTransforms`: Combine multiple transforms together
+
+This can be used in many ways. Some examples:
+
+1. **Migrate between versions**: If the local data has legacy values in it, you can can transform it to the latest format. This can be done by either keeping a version number or just checking for specific fields. This example migrates old persisted data by checking the version and old field name.
+
+```ts
+const state$ = observable(synced({
+    get: () => {/* ... */},
+    persist: {
+        name: 'state',
+        transform: {
+            load: (value) => {
+                if (value.version === 2) {
+                    if (value.currentPeriodStart) {
+                        value.periodStart = new Date(value.currentPeriodStart * 1000)
+                        delete value.currentPeriodStart
+                    }
+                }
+                return value;
+            }
+        }
+    }
+}))
+```
+
+2. **Transform to backend format**: If you want to interact with data in a different format than your backend stores it, it can be automatically transformed between the observable and the sync functions. This could be used for stringifying or parsing dates for example. In this example we combine the `transformStringifyDates` and `transformStringifyKeys` helpers with a custom transformer.
+
+```ts
+import { combineTransforms, transformStringifyDates } from '@legendapp/state/sync';
+const state$ = observable(synced({
+    get: () => {/* ... */},
+    transform: combineTransforms(
+        transformStringifyDates(),
+        transformStringifyKeys('jsonData', 'messagesArr'),
+        {
+            load: async (value) => {
+                value.localBool = value.serverOption !== 'no'
+                delete value.serverOption
+                return value
+            },
+            save: async (value) => {
+                value.serverOption = value.localBool ? 'yes' : 'no'
+                delete value.localBool
+                return value
+            }
+        }
+    )
+}))
+```
+
+3. **Encrypt**: For end-to-end encryption you can encrypt/decrypt in the transformer so that you interact with unencrypted data locally and it's encrypted before going into your update functions
+
+```ts
+import { combineTransforms, transformStringifyDates } from '@legendapp/state/sync'
+const state$ = observable(synced({
+    get: () => {/* ... */},
+    transform: {
+        load: async (value) => {
+            return decrypt(value)
+        },
+        save: async (value) => {
+            return encrypt(value)
+        }
+    }
+}))
+```
+
+
+#### Persist
 
 ## Persist plugins
 
@@ -507,7 +636,7 @@ The AsyncStorage plugin needs an additional bit of global configuration, giving 
 ```js
 import { configureObservableSync } from '@legendapp/state/sync'
 import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Global configuration
 configureObservableSync({
@@ -533,17 +662,18 @@ await when(status$.isPersistLoaded)
 
 ## Making a sync plugin
 
-Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a `synced`. If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of `syncedCrud` which encapsulates a lot of logic for those specifics for you.
+Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a `synced`. If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](../crud) which encapsulates a lot of logic for those specifics for you.
 
 It may be easiest to look at [the source of the built-in sync plugins](https://github.com/LegendApp/legend-state/tree/main/src/persist-plugins) to see what they look like.
 
-This is a simple contrived example to give you an easy of what that could look like.
+This is a simple contrived example to show what that could look like.
 
 ```ts
 import { synced } from '@legendapp/state/sync'
 
+// Create a custom synced that just needs a name in your API
 const customSynced = ({ name }) => {
-    const basePath = 'https://url/api/v1/';
+    const basePath = 'https://url/api/v1/'
     const doFetch = (path) => {
         return fetch(basePath + path).then((res) => res.json())
     }
@@ -565,23 +695,8 @@ const customSynced = ({ name }) => {
         subscribe: ({ refresh }) => {
             // Subscribe to realtime service
         },
-    });
+    })
 }
 ```
 
 TODO: More details
-
-## persistObservable (Deprecated)
-
-`persistObservable` can be used to automatically persist an observable, both locally and remotely. It will be saved whenever you change anything anywhere within the observable, and the observable will be filled with the local state right after calling `persistObservable`.
-
-The second parameter to `persistObservable` provides some options:
-
-- `local`: A unique name for this observable in storage or options to configure it
-- `pluginLocal`: The local persistence plugin to use. This defaults to use the globally configured pluginLocal.
-- `remote`: Options to configure remote persistence
-- `pluginRemote`: The persistence plugin to use. This defaults to use the globally configured pluginRemote.
-
-`persistObservable` returns the observable with an additional `state` child that can be used to check it's loading state.
-
-First you most likely want to set a global configuration for which plugins to use, though it can also be configured per observable.

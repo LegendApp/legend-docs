@@ -4,6 +4,121 @@ sidebar:
     order: 2
 ---
 
+## 2.x to 3.0 Alpha
+
+Version 3.0 is a big change focused mainly in four areas:
+
+### 1. Types
+
+The types were fully rewritten from scratch, fixing many bugs especially around Promises and nullability, and many of the types were renamed. You may need to rename some of your type imports.
+
+### 2. Computed/Proxy
+
+computed/proxy are no longer separate concepts, they're just a function in an observable. If you were using `computed` you can just use `observable` now, and if you were using `computed` as a child of an observable, you can remove `computed` and use just a function. The old behavior will still work for now, but the new way is more efficient and `computed` will be deprecated in a later version.
+
+See [Computed Observables](../../usage/observable#computed-observables) for more details.
+
+```ts
+// Change
+const compValue$ = computed(() => /* ... */)
+// to
+const compValue$ = observable(() => /* ... */)
+
+// Change
+const state$ = observable(() => ({
+    value: 1,
+    comp: computed(() => state$.value.get())
+}))
+// to
+const state$ = observable(() => ({
+    value: 1,
+    comp: () => state$.value.get()
+}))
+```
+
+`proxy` is now just a function with a string parameter.
+
+See [Computed Observables](../../usage/observable#lookup-table) for more details.
+
+```ts
+// Change
+const state$ = observable({
+    items: { test1: { text: 'hi' }, test2: { text: 'hello' } },
+    itemText: proxy((key) => {
+        return state$.items[key]['text'];
+    })
+})
+// To
+const state$ = observable({
+    items: { test1: { text: 'hi' }, test2: { text: 'hello' } },
+    texts: (key: string) => {
+        return state$.items[key]['text']
+    }
+})
+```
+
+And you can use `useObservable` in the same way that you used to use `useComputed`:
+
+```ts
+// Change
+const state$ = useComputed(() => state$.text.get())
+// To
+const state$ = useObservable(() => state$.text.get())
+```
+
+### 3. Persist
+
+Persistence works in the same way but the API is changed for clarity and new features with the new more robust sync system. `persistObservable` is changed to `syncObservable` and the persisting features are under the `persist` option instead of `local`.
+
+Additionally, `persistObservable` was inserting a `state` property for the sync state, which caused compatibility issues with data that had its own `state` property. So the sync state is now accessible separately with `syncState`.
+
+Likewise, `configureObservablePersistence` is renamed to `configureObservableSync`.
+
+```ts
+import { configureObservableSync, syncObservable, syncState } from "@legendapp/state/sync"
+// Change
+configureObservablePersistence({
+    pluginLocal: ObservablePersistLocalStorage
+})
+// To
+configureObservableSync({
+    persist: {
+        plugin: ObservablePersistLocalStorage
+    }
+})
+
+// Change
+const { state } = persistObservable(state$, {
+    local: {
+        name: "store",
+    }
+})
+// To
+syncObservable(state$, {
+    persist: {
+        name: "store",
+    }
+})
+const state = syncState(state$);
+```
+
+## 4. Sync
+
+It's now much easier to sync individual observables with a new plugin system. The Firebase plugin is still in progress, so if you were using that you'll want to hold off on the upgrade until the full 3.0 release.
+
+If you had made a custom sync plugin on the old system, please post an issue on [Github](https://github.com/LegendApp/legend-state) or talk to us on [Slack](https://join.slack.com/t/legendappcommunity/shared_invite/zt-1mfjknpna-vUL2s1qOuNeZL12~t2RruQ), and we will help you with the migration.
+
+## Other changes
+
+- useObservable with a function parameter is now reactive like useComputed was. So use peek() when accessing observables inside it if you want it to be just an initial value and not be reactive.
+- Removed lockObservable: With the new method of computeds it's not possible to modify the types to be readonly, so we removed this feature.
+- set and toggle return void: They had previously returned the observable in order to allow chaining, but it caused unintended side effects, so they now return void.
+- `onSet` was renamed to `onAfterSet` for clarity
+- Removed the concept of "after batch" - it was generally unreliable because batches can run recursively
+- Renamed `enableDirectAccess()` to `enable$GetSet()` and `enableDirectPeek()` to `enable_PeekAssign()` for clarity
+- Computeds now only re-compute themselves when observed. This may cause some migration issues if your computeds had side effects, as they will not re-run when dependencies change unless being observed.
+
+
 ## 1.x to 2.0
 
 Version 2.0 removes old deprecated features to reduce bundle size and encourage everyone to move over to the new features. Version 1.11 displays deprecation warnings to help you migrate.

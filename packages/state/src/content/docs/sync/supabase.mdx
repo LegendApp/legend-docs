@@ -165,7 +165,7 @@ const messages$ = observable(syncedSupabase({
 An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce badwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
 
 1. Save the maximum updatedAt to the local persistence
-2. In subsquent syncs or after refresh it will list by `updated_at: lastSync + 1` to get only recent changes
+2. In subsequent syncs or after refresh it will list by `updated_at: lastSync + 1` to get only recent changes
 3. The new changes will be merged into the observable
 
 Enabling this on the Supabase side requires adding `created_at` and `updated_at` columns and a trigger to your table. You can run this snippet to set it up, just replace the two instances of YOUR_TABLE_NAME.
