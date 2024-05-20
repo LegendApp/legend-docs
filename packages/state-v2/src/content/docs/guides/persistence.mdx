@@ -212,7 +212,6 @@ All you need to make a remote persistence plugin is a `get` and a `set` function
 
 ```js
 import { persistObservable } from "@legendapp/state/persist"
-import { persistPluginQuery } from "@legendapp/state/persist-plugins/query"
 
 const obs$ = persistObservable(
   { initialValue: "hello" },

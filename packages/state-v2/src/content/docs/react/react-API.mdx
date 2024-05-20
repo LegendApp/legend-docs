@@ -180,14 +180,14 @@ const Component = function Component() {
 
 ```jsx
 import { observable } from "@legendapp/state";
-import { useComputed } from "@legendapp/state/react";
+import { useComputed, Memo } from "@legendapp/state/react";
 
 const state$ = observable({ test: 10, test2: 20 });
 
 function Component() {
   const sum = useComputed(() => state$.test.get() + state$.test2.get());
 
-  return <div>Sum: {sum}</div>;
+  return <div>Sum: <Memo>{sum}</Memo></div>;
 }
 ```
 

@@ -207,7 +207,7 @@ const state$ = observable({
   selector: 'text',
   items: { test1: { text: 'hi', othertext: 'bye' }, test2: { text: 'hello', othertext: 'goodbye' } },
     itemText: proxy((key) => {
-    return obs.items[key][obs.selector.get()];
+    return state$.items[key][obs.selector.get()];
   }),
 });
 

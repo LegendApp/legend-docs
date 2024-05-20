@@ -8,7 +8,7 @@ If you notice your components feeling too slow or seeming to render too often, t
 
 ## useTraceListeners()
 
-Call `useTraceListeners()` anywhere within `observe` or any React component to console.log a list of every observable being track for changes. This can help you find and reduce the number of listeners.
+Call `useTraceListeners()` anywhere within `observer` or any React component to console.log a list of every observable being track for changes. This can help you find and reduce the number of listeners.
 
 ```jsx
 import { useTraceListeners } from "@legendapp/state/trace";
@@ -30,7 +30,7 @@ const Component = observer(function Component(props) {
 
 ## useTraceUpdates()
 
-Call `useTraceUpdates()` anywhere within `observe` or any React component to console.log information about the observable change that causes each render. This can help you track down why components are rendering too often.
+Call `useTraceUpdates()` anywhere within `observer` or any React component to console.log information about the observable change that causes each render. This can help you track down why components are rendering too often.
 
 ```jsx
 import { useTraceUpdates } from "@legendapp/state/trace";
