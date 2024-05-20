@@ -102,13 +102,13 @@ syncObservable(state$, {
 const state = syncState(state$);
 ```
 
-## 4. Sync
+### 4. Sync
 
 It's now much easier to sync individual observables with a new plugin system. The Firebase plugin is still in progress, so if you were using that you'll want to hold off on the upgrade until the full 3.0 release.
 
 If you had made a custom sync plugin on the old system, please post an issue on [Github](https://github.com/LegendApp/legend-state) or talk to us on [Slack](https://join.slack.com/t/legendappcommunity/shared_invite/zt-1mfjknpna-vUL2s1qOuNeZL12~t2RruQ), and we will help you with the migration.
 
-## Other changes
+### Other changes
 
 - useObservable with a function parameter is now reactive like useComputed was. So use peek() when accessing observables inside it if you want it to be just an initial value and not be reactive.
 - Removed lockObservable: With the new method of computeds it's not possible to modify the types to be readonly, so we removed this feature.
