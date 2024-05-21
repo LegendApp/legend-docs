@@ -22,6 +22,7 @@ There is no boilerplate and there are no contexts, actions, reducers, dispatcher
 
 ```js
 import { observable, observe } from "@legendapp/state"
+import { observer } from "@legendapp/state/react"
 
 const settings$ = observable({ theme: 'dark' })
 
@@ -38,6 +39,11 @@ observe(() => {
   console.log(settings$.theme.get())
 })
 
+const Component = observer(function Component() {
+    const theme = state$.settings.theme.get()
+
+    return <div>Theme: {theme}</div>
+})
 ```
 
 React components track access to `get()` on observables and automatically re-render whenever they change.

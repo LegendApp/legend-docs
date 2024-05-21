@@ -217,7 +217,7 @@ The shape of the observable object can be changed with the `as` parameter, which
 
 When using a `list` function you may want to provide more options to the `where` query. You can do that by [customizing actions](#customizing-actions), but it is most easily done with the `where` parameter.
 
-In this example of using a [lookup table](TODO) by room, we can pass the `roomId` into the query:
+In this example of using a [lookup table](../../usage/observable#lookup-table) by room, we can pass the `roomId` into the query:
 
 ```ts
 const { mutations, queries } = client.api
@@ -276,7 +276,7 @@ model Message {
 
 ## Customizing actions
 
-In the previous examples we provided the Keel function directly, but you can also provide your own function which calls the Keel action. That can be useful for adding extra query or creation options, such as with a [lookup table](TODO).
+In the previous examples we provided the Keel function directly, but you can also provide your own function which calls the Keel action. That can be useful for adding extra query or creation options, such as with a [lookup table](../../usage/observable#lookup-table).
 
 ```ts
 import { mutations, queries, CreateProfileInput } from './keelClient'
