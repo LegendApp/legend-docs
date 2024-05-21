@@ -106,17 +106,26 @@ const state = syncState(state$);
 
 It's now much easier to sync individual observables with a new plugin system. The Firebase plugin is still in progress, so if you were using that you'll want to hold off on the upgrade until the full 3.0 release.
 
+See the [Persist and Sync docs](../../sync/persist-sync/) for the latest.
+
 If you had made a custom sync plugin on the old system, please post an issue on [Github](https://github.com/LegendApp/legend-state) or talk to us on [Slack](https://join.slack.com/t/legendappcommunity/shared_invite/zt-1mfjknpna-vUL2s1qOuNeZL12~t2RruQ), and we will help you with the migration.
+
+### 5. Removed old sync plugins
+
+Version 2 had inconsistent and varied ways to sync with fetch or Query, and they are now aligned into the Sync system.
+
+- Fetch: [syncedFetch](../../sync/fetch)
+- TanStack Query: [syncedQuery](../../sync/tanstack-query)
 
 ### Other changes
 
 - useObservable with a function parameter is now reactive like useComputed was. So use peek() when accessing observables inside it if you want it to be just an initial value and not be reactive.
+- Computeds now only re-compute themselves when observed. This may cause some migration issues if your computeds had side effects, as they will not re-run when dependencies change unless being observed.
 - Removed lockObservable: With the new method of computeds it's not possible to modify the types to be readonly, so we removed this feature.
 - set and toggle return void: They had previously returned the observable in order to allow chaining, but it caused unintended side effects, so they now return void.
 - `onSet` was renamed to `onAfterSet` for clarity
 - Removed the concept of "after batch" - it was generally unreliable because batches can run recursively
 - Renamed `enableDirectAccess()` to `enable$GetSet()` and `enableDirectPeek()` to `enable_PeekAssign()` for clarity
-- Computeds now only re-compute themselves when observed. This may cause some migration issues if your computeds had side effects, as they will not re-run when dependencies change unless being observed.
 
 
 ## 1.x to 2.0
