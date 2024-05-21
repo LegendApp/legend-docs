@@ -11,7 +11,7 @@ import { versions, defaultVersion } from "shared/config";
 const url = new URL(Astro.url);
 const urlBase = "/open-source/state/";
 const versionMatch = new RegExp(urlBase + "(v\\d)").exec(url.pathname);
-const currentVersion = versionMatch?.[1] || "defaultVersion";
+const currentVersion = versionMatch?.[1] || defaultVersion;
 const options = versions.map(([version, label]) => ({
   label,
   selected: currentVersion === version,
