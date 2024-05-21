@@ -8,7 +8,7 @@ export const InstallFrameworks = observer(function ({
 }: {
   className?: string;
 }) {
-  const name = "@legendapp/state";
+  const name = "@legendapp/state@alpha";
   const framework = state$.framework.get();
   return (
     <div className={classNames("mt-6", className)}>
