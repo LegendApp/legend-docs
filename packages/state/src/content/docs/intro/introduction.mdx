@@ -1,5 +1,5 @@
 ---
-title: Introduction v3
+title: Introduction
 description: Basic intro to Legend State
 sidebar:
     order: 1
@@ -7,6 +7,8 @@ sidebar:
 
 :::caution
 Version 3 is in Alpha. You can use it by installing the @alpha version but keep in mind that the APIs may change slightly before release. If you're starting a new project we suggest starting with version 3 since it's much improved over version 2.
+
+See [Migrating](../../other/migrating) for details of the changes or [go back to the v2 docs](../../../v2).
 :::
 
 import Primitives from "../../../Components/Introduction/Primitives.astro"
@@ -65,31 +67,36 @@ Legend-State helps your components re-render less, less often, making your apps 
 
 ### 4. 💾 Powerful sync and persistence
 
-Legend-State includes a powerful [sync and persistence system](../../usage/persist-sync). It easily enables local-first apps by optimistically applying all changes locally first, ensuring they eventually sync, managing conflict resolution, and syncing minimal diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
+Legend-State includes a powerful [sync and persistence system](../../usage/persist-sync). It easily enables local-first apps by optimistically applying all changes locally first, retrying changes even after restart until they eventually sync, and syncing minimal diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
 
-Local persistence plugins for the browser and React Native are included, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
+Local persistence plugins for the browser and React Native are included, with sync plugins for [Keel](https://www.keel.so), [Supabase](https://www.supabase.com), [TanStack Query](https://tanstack.com/query), and `fetch`.
 
 ```js
-import { observable } from '@legendapp/state'
-import { synced } from '@legendapp/state/sync'
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+const state$ = observable(
+    users: syncedKeel({
+        list: queries.getUsers,
+        create: mutations.createUsers,
+        update: mutations.updateUsers,
+        delete: mutations.deleteUsers,
+        persist: { name: 'users', retrySync: true },
+        debounceSet: 500,
+        retry: {
+            infinite: true,
+        },
+        changesSince: 'last-sync',
+    }),
+    // direct link to my user within the users observable
+    me: () => state$.users['myuid']
+)
 
-const store$ = observable(synced({
-    // Two-way bind this observable to a remote server
-    get: () => fetch(url).then(r => r.json()),
-    set: ({ value }) => fetch(url, { method: 'POST', data: JSON.stringify(value) }),
-    // Cache data locally
-    cache: {
-        local: 'store',
-        plugin: ObservablePersistLocalStorage
-    },
-}))
+observe(() => {
+    // get() activates through to state$.users and starts syncing.
+    // it updates itself and re-runs observers when name changes
+    const name = me$.name.get()
+})
 
-// Getting the value activates it to fetch
-store$.user.name.get()
-
-// Setting a value automatically syncs with the server
-store$.user.name.set('Annyong')
+// Setting a value goes through to state$.users and saves update to server
+me$.name.set('Annyong')
 ```
 
 [Read more](../../usage/persist-sync)

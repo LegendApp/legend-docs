@@ -308,6 +308,33 @@ state$.selectedItem.set('HELLO!')
 // items = ["hi", "there", "HELLO!"]
 ```
 
+This could also be used to transform objects to another shape while still linking to the original value. So for example you could filter the values of an object into an array, with each element in the array pointing to the original observable.
+
+```js
+const state$ = observable({
+  items: {
+    id1: { id: 'id1', status: 'ready' },
+    id2: { id: 'id2', status: 'disabled' }
+  },
+  itemsReady: () => Object.values(state$.items)
+                    .filter(item => item.status.get() === 'ready')
+})
+
+observe(() => {
+    console.log('observe:' + state$.itemsReady.get())
+})
+// observe: [{ id: 'id1', status: 'ready' }]
+
+// modifying the target object recomputes the computed array
+state$.items.id2.status.set('ready')
+// observe: [{ id: 'id1', status: 'ready' }, { id: 'id2', status: 'ready' }]
+
+// set on the computed array goes into the target object
+state$.itemsReady[0].status.set('disabled')
+// observe: [{ id: 'id2', status: 'ready' }]
+
+```
+
 ### Lookup table
 
 A function with a single `string` key can be used as a lookup table (an object with a string key). Accessing it by index will call the function to create a computed observable by that key.
@@ -328,6 +355,10 @@ const state$ = observable({
 // Now these reference the same thing:
 state$.items.test1.text.get()
 state$.texts['test1'].get()
+
+// And setting a text goes through to the linked observable
+state$.texts.test1.set('hello')
+state$.items.test1.text.get() // 'hello'
 ```
 
 ### event

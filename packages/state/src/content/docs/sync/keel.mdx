@@ -42,29 +42,37 @@ const profile$ = observable(syncedKeel({
 
 Then you can just get and modify the observable to two-way sync your data with Keel.
 
+## Install
+
+Follow [Keel's](https://www.keel.so) instructions to get everything setup with Keel. Then install the `ksuid` library, which the Keel plugin uses to generate IDs locally in the same way that Keel's backend generates IDs.
+
+<Install name="ksuid" />
+
 ## Full Example
 
 We'll start with a full example to see what a full setup looks like, then go into specific details.
 
 ```ts
 import { observable } from '@legendapp/state'
-import { configureSyncedKeel, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+import { configureObservableSync } from '@legendapp/state/sync/'
+import { configureSyncedKeel, generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
 import { APIClient } from './keelClient'
-import ksuid from 'ksuid'
 
 const client = new APIClient({
-  baseUrl: process.env.API_BASE_URL, // http://localhost:8000/api
+  baseUrl: process.env.API_BASE_URL
 })
 
-// a function to generateId locally
-function generateId() {
-    return ksuid.randomSync().string
-}
+// configure global persistence
+configureObservableSync({
+    persist: {
+        plugin: ObservablePersistLocalStorage
+    }
+})
 
-// configure client and generateId
+// configure keel plugin with client
 configureSyncedKeel({
     client,
-    generateId,
 })
 
 // enable sync after authentication succeeds
@@ -85,19 +93,24 @@ async function doAuth() {
 const { mutations, queries } = client.api
 
 // create an observable with the action functions
-const profile$ = observable(syncedKeel({
-    get: queries.getProfile,
-    create: mutations.createProfile,
-    update: mutations.updateProfile,
-    delete: mutations.deleteProfile,
-    persist: { name: 'profile' },
+const messages$ = observable(syncedKeel({
+    list: queries.getMessages,
+    create: mutations.createMessage,
+    update: mutations.updateMessage,
+    delete: mutations.deleteMessage,
+    persist: { name: 'messages', retrySync: true },
+    debounceSet: 500,
+    retry: {
+        infinite: true,
+    },
+    changesSince: 'last-sync',
 }))
 
 // get() activates and starts syncing
-const profile = profile$.get()
+const messages = messages$.get()
 
 function addMessage(text: string) {
-    const id = generateId()
+    const id = generateKeelId()
     // Add keyed by id to the messages$ observable to trigger the create action
     messages$[id].set({
         id,
@@ -118,28 +131,22 @@ function updateMessage(id: string, text: string) {
 The first step to using the Keel plugin is to set some global configuration options. The required options are:
 
 - **client**: It needs the client in order to set enable the Keel realtime plugins.
-- **generateId**: In order to create new rows locally the plugin needs to generate an ID locally. Keel uses `ksuid` for their IDs, so we suggest using that for best compatibility.
 - **enabled**: Set enabled to true after you've [authenticated](https://docs.keel.so/apis/client#authenticating) with Keel. You can set this option separately whenever it's ready.
 
 This is what a basic configuration should look like. You'll want to configure the options before using `syncedKeel`, and update `enabled` after you've [authenticated](https://docs.keel.so/apis/client#authenticating).
-
-
-<Install name="ksuid" />
 
 ```ts
 import { observable } from '@legendapp/state'
 import { configureSyncedKeel, syncedKeel } from '@legendapp/state/sync-plugins/keel'
 import { APIClient } from './keelClient'
-import ksuid from 'ksuid'
 
 const client = new APIClient({
   baseUrl: process.env.API_BASE_URL,
 })
 
-// configure client and generateId
+// configure client
 configureSyncedKeel({
     client,
-    generateId: () => ksuid.randomSync().string,
 })
 
 // enable sync after authentication succeeds
@@ -409,13 +416,10 @@ To add a new element to an observable and use it locally before it has been crea
 Note that since `createdAt` and `updatedAt` are defined as required in the types they should to be set to undefined when creating.
 
 ```ts
-import ksuid from 'ksuid'
 import { Message } from './keelClient'
+import { observable } from '@legendapp/state'
+import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
 
-// a function to generateId locally
-function generateId() {
-    return ksuid.randomSync().string
-}
 
 const profile$ = observable(syncedKeel({
     get: queries.getProfile,
@@ -425,7 +429,7 @@ const profile$ = observable(syncedKeel({
 }))
 
 function addMessage(text: string) {
-    const id = generateId()
+    const id = generateKeelId()
     // Add keyed by id to the messages$ observable
     messages$[id].set({
         id,
@@ -467,9 +471,15 @@ const roomMessages$ = observable(
 )
 ```
 
-### TODO
+## TODO
 
+### Realtime
+
+Keel does not have realtime built in, but it's very easy to build a realtime system on top of it.
+
+More details coming soon.
+
+Other todo
 - options
     - transforms
-- Realtime
 - Persist in full example
