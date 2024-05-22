@@ -126,6 +126,7 @@ Version 2 had inconsistent and varied ways to sync with fetch or Query, and they
 - `onSet` was renamed to `onAfterSet` for clarity
 - Removed the concept of "after batch" - it was generally unreliable because batches can run recursively
 - Renamed `enableDirectAccess()` to `enable$GetSet()` and `enableDirectPeek()` to `enable_PeekAssign()` for clarity
+- Moved `trackHistory` export, so you can now use  `import { trackHistory } from '@legendapp/state/helpers/trackHistory'`
 
 
 ## 1.x to 2.0

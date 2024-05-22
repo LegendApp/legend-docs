@@ -48,7 +48,7 @@ An optional second parameter lets you use an existing observable for storing the
 
 ```js
 import { observable } from '@legendapp/state'
-import { trackHistory } from '@legendapp/state/history'
+import { trackHistory } from '@legendapp/state/helpers/trackHistory'
 
 const state$ = observable({ profile: { name: 'Hello' }})
 
@@ -81,7 +81,7 @@ will be removed and the new state will take its place. This is similar to how ot
 
 ```js
 import { observable } from "@legendapp/state";
-import { undoRedo } from "@legendapp/state/history";
+import { undoRedo } from "@legendapp/state/helpers/undoRedo";
 
 const state$ = observable({ todos: ["Get milk"] });
 
@@ -112,7 +112,7 @@ Hint: use [batching](../../usage/reactivity/#batching) to group sets of changes 
 ```jsx
 import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
-import { undoRedo } from "@legendapp/state/history";
+import { undoRedo } from "@legendapp/state/helpers/undoRedo";
 
 const state$ = observable({ todos: ["Get milk"] });
 
