@@ -117,7 +117,8 @@ The key difference between syncObservable and synced is that syncObservable star
 Some persistences like IndexedDB and AsyncStorage are asynchronous, so you'll need to wait for it to load before you start reading from it. `syncState` returns an observable with load statuses that you can wait for.
 
 ```js
-import { syncObservable, syncState } from '@legendapp/state/sync'
+import { syncState } from "@legendapp/state"
+import { syncObservable } from '@legendapp/state/sync'
 
 syncObservable(state$, {
     persist: {
@@ -376,8 +377,8 @@ syncObservable(state$, {
 Each synced observable has a `syncState` observable that you can get to check its status or do some actions.
 
 ```ts
-import { observable } from '@legendapp/state'
-import { synced, syncState } from '@legendapp/state/sync'
+import { observable, syncState } from '@legendapp/state'
+import { synced } from '@legendapp/state/sync'
 
 const obs$ = observable(synced({ /*...*/ }))
 const state$ = syncState(obs$)
