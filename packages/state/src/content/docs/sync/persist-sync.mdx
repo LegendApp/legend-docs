@@ -75,7 +75,7 @@ configureObservableSync({
 // Create an observable
 const store$ = observable({
   todos: [],
-});
+})
 
 // Persist the observable to the named key of the global persist plugin
 syncObservable(store$, {
@@ -102,7 +102,7 @@ const store$ = observable(
             name: 'persistKey',
         }
     })
-);
+)
 
 // Any changes will be persisted
 store$.todos.push({ id: 0 })
@@ -211,9 +211,9 @@ First set the general sync and persist options, then configure your sync plugin 
 5. Set the `subscribe` option to subscribe to a realtime updater or set up polling.
 
 ```ts
-import { configureObservableSync, synced } from '@legendapp/state/sync';
-import { syncedCrud } from '@legendapp/state/sync-plugins/crud';
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
+import { configureObservableSync, synced } from '@legendapp/state/sync'
+import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 configureObservableSync({
     persist: {
@@ -223,8 +223,8 @@ configureObservableSync({
     debounceSet: 500,
     retry: {
         infinite: true,
-    },
-});
+    }
+})
 
 const profile$ = observable(syncedCrud({
     list: () => {/*...*/},
@@ -232,14 +232,14 @@ const profile$ = observable(syncedCrud({
     update: () => {/*...*/},
     delete: () => {/*...*/},
     changesSince: 'last-sync',
-    updatedAt: 'updatedAt',
+    fieldUpdatedAt: 'updatedAt',
     subscribe: ({ refresh, update }) => {
         return realtime.subscribe({ /*...*/ }, () => {
             // Trigger a refresh of the list function
             refresh()
         })
     }
-}));
+}))
 ```
 
 ## API
@@ -382,8 +382,8 @@ import { synced } from '@legendapp/state/sync'
 
 const obs$ = observable(synced({ /*...*/ }))
 const state$ = syncState(obs$)
-const error = state$.error.get();
-const isLoaded = state$.isLoaded.get();
+const error = state$.error.get()
+const isLoaded = state$.isLoaded.get()
 
 if (error) {
     // Handle error
@@ -452,7 +452,7 @@ const state$ = observable(synced({
                         delete value.currentPeriodStart
                     }
                 }
-                return value;
+                return value
             }
         }
     }
@@ -462,7 +462,7 @@ const state$ = observable(synced({
 2. **Transform to backend format**: If you want to interact with data in a different format than your backend stores it, it can be automatically transformed between the observable and the sync functions. This could be used for stringifying or parsing dates for example. In this example we combine the `transformStringifyDates` and `transformStringifyKeys` helpers with a custom transformer.
 
 ```ts
-import { combineTransforms, transformStringifyDates } from '@legendapp/state/sync';
+import { combineTransforms, transformStringifyDates } from '@legendapp/state/sync'
 const state$ = observable(synced({
     get: () => {/* ... */},
     transform: combineTransforms(

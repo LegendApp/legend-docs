@@ -14,23 +14,24 @@ We'll start with a full example to see what a full setup looks like, then go int
 import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 import { observable } from '@legendapp/state'
-import { syncedSupabase } from '@legendapp/state/sync-plugins/supabase'
+import { configureSyncedSupabase, syncedSupabase } from '@legendapp/state/sync-plugins/supabase'
 import { v4 as uuidv4 } from "uuid";
 
 const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
 
 // provide a function to generate ids locally
-const generateId = () => uuidv4();
+const generateId = () => uuidv4()
 configureSyncedSupabase({
     generateId
 })
+const uid = ''
 
 const messages$ = observable(syncedSupabase({
     supabase,
     collection: 'messages',
     // Optional:
     // Select only id and text fields
-    select: (from) => from.select('id,text')
+    select: (from) => from.select('id,text'),
     // Filter by the current user
     filter: (select) => select.eq('user_id', uid),
     // Don't allow delete
@@ -52,8 +53,8 @@ function addMessage(text: string) {
     messages$[id].set({
         id,
         text,
-        createdAt: undefined,
-        updatedAt: undefined
+        createdAt: null,
+        updatedAt: null
     })
 }
 
