@@ -19,13 +19,13 @@ The behavior when using `get` is:
 - **create**: Setting the value to null or undefined, or calling `delete()`, will delete
 
 ```ts
-const { mutations, queries } = client.api
+import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
 
-const profile$ = observable(syncedKeel({
-    get: queries.getProfile,
-    create: mutations.createProfile,
-    update: mutations.updateProfile,
-    delete: mutations.deleteProfile,
+const profile$ = observable(syncedCrud({
+    get: getProfile,
+    create: createProfile,
+    update: updateProfile,
+    delete: deleteProfile,
 }))
 // profile$.get() is a Profile
 ```
@@ -37,13 +37,11 @@ The behavior when using `list` is:
 - **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
 
 ```ts
-const { mutations, queries } = client.api
-
-const profiles$ = observable(syncedKeel({
-    list: queries.listProfiles,
-    create: mutations.createProfile,
-    update: mutations.updateProfile,
-    delete: mutations.deleteProfile,
+const profiles$ = observable(syncedCrud({
+    list: listProfiles,
+    create: createProfile,
+    update: updateProfile,
+    delete: deleteProfile,
 }))
 // profile$.get() is a Record<string, Profile>
 ```
@@ -64,7 +62,7 @@ The `create` function is called whenever a new object is added to the observable
 The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     create: (value, options) => {
         const { data, error } = await serverCreateProfile(value);
@@ -85,7 +83,7 @@ If an element in the observable is updated it will call the `update` function wi
 The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     update: (value, options) => {
         const { data, error } = await serverUpdateProfile(value);
@@ -105,7 +103,7 @@ const profile$ = observable(syncedKeel({
 When an element is deleted from the observable, it will call the `delete` function with the `id` of the deleted element.
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     delete: ({ id }, options) => {
         const { data, error } = await serverDeleteProfile(id);
@@ -121,7 +119,7 @@ const profile$ = observable(syncedKeel({
 Alternatively if you do soft deletes, you can provide a `fieldDeleted` option instead of `delete`, and then it will call the `update` function with that field set to true.
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     update: () => {/* ... */},
     fieldUpdated: 'deleted'
@@ -135,7 +133,7 @@ When a value is saved to the server you may want it to apply changes back into t
 1. **onSavedUpdate: 'createdUpdatedAt'**: This will save any fields ending in `["createdAt", "updatedAt", "created_at", "updated_at"]` back to the observable. This can be useful if your backend updates these values on the server. It also works if you have updated times for specific fields like "noteUpdatedAt".
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     create: () => {/* ... */},
     update: () => {/* ... */},
@@ -146,7 +144,7 @@ const profile$ = observable(syncedKeel({
 2. **onSaved**: If you want more control over what fields are updated in your object you can do it manually with `onSaved`. Just return an object with the fields you want merged into the observable. Note that you can also just use this for side effects and not return anything.
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     create: () => {/* ... */},
     update: () => {/* ... */},
@@ -167,7 +165,7 @@ This can be used in two ways depending on how your backend works, updating with 
 When the observable is no longer being observed it will call the returned unsubscribe function.
 
 ```ts
-const profile$ = observable(syncedKeel({
+const profile$ = observable(syncedCrud({
     // ...
     list: () => {/* ... */},
     subscribe: ({ refresh, update }) => {
