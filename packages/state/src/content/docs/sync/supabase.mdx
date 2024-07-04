@@ -15,7 +15,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 import { observable } from '@legendapp/state'
 import { configureSyncedSupabase, syncedSupabase } from '@legendapp/state/sync-plugins/supabase'
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid"
 
 const supabase = createClient<Database>(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
 
@@ -53,8 +53,8 @@ function addMessage(text: string) {
     messages$[id].set({
         id,
         text,
-        createdAt: null,
-        updatedAt: null
+        created_at: null,
+        updated_at: null
     })
 }
 
@@ -103,7 +103,7 @@ const messages$ = observable(syncedSupabase({
     supabase,
     collection: 'messages',
     // Select only id and text fields
-    select: (from) => from.select('id,text')
+    select: (from) => from.select('id,text'),
     // Or select and filter together
     select: (from) => from.select('id,text').eq('user_id', 'uid')
 }))
@@ -229,7 +229,7 @@ configureSyncedSupabase({
     fieldUpdatedAt: 'updated_at',
     // Optionally enable soft deletes
     fieldDeleted: 'deleted'
-});
+})
 ```
 
 ## Soft deletes
