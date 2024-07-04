@@ -49,12 +49,12 @@ const messages = messages$.get()
 function addMessage(text: string) {
     const id = generateId()
     // Add keyed by id to the messages$ observable to trigger a create in Supabase
-    messages$[id].set({
+    messages$[id].set(() => ({
         id,
         text,
         createdAt: undefined,
         updatedAt: undefined
-    })
+    }))
 }
 
 function updateMessage(id: string, text: string) {
