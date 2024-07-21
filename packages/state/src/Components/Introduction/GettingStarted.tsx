@@ -122,6 +122,7 @@ export const GettingStarted = observer(function GettingStarted() {
     const replacer = (str: string) =>
       str
         .replace(/<View|<Text/g, "<div")
+        .replace(/<\/View|<\/Text/g, "</div")
         .replace(/enableReactNativeComponents/g, "enableReactComponents")
         .replace(/,\n        asyncStorage: { AsyncStorage }/g, "")
         .replace(
