@@ -1,5 +1,6 @@
 :root {
     --sl-color-accent-high: #09d;
+    --sl-color-bg-nav: #1F2025;
     @media (min-width: 80rem) {
         --sl-content-width: 48rem;
     }

@@ -1,0 +1,23 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import Home from "../Components/Home/Home";
+---
+
+<StarlightPage
+  hasSidebar={false}
+  headings={[]}
+  frontmatter={{ title: "Home", tableOfContents: false }}
+>
+    <Home client:load />
+</StarlightPage>
+
+
+
+<style is:global>
+  main > .content-panel:first-child {
+    display: none;
+  }
+  main > .content-panel {
+    border-top: none !important;
+  }
+</style>
