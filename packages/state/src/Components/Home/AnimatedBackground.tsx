@@ -50,18 +50,27 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
     resizeCanvas();
 
     const createParticle = () => {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 2 + 1,
-          dx: (Math.random() - 0.5) * 0.5,
-          dy: (Math.random() - 0.5) * 0.5,
-        });
-    }
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+      });
+    };
 
     for (let i = 0; i < NumParticles; i++) {
-        createParticle();
+      createParticle();
     }
+
+    const opacityLevels = Array.from(
+      { length: 101 },
+      (_, i) => 0.2 * (1 - i / 100)
+    );
+
+    const strokeStyles = opacityLevels.map(
+      opacity => `rgba(100, 149, 237, ${opacity})`
+    );
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -71,7 +80,7 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
 
       const state = state$.get();
       const speed = state.speed - 9;
-      const num = NumParticles + (speed * 3);
+      const num = NumParticles + speed * 3;
 
       if (num < particles.length) {
         particles.length = num;
@@ -80,7 +89,8 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
         createParticle();
       }
 
-      particles.forEach((particle, i) => {
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i];
         particle.x += particle.dx * speed;
         particle.y += particle.dy * speed;
 
@@ -92,25 +102,22 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
         ctx.fillStyle = "rgba(100, 149, 237, 0.5)";
         ctx.fill();
 
-        particles.forEach((particle2, j) => {
-          if (i !== j) {
-            const dx = particle.x - particle2.x;
-            const dy = particle.y - particle2.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+        for (let j = i; j < particles.length; j++) {
+          const particle2 = particles[j];
+          const dx = particle.x - particle2.x;
+          const dy = particle.y - particle2.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < 100) {
-              ctx.beginPath();
-              ctx.strokeStyle = `rgba(100, 149, 237, ${
-                0.2 * (1 - distance / 100)
-              })`;
-              ctx.lineWidth = 0.5;
-              ctx.moveTo(particle.x, particle.y);
-              ctx.lineTo(particle2.x, particle2.y);
-              ctx.stroke();
-            }
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = strokeStyles[Math.floor(distance)];
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(particle2.x, particle2.y);
+            ctx.stroke();
           }
-        });
-      });
+        }
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };
