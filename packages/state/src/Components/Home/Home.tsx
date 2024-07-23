@@ -4,16 +4,17 @@ import React from "react";
 import { AnimatedBackground } from "./AnimatedBackground";
 import { SectionEasy } from "./SectionEasy";
 import { SectionPerf } from "./SectionPerf";
+import { SectionSync } from "./SectionSync";
 
 enableReactComponents();
 
 
 
 const LandingPage: React.FC = () => {
-  const state$ = useObservable({ name: "", speed: 10 });
+  const state$ = useObservable({ name: "", speed: 1 });
 
   return (
-    <div className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white font-sans">
+    <div id="scroller" className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white font-sans">
       <AnimatedBackground state$={state$} />
       <main className="z-10 flex-grow">
         <div className="max-w-7xl mx-auto py-16 px-4">
@@ -27,7 +28,8 @@ const LandingPage: React.FC = () => {
             </p>
           </div>
           <SectionEasy state$={state$} />
-          <SectionPerf state$={state$} />
+          <SectionPerf />
+          <SectionSync />
         </div>
       </main>
     </div>

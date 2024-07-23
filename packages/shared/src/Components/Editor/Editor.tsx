@@ -11,7 +11,7 @@ interface Props {
   renderCode?: string;
   previewWidth?: number;
   classNameEditor?: string;
-  classNamePreview?: string;
+  disableDemo?: boolean;
   showEditing?: boolean;
   transformCode?: (code: string) => string;
 }
@@ -28,8 +28,8 @@ export const Editor = observer(function Editor({
   previewWidth,
   renderCode,
   classNameEditor,
-  classNamePreview,
   transformCode,
+  disableDemo = false,
   showEditing = true,
   noInline = false,
 }: Props) {
@@ -53,21 +53,25 @@ export const Editor = observer(function Editor({
           <div>
             <LiveEditor />
           </div>
-          {showEditing && <div
-            className={classNames(
-              "absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm cursor-default"
-            )}
+          {showEditing && (
+            <div
+              className={classNames(
+                "absolute top-3 right-3 !mt-0 flex items-center bg-blue-700 px-2 py-1 rounded-md text-sm cursor-default"
+              )}
+            >
+              <BiPencil className="mr-2" />
+              Live Editing
+            </div>
+          )}
+        </div>
+        {!disableDemo && (
+          <div
+            className={classNames(name ? `p_${name}` : "col-span-1 rounded")}
+            style={{ width: previewWidth }}
           >
-            <BiPencil className="mr-2" />
-            Live Editing
-          </div>}
-        </div>
-        <div
-          className={classNames(name ? `p_${name}` : "col-span-1 rounded")}
-          style={{ width: previewWidth }}
-        >
-          <LivePreview />
-        </div>
+            <LivePreview />
+          </div>
+        )}
       </div>
       <LiveError />
     </LiveProvider>

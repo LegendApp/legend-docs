@@ -40,7 +40,7 @@ function Tree() {
 }
 `;
 
-const DemoPerf = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
+const DemoPerf = () => {
   return (
     <Editor
       code={CodeDemoPerf}
@@ -54,7 +54,6 @@ const DemoPerf = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
         Button,
         Memo,
         observable,
-        state$,
         Box: DemoBox,
         FlashingDiv,
         Reactive,
@@ -123,18 +122,14 @@ const DemoPerf = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
   );
 };
 
-export const SectionPerf = ({
-  state$,
-}: {
-  state$: Observable<{ speed: number }>;
-}) => {
+export const SectionPerf = () => {
   return (
     <div className="!mt-20 max-w-4xl mx-auto">
       <SectionTitle
-        text="⚡️ The fastest React state library"
+        text="🚀 The fastest React state library"
         description="Legend-State is so fast that it outperforms even vanilla JS in some benchmarks. Extremely optimized at just 4kb and encouraging fine-grained reactivity, it reduces code and file size while maximizing performance."
       />
-      <DemoPerf state$={state$} />
+      <DemoPerf  />
     </div>
   );
 };
