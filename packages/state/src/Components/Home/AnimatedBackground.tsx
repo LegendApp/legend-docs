@@ -65,11 +65,11 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
 
     const opacityLevels = Array.from(
       { length: 101 },
-      (_, i) => 0.2 * (1 - i / 100)
+      (_, i) => 0.4 * (1 - i / 100)
     );
 
     const strokeStyles = opacityLevels.map(
-      opacity => `rgba(100, 149, 237, ${opacity})`
+      (opacity) => `rgba(100, 149, 237, ${opacity})`
     );
 
     const animate = () => {
@@ -131,9 +131,8 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 bg-gradient-to-br from-gray-900 to-blue-900"
-    />
+    <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-blue-950">
+      <canvas ref={canvasRef} />
+    </div>
   );
 };

@@ -367,7 +367,6 @@ pre[class*="language-"] {
     font-weight: bold;
 }
 
-.token.comment,
 .token.italic {
     font-style: italic;
 }
