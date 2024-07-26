@@ -11,8 +11,11 @@ interface Props {
   renderCode?: string;
   previewWidth?: number;
   classNameEditor?: string;
-  disableDemo?: boolean;
+  classNamePreview?: string;
+  hideCode?: boolean;
+  hideDemo?: boolean;
   showEditing?: boolean;
+  noError?: boolean;
   transformCode?: (code: string) => string;
 }
 const emptyTheme = { plain: {}, styles: [] };
@@ -28,10 +31,13 @@ export const Editor = observer(function Editor({
   previewWidth,
   renderCode,
   classNameEditor,
+  classNamePreview,
   transformCode,
-  disableDemo = false,
+  hideCode = false,
+  hideDemo = false,
   showEditing = true,
   noInline = false,
+  noError = false
 }: Props) {
   code = code.trim();
   return (
@@ -49,7 +55,7 @@ export const Editor = observer(function Editor({
       language="tsx"
     >
       <div className="flex gap-4 text-sm mt-6 items-center">
-        <div className={classNames("relative flex-1", classNameEditor)}>
+        {!hideCode && <div className={classNames("relative flex-1", classNameEditor)}>
           <div>
             <LiveEditor />
           </div>
@@ -63,17 +69,17 @@ export const Editor = observer(function Editor({
               Live Editing
             </div>
           )}
-        </div>
-        {!disableDemo && (
+        </div>}
+        {!hideDemo && (
           <div
-            className={classNames(name ? `p_${name}` : "col-span-1 rounded")}
+            className={classNames(name ? `p_${name}` : "col-span-1 rounded", classNamePreview)}
             style={{ width: previewWidth }}
           >
             <LivePreview />
           </div>
         )}
       </div>
-      <LiveError />
+      {!noError && <LiveError />}
     </LiveProvider>
   );
 });

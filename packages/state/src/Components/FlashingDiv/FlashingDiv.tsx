@@ -6,11 +6,13 @@ import { type ReactNode } from "react";
 export function FlashingDiv({
   span,
   className,
+  classNameOuter,
   bg,
   children,
 }: {
   span?: boolean;
   className?: string;
+  classNameOuter?: string;
   bg?: boolean;
   children: ReactNode;
 }) {
@@ -35,7 +37,13 @@ export function FlashingDiv({
   });
 
   return (
-    <span className={classNames("relative", span ? "p-1" : "block p-1", className)}>
+    <span
+      className={classNames(
+        "relative",
+        span ? "p-1" : "block p-1",
+        classNameOuter
+      )}
+    >
       <motion.div
         animate={controls}
         className="absolute inset-0 rounded-lg opacity-0 bg-blue-500"
@@ -43,8 +51,9 @@ export function FlashingDiv({
       <span
         className={classNames(
           "relative z-10 rounded-lg",
-          bg || 'bg-gray-800',
+          bg || "bg-gray-800",
           span ? "px-2" : "block p-4",
+          className
         )}
       >
         {children}
