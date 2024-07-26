@@ -16,13 +16,14 @@ import { SectionKitComponents } from "./SectionKitComponents";
 import { SectionKitExtension } from "./SectionKitExtension";
 import { SectionKitWrappers } from "./SectionKitWrappers";
 import { SectionKitExamples } from "./SectionKitExamples";
+import { SectionKitDevTools } from "./SectionKitDevTools";
 
 enableReactComponents();
 
 const EnableKit = true;
 
 const LandingPage: React.FC = () => {
-  const state$ = useObservable({ name: "", speed: 1 });
+  const state$ = useObservable({ speed: 1 });
 
   return (
     <div
@@ -56,7 +57,7 @@ const LandingPage: React.FC = () => {
 
           <SectionRPerfChart />
           <SectionReactivityPerf />
-          <SectionReactivityComponents />
+          {/* <SectionReactivityComponents /> */}
 
           <SectionPersistence />
           <SectionSync />
@@ -72,6 +73,7 @@ const LandingPage: React.FC = () => {
               <SectionKitExtension />
               <SectionKitWrappers />
               <SectionKitExamples />
+              <SectionKitDevTools />
             </>
           )}
         </div>

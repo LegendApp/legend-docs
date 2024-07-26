@@ -50,10 +50,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
         transformCode={
           (code) =>
             code
-              .replace(
-                `const state$ = useObservable({ name: '', speed: 1 })`,
-                ""
-              )
+              .replace(`const speed$ = observable(1)`, "")
               .replace(
                 "<Reactive.input",
                 '<Reactive.input className="w-40 mt-4 rounded bg-gray-700 px-2 py-2"'
@@ -63,10 +60,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                 "<Button ",
                 '<Button className="bg-blue-800 hover:bg-blue-700"'
               )
-          //   .replace(
-          //     "const speed = speed$.get()",
-          //     "const speed = state$.speed.get()"
-          //   )
+              .replace(/speed\$/g, "state$.speed")
           //   .replace(/globalState\$.name/g, "state$.name")
           //   .replace(/speed\$\./g, "state$.speed.")
         }

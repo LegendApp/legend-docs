@@ -172,13 +172,15 @@ export const SectionReactivityPerf = () => {
     <div className="!mt-20 max-w-4xl mx-auto">
       <SectionTitle
         text="🚀 Fine grained reactivity for optimal performance"
-        description="A built-in set of control-flow components make it easy to isolate re-renders to only the tiniest element that changed."
+        description="A built-in set of control-flow components make it easy to isolate re-renders to only the tiniest element that changed. This example uses Memo to re-render only the changed text element."
       />
       <div className="flex gap-4 justify-center">
         <div className="flex-1 max-w-[380px]">
+          <p className="font-bold">Normal React</p>
           <DemoPerf1 />
         </div>
         <div className="flex-1 !-mt-0 max-w-[380px]">
+          <p className="font-bold">Legend-State</p>
           <DemoPerf2 />
         </div>
       </div>

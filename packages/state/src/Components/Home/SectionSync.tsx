@@ -3,6 +3,7 @@ import { Memo, observer, useObservable } from "@legendapp/state/react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { SectionTitle } from "./Components";
 import { useMemo } from "react";
+import { TabsUnderlined } from "../Kit/TabsUnderlined";
 
 const Backends = {
   keel: {
@@ -137,15 +138,7 @@ export const SectionSync = observer(function SectionSync() {
             own on top of the CRUD plugin or the basic synced.
           </div>
           <div className="flex gap-4">
-            {backends.map((backend) => (
-              <div
-                key={backend}
-                className="!mt-0"
-                onClick={() => backend$.set(backend)}
-              >
-                {Backends[backend].text}
-              </div>
-            ))}
+            <TabsUnderlined tabs={backends} tabText={(tab) => Backends[tab].text} $activeTab={backend$} tabPadding="pb-0" />
           </div>
         </div>
         <DemoSync backend={backend$.get()} />
