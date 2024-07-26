@@ -31,7 +31,7 @@ export const SectionReactivityComponents = () => {
           <CodeSample code={CodeDemoSubtitle} />
         </div>
         <div className="!mt-0">
-          <div>Show</div>
+          <div>Switch</div>
           <CodeSample code={CodeDemoSubtitle} />
         </div>
       </div>

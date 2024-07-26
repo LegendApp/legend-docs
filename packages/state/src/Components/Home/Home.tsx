@@ -12,8 +12,14 @@ import { SectionReactivityPerf } from "./SectionReactivityPerf";
 import { SectionRPerfChart } from "./SectionPerfChart";
 import { SectionReactivityComponents } from "./SectionReactivityComponents";
 import { SectionPersistence } from "./SectionPersistence";
+import { SectionKitComponents } from "./SectionKitComponents";
+import { SectionKitExtension } from "./SectionKitExtension";
+import { SectionKitWrappers } from "./SectionKitWrappers";
+import { SectionKitExamples } from "./SectionKitExamples";
 
 enableReactComponents();
+
+const EnableKit = true;
 
 const LandingPage: React.FC = () => {
   const state$ = useObservable({ name: "", speed: 1 });
@@ -31,9 +37,7 @@ const LandingPage: React.FC = () => {
             <div />
             <div className="col-span-5">
               <h1 className="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
-                <span className="block">
-                  Build blazing fast local-first apps with less code
-                </span>
+                Build blazing fast local-first apps with less code
               </h1>
               <div className="grid grid-cols-4">
                 <p className="mt-3 col-span-3 text-gray-400">
@@ -56,6 +60,20 @@ const LandingPage: React.FC = () => {
 
           <SectionPersistence />
           <SectionSync />
+
+          {EnableKit && (
+            <>
+              <h1 className="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
+                Legend Kit accelerates your development
+              </h1>
+              <p>Tools to help you get started and speed up development</p>
+
+              <SectionKitComponents />
+              <SectionKitExtension />
+              <SectionKitWrappers />
+              <SectionKitExamples />
+            </>
+          )}
         </div>
       </main>
     </div>
