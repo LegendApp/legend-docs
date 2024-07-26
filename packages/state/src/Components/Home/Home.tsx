@@ -11,6 +11,7 @@ import { SectionReact } from "./SectionReact";
 import { SectionReactivityPerf } from "./SectionReactivityPerf";
 import { SectionRPerfChart } from "./SectionPerfChart";
 import { SectionReactivityComponents } from "./SectionReactivityComponents";
+import { SectionPersistence } from "./SectionPersistence";
 
 enableReactComponents();
 
@@ -53,6 +54,7 @@ const LandingPage: React.FC = () => {
           <SectionReactivityPerf />
           <SectionReactivityComponents />
 
+          <SectionPersistence />
           <SectionSync />
         </div>
       </main>

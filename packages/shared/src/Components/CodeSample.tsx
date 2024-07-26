@@ -10,12 +10,18 @@ import { Button } from "./Button";
 import { Editor } from "./Editor/Editor";
 import { useInterval } from "usehooks-ts";
 
-export function CodeSample({ code }: { code: string }) {
+export function CodeSample({
+  code,
+  scope,
+}: {
+  code: string;
+  scope?: Record<string, unknown>;
+}) {
   return (
     <Editor
       code={code}
       noInline
-      renderCode={`;render(<div><Component /></div>)`}
+      renderCode={`;function Component(){};render(<div><Component /></div>)`}
       previewWidth={360}
       showEditing={false}
       scope={{
@@ -27,6 +33,7 @@ export function CodeSample({ code }: { code: string }) {
         Reactive,
         observer,
         useInterval,
+        ...(scope || {})
       }}
       classNameEditor="home-editor"
       hideDemo
