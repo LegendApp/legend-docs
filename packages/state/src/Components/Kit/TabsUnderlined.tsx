@@ -12,11 +12,7 @@ const TransitionSpringFast: Transition = {
   duration: 0.35,
   bounce: 0.25,
 };
-const TransitionSpringFaster: Transition = {
-  type: "spring",
-  duration: 0.2,
-  bounce: 0.1,
-};
+
 
 interface PropsTab {
   name: string;
