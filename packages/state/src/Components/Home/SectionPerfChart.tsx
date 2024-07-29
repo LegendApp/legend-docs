@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { SectionTitle } from "./Components";
 import { motion, useInView, type Transition } from "framer-motion";
 import { useRef } from "react";
+import { useObservable } from "@legendapp/state/react";
 
 export const SectionRPerfChart = () => {
   const TransitionSpringFast: Transition = {
@@ -13,15 +14,17 @@ export const SectionRPerfChart = () => {
   const inView = useInView(ref, { once: true });
 
   const chartData = [
-    { name: "Vanilla JS", value: 1 },
-    { name: "Legend-State", value: 1.1 },
-    { name: "Test", value: 1.4 },
-    { name: "Test2", value: 1.6 },
-    { name: "Context API", value: 1.8 },
+    { name: "Legend-State", value: 1.02 },
+    { name: "Jotai", value: 1.41 },
+    { name: "MobX", value: 1.49 },
+    { name: "Recoil", value: 1.53 },
+    { name: "Redux", value: 1.55 },
+    { name: "Zustand", value: 1.69 },
+    { name: "Valtio", value: 1.82 },
   ];
 
-  const minValue = 0.8;
-  const maxValue = 1.2;
+  const minValue = 0.85;
+  const maxValue = 1;
 
   return (
     <div className="!mt-20 max-w-4xl mx-auto" ref={ref}>
@@ -31,26 +34,53 @@ export const SectionRPerfChart = () => {
       />
       <div className="mt-8 max-w-lg">
         {chartData.map((item, index) => (
-          <div key={index} className="flex items-center mb-4">
-            <div className="w-24 text-right mr-4">{item.name}</div>
-            <div className="flex-grow bg-gray-700 rounded-full h-6 overflow-hidden">
+          <div key={index} className="flex items-center [&>*]:!mt-0">
+            <div className="w-28 flex-shrink-0 text-right mr-4">
+              {item.name}
+            </div>
+            <div className="flex-1 text-sm" /*bg-gray-700 rounded-full */>
               <motion.div
                 className={classNames(
-                  "h-full rounded-full",
-                  index === 1 ? "bg-blue-500" : "bg-gray-500"
+                  "h-6 rounded-full relative text-right flex items-center justify-end font-medium"
                 )}
-                initial={{ width: 0 }}
+                initial={{ width: 0, opacity: 0 }}
                 animate={
                   inView
                     ? {
                         width: `${((item.value - minValue) / maxValue) * 100}%`,
+                        opacity: 1,
                       }
                     : {}
                 }
-                transition={{ ...TransitionSpringFast, delay: index * 0.2 }}
-              ></motion.div>
+                transition={{
+                  width: {
+                    ...TransitionSpringFast,
+                    delay: index * 0.1,
+                  },
+                  opacity: {
+                    duration: 0.5,
+                    delay: index * 0.1,
+                  },
+                }}
+              >
+                <motion.div
+                  className={classNames(
+                    "h-6 rounded-full absolute inset-0 text-right flex items-center justify-end font-medium",
+                    index === 0 ? "bg-blue-500" : "bg-gray-500"
+                  )}
+                  whileHover={{
+                    backgroundColor: index === 0 ? "#1eb5f9" : "#888899",
+                    scaleY: 1.2,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                  }}
+                />
+                <motion.span className="pr-2 z-10 pointer-events-none" layout>
+                  {item.value}
+                </motion.span>
+              </motion.div>
             </div>
-            <div className="w-12 text-left ml-4">{item.value}</div>
           </div>
         ))}
       </div>
