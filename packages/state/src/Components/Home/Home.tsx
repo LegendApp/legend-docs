@@ -51,6 +51,8 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
+          <div>Badges of sizes of each package</div>
+
           <SectionTop state$={state$} />
           <SectionEasy />
           <SectionReact />
@@ -73,7 +75,7 @@ const LandingPage: React.FC = () => {
               <SectionKitExtension />
               <SectionKitWrappers />
               <SectionKitExamples />
-              <SectionKitDevTools />
+              {/* <SectionKitDevTools /> */}
             </>
           )}
         </div>

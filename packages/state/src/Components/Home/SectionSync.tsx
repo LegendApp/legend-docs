@@ -128,7 +128,7 @@ export const SectionSync = observer(function SectionSync() {
   return (
     <div className="!mt-20 max-w-3xl mx-auto">
       <SectionTitle
-        text="💾 Powerful sync and persistence"
+        text="💾 Powerful sync engine"
         description="Legend-State includes a powerful sync and persistence system that enables local-first apps with optimistic updates, retry mechanisms, and efficient diff-based syncing. It supports various storage and sync backends, making it easy to build robust, offline-capable applications."
       />
       <div className="!mt-16">
