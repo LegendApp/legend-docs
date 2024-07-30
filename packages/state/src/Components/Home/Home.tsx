@@ -51,9 +51,9 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <div>Badges of sizes of each package</div>
 
           <SectionTop state$={state$} />
+          <div>Badges of sizes of each package</div>
           <SectionEasy />
           <SectionReact />
 

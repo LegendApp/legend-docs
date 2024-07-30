@@ -47,7 +47,7 @@ const messages$ = observable(syncedFirebase({
     text: "CRUD",
     code: `
 const messages$ = observable(syncedCrud({
-    get: getMessages,
+    list: getMessages,
     create: createMessages,
     update: updateMessages,
     delete: deleteMessages,
@@ -88,14 +88,11 @@ const messages$ = observable(syncedFetch({
   synced: {
     text: "Synced",
     code: `
-const state$ = observable(synced({
+const messages$ = observable(synced({
     get: () =>
-        fetch('https://url.to.get').then((res) => res.json()),
+        fetch('https://myurl/messages').then((res) => res.json()),
     set: ({ value }) =>
-        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) }),
-    persist: {
-        name: 'test',
-    },
+        fetch('https://myurl/messages', { method: 'POST', data: JSON.stringify(value) })
 }))
     `,
   },
