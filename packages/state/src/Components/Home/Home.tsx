@@ -21,6 +21,7 @@ import { SectionBadges } from "./SectionBadges";
 import { Header } from "./Header";
 import { Text } from "./Text";
 import { SectionFullSync } from "./SectionFullSync";
+import { Preorder } from "./Preorder";
 
 enableReactComponents();
 
@@ -35,7 +36,7 @@ const LandingPage: React.FC = () => {
       className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white"
     >
       <div className="fixed inset-0 bg-[#0b0d0e]" />
-      <main className="z-10 flex-grow">
+      <main className="z-10 flex-grow pb-24">
         <div className="relative" id="background-container">
           <div className="max-w-5xl mx-auto pt-28 pb-16 px-4">
             <AnimatedBackground state$={state$} />
@@ -43,7 +44,7 @@ const LandingPage: React.FC = () => {
               <Header
                 size="h1"
                 fontWeight="!font-medium"
-                className="!text-[3.25rem] tracking-tight"
+                className="!text-[3.25rem] !leading-tight"
               >
                 Build blazing fast local-first apps with less code
               </Header>
@@ -83,16 +84,22 @@ const LandingPage: React.FC = () => {
 
           {EnableKit && (
             <>
-              <h1 className="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
-                Legend Kit accelerates your development
-              </h1>
-              <p>Tools to help you get started and speed up development</p>
+              <Header
+                size="h1"
+                className="!text-[3.25rem] !leading-tight max-w-xl"
+              >
+                Get going faster with Legend Kit
+              </Header>
+              <Text>
+                Tons of tools to increase your development speed and reduce the code you have to write.
+              </Text>
 
               <SectionKitComponents />
               <SectionKitExtension />
               <SectionKitWrappers />
               <SectionKitExamples />
               {/* <SectionKitDevTools /> */}
+              <Preorder />
             </>
           )}
         </div>

@@ -1,4 +1,8 @@
-import { computeSelector, isObservable, type Observable } from "@legendapp/state";
+import {
+  computeSelector,
+  isObservable,
+  type Observable,
+} from "@legendapp/state";
 import { observer, useObservable } from "@legendapp/state/react";
 import cx from "classnames";
 import { motion, type Transition } from "framer-motion";
@@ -12,7 +16,6 @@ const TransitionSpringFast: Transition = {
   duration: 0.35,
   bounce: 0.25,
 };
-
 
 interface PropsTab {
   name: string;
@@ -44,7 +47,7 @@ const Tab = observer(function Tab({
   index,
   tabPosition$,
 }: PropsTab) {
-  const ref = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   // const size$ = useMeasure(ref);
   const pos$ = useElementPosition(ref, groupName);
   useMemo(() => tabPosition$.set(pos$), [index]);
@@ -66,17 +69,13 @@ const Tab = observer(function Tab({
       layoutRoot
       ref={ref}
     >
-      <div className="flex items-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-        <div
-          className={cx(
-            "flex items-center whitespace-nowrap",
-            isActive && "text-tPurpleHover"
-          )}
-        >
-          <div data-text={text} className="whitespace-pre">
-            {text}
-          </div>
-        </div>
+      <div
+        className={cx(
+          "flex items-center whitespace-pre text-sm font-medium text-gray-400 hover:text-white/80",
+          isActive && "text-white shadow-bold"
+        )}
+      >
+        {text}
       </div>
     </motion.div>
   );
@@ -130,7 +129,7 @@ export const TabsUnderlined = observer(function TabsUnderlined<
   const tabPositions$ = useObservable<Record<string, PositionSize>>({});
   const tabPositions = tabPositions$.get();
 
-  const tabIndex = tabs.indexOf(activeTab || defaultTab as any);
+  const tabIndex = tabs.indexOf(activeTab || (defaultTab as any));
 
   const defaultHeight = 32;
   const underlineAnimate: { x: number; y: number; width: number } =

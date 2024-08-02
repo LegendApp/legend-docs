@@ -66,7 +66,7 @@ export const SectionSync = () => {
   return (
     <div className="flex !mt-24 gap-16">
       <div className="flex-1 pt-12">
-        <Header size="h2">Local State = Remote State</Header>
+        <Header size="h2" className="text-nowrap">Local State = Remote State</Header>
         <Text className="pt-2">
           Just get and set observables and they{" "}
           <span className="text-white">sync themselves</span> with a powerful

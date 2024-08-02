@@ -1,8 +1,11 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { observable, type Observable } from "@legendapp/state";
 import {
   Memo,
   Reactive,
+  Show,
   observer,
+  useMount,
   useObservable,
 } from "@legendapp/state/react";
 import { useRef } from "react";
@@ -10,6 +13,7 @@ import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { FlashingDiv } from "../FlashingDiv/FlashingDiv";
 import { DemoBox, SectionTitle } from "./Components";
+import CurvedArrowCallout from "./CurvedArrowCallout";
 
 const CodeDemoTop = `
 const speed$ = observable(1)
@@ -76,11 +80,45 @@ export const SectionTop = ({
 }: {
   state$: Observable<{ speed: number }>;
 }) => {
+  const arrowVisible$ = observable(true);
+  useMount(() => {
+    state$.speed.onChange(() => {
+      arrowVisible$.set(false);
+    });
+  });
+
   return (
     <div className="grid grid-cols-3 !-mt-4">
       <div className="pointer-events-none" />
-      <div className="col-span-2">
+      <div className="col-span-2 relative">
         <DemoTop state$={state$} />
+
+        <Show if={arrowVisible$} wrap={AnimatePresence}>
+          {() => (
+            <motion.div
+              className="absolute top-0 left-0 pointer-events-none"
+              style={{ marginLeft: 260, marginTop: -70 }}
+              initial={{ opacity: 0.6 }}
+              animate={{
+                opacity: 1,
+                transition:{
+                  duration: 0.7,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut",
+                }
+              }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="rotate-12">
+                <CurvedArrowCallout />
+              </div>
+              <div className="absolute top-0 left-0 !mt-10 -ml-6 text-sm font-bold">
+                Turn it up!
+              </div>
+            </motion.div>
+          )}
+        </Show>
       </div>
     </div>
   );
