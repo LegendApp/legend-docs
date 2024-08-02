@@ -20,7 +20,7 @@ const DemoPersistence = () => {
   return <CodeSample code={CodeDemoPersist} scope={{synced, ObservablePersistLocalStorage}} />;
 };
 
-export const SectionPersistence = () => {
+export const SectionLocalFirst = () => {
 
   return (
     <div className="!mt-20 max-w-3xl mx-auto">
@@ -35,7 +35,7 @@ export const SectionPersistence = () => {
           </p>
           <p>Or create your own plugins</p>
           <p>Sync only diffs</p>
-          <p>Perist unsaved changes and retry</p>
+          <p>Persist unsaved changes and retry</p>
         </div>
         <DemoPersistence />
       </div>

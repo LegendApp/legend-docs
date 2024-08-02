@@ -11,12 +11,16 @@ import { SectionReact } from "./SectionReact";
 import { SectionReactivityPerf } from "./SectionReactivityPerf";
 import { SectionRPerfChart } from "./SectionPerfChart";
 import { SectionReactivityComponents } from "./SectionReactivityComponents";
-import { SectionPersistence } from "./SectionPersistence";
+import { SectionLocalFirst } from "./SectionLocalFirst";
 import { SectionKitComponents } from "./SectionKitComponents";
 import { SectionKitExtension } from "./SectionKitExtension";
 import { SectionKitWrappers } from "./SectionKitWrappers";
 import { SectionKitExamples } from "./SectionKitExamples";
 import { SectionKitDevTools } from "./SectionKitDevTools";
+import { SectionBadges } from "./SectionBadges";
+import { Header } from "./Header";
+import { Text } from "./Text";
+import { SectionFullSync } from "./SectionFullSync";
 
 enableReactComponents();
 
@@ -28,32 +32,44 @@ const LandingPage: React.FC = () => {
   return (
     <div
       id="scroller"
-      className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white font-sans"
+      className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white"
     >
-      <div className="fixed inset-0 bg-gray-950" />
-      {/* <AnimatedBackground state$={state$} /> */}
+      <div className="fixed inset-0 bg-[#0b0d0e]" />
       <main className="z-10 flex-grow">
-        <div className="max-w-5xl mx-auto py-16 px-4">
-          <div className="grid grid-cols-8">
-            <div />
-            <div className="col-span-5">
-              <h1 className="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
+        <div className="relative" id="background-container">
+          <div className="max-w-5xl mx-auto pt-28 pb-16 px-4">
+            <AnimatedBackground state$={state$} />
+            <div className="max-w-3xl z-10 relative">
+              <Header
+                size="h1"
+                fontWeight="!font-medium"
+                className="!text-[3.25rem] tracking-tight"
+              >
                 Build blazing fast local-first apps with less code
-              </h1>
-              <div className="grid grid-cols-4">
-                <p className="mt-3 col-span-3 text-gray-400">
+              </Header>
+              <div className="max-w-xl pt-2 pb-4">
+                <Text>
                   It's fast by default with fine-grained reactivity, a powerful
                   sync system for any backend, and persistence plugins for web
-                  and mobile.
-                </p>
+                  and mobile."
+                </Text>
               </div>
-              <Button>Get started</Button>
+              <div className="flex gap-8 !mt-0 items-center">
+                <Button color="bg-blue-700 hover:bg-blue-600">
+                  Get started
+                </Button>
+                <div className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-gray-850 px-4 h-10 rounded-lg transition-colors gap-3 flex items-center">
+                  <div>Check out Legend-Kit</div>
+                  <div className="!mt-0">{">"}</div>
+                </div>
+              </div>
             </div>
+
+            <SectionTop state$={state$} />
           </div>
-
-
-          <SectionTop state$={state$} />
-          <div>Badges of sizes of each package</div>
+        </div>
+        <div className="max-w-5xl mx-auto">
+          <SectionBadges />
           <SectionEasy />
           <SectionReact />
 
@@ -61,8 +77,9 @@ const LandingPage: React.FC = () => {
           <SectionReactivityPerf />
           {/* <SectionReactivityComponents /> */}
 
-          <SectionPersistence />
           <SectionSync />
+          <SectionFullSync />
+          {/* <SectionLocalFirst /> */}
 
           {EnableKit && (
             <>

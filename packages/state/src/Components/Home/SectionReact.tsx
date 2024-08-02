@@ -10,6 +10,8 @@ import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { FlashingDiv } from "../FlashingDiv/FlashingDiv";
 import { DemoBox, SectionTitle } from "./Components";
+import { Header } from "./Header";
+import { Text } from "./Text";
 
 const CodeDemoObserver = `
 const EasyComponent = observer(() => {
@@ -103,29 +105,31 @@ const DemoReactive = () => {
 export const SectionReact = () => {
   return (
     <div className="!mt-24">
-      <h2 className="text-center">🦄 Makes React fun, fast, and easy</h2>
-      <div className="flex gap-16">
-        <div className="flex-1">
+      <Header size="h2" className="text-center">🦄 Makes React fun, fast, and easy</Header>
+      <div className="flex gap-16 !mt-12 border-t-2 border-b-2 border-white/4">
+        <div className="flex-1 py-12">
           <div>
-            <p className="font-bold text-white">
-              observer makes components reactive
-            </p>
-            <p className="text-gray-350">
+            <Header size="h4" className="font-medium text-white">
+              Reactive components with observer
+            </Header>
+            <Text className="pb-4">
               You don't need any complicated selectors or anything. Just get an
               observable value and the component will re-render itself when it
               changes.
-            </p>
+            </Text>
           </div>
           <DemoObserver />
         </div>
-        <div className="flex-1 !mt-0">
+        <div className="flex-1 !mt-0 border-l-2 border-white/4 pl-16 py-12">
           <div>
-            <p className="font-bold text-white">
-              Two-way binding with Reactive components
-            </p>
-            <p className="text-gray-350">
-              No more change handlers, just bind observables to inputs. Reactive props simplify logic and optimize performance with the tiniest possible rerenders.
-            </p>
+            <Header size="h4" className="font-medium">
+              Two-way binding
+            </Header>
+            <Text className="pb-4">
+              No more change handlers, just bind observables to inputs. Reactive
+              props simplify logic and optimize performance with the tiniest
+              possible rerenders.
+            </Text>
           </div>
           <DemoReactive />
         </div>

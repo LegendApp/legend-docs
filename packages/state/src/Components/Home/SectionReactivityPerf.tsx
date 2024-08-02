@@ -11,6 +11,8 @@ import { Editor } from "shared/src/Components/Editor/Editor";
 import { FlashingDiv } from "../FlashingDiv/FlashingDiv";
 import { DemoBox, SectionTitle } from "./Components";
 import { useInterval } from "usehooks-ts";
+import { Header } from "./Header";
+import { Text } from "./Text";
 
 const CodeDemoPerf1 = `
 // This example uses Memo to isolate renders
@@ -169,21 +171,32 @@ const DemoPerf2 = () => {
 
 export const SectionReactivityPerf = () => {
   return (
-    <div className="!mt-20 max-w-4xl mx-auto">
-      <SectionTitle
-        text="🚀 Fine grained reactivity for optimal performance"
-        description="A built-in set of control-flow components make it easy to isolate re-renders to only the tiniest element that changed. This example uses Memo to re-render only the changed text element."
-      />
-      <div className="flex gap-4 justify-center">
-        <div className="flex-1 max-w-[380px]">
-          <p className="font-bold">Normal React</p>
-          <DemoPerf1 />
-        </div>
-        <div className="flex-1 !-mt-0 max-w-[380px]">
-          <p className="font-bold">Legend-State</p>
-          <DemoPerf2 />
+    <div className="!mt-24">
+      <div className="flex gap-24 pb-8">
+        <Header size="h3" className="flex-1">
+          🚀 Fine grained reactivity for optimal performance
+        </Header>
+        <Text className="flex-1 !mt-0">
+          A built-in set of control-flow components make it easy to isolate
+          re-renders to only the tiniest element that changed.
+        </Text>
+      </div>
+      <div className="flex justify-center">
+        <div className="inline-flex mx-auto justify-center px-6 bg-black border-white/10 border rounded-xl">
+          <div className="flex-1 max-w-[380px] border-r border-white/10 pr-4 py-6">
+            <Header size="h4" className="text-center">Normal React</Header>
+            <DemoPerf1 />
+          </div>
+          <div className="flex-1 !-mt-0 max-w-[380px] pl-4 py-6">
+            <Header size="h4" className="text-center">Legend-State</Header>
+            <DemoPerf2 />
+          </div>
         </div>
       </div>
+      {/* <SectionTitle
+        text="🚀 Fine grained reactivity for optimal performance"
+        description="A built-in set of control-flow components make it easy to isolate re-renders to only the tiniest element that changed. This example uses Memo to re-render only the changed text element."
+      /> */}
     </div>
   );
 };

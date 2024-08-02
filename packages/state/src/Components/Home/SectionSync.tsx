@@ -1,145 +1,86 @@
 import { observable } from "@legendapp/state";
-import { Memo, observer, useObservable } from "@legendapp/state/react";
+import {
+  Memo,
+  Reactive,
+  observer,
+  useObservable,
+} from "@legendapp/state/react";
+import { useRef } from "react";
+import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
-import { SectionTitle } from "./Components";
-import { useMemo } from "react";
-import { TabsUnderlined } from "../Kit/TabsUnderlined";
+import { FlashingDiv } from "../FlashingDiv/FlashingDiv";
+import { DemoBox } from "./Components";
+import { Header } from "./Header";
+import { Text } from "./Text";
 
-const Backends = {
-  keel: {
-    text: "Keel",
-    code: `
-const { mutations, queries } = client.api
+const CodeDemoTop = `
+const profile$ = observable(syncedFetch({
+  get: 'https://myurl/my-profile',
+  set: 'https://myurl/my-profile',
+  persist: {
+    plugin: ObservablePersistLocalStorage,
+    name: 'profile',
+  },
+}))
 
-const messages$ = observable(syncedKeel({
-    list: queries.listMessages,
-    create: mutations.createMessages,
-    update: mutations.updateMessages,
-    delete: mutations.deleteMessages,
-}))
-`,
-  },
-  supabase: {
-    text: "Supabase",
-    code: `
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const Component = observer(() => {
+  // get triggers the fetch and re-runs on change
+  const name = profile$.name.get()
 
-const messages$ = observable(syncedSupabase({
-    supabase,
-    collection: 'messages',
-    select: (from) => from.select('id,text'),
-    filter: (select) => select.eq('user_id', uid),
-    realtime: { filter: \`user_id=eq.\${uid}\` },
-}))
-  `,
-  },
-  firebase: {
-    text: "Firebase",
-    code: `
-const messages$ = observable(syncedFirebase({
-    refPath: (uid) => \`/users/\${uid}/messages/\`,
-    realtime: true,
-    mode: 'merge',
-}))
-    `,
-  },
-  crud: {
-    text: "CRUD",
-    code: `
-const messages$ = observable(syncedCrud({
-    list: getMessages,
-    create: createMessages,
-    update: updateMessages,
-    delete: deleteMessages,
-}))
-    `,
-  },
-  query: {
-    text: "TanStack Query",
-    code: `
-const messages$ = observable(syncedQuery({
-    queryClient,
-        query: {
-            queryKey: ['messages'],
-            queryFn: async () => {
-                return fetch('https://myurl/messages').then((v) => v.json())
-            },
-        },
-        mutation: {
-            mutationFn: async (variables) => {
-                return fetch(
-                    'https://myurl/messages',
-                    { body: JSON.stringify(variables), method: 'POST' }
-                )
-            },
-        },
-}))
-    `,
-  },
-  fetch: {
-    text: "Fetch",
-    code: `
-const messages$ = observable(syncedFetch({
-    get: 'https://myurl/messages',
-    set: 'https://myurl/messages'
-}))
-    `,
-  },
-  synced: {
-    text: "Synced",
-    code: `
-const messages$ = observable(synced({
-    get: () =>
-        fetch('https://myurl/messages').then((res) => res.json()),
-    set: ({ value }) =>
-        fetch('https://myurl/messages', { method: 'POST', data: JSON.stringify(value) })
-}))
-    `,
-  },
-} satisfies Record<string, { text: string; code: string }>; ;
+  const onClick = () => {
+    // set sets the local state and syncs to remote
+    profile$.name.set('Annyong')
+  }
 
-type Backend = keyof typeof Backends;
+  // Two-way bind to remote data
+  return <Reactive.input $value={$name} />
+})
+`;
 
-const DemoSync = ({ backend }: { backend: Backend }) => {
+const DemoEasy = () => {
   return (
     <Editor
-      code={Backends[backend].code}
+      code={CodeDemoTop}
       noInline
-      renderCode={`;render(null)`}
-      hideDemo
-      noError
+      renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}
       showEditing={false}
       scope={{
+        useRef,
+        useObservable,
+        Button,
         Memo,
         observable,
+        Box: DemoBox,
+        FlashingDiv,
+        Reactive,
+        observer,
       }}
       classNameEditor="home-editor"
+      hideDemo
+      noError
     />
   );
 };
 
-export const SectionSync = observer(function SectionSync() {
-  const backend$ = useObservable<Backend>("keel");
-  const backends = useMemo(() => Object.keys(Backends) as Backend[], []);
-
+export const SectionSync = () => {
   return (
-    <div className="!mt-20 max-w-3xl mx-auto">
-      <SectionTitle
-        text="💾 Powerful sync engine"
-        description="Legend-State includes a powerful sync and persistence system that enables local-first apps with optimistic updates, retry mechanisms, and efficient diff-based syncing. It supports various storage and sync backends, making it easy to build robust, offline-capable applications."
-      />
-      <div className="!mt-16">
-        <div>
-          <div>
-            Use one of the ever-expanding library of sync plugins or build your
-            own on top of the CRUD plugin or the basic synced.
-          </div>
-          <div className="flex gap-4">
-            <TabsUnderlined tabs={backends} tabText={(tab) => Backends[tab].text} $activeTab={backend$} tabPadding="pb-0" />
-          </div>
-        </div>
-        <DemoSync backend={backend$.get()} />
+    <div className="flex !mt-24 gap-16">
+      <div className="flex-1 pt-12">
+        <Header size="h2">Local State = Remote State</Header>
+        <Text className="pt-2">
+          Just get and set observables and they{" "}
+          <span className="text-white">sync themselves</span> with a powerful
+          sync engine. Your UI code doesn't need to be full of querying,
+          sending back mutations, and synchronizing with local state anymore.
+        </Text>
+        <Text className="pt-2">
+          You can even bind UI components directly to synced observables.
+        </Text>
+        <Text className="pt-2">It just works.</Text>
+      </div>
+      <div className="max-w-lg flex-2 !mt-0 [&>div]:!mt-0">
+        <DemoEasy />
       </div>
     </div>
   );
-});
+};

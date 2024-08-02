@@ -3,6 +3,8 @@ import { SectionTitle } from "./Components";
 import { motion, useInView, type Transition } from "framer-motion";
 import { useRef } from "react";
 import { useObservable } from "@legendapp/state/react";
+import { Header } from "./Header";
+import { Text } from "./Text";
 
 export const SectionRPerfChart = () => {
   const TransitionSpringFast: Transition = {
@@ -23,25 +25,21 @@ export const SectionRPerfChart = () => {
     { name: "Valtio", value: 1.82 },
   ];
 
-  const minValue = 0.85;
+  const minValue = 0.8;
   const maxValue = 1;
 
   return (
-    <div className="!mt-20 max-w-4xl mx-auto" ref={ref}>
-      <SectionTitle
-        text="🚀 The fastest React state library"
-        description="Legend-State is so fast that it outperforms even vanilla JS in some benchmarks. Extremely optimized at just 4kb and encouraging fine-grained reactivity, it reduces code and file size while maximizing performance."
-      />
-      <div className="mt-8 max-w-lg">
+    <div className="!mt-20 flex gap-8" ref={ref}>
+      <div className="mt-8 flex-1">
         {chartData.map((item, index) => (
           <div key={index} className="flex items-center [&>*]:!mt-0">
             <div className="w-28 flex-shrink-0 text-right mr-4">
               {item.name}
             </div>
-            <div className="flex-1 text-sm" /*bg-gray-700 rounded-full */>
+            <div className="flex-1 text-sm">
               <motion.div
                 className={classNames(
-                  "h-6 rounded-full relative text-right flex items-center justify-end font-medium"
+                  "h-7 rounded-full relative text-right flex items-center justify-end font-medium"
                 )}
                 initial={{ width: 0, opacity: 0 }}
                 animate={
@@ -65,24 +63,32 @@ export const SectionRPerfChart = () => {
               >
                 <motion.div
                   className={classNames(
-                    "h-6 rounded-full absolute inset-0 text-right flex items-center justify-end font-medium",
-                    index === 0 ? "bg-blue-500" : "bg-gray-500"
+                    "h-7 rounded-full absolute inset-0 text-right flex items-center justify-end font-medium",
+                    index === 0 ? "bg-blue-600" : "bg-[#2d2e31]"
                   )}
                   whileHover={{
-                    backgroundColor: index === 0 ? "#1eb5f9" : "#888899",
+                    backgroundColor: index === 0 ? "#1eb5f9" : "#3d3e41",
                     scaleY: 1.2,
                   }}
                   transition={{
                     duration: 0.2,
                   }}
                 />
-                <motion.span className="pr-2 z-10 pointer-events-none" layout>
+                <motion.span className="pr-3 z-10 pointer-events-none" layout>
                   {item.value}
                 </motion.span>
               </motion.div>
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex-1 pt-8">
+        <Header size="h3">🚀 The fastest React state library</Header>
+        <Text className="pt-4">
+          Legend-State is so fast that it outperforms even vanilla JS in some
+          benchmarks. It's extremely optimized with fine-grained reactivity and
+          massively reduces re-rendering.
+        </Text>
       </div>
     </div>
   );

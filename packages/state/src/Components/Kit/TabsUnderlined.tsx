@@ -18,7 +18,6 @@ interface PropsTab {
   name: string;
   groupName: string;
   text?: string;
-  icon?: { name: TypeIcon; size?: number };
   disabled?: boolean;
   activeTab: string;
   $activeTab: Observable<string>;
@@ -34,7 +33,6 @@ const Tab = observer(function Tab({
   name,
   groupName,
   text,
-  icon,
   tabPadding,
   disabled,
   activeTab,
@@ -172,7 +170,7 @@ export const TabsUnderlined = observer(function TabsUnderlined<
       <motion.div
         initial={underlineAnimate}
         animate={underlineAnimate}
-        className="absolute top-0 h-0.5 bg-blue-500"
+        className="absolute top-0 h-0.5 bg-blue-500 !mt-0"
         transition={TransitionSpringFast}
       />
     </nav>

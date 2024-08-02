@@ -10,6 +10,8 @@ import { Button } from "shared/src/Components/Button";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { FlashingDiv } from "../FlashingDiv/FlashingDiv";
 import { DemoBox, SectionTitle } from "./Components";
+import { Header } from "./Header";
+import { Text } from "./Text";
 
 const CodeDemoTop = `
 const settings$ = observable({ theme: 'dark' })
@@ -57,15 +59,16 @@ const DemoEasy = () => {
 
 export const SectionEasy = () => {
   return (
-    <div className="flex !mt-24 gap-24">
-      <div className="flex-1">
-        <h3>🦄 Incredibly easy to use</h3>
-        <p>
-          When you get() while observing, it tracks those values and re-runs when they change. No
-          boilerplate, no selectors, no dependency arrays, just easy reactivity.
-        </p>
+    <div className="flex !mt-24 gap-16">
+      <div className="flex-1 pt-12">
+        <Header size="h2">🦄 Incredibly easy to use</Header>
+        <Text className="pt-2">
+          When you get() values while observing, it tracks them and re-runs
+          when they change. No boilerplate, no selectors, no dependency arrays,
+          just easy reactivity.
+        </Text>
       </div>
-      <div className="max-w-lg flex-2">
+      <div className="max-w-lg flex-2 !mt-0 [&>div]:!mt-0">
         <DemoEasy />
       </div>
     </div>

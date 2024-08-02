@@ -33,7 +33,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
         code={CodeDemoTop}
         noInline
         renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}
-        previewWidth={190}
+        previewWidth={180}
         showEditing={false}
         scope={{
           useRef,
@@ -53,7 +53,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
               .replace(`const speed$ = observable(1)`, "")
               .replace(
                 "<Reactive.input",
-                '<Reactive.input className="w-40 mt-4 rounded bg-gray-700 px-2 py-2"'
+                '<Reactive.input className="w-20 mt-4 rounded bg-gray-700 px-2 py-2" min="1" max="100"'
               )
               .replace("<div>Speed", '<div className="mt-8">Speed')
               .replace(
@@ -65,7 +65,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
           //   .replace(/speed\$\./g, "state$.speed.")
         }
         classNameEditor="home-editor"
-        classNamePreview="absolute right-0 top-0 !-mt-24 -mr-16 shadow shadow-blue-500"
+        classNamePreview="absolute right-0 top-0 !-mt-12 -mr-12 shadow-lg border border-gray-800 rounded-lg"
       />
     </div>
   );
@@ -77,8 +77,8 @@ export const SectionTop = ({
   state$: Observable<{ speed: number }>;
 }) => {
   return (
-    <div className="grid grid-cols-3 !-mt-8">
-      <div />
+    <div className="grid grid-cols-3 !-mt-4">
+      <div className="pointer-events-none" />
       <div className="col-span-2">
         <DemoTop state$={state$} />
       </div>
