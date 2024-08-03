@@ -153,18 +153,6 @@ const DemoSync = ({
   );
 };
 
-function maxObservable(value$: ObservableParam<number | undefined>) {
-  const max$ = observable(0);
-
-  value$.onChange(({ value}) => {
-    if (value! > max$.get()) {
-      max$.set(value!);
-    }
-  });
-
-  return max$;
-}
-
 export const SectionFullSync = observer(function SectionFullSync() {
   const backend$ = useObservable<Backend>("keel");
   const persistence$ = useObservable<Persistence>("LocalStorage");
@@ -174,46 +162,45 @@ export const SectionFullSync = observer(function SectionFullSync() {
     []
   );
 
-  const ref = useRef<HTMLDivElement>(null);
-  const size$ = useMeasure(ref);
-  const max = useMemo(() => maxObservable(size$.height), []).get();
-
   return (
-    <div className="!mt-20 max-w-2xl mx-auto">
-      <div className="border border-white/10 rounded-xl p-12 !mt-8 bg-black">
-      <Header size="h2" className="mb-4">
-        Local-First with any backend
-      </Header>
-      <div>
-        <Text className="max-w-lg">
-          Use one of our ever-expanding library of sync plugins or build your
-          own on top of the CRUD plugin or the basic synced plugin.
-        </Text>
-        <Header size="h6">Backend</Header>
-        <div className="flex gap-4">
-          <TabsUnderlined
-            tabs={backends}
-            tabText={(tab) => Backends[tab].text}
-            $activeTab={backend$}
-            tabPadding="pb-2"
-          />
-        </div>
-        <Header size="h6" className="!mt-2">
-          Persistence
+    <div className="mt-section max-w-3xl mx-auto">
+      <div className="border t-border rounded-xl px-16 py-12 !mt-8 t-bg-dark shadow-dark">
+        <Header size="h2" className="mb-4">
+          Local-First with any backend
         </Header>
-        <div className="flex gap-4">
-          <TabsUnderlined
-            tabs={persistences}
-            // tabText={(tab) => Backends[tab].text}
-            $activeTab={persistence$}
-            tabPadding="pb-2"
-          />
+        <div>
+          <Text className="max-w-lg">
+            Use one of our ever-expanding library of sync plugins or build your
+            own on top of the CRUD plugin or the basic synced plugin.
+          </Text>
+          <Header size="h6" className="pt-8">
+            Backend
+          </Header>
+          <div className="flex gap-4">
+            <TabsUnderlined
+              tabs={backends}
+              tabText={(tab) => Backends[tab].text}
+              $activeTab={backend$}
+              tabPadding="pb-2"
+            />
+          </div>
+          <Header size="h6" className="!mt-2">
+            Persistence
+          </Header>
+          <div className="flex gap-4">
+            <TabsUnderlined
+              tabs={persistences}
+              // tabText={(tab) => Backends[tab].text}
+              $activeTab={persistence$}
+              tabPadding="pb-2"
+            />
+          </div>
+        </div>
+        <div>
+          <DemoSync backend={backend$.get()} persistence={persistence$.get()} />
         </div>
       </div>
-      <div ref={ref} style={{ minHeight: max ? max : undefined }}>
-        <DemoSync backend={backend$.get()} persistence={persistence$.get()} />
-      </div>
-    </div>
+
     </div>
   );
 });

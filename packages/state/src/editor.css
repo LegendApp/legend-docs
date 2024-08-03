@@ -28,6 +28,34 @@
     --astro-code-token-link: var(--color-indigo);
 }
 
+.t-border {
+    @apply border-[#31353e];
+}
+
+.t-divide {
+    @apply divide-white/15;
+}
+
+.t-bg {
+    @apply bg-[#141820];
+}
+
+.t-bg-light {
+    @apply bg-[#1d232f];
+}
+
+.t-bg-dark {
+    @apply bg-black/20;
+}
+
+.mt-section {
+    @apply mt-32 !important;
+}
+
+.mt-subsection {
+    @apply mt-24 !important;
+}
+
 .astro-code {
     border-radius: var(--code-border-radius);
     border-color: var(--color-border-code-block) !important;
@@ -39,8 +67,7 @@
 
 .home-editor .prism-code {
     padding: 16px !important;
-    @apply border !border-gray-850 shadow-dark;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.1); */
+    @apply border t-border shadow-dark bg-[#161b22] !important;
 }
 
 code {

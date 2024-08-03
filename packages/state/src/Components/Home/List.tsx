@@ -20,7 +20,7 @@ function ListItem({ item }: { item: string }) {
 export function List({ items, title, border, headerSize }: Props) {
   return (
     <div
-      className={classNames("!mt-0", border && "border border-white/10 rounded-lg p-4")}
+      className={classNames("!mt-0", border && "border t-border shadow-dark t-bg rounded-lg p-4")}
     >
       {title && <Header size={headerSize || 'h5'}>{title}</Header>}
       <ul className="text-gray-400 font-medium space-y-2 list-none pl-2">

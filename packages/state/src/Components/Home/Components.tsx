@@ -31,7 +31,9 @@ export const DemoBox = ({
 }) => {
   return (
     <div
-      className={"rounded-lg p-4 relative bg-gray-900 text-gray-200"}
+      className={
+        "rounded-lg p-4 relative bg-black/50 text-gray-200 backdrop-blur-sm border t-border shadow-dark"
+      }
       style={{ width, height }}
     >
       {children}

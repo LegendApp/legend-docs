@@ -6,7 +6,7 @@ import { useObservable } from "@legendapp/state/react";
 import { Header } from "./Header";
 import { Text } from "./Text";
 
-export const SectionRPerfChart = () => {
+export const SectionPerfChart = () => {
   const TransitionSpringFast: Transition = {
     type: "spring",
     duration: 1,
@@ -29,8 +29,8 @@ export const SectionRPerfChart = () => {
   const maxValue = 1;
 
   return (
-    <div className="!mt-20 gap-8 grid grid-cols-2" ref={ref}>
-      <div className="mt-8">
+    <div className="mt-section gap-8 grid grid-cols-2" ref={ref}>
+      <div>
         {chartData.map((item, index) => (
           <div key={index} className="flex items-center [&>*]:!mt-0">
             <div className="w-28 flex-shrink-0 text-right mr-4">
@@ -82,10 +82,10 @@ export const SectionRPerfChart = () => {
           </div>
         ))}
       </div>
-      <div className="pt-8">
-        <Header size="h3">🚀 The fastest React state library</Header>
-        <Text className="pt-4">
-          Legend-State is so fast that it outperforms even vanilla JS in some
+      <div className="-ml-16">
+        <Header size="h2">🚀 The fastest React state library</Header>
+        <Text className="pt-4 max-w-md">
+          Legend-State is so fast that it even outperforms vanilla JS in some
           benchmarks. It's extremely optimized with fine-grained reactivity and
           massively reduces re-rendering.
         </Text>

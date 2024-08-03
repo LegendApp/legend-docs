@@ -16,7 +16,7 @@ interface Props {
 export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
   const refCanvas = useRef<HTMLCanvasElement | null>(null);
   const refBg = useRef<HTMLDivElement | null>(null);
-  const NumParticles = 30;
+  const NumParticles = 50;
 
   useEffect(() => {
     const canvas = refCanvas.current;
@@ -77,11 +77,11 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "rgba(0, 0, 50, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //   ctx.fillStyle = "rgba(0, 0, 50, 0.05)";
+    //   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const state = state$.get();
-      const speed = state.speed;
+      const speed = +state.speed + 1;
       const num = NumParticles + speed * 5;
 
       if (num < particles.length) {
@@ -96,15 +96,15 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
         particle.x += particle.dx * speed;
         particle.y += particle.dy * speed;
 
-        if (particle.x < 0 || particle.x > canvas.width) particle.dx *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.dy *= -1;
+        if (particle.x < 0 || particle.x >= canvas.width) particle.dx *= -1;
+        if (particle.y < 0 || particle.y >= canvas.height - particle.radius) particle.dy *= -1;
 
         const x = particle.x;
         const y = particle.y;
 
         ctx.beginPath();
         ctx.arc(x, y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(100, 149, 237, 0.5)";
+        ctx.fillStyle = "rgba(120, 171, 245, 0.6)";
         ctx.fill();
 
         for (let j = i; j < particles.length; j++) {
@@ -138,10 +138,10 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
   }, []);
 
   return (
-    <div className="absolute inset-0 border-b border-white/5">
+    <div className="absolute inset-0">
       <div
         ref={refBg}
-        className="absolute inset-0 bg-gradient-to-br from-[#151517] to-[#020a15] -z-10"
+        className="absolute inset-0 bg-gradient-to-b from-[#112c53] to-t-bg -z-10"
         // style={{ height: '800%'}}
       />
       <canvas ref={refCanvas} className="!mt-0" />

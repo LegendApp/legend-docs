@@ -4,8 +4,8 @@ import { Text } from "./Text";
 
 export function SectionKitExtension() {
   return (
-    <div>
-      <Header size="h3">2. VS Code Extension</Header>
+    <div className="mt-subsection">
+      <Header size="h3">🧑‍💻 VS Code Extension</Header>
       <p className="text-gray-400">
         Contextually aware helpers to quickly do common tasks for you
       </p>
@@ -48,7 +48,7 @@ function FeatureGrid() {
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
       {features.map((feature, index) => (
-        <div key={index} className="p-4 border rounded-lg border-white/10 !mt-0">
+        <div key={index} className="p-4 border rounded-lg t-border shadow-dark t-bg !mt-0">
           <Header size="h5" className="font-bold mb-2">
             {feature.title}
           </Header>

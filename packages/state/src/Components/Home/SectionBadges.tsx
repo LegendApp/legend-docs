@@ -1,8 +1,6 @@
-import React from "react";
 import { Badges } from "./Badges";
 
-
-export const SectionBadges: React.FC = () => {
+export function SectionBadges ({ className }: { className: string}) {
   const badges = [
     { title: "Core", subtitle: "4kb" },
     { title: "React", subtitle: "4kb" },
@@ -11,5 +9,5 @@ export const SectionBadges: React.FC = () => {
     { title: "Stars", subtitle: "2.6k+" },
   ];
 
-  return <Badges badges={badges} />;
+  return <Badges badges={badges} className={className} />;
 };

@@ -13,8 +13,9 @@ export const Preorder = observer(function Preorder() {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-8">
-      <div>
+    <div className="flex items-center gap-8 mt-section">
+      <div className="flex-1">
+        <div className="max-w-lg">
         <Header size="h1">Buy once, yours forever</Header>
         <Text>
           Lifetime access to an ever-growing library of helpers, components,
@@ -23,15 +24,30 @@ export const Preorder = observer(function Preorder() {
         <Text>
           Now available for pre-order at a discount for a limited time.
         </Text>
-        <Text>Releasing shortly after Legend-State 3.0.</Text>
+          <Text>Releasing shortly after Legend-State 3.0.</Text>
+        </div>
       </div>
-      <div className="bg-white/15 rounded-xl p-8">
-        <div className="line-through text-2xl text-white/50">$299</div>
-        <div className="text-5xl !-mt-0">$199</div>
+      <div
+        className="rounded-xl p-8 border t-border bg-gradient-to-br from-[#d556e3] to-[#3c59fd] max-w-sm"
+        // style={{
+        //   backgroundImage: "linear-gradient(132deg, #f85d7f, #6b81fa)",
+        // }}
+      >
+        <Header size="h2">Legend Kit</Header>
         <Text>
-          Get lifetime access to everything in Legend Kit for a single one-time purchase, including all future updates.
+          Get lifetime access to everything in Legend Kit for a single one-time
+          purchase, including all future updates.
         </Text>
-        <Button onClick={handlePreorder}>
+        <div className="text-5xl !mt-8">$199</div>
+        <Text className="!mt-2">
+          <span className="line-through">$299</span>
+          <span> Save $100 with preorder</span>
+        </Text>
+        <Button
+          color="bg-white hover:bg-white/70 text-black/90 font-semibold "
+          className="!mt-8"
+          onClick={handlePreorder}
+        >
           {isPreordered ? "Preordered!" : "Preorder Now"}
         </Button>
       </div>

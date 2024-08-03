@@ -9,7 +9,7 @@ import { Button } from "shared/src/Components/Button";
 import { SectionEasy } from "./SectionEasy";
 import { SectionReact } from "./SectionReact";
 import { SectionReactivityPerf } from "./SectionReactivityPerf";
-import { SectionRPerfChart } from "./SectionPerfChart";
+import { SectionPerfChart } from "./SectionPerfChart";
 import { SectionReactivityComponents } from "./SectionReactivityComponents";
 import { SectionLocalFirst } from "./SectionLocalFirst";
 import { SectionKitComponents } from "./SectionKitComponents";
@@ -35,17 +35,14 @@ const LandingPage: React.FC = () => {
       id="scroller"
       className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white"
     >
-      <div className="fixed inset-0 bg-[#0b0d0e]" />
+      <div className="fixed inset-0 bg-[#0d1117]" />
       <main className="z-10 flex-grow pb-24">
         <div className="relative" id="background-container">
-          <div className="max-w-5xl mx-auto pt-28 pb-16 px-4">
+          <RadialGradients />
+          <div className="max-w-5xl mx-auto pt-28 px-4 !mt-0 pb-24">
             <AnimatedBackground state$={state$} />
             <div className="max-w-3xl z-10 relative">
-              <Header
-                size="h1"
-                fontWeight="!font-medium"
-                className="!text-[3.25rem] !leading-tight"
-              >
+              <Header size="h1" className="!text-[3.25rem] !leading-tight">
                 Build blazing fast local-first apps with less code
               </Header>
               <div className="max-w-xl pt-2 pb-4">
@@ -56,10 +53,10 @@ const LandingPage: React.FC = () => {
                 </Text>
               </div>
               <div className="flex gap-8 !mt-0 items-center">
-                <Button color="bg-blue-700 hover:bg-blue-600">
+                <Button color="bg-blue-700/80 hover:bg-blue-600">
                   Get started
                 </Button>
-                <div className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-gray-850 px-4 h-10 rounded-lg transition-colors gap-3 flex items-center">
+                <div className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-black/50 px-4 h-10 rounded-lg transition-colors gap-3 flex items-center">
                   <div>Check out Legend-Kit</div>
                   <div className="!mt-0">{">"}</div>
                 </div>
@@ -69,12 +66,12 @@ const LandingPage: React.FC = () => {
             <SectionTop state$={state$} />
           </div>
         </div>
-        <div className="max-w-5xl mx-auto">
-          <SectionBadges />
+        <div className="max-w-5xl mx-auto !mt-0">
+          <SectionBadges className="pt-0" />
           <SectionEasy />
           <SectionReact />
 
-          <SectionRPerfChart />
+          <SectionPerfChart />
           <SectionReactivityPerf />
           {/* <SectionReactivityComponents /> */}
 
@@ -83,7 +80,7 @@ const LandingPage: React.FC = () => {
           {/* <SectionLocalFirst /> */}
 
           {EnableKit && (
-            <>
+            <div className="mt-section">
               <Header
                 size="h1"
                 className="!text-[3.25rem] !leading-tight max-w-xl"
@@ -91,7 +88,8 @@ const LandingPage: React.FC = () => {
                 Get going faster with Legend Kit
               </Header>
               <Text>
-                Tons of tools to increase your development speed and reduce the code you have to write.
+                Tons of tools to increase your development speed and reduce the
+                code you have to write.
               </Text>
 
               <SectionKitComponents />
@@ -100,7 +98,7 @@ const LandingPage: React.FC = () => {
               <SectionKitExamples />
               {/* <SectionKitDevTools /> */}
               <Preorder />
-            </>
+            </div>
           )}
         </div>
       </main>
@@ -109,3 +107,41 @@ const LandingPage: React.FC = () => {
 };
 
 export default LandingPage;
+
+function RadialGradients() {
+  return (
+    <>
+      <RadialGradient top={800} height={3000} left="-100%" width={'200%'} />
+      <RadialGradient top={4000} height={3000} left="0" width={"200%"} />
+    </>
+  );
+}
+function RadialGradient({
+  top,
+  height,
+  left,
+  width,
+  flip
+}: {
+  top: number;
+  height: number;
+  left: number | string;
+  width: number | string;
+  flip?: boolean;
+}) {
+    const brightness = 0.04;
+  return (
+    <div
+      className="absolute -z-10"
+      style={{
+        top,
+        height,
+        left,
+        width,
+        background: `
+          radial-gradient(ellipse at center, rgba(255, 255, 255, ${brightness}) 0%, rgba(255, 255, 255, 0) 80%)
+        `,
+      }}
+    ></div>
+  );
+}

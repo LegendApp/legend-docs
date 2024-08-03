@@ -16,18 +16,23 @@ import { Text } from "./Text";
 const CodeDemoTop = `
 const settings$ = observable({ theme: 'dark' })
 
+// Infinitely nested observables
+const theme$ = settings$.theme
+
 // get returns the raw data
-settings$.theme.get() // 'dark'
+theme$.get() // 'dark'
+
 // set sets
-settings$.theme.set('light')
+theme$.set('light')
 
 // Computed observables with just a function
 const isDark$ = observable(() =>
-    settings$.theme.get() === 'dark')
+    theme$.get() === 'dark'
+)
 
 // observers re-run when observables change
 observe(() => {
-  console.log(settings$.theme.get())
+  console.log(theme$.get())
 })
 
 `;
@@ -59,13 +64,15 @@ const DemoEasy = () => {
 
 export const SectionEasy = () => {
   return (
-    <div className="flex !mt-24 gap-16">
-      <div className="flex-1 pt-12">
-        <Header size="h2">🦄 Incredibly easy to use</Header>
+    <div className="flex mt-section gap-16 items-center">
+      <div className="flex-1">
+        <Header size="h2" className="!mt-0">
+          🦄 Incredibly easy to use
+        </Header>
         <Text className="pt-2">
-          When you get() values while observing, it tracks them and re-runs
-          when they change. No boilerplate, no selectors, no dependency arrays,
-          just easy reactivity.
+          When you get() values while observing, it tracks them and re-runs when
+          they change. No boilerplate, no selectors, no dependency arrays, just
+          easy reactivity.
         </Text>
       </div>
       <div className="max-w-lg flex-2 !mt-0 [&>div]:!mt-0">
@@ -74,3 +81,10 @@ export const SectionEasy = () => {
     </div>
   );
 };
+
+/*
+        <div className="inline-flex items-center gap-2 border t-border rounded-full px-4 py-1 text-blue-600 text-xs font-semibold">
+          <div className="bg-blue-600 rounded-full w-3 h-1.5 text-white text-xs font-semibold" />
+          Easy
+        </div>
+        */

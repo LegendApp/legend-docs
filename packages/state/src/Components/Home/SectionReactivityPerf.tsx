@@ -171,32 +171,28 @@ const DemoPerf2 = () => {
 
 export const SectionReactivityPerf = () => {
   return (
-    <div className="!mt-24">
-      <div className="flex gap-24 pb-8">
-        <Header size="h3" className="flex-1">
-          🚀 Fine grained reactivity for optimal performance
+    <div className="mt-section">
+      <div className="max-w-lg">
+        <Header size="h2" className="flex-1">
+          ⚡️ Fine-grained reactivity
         </Header>
-        <Text className="flex-1 !mt-0">
+        <Text className="flex-1 !mt-4">
           A built-in set of control-flow components make it easy to isolate
           re-renders to only the tiniest element that changed.
         </Text>
       </div>
-      <div className="flex justify-center">
-        <div className="inline-flex mx-auto justify-center px-6 bg-black border-white/10 border rounded-xl">
-          <div className="flex-1 max-w-[380px] border-r border-white/10 pr-4 py-6">
+      <div className="flex justify-center pt-8">
+        <div className="inline-flex mx-auto justify-center t-bg-dark t-border border rounded-xl shadow-dark">
+          <div className="flex-1 max-w-[420px] border-r t-border px-8 py-6">
             <Header size="h4" className="text-center">Normal React</Header>
             <DemoPerf1 />
           </div>
-          <div className="flex-1 !-mt-0 max-w-[380px] pl-4 py-6">
+          <div className="flex-1 !-mt-0 max-w-[420px] px-8 py-6">
             <Header size="h4" className="text-center">Legend-State</Header>
             <DemoPerf2 />
           </div>
         </div>
       </div>
-      {/* <SectionTitle
-        text="🚀 Fine grained reactivity for optimal performance"
-        description="A built-in set of control-flow components make it easy to isolate re-renders to only the tiniest element that changed. This example uses Memo to re-render only the changed text element."
-      /> */}
     </div>
   );
 };

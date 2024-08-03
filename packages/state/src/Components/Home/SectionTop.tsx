@@ -69,7 +69,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
           //   .replace(/speed\$\./g, "state$.speed.")
         }
         classNameEditor="home-editor"
-        classNamePreview="absolute right-0 top-0 !-mt-12 -mr-12 shadow-lg border border-gray-800 rounded-lg"
+        classNamePreview="absolute right-0 top-0 !-mt-12 -mr-12 shadow-lg rounded-lg"
       />
     </div>
   );

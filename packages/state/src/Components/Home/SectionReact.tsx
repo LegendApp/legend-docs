@@ -104,10 +104,12 @@ const DemoReactive = () => {
 
 export const SectionReact = () => {
   return (
-    <div className="!mt-24">
-      <Header size="h2" className="text-center">🦄 Makes React fun, fast, and easy</Header>
-      <div className="flex gap-16 !mt-12 border-t-2 border-b-2 border-white/4">
-        <div className="flex-1 py-12">
+    <div className="mt-section">
+      <Header size="h2" className="text-center">
+        ✨ Makes React fun, fast, and easy
+      </Header>
+      <div className="flex !mt-12 border-t-2 border-b-2 border-white/4">
+        <div className="flex-1 py-12 pr-12">
           <div>
             <Header size="h4" className="font-medium text-white">
               Reactive components with observer
@@ -120,7 +122,7 @@ export const SectionReact = () => {
           </div>
           <DemoObserver />
         </div>
-        <div className="flex-1 !mt-0 border-l-2 border-white/4 pl-16 py-12">
+        <div className="flex-1 !mt-0 border-l-2 border-white/4 py-12 pl-12">
           <div>
             <Header size="h4" className="font-medium">
               Two-way binding

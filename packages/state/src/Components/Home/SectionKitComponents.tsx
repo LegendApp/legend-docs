@@ -3,9 +3,9 @@ import { List } from "./List";
 
 export function SectionKitComponents() {
   return (
-    <div>
-        <Header size="h3">1. Library of helpful code</Header>
-      <div className="grid grid-cols-4 gap-2">
+    <div className="mt-subsection">
+      <Header size="h3">📚 Library of helpful code</Header>
+      <div className="grid grid-cols-4 gap-4">
         <List
           title="Optimized Components"
           items={["Tabs", "Modals", "Forms", "Toasts", "More..."]}

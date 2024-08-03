@@ -169,7 +169,7 @@ export const TabsUnderlined = observer(function TabsUnderlined<
       <motion.div
         initial={underlineAnimate}
         animate={underlineAnimate}
-        className="absolute top-0 h-0.5 bg-blue-500 !mt-0"
+        className="absolute top-0 h-0.5 bg-blue-500 !mt-0 rounded-full"
         transition={TransitionSpringFast}
       />
     </nav>

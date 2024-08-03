@@ -64,19 +64,19 @@ const DemoEasy = () => {
 
 export const SectionSync = () => {
   return (
-    <div className="flex !mt-24 gap-16">
-      <div className="flex-1 pt-12">
-        <Header size="h2" className="text-nowrap">Local State = Remote State</Header>
+    <div className="flex items-center mt-section gap-16">
+      <div className="flex-1">
+        <Header size="h2" className="text-nowrap">🤝 Local State = Remote State</Header>
         <Text className="pt-2">
           Just get and set observables and they{" "}
           <span className="text-white">sync themselves</span> with a powerful
-          sync engine. Your UI code doesn't need to be full of querying,
-          sending back mutations, and synchronizing with local state anymore.
+          sync engine. Your UI code doesn't need any querying,
+          creating mutations, or synchronizing with local state.
         </Text>
         <Text className="pt-2">
           You can even bind UI components directly to synced observables.
         </Text>
-        <Text className="pt-2">It just works.</Text>
+        <Text className="pt-2">You don't need any sync code in your components. You can just focus on making great apps.</Text>
       </div>
       <div className="max-w-lg flex-2 !mt-0 [&>div]:!mt-0">
         <DemoEasy />
