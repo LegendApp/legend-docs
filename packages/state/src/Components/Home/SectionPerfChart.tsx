@@ -63,11 +63,13 @@ export const SectionPerfChart = () => {
               >
                 <motion.div
                   className={classNames(
-                    "h-7 rounded-full absolute inset-0 text-right flex items-center justify-end font-medium",
-                    index === 0 ? "bg-blue-600" : "bg-[#2d2e31]"
+                    "h-7 rounded-full absolute inset-0 text-right flex items-center justify-end font-medium"
                   )}
+                  style={{
+                    backgroundColor: index === 0 ? "#0284c7" : "#DDEEFF25",
+                  }}
                   whileHover={{
-                    backgroundColor: index === 0 ? "#1eb5f9" : "#3d3e41",
+                    backgroundColor: index === 0 ? "#1eb5f9" : "#DDEEFF50",
                     scaleY: 1.2,
                   }}
                   transition={{
@@ -85,9 +87,12 @@ export const SectionPerfChart = () => {
       <div className="-ml-16">
         <Header size="h2">🚀 The fastest React state library</Header>
         <Text className="pt-4 max-w-md">
-          Legend-State is so fast that it even outperforms vanilla JS in some
-          benchmarks. It's extremely optimized with fine-grained reactivity and
-          massively reduces re-rendering.
+          Legend-State is so fast that it even outperforms vanilla JS in some{" "}
+          <a href="https://krausest.github.io/js-framework-benchmark/">
+            benchmarks
+          </a>
+          . It's extremely optimized with fine-grained reactivity and massively
+          reduces re-rendering.
         </Text>
       </div>
     </div>

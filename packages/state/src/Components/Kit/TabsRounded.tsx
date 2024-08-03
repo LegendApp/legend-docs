@@ -25,7 +25,6 @@ interface PropsTab {
   activeTab: string;
   $activeTab: Observable<string>;
   defaultTab: string;
-  tabPadding: `pb-${number}`;
   setActiveTab: (value: string) => void;
   numVariant?: "default" | "red";
   numValue?: number | string;
@@ -36,14 +35,11 @@ const Tab = observer(function Tab({
   name,
   groupName,
   text,
-  tabPadding,
   disabled,
   activeTab,
   $activeTab,
   defaultTab,
   setActiveTab,
-  numVariant = "default",
-  numValue,
   index,
   tabPosition$,
 }: PropsTab) {
@@ -59,7 +55,6 @@ const Tab = observer(function Tab({
       className={cx(
         "relative cursor-pointer select-none !my-0 px-1",
         name,
-        tabPadding,
         disabled && "pointer-events-none opacity-30"
       )}
       onClick={() => {
@@ -71,7 +66,7 @@ const Tab = observer(function Tab({
     >
       <div
         className={cx(
-          "flex items-center whitespace-pre text-sm font-medium text-gray-400 hover:text-white/80",
+          "flex items-center whitespace-pre text-sm font-medium text-gray-400 hover:text-white/80 px-3 py-2",
           isActive && "text-white shadow-bold"
         )}
       >
@@ -89,15 +84,13 @@ interface Props<T extends string> {
   $activeTab?: Observable<T>;
   defaultTab?: T;
   className?: string;
-  tabPadding: `pb-${number}`;
+  tabPadding?: `pb-${number}`;
   onSelect?: (tab: T) => void;
   numVariant?: Record<T, "default" | "red">;
   listsForNum?: Record<any, any[]>;
 }
 
-export const TabsUnderlined = observer(function TabsUnderlined<
-  T extends string
->({
+export const TabsRounded = observer(function TabsRounded<T extends string>({
   tabs,
   tabTexts,
   tabText,
@@ -136,7 +129,7 @@ export const TabsUnderlined = observer(function TabsUnderlined<
     tabIndex >= 0
       ? {
           x: tabPositions[activeTab as string]?.left || 0,
-          y: (tabPositions[activeTab as string]?.bottom || defaultHeight) - 2,
+          y: tabPositions[activeTab as string]?.top,
           width: tabPositions[activeTab as string]?.width || 80,
         }
       : { x: 0, y: defaultHeight, width: 0 };
@@ -144,34 +137,32 @@ export const TabsUnderlined = observer(function TabsUnderlined<
   // Render
   return (
     <nav
-      className={cx(
-        "relative flex flex-wrap gap-x-4 gap-y-2 pr-8 text-sm pb-4",
-        className
-      )}
+      className={cx("relative border t-border t-bg rounded-full overflow-hidden", className)}
     >
-      {tabs.map((tab, i) => (
-        <Tab
-          key={tab}
-          groupName={groupName}
-          name={tab}
-          text={tabTexts?.[tab] || tabText?.(tab) || tab}
-          tabPadding={tabPadding}
-          activeTab={activeTab as string}
-          $activeTab={$activeTab as unknown as Observable<string>}
-          defaultTab={defaultTab as string}
-          setActiveTab={onSelect as any}
-          numVariant={numVariant?.[tab]}
-          numValue={listsForNum?.[tab]?.length}
-          index={i}
-          tabPosition$={tabPositions$[tab]}
-        />
-      ))}
       <motion.div
         initial={underlineAnimate}
         animate={underlineAnimate}
-        className="absolute top-0 h-0.5 bg-blue-500 !mt-0"
+        className="absolute top-0 h-full bg-blue-700 !mt-0"
         transition={TransitionSpringFast}
       />
+      <div className="flex flex-wrap text-sm rounded-full divide-x t-divide !mt-0">
+        {tabs.map((tab, i) => (
+          <Tab
+            key={tab}
+            groupName={groupName}
+            name={tab}
+            text={tabTexts?.[tab] || tabText?.(tab) || tab}
+            activeTab={activeTab as string}
+            $activeTab={$activeTab as unknown as Observable<string>}
+            defaultTab={defaultTab as string}
+            setActiveTab={onSelect as any}
+            numVariant={numVariant?.[tab]}
+            numValue={listsForNum?.[tab]?.length}
+            index={i}
+            tabPosition$={tabPositions$[tab]}
+          />
+        ))}
+      </div>
     </nav>
   );
 });

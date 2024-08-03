@@ -9,7 +9,7 @@ export function SectionKitExtension() {
       <p className="text-gray-400">
         Contextually aware helpers to quickly do common tasks for you
       </p>
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 gap-8">
         {/* <List
           items={[
             "Quick add for Legend-State features",
@@ -19,7 +19,9 @@ export function SectionKitExtension() {
           ]}
         /> */}
         <FeatureGrid />
-        <p>Video</p>
+        <div className="t-bg border t-border flex justify-center items-center rounded-lg shadow-dark">
+          Video
+        </div>
       </div>
     </div>
   );
@@ -48,7 +50,10 @@ function FeatureGrid() {
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
       {features.map((feature, index) => (
-        <div key={index} className="p-4 border rounded-lg t-border shadow-dark t-bg !mt-0">
+        <div
+          key={index}
+          className="p-4 border rounded-lg t-border shadow-dark t-bg !mt-0"
+        >
           <Header size="h5" className="font-bold mb-2">
             {feature.title}
           </Header>

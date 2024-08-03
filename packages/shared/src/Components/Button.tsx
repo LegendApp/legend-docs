@@ -6,7 +6,7 @@ export const Button = ({
   color,
   children,
 }: {
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   color?: string;
   children: any;

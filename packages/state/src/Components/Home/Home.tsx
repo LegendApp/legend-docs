@@ -1,27 +1,23 @@
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { useObservable } from "@legendapp/state/react";
 import React from "react";
-import { AnimatedBackground } from "./AnimatedBackground";
-import { SectionTop } from "./SectionTop";
-import { SectionPerf } from "./SectionPerf";
-import { SectionSync } from "./SectionSync";
 import { Button } from "shared/src/Components/Button";
+import { AnimatedBackground } from "./AnimatedBackground";
+import { Header } from "./Header";
+import { Preorder } from "./Preorder";
+import { SectionBadges } from "./SectionBadges";
 import { SectionEasy } from "./SectionEasy";
-import { SectionReact } from "./SectionReact";
-import { SectionReactivityPerf } from "./SectionReactivityPerf";
-import { SectionPerfChart } from "./SectionPerfChart";
-import { SectionReactivityComponents } from "./SectionReactivityComponents";
-import { SectionLocalFirst } from "./SectionLocalFirst";
+import { SectionFullSync } from "./SectionFullSync";
 import { SectionKitComponents } from "./SectionKitComponents";
+import { SectionKitExamples } from "./SectionKitExamples";
 import { SectionKitExtension } from "./SectionKitExtension";
 import { SectionKitWrappers } from "./SectionKitWrappers";
-import { SectionKitExamples } from "./SectionKitExamples";
-import { SectionKitDevTools } from "./SectionKitDevTools";
-import { SectionBadges } from "./SectionBadges";
-import { Header } from "./Header";
+import { SectionPerfChart } from "./SectionPerfChart";
+import { SectionReact } from "./SectionReact";
+import { SectionReactivityPerf } from "./SectionReactivityPerf";
+import { SectionSync } from "./SectionSync";
+import { SectionTop } from "./SectionTop";
 import { Text } from "./Text";
-import { SectionFullSync } from "./SectionFullSync";
-import { Preorder } from "./Preorder";
 
 enableReactComponents();
 
@@ -33,10 +29,10 @@ const LandingPage: React.FC = () => {
   return (
     <div
       id="scroller"
-      className="absolute inset-0 overflow-auto mt-11 flex flex-col text-white"
+      className="absolute inset-0 overflow-auto flex flex-col text-white"
     >
       <div className="fixed inset-0 bg-[#0d1117]" />
-      <main className="z-10 flex-grow pb-24">
+      <main className="z-10 flex-grow pb-24 !mt-0">
         <div className="relative" id="background-container">
           <RadialGradients />
           <div className="max-w-5xl mx-auto pt-28 px-4 !mt-0 pb-24">
@@ -53,9 +49,11 @@ const LandingPage: React.FC = () => {
                 </Text>
               </div>
               <div className="flex gap-8 !mt-0 items-center">
-                <Button color="bg-blue-700/80 hover:bg-blue-600">
-                  Get started
-                </Button>
+                <a href="/open-source/state/v3/intro/introduction/">
+                  <Button color="bg-blue-700/80 hover:bg-blue-600">
+                    Get started
+                  </Button>
+                </a>
                 <div className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-black/50 px-4 h-10 rounded-lg transition-colors gap-3 flex items-center">
                   <div>Check out Legend-Kit</div>
                   <div className="!mt-0">{">"}</div>
@@ -85,7 +83,7 @@ const LandingPage: React.FC = () => {
                 size="h1"
                 className="!text-[3.25rem] !leading-tight max-w-xl"
               >
-                Get going faster with Legend Kit
+                Get started faster with Legend Kit
               </Header>
               <Text>
                 Tons of tools to increase your development speed and reduce the
@@ -111,7 +109,7 @@ export default LandingPage;
 function RadialGradients() {
   return (
     <>
-      <RadialGradient top={800} height={3000} left="-100%" width={'200%'} />
+      <RadialGradient top={800} height={3000} left="-100%" width={"200%"} />
       <RadialGradient top={4000} height={3000} left="0" width={"200%"} />
     </>
   );
@@ -121,7 +119,7 @@ function RadialGradient({
   height,
   left,
   width,
-  flip
+  flip,
 }: {
   top: number;
   height: number;
@@ -129,7 +127,7 @@ function RadialGradient({
   width: number | string;
   flip?: boolean;
 }) {
-    const brightness = 0.04;
+  const brightness = 0.04;
   return (
     <div
       className="absolute -z-10"

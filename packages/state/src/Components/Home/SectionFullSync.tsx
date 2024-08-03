@@ -10,6 +10,7 @@ import { CodeSample } from "shared/src/Components/CodeSample";
 import { synced } from "@legendapp/state/sync";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { useMeasure } from "@legendapp/state/react-hooks/useMeasure";
+import { TabsRounded } from "../Kit/TabsRounded";
 
 const Backends = {
   keel: {
@@ -177,22 +178,19 @@ export const SectionFullSync = observer(function SectionFullSync() {
             Backend
           </Header>
           <div className="flex gap-4">
-            <TabsUnderlined
+            <TabsRounded
               tabs={backends}
               tabText={(tab) => Backends[tab].text}
               $activeTab={backend$}
-              tabPadding="pb-2"
             />
           </div>
           <Header size="h6" className="!mt-2">
             Persistence
           </Header>
           <div className="flex gap-4">
-            <TabsUnderlined
+            <TabsRounded
               tabs={persistences}
-              // tabText={(tab) => Backends[tab].text}
               $activeTab={persistence$}
-              tabPadding="pb-2"
             />
           </div>
         </div>
@@ -200,7 +198,6 @@ export const SectionFullSync = observer(function SectionFullSync() {
           <DemoSync backend={backend$.get()} persistence={persistence$.get()} />
         </div>
       </div>
-
     </div>
   );
 });

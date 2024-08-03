@@ -14,10 +14,10 @@ import { Header } from "./Header";
 import { Text } from "./Text";
 
 const CodeDemoTop = `
-const settings$ = observable({ theme: 'dark' })
+const settings$ = observable({ ui: { theme: 'dark' }})
 
 // Infinitely nested observables
-const theme$ = settings$.theme
+const theme$ = settings$.ui.theme
 
 // get returns the raw data
 theme$.get() // 'dark'

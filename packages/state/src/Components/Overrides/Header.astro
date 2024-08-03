@@ -33,17 +33,23 @@ const options = versions.map(([version, label]) => ({
 
 <div class="header sl-flex">
   <div class="sl-flex items-center">
-    <a class="flex items-center pr-6 text-xl font-semibold" href="/">
+    <a class="flex items-center pr-6 font-medium" href="/">
       <Image
         src={logomark}
         alt="Legend homepage"
-        width="36"
-        height="36"
+        width="20"
+        height="20"
         class="opacity-60"
       />
       <span class="pl-3">Legend Open Source</span>
     </a>
-    <Select icon={undefined as any} label="version" value="auto" options={options} width="auto" />
+    <Select
+      icon={undefined as any}
+      label="version"
+      value="auto"
+      options={options}
+      width="auto"
+    />
 
     <a class="px-4" href="/"> Home </a>
     <a class="px-4" href="/open-source/"> Blog </a>
@@ -59,6 +65,18 @@ const options = versions.map(([version, label]) => ({
     </div>
   </div>
 </div>
+
+<style is:global>
+  header {
+    /* background-color: #0d1117ca !important; */
+    --tw-backdrop-blur: blur(8px);
+    backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+      var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
+      var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
+      var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+      var(--tw-backdrop-sepia);
+  }
+</style>
 
 <style>
   .header {
