@@ -70,6 +70,7 @@ export const SectionPerfChart = () => {
                   }}
                   whileHover={{
                     backgroundColor: index === 0 ? "#1eb5f9" : "#DDEEFF50",
+                    scaleX: 1.02,
                     scaleY: 1.2,
                   }}
                   transition={{

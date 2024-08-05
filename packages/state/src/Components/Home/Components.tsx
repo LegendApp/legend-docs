@@ -1,3 +1,5 @@
+import classNames from "classnames";
+
 export const SectionTitle = ({
   text,
   description,
@@ -21,19 +23,19 @@ export const DemoBox = ({
   children,
   width,
   height,
+  blur,
 }: {
-  className?: string;
-  theme?: "light" | "dark";
-  center?: boolean;
   children: any;
   width?: number;
   height?: number;
+  blur?: boolean;
 }) => {
   return (
     <div
-      className={
-        "rounded-lg p-4 relative bg-black/50 text-gray-200 backdrop-blur-sm border t-border shadow-dark"
-      }
+      className={classNames(
+        "rounded-lg p-4 relative text-gray-200 border t-border shadow-dark",
+        blur && "backdrop-blur-sm bg-black/20"
+      )}
       style={{ width, height }}
     >
       {children}

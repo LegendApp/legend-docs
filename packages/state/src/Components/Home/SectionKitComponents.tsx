@@ -14,7 +14,7 @@ export function SectionKitComponents() {
         <List
           title="Observable helpers"
           items={[
-            "Current date & time",
+            "currentDate",
             "createDraft",
             "stringAsNumber",
             "setAsString",

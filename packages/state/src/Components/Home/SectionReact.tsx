@@ -41,12 +41,11 @@ const Form = () => {
 
   return (
     <Reactive.input
-        $value={form$.value}
-        $className={() => cx(
-            isValid(form$.value.get()) ?
-                'border-green-500' : 'border-red-500'
-        )}
-        $disabled={form$.submitting}
+      $value={form$.value}
+      $className={() => isValid(form$.value.get()) ?
+          'border-green-500' : 'border-red-500'
+      }
+      $disabled={form$.submitting}
     />
   )
 }

@@ -184,7 +184,7 @@ export const SectionFullSync = observer(function SectionFullSync() {
               $activeTab={backend$}
             />
           </div>
-          <Header size="h6" className="!mt-2">
+          <Header size="h6" className="!mt-8">
             Persistence
           </Header>
           <div className="flex gap-4">

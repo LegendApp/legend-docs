@@ -1,6 +1,6 @@
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { useObservable } from "@legendapp/state/react";
-import React from "react";
+import React, { useRef } from "react";
 import { Button } from "shared/src/Components/Button";
 import { AnimatedBackground } from "./AnimatedBackground";
 import { Header } from "./Header";
@@ -18,6 +18,7 @@ import { SectionReactivityPerf } from "./SectionReactivityPerf";
 import { SectionSync } from "./SectionSync";
 import { SectionTop } from "./SectionTop";
 import { Text } from "./Text";
+import classNames from "classnames";
 
 enableReactComponents();
 
@@ -25,6 +26,11 @@ const EnableKit = true;
 
 const LandingPage: React.FC = () => {
   const state$ = useObservable({ speed: 1 });
+  const refKit = useRef<HTMLDivElement>(null);
+
+  const onClickGotoKit = () => {
+    refKit.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <div
@@ -54,7 +60,7 @@ const LandingPage: React.FC = () => {
                     Get started
                   </Button>
                 </a>
-                <div className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-black/50 px-4 h-10 rounded-lg transition-colors gap-3 flex items-center">
+                <div className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-black/30 hover:shadow-dark px-4 h-10 rounded-lg transition-colors gap-3 flex items-center" onClick={onClickGotoKit}>
                   <div>Check out Legend-Kit</div>
                   <div className="!mt-0">{">"}</div>
                 </div>
@@ -76,6 +82,7 @@ const LandingPage: React.FC = () => {
           <SectionSync />
           <SectionFullSync />
           {/* <SectionLocalFirst /> */}
+          <div ref={refKit} />
 
           {EnableKit && (
             <div className="mt-section">
@@ -109,8 +116,8 @@ export default LandingPage;
 function RadialGradients() {
   return (
     <>
-      <RadialGradient top={800} height={3000} left="-100%" width={"200%"} />
-      <RadialGradient top={4000} height={3000} left="0" width={"200%"} />
+      <LinearGradient top={800} height={3000} left="0" width={"100%"} />
+      <LinearGradient top={3800} height={3000} left="0" width={"100%"} flip />
     </>
   );
 }
@@ -128,6 +135,8 @@ function RadialGradient({
   flip?: boolean;
 }) {
   const brightness = 0.04;
+  const color = Math.round(255 * brightness);
+  const hex = rgbToHex(color, color, color);
   return (
     <div
       className="absolute -z-10"
@@ -137,9 +146,42 @@ function RadialGradient({
         left,
         width,
         background: `
-          radial-gradient(ellipse at center, rgba(255, 255, 255, ${brightness}) 0%, rgba(255, 255, 255, 0) 80%)
+          radial-gradient(ellipse at center, ${hex} 0%, #0d1117 50%)
         `,
       }}
     ></div>
   );
+}
+function LinearGradient({
+  top,
+  height,
+  left,
+  width,
+  flip,
+}: {
+  top: number;
+  height: number;
+  left: number | string;
+  width: number | string;
+  flip?: boolean;
+}) {
+
+  return (
+    <div
+      className={classNames(
+        "absolute -z-10 from-[#11141a] to-[#0d1117] !mt-0",
+        flip ? "bg-gradient-to-b" : "bg-gradient-to-t"
+      )}
+      style={{
+        top,
+        height,
+        left,
+        width,
+      }}
+    ></div>
+  );
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
 }

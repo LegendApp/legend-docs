@@ -141,7 +141,7 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
     <div className="absolute inset-0">
       <div
         ref={refBg}
-        className="absolute inset-0 bg-gradient-to-b from-[#112c53] to-t-bg -z-10"
+        className="absolute inset-0 bg-gradient-to-b from-[#112c53] to-[#0d1117] -z-10"
         // style={{ height: '800%'}}
       />
       <canvas ref={refCanvas} className="!mt-0" />

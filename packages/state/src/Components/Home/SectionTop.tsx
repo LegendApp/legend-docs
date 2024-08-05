@@ -36,7 +36,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
       <Editor
         code={CodeDemoTop}
         noInline
-        renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}
+        renderCode={`;render(<div><Box blur><EasyComponent /></Box></div>)`}
         previewWidth={180}
         showEditing={false}
         scope={{
