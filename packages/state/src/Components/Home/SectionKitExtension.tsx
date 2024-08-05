@@ -1,8 +1,17 @@
+import { observer, useObservable } from "@legendapp/state/react";
+import { motion, AnimatePresence, type Transition } from "framer-motion";
 import { Header } from "./Header";
-import { List } from "./List";
 import { Text } from "./Text";
 
-export function SectionKitExtension() {
+const TransitionSpringFast: Transition = {
+  type: "spring",
+  duration: 0.5,
+  bounce: 0.2,
+};
+
+export const SectionKitExtension = observer(function SectionKitExtension() {
+  const isOpen$ = useObservable(false);
+
   return (
     <div className="mt-subsection">
       <Header size="h3">🧑‍💻 VS Code Extension</Header>
@@ -10,22 +19,43 @@ export function SectionKitExtension() {
         Contextually aware helpers to quickly do common tasks for you
       </p>
       <div className="grid grid-cols-2 gap-8">
-        {/* <List
-          items={[
-            "Quick add for Legend-State features",
-            "Smart component generation",
-            "Auto imports",
-            "Context-aware to know what you want",
-          ]}
-        /> */}
         <FeatureGrid />
-        <div className="t-bg border t-border flex justify-center items-center rounded-lg shadow-dark">
+        <motion.div
+          className="t-bg border t-border flex justify-center items-center rounded-lg shadow-dark cursor-pointer"
+          onClick={isOpen$.toggle}
+          layout
+          layoutId="video-container"
+          transition={TransitionSpringFast}
+        >
           Video
-        </div>
+        </motion.div>
       </div>
+      <AnimatePresence>
+        {isOpen$.get() && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex flex-col justify-center items-center z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={isOpen$.toggle}
+          >
+            <motion.div
+              className="h-[720px] w-[1280px] max-h-[95%] max-w-[95%] t-bg border t-border flex justify-center items-center rounded-lg shadow-dark"
+              layoutId="video-container"
+              transition={TransitionSpringFast}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              Video (Expanded)
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
-}
+});
 
 function FeatureGrid() {
   const features = [
