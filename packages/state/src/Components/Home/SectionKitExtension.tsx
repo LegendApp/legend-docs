@@ -15,13 +15,14 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
   return (
     <div className="mt-subsection">
       <Header size="h3">🧑‍💻 VS Code Extension</Header>
-      <p className="text-gray-400">
-        Contextually aware helpers to quickly do common tasks for you
-      </p>
-      <div className="grid grid-cols-2 gap-8">
+      <Text>
+        A contextually aware coding assistant to accelerate your development speed
+      </Text>
+      <div className="flex items-center gap-4 pt-4">
         <FeatureGrid />
         <motion.div
-          className="t-bg border t-border flex justify-center items-center rounded-lg shadow-dark cursor-pointer"
+          className="t-bg border t-border flex justify-center items-center rounded-lg shadow-dark cursor-pointer !mt-0"
+          style={{ width: 480, height: 270 }}
           onClick={isOpen$.toggle}
           layout
           layoutId="video-container"
@@ -60,7 +61,7 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
 function FeatureGrid() {
   const features = [
     {
-      title: "Quick Add",
+      title: "Snippets",
       description: "Easily add Legend-State features by hotkey",
     },
     {
@@ -75,10 +76,18 @@ function FeatureGrid() {
       title: "Context-Aware Sidebar",
       description: "Quick access to tools most useful in any moment",
     },
+    {
+      title: "Linter",
+      description: "Detect and fix common issues like missing observer",
+    },
+    {
+      title: "Extensive Customization",
+      description: "Customize to your workflow and create your own snippets",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 mt-4">
+    <div className="grid grid-cols-2 gap-4 flex-1">
       {features.map((feature, index) => (
         <div
           key={index}

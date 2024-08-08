@@ -183,11 +183,11 @@ export const SectionReactivityPerf = () => {
       </div>
       <div className="flex justify-center pt-8">
         <div className="inline-flex mx-auto justify-center t-bg-dark t-border border rounded-xl shadow-dark">
-          <div className="flex-1 max-w-[420px] border-r t-border px-8 py-6">
+          <div className="flex-1 max-w-[460px] border-r t-border px-8 py-6">
             <Header size="h4" className="text-center">Normal React</Header>
             <DemoPerf1 />
           </div>
-          <div className="flex-1 !-mt-0 max-w-[420px] px-8 py-6">
+          <div className="flex-1 !-mt-0 max-w-[460px] px-8 py-6">
             <Header size="h4" className="text-center">Legend-State</Header>
             <DemoPerf2 />
           </div>

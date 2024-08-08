@@ -16,14 +16,14 @@ export const Preorder = observer(function Preorder() {
     <div className="flex items-center gap-8 mt-section">
       <div className="flex-1">
         <div className="max-w-lg">
-        <Header size="h1">Buy once, yours forever</Header>
-        <Text>
-          Lifetime access to an ever-growing library of helpers, components,
-          hooks, example projects, and reactive components.
-        </Text>
-        <Text>
-          Now available for pre-order at a discount for a limited time.
-        </Text>
+          <Header size="h1">Buy once, yours forever</Header>
+          <Text>
+            Lifetime access to an ever-growing library of helpers, components,
+            hooks, example projects, and reactive components.
+          </Text>
+          <Text>
+            Now available for pre-order at a discount for a limited time.
+          </Text>
           <Text>Releasing shortly after Legend-State 3.0.</Text>
         </div>
       </div>
@@ -36,7 +36,8 @@ export const Preorder = observer(function Preorder() {
         <Header size="h2">Legend Kit</Header>
         <Text>
           Get lifetime access to everything in Legend Kit for a single one-time
-          purchase, including all future updates.
+          purchase, including all future updates. Preorder now to save $100 and
+          accelerate Legend Kit's development.
         </Text>
         <div className="text-5xl !mt-8">$199</div>
         <Text className="!mt-2">

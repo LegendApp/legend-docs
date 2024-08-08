@@ -1,8 +1,6 @@
 import classNames from "classnames";
-import { SectionTitle } from "./Components";
 import { motion, useInView, type Transition } from "framer-motion";
 import { useRef } from "react";
-import { useObservable } from "@legendapp/state/react";
 import { Header } from "./Header";
 import { Text } from "./Text";
 

@@ -1,10 +1,14 @@
 import { Header } from "./Header";
 import { List } from "./List";
+import { Text } from "./Text";
 
 export function SectionKitComponents() {
   return (
     <div className="mt-subsection">
       <Header size="h3">📚 Library of helpful code</Header>
+      <Text className="max-w-4xl">
+        High performance headless components, helpful generic observables and transformational computed observables, React hooks that return observables (so they don't re-render), and observable tools for popular frameworks.
+      </Text>
       <div className="grid grid-cols-4 gap-4">
         <List
           title="Optimized Components"
