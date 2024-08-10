@@ -1,6 +1,6 @@
 :root {
     --sl-color-accent-high: #09d;
-    --sl-color-bg-nav: #0d0e0fca;
+    /* --sl-color-bg-nav: #0d0e0fca; */
     --sl-color-bg-sidebar: #0d0e0f;
     --sl-font: 'Inter', ui-sans-serif, system-ui, sans-serif;
     @media (min-width: 80rem) {

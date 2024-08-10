@@ -16,7 +16,7 @@ import { DemoBox, SectionTitle } from "./Components";
 import CurvedArrowCallout from "./CurvedArrowCallout";
 
 const CodeDemoTop = `
-const speed$ = observable(1)
+const speed$ = observable(2)
 
 const EasyComponent = observer(() => {
   const speed = speed$.get()
@@ -25,7 +25,7 @@ const EasyComponent = observer(() => {
 
   return (<>
     <Reactive.input $value={speed$} type="number" />
-    <Button onClick={reset}>{speed} is too fast 😱</Button>
+    <Button onClick={reset}>{speed} is too much 😱</Button>
   </>)
 })
 `;
@@ -37,8 +37,9 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
         code={CodeDemoTop}
         noInline
         renderCode={`;render(<div><Box blur><EasyComponent /></Box></div>)`}
-        previewWidth={180}
+        previewWidth={190}
         showEditing={false}
+        disabled
         scope={{
           useRef,
           useObservable,
@@ -54,10 +55,10 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
         transformCode={
           (code) =>
             code
-              .replace(`const speed$ = observable(1)`, "")
+              .replace(`const speed$ = observable(2)`, "")
               .replace(
                 "<Reactive.input",
-                '<Reactive.input className="w-20 mt-4 rounded bg-gray-700 px-2 py-2" min="1" max="100"'
+                '<div className="font-bold pb-4 text-center">Particle Speed</div><Reactive.input className="w-20 rounded bg-gray-700 px-2 py-2" min="1" max="10"'
               )
               .replace("<div>Speed", '<div className="mt-8">Speed')
               .replace(
@@ -97,12 +98,12 @@ export const SectionTop = ({
           {() => (
             <motion.div
               className="absolute top-0 left-0 pointer-events-none"
-              style={{ marginLeft: 260, marginTop: -70 }}
-              initial={{ opacity: 0.6 }}
+              style={{ marginLeft: 220, marginTop: -60 }}
+              initial={{ opacity: 0.5 }}
               animate={{
                 opacity: 1,
                 transition:{
-                  duration: 0.7,
+                  duration: 0.6,
                   repeat: Infinity,
                   repeatType: "mirror",
                   ease: "easeInOut",
@@ -113,7 +114,7 @@ export const SectionTop = ({
               <div className="rotate-12">
                 <CurvedArrowCallout />
               </div>
-              <div className="absolute top-0 left-0 !mt-10 -ml-6 text-sm font-bold">
+              <div className="absolute top-0 left-0 !mt-10 -ml-6 text-md font-bold">
                 Turn it up!
               </div>
             </motion.div>

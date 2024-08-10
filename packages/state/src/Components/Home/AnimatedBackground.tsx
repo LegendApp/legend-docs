@@ -81,7 +81,7 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
     //   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const state = state$.get();
-      const speed = +state.speed + 1;
+      const speed = (+state.speed - 1) * 10 + 1;
       const num = NumParticles + speed * 5;
 
       if (num < particles.length) {

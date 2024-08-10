@@ -3,7 +3,6 @@ import React from "react";
 const CurvedArrowCallout = ({
   width = 200,
   height = 100,
-  fontSize = 14,
 }) => {
   return (
     <svg width={width} height={height} viewBox="0 0 220 100">
@@ -23,7 +22,7 @@ const CurvedArrowCallout = ({
         d="M190,50 Q100,0 10,50"
         fill="none"
         stroke="#3b82f6"
-        strokeWidth="2"
+        strokeWidth="3.5"
         markerStart="url(#arrowhead)"
       />
     </svg>

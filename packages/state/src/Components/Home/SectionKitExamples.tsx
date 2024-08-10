@@ -12,7 +12,7 @@ export function SectionKitExamples() {
         starting point or for reference for best practices.
       </Text>
       <ListOfBoxes
-        items={["JSON Viewer", "Trellix Clone", "More..."]}
+        items={["JSON Viewer", "Trellix Clone", 'Chat app', "More..."]}
         className="!mt-8"
       />
     </div>

@@ -16,6 +16,7 @@ interface Props {
   hideDemo?: boolean;
   showEditing?: boolean;
   noError?: boolean;
+  disabled?: boolean;
   transformCode?: (code: string) => string;
 }
 const emptyTheme = { plain: {}, styles: [] };
@@ -37,7 +38,8 @@ export const Editor = observer(function Editor({
   hideDemo = false,
   showEditing = true,
   noInline = false,
-  noError = false
+  noError = false,
+  disabled = false
 }: Props) {
   code = code.trim();
   return (
@@ -51,6 +53,7 @@ export const Editor = observer(function Editor({
       scope={scope}
       enableTypeScript={true}
       theme={emptyTheme}
+      disabled={disabled}
       noInline={noInline}
       language="tsx"
     >
