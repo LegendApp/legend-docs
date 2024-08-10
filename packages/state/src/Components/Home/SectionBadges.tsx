@@ -1,9 +1,10 @@
 import { Badges } from "./Badges";
 import { Header } from "./Header";
+import { Text } from "./Text";
 
-export function SectionBadges({ className }: { className: string }) {
+export function SectionBadges() {
   const badges = [
-    { title: "✅  App State", subtitle: "Local and global" },
+    { title: "📚  App State", subtitle: "Local and global" },
     { title: "☁️  Remote State", subtitle: "Sync with any backend" },
     { title: "💾  Persistence", subtitle: "Both web and mobile" },
     { title: "😀  Best DX", subtitle: "Easy and fun" },
@@ -13,7 +14,10 @@ export function SectionBadges({ className }: { className: string }) {
   return (
     <div className="text-center pt-16 !mt-0">
       <Header size="h1">All in One</Header>
-      <Badges badges={badges} className={className} />
+      <Text className="max-w-lg mx-auto">
+        Legend-State is the fastest React state library, and it takes care of all of the hard sync and caching stuff for you.
+      </Text>
+      <Badges badges={badges} className={"!mt-8"} />
     </div>
   );
 }

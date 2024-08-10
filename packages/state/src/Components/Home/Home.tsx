@@ -61,9 +61,8 @@ const LandingPage = () => {
       className="absolute inset-0 overflow-auto flex flex-col text-white"
     >
       <div className="fixed inset-0 bg-[#0d1117]" />
-      <main className="z-10 flex-grow pb-24 !mt-0">
+      <main className="z-10 flex-grow !mt-0">
         <div className="relative" id="background-container">
-          <BackgroundGradients />
           <div className="max-w-5xl mx-auto pt-28 px-4 !mt-0">
             <AnimatedBackground state$={state$} />
             <div className="max-w-3xl z-10 relative">
@@ -100,34 +99,37 @@ const LandingPage = () => {
             </div>
 
             <SectionTop state$={state$} />
-            <SectionBadges className="pt-0" />
+            <SectionBadges />
           </div>
         </div>
-        <div className="max-w-5xl mx-auto !mt-0">
-          <SectionEasy />
-          <SectionReact />
+        <div className="!mt-0 relative">
+          <BackgroundGradients />
+          <div className="max-w-5xl mx-auto !mt-0 relative pb-24">
+            <SectionEasy />
+            <SectionReact />
 
-          <SectionPerfChart />
-          <SectionReactivityPerf />
-          {/* <SectionReactivityComponents /> */}
+            <SectionPerfChart />
+            <SectionReactivityPerf />
+            {/* <SectionReactivityComponents /> */}
 
-          <SectionSync />
-          <SectionFullSync />
-          {/* <SectionLocalFirst /> */}
-          <div ref={refKit} />
+            <SectionSync />
+            <SectionFullSync />
+            {/* <SectionLocalFirst /> */}
+            <div ref={refKit} />
 
-          {EnableKit && (
-            <>
-              <SectionKitHeader />
+            {EnableKit && (
+              <>
+                <SectionKitHeader />
 
-              <SectionKitComponents />
-              <SectionKitExtension />
-              <SectionKitWrappers />
-              <SectionKitExamples />
-              {/* <SectionKitDevTools /> */}
-              <Preorder />
-            </>
-          )}
+                <SectionKitComponents />
+                <SectionKitExtension />
+                <SectionKitWrappers />
+                <SectionKitExamples />
+                {/* <SectionKitDevTools /> */}
+                <Preorder />
+              </>
+            )}
+          </div>
         </div>
       </main>
     </div>

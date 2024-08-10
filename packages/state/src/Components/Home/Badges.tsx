@@ -9,7 +9,7 @@ interface Props {
 
 export const Badges = ({ badges, titleSize, titleWeight, className }: Props) => {
   return (
-    <div className={classNames("flex justify-center !mt-2", className)}>
+    <div className={classNames("flex justify-center", className)}>
       <div className="flex justify-center border t-bg t-border rounded-lg divide-x t-divide shadow-dark">
         {badges.map(({ title, subtitle }) => (
           <div key={title} className="!mt-0 px-8 py-2 text-center whitespace-pre">
