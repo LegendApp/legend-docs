@@ -9,7 +9,7 @@ export function SectionKitComponents() {
       <Text className="max-w-4xl">
         High performance headless components, helpful generic observables and transformational computed observables, React hooks that return observables (so they don't re-render), and observable tools for popular frameworks.
       </Text>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 text-sm sm:gap-4 sm:text-base">
         <List
           title="Optimized Components"
           items={["Tabs", "Modals", "Forms", "Toasts", "More..."]}

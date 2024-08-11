@@ -28,7 +28,7 @@ export const Preorder = observer(function Preorder() {
         </div>
       </div>
       <div
-        className="rounded-xl p-8 border t-border bg-gradient-to-br from-[#d556e3] to-[#3c59fd] max-w-sm mx-auto !mt-8 sm:!mt-0"
+        className="rounded-xl p-8 border border-tBorder bg-gradient-to-br from-[#d556e3] to-[#3c59fd] max-w-sm mx-auto !mt-8 sm:!mt-0"
         // style={{
         //   backgroundImage: "linear-gradient(132deg, #f85d7f, #6b81fa)",
         // }}

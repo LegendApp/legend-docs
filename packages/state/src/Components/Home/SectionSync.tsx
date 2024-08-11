@@ -64,7 +64,7 @@ const DemoSync = () => {
 
 export const SectionSync = () => {
   return (
-    <div className="md:flex items-center mt-section gap-16 px-4">
+    <div className="lg:flex items-center mt-section gap-16 px-4">
       <div className="flex-1">
         <Header size="h2" className="md:text-nowrap">🤝 Local State = Remote State</Header>
         <Text className="pt-2">
@@ -78,7 +78,7 @@ export const SectionSync = () => {
         </Text>
         <Text className="pt-2">You don't need any sync code in your components. You can just focus on making great apps.</Text>
       </div>
-      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 min-w-[460px] mx-auto">
+      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 sm:min-w-[460px] mx-auto">
         <DemoSync />
       </div>
     </div>

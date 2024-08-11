@@ -28,26 +28,6 @@
     --astro-code-token-link: var(--color-indigo);
 }
 
-.t-border {
-    @apply border-[#31353e];
-}
-
-.t-divide {
-    @apply divide-white/15;
-}
-
-.t-bg {
-    @apply bg-[#141820];
-}
-
-.t-bg-light {
-    @apply bg-[#1d232f];
-}
-
-.t-bg-dark {
-    @apply bg-black/20;
-}
-
 .mt-section {
     @apply mt-24 md:mt-32 !important;
 }
@@ -62,12 +42,12 @@
 }
 
 .shadow-dark {
-    @apply shadow-md shadow-black/50
+    @apply shadow-md shadow-tShadowDark
 }
 
 .home-editor .prism-code {
     padding: 16px !important;
-    @apply border t-border shadow-dark bg-[#161b22] !important;
+    @apply border border-tBorder shadow-dark bg-[#161b22] !important;
 }
 
 code {

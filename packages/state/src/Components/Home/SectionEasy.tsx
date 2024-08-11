@@ -83,7 +83,7 @@ export const SectionEasy = () => {
 };
 
 /*
-        <div className="inline-flex items-center gap-2 border t-border rounded-full px-4 py-1 text-blue-600 text-xs font-semibold">
+        <div className="inline-flex items-center gap-2 border border-tBorder rounded-full px-4 py-1 text-blue-600 text-xs font-semibold">
           <div className="bg-blue-600 rounded-full w-3 h-1.5 text-white text-xs font-semibold" />
           Easy
         </div>

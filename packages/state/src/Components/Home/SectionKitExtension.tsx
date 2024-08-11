@@ -24,8 +24,8 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
       <div className="lg:flex items-center gap-4 pt-4">
         <FeatureGrid />
         <motion.div
-          className="!mt-8 lg:!mt-0 t-bg border t-border flex justify-center items-center rounded-lg shadow-dark cursor-pointer relative overflow-hidden mx-auto"
-          style={{ width: 480, height: 270 }}
+          className="!mt-8 lg:!mt-0 max-w-full bg-tBg border border-tBorder flex justify-center items-center rounded-lg shadow-tShadowDark cursor-pointer relative overflow-hidden mx-auto"
+          style={{ width: 480 }}
           onClick={isOpen$.toggle}
           layout
           layoutId="video-container"
@@ -66,7 +66,7 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
             onClick={isOpen$.toggle}
           >
             <motion.div
-              className="w-[1280px] h-auto  max-h-[95%] max-w-[95%] t-bg border t-border flex justify-center items-center rounded-lg shadow-dark overflow-hidden"
+              className="w-[1280px] h-auto max-h-[95%] max-w-[95%] bg-tBg border border-tBorder flex justify-center items-center rounded-lg shadow-tShadowDark overflow-hidden"
               layoutId="video-container"
               transition={TransitionSpringFast}
               onClick={(e) => {
@@ -122,7 +122,7 @@ function FeatureGrid() {
       {features.map((feature, index) => (
         <div
           key={index}
-          className="p-4 border rounded-lg t-border shadow-dark t-bg !mt-0"
+          className="p-4 border rounded-lg border-tBorder shadow-tShadowDark bg-tBg !mt-0"
         >
           <Header size="h5" className="font-bold mb-2">
             {feature.title}

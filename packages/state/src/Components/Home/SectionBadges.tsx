@@ -34,11 +34,11 @@ interface PropsBadges {
 const Badges = ({ badges, titleSize, titleWeight, className }: PropsBadges) => {
   return (
     <div className={classNames("flex justify-center max-w-5xl", className)}>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:flex justify-center border t-bg t-border rounded-lg divide-x divide-y t-divide shadow-dark">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:flex justify-center border bg-tBg border-tBorder rounded-lg divide-x divide-y divide-tBorder shadow-tShadowDark">
         {badges.map(({ title, subtitle }, i) => (
           <div
             key={title}
-            className={classNames("!mt-0 px-8 py-2 text-center whitespace-pre", i === 5 && 'xl:hidden')}
+            className={classNames("!mt-0 px-3 sm:px-8 py-2 text-center whitespace-pre", i === 5 && 'xl:hidden')}
           >
             <div
               className={classNames(
@@ -50,7 +50,7 @@ const Badges = ({ badges, titleSize, titleWeight, className }: PropsBadges) => {
               {title}
             </div>
             {subtitle && (
-              <div className="text-md text-white/80 pt-1 !mt-0">{subtitle}</div>
+              <div className="text-sm sm:text-md text-white/60 pt-1 !mt-0">{subtitle}</div>
             )}
           </div>
         ))}

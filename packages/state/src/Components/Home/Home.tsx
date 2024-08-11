@@ -64,7 +64,7 @@ const LandingPage = () => {
       <main className="z-10 flex-grow !mt-0">
         <div className="relative" id="background-container">
           <div className="max-w-5xl mx-auto pt-28 px-4 !mt-0">
-            {/* <AnimatedBackground state$={state$} /> */}
+            <AnimatedBackground state$={state$} />
             <div className="max-w-3xl z-10 relative !mt-0">
               <Header
                 size="h1"
@@ -89,7 +89,7 @@ const LandingPage = () => {
                   </Button>
                 </a>
                 <div
-                  className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-black/30 hover:shadow-dark px-4 h-10 rounded-lg transition-colors gap-3 flex items-center"
+                  className="!mt-0 text-white/80 hover:text-white cursor-pointer font-medium hover:bg-black/30 hover:shadow-tShadowDark px-4 h-10 rounded-lg transition-colors gap-3 flex items-center"
                   onClick={onClickGotoKit}
                 >
                   <div>Check out Legend-Kit</div>

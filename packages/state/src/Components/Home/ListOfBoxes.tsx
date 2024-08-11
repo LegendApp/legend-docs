@@ -19,7 +19,7 @@ export const ListOfBoxes = ({
         {items.map((item) => (
           <div
             key={item}
-            className="!mt-0 px-8 py-2 text-center whitespace-pre t-bg-light rounded-lg"
+            className="!mt-0 px-8 py-2 text-center whitespace-pre bg-tBgLight rounded-lg"
           >
             <div
               className={classNames(

@@ -137,7 +137,7 @@ export const TabsRounded = observer(function TabsRounded<T extends string>({
   // Render
   return (
     <nav
-      className={cx("relative border t-border t-bg rounded-full overflow-hidden overflow-x-auto", className)}
+      className={cx("relative border border-tBorder bg-tBg rounded-full overflow-hidden overflow-x-auto", className)}
     >
       <motion.div
         initial={underlineAnimate}
@@ -145,7 +145,7 @@ export const TabsRounded = observer(function TabsRounded<T extends string>({
         className="absolute top-0 h-full bg-blue-700 !mt-0"
         transition={TransitionSpringFast}
       />
-      <div className="flex text-sm rounded-full divide-x divide-y t-divide !mt-0">
+      <div className="flex text-sm rounded-full divide-x divide-y divide-tBorder !mt-0">
         {tabs.map((tab, i) => (
           <Tab
             key={tab}

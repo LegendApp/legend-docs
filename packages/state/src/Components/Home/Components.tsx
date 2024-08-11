@@ -33,7 +33,7 @@ export const DemoBox = ({
   return (
     <div
       className={classNames(
-        "rounded-lg p-4 relative text-gray-200 border t-border shadow-dark",
+        "rounded-lg p-4 relative text-gray-200 border border-tBorder shadow-tShadowDark",
         blur && "backdrop-blur-sm bg-black/20"
       )}
       style={{ width, height }}

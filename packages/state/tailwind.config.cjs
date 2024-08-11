@@ -18,7 +18,11 @@ module.exports = {
                 h1: "3.5rem",
             },
             colors: {
-                "tBorder": "#31353e",
+                tBorder: "#31353e",
+                tBg: "#141820",
+                tBgDark: "rgba(0,0,0,0.2)",
+                tBgLight: "#1d232f",
+                tShadowDark: "rgba(0, 0, 0, 0.5)",
             },
         },
         colors: {

@@ -184,7 +184,7 @@ export const SectionReactivityPerf = () => {
         </Text>
       </div>
       <div className="flex justify-center pt-8">
-        <div className="lg:flex mx-auto justify-center sm:t-bg-dark border-tBorder t-border t-divide lg:divide-x sm;border rounded-xl sm:shadow-dark">
+        <div className="lg:flex mx-auto justify-center sm:bg-tBgDark border-tBorder divide-tBorder lg:divide-x sm:border rounded-xl sm:shadow-md sm:shadow-tShadowDark">
           <div className="flex-1 lg:max-w-[460px] px-8 py-6 flex flex-col items-center">
             <Header size="h4" className="text-center">
               Normal React
