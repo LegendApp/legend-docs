@@ -145,7 +145,7 @@ export const TabsRounded = observer(function TabsRounded<T extends string>({
         className="absolute top-0 h-full bg-blue-700 !mt-0"
         transition={TransitionSpringFast}
       />
-      <div className="flex text-sm rounded-full divide-x divide-y divide-tBorder !mt-0">
+      <div className="flex text-sm rounded-full divide-x divide-tBorder !mt-0">
         {tabs.map((tab, i) => (
           <Tab
             key={tab}

@@ -24,11 +24,11 @@ const profile$ = observable(syncedFetch({
 }))
 
 const Component = observer(() => {
-  // get triggers the fetch and re-runs on change
+  // get triggers fetch and updates on change
   const name = profile$.name.get()
 
   const onClick = () => {
-    // set sets the local state and syncs to remote
+    // set sets the local state and syncs
     profile$.name.set('Annyong')
   }
 
@@ -78,7 +78,7 @@ export const SectionSync = () => {
         </Text>
         <Text className="pt-2">You don't need any sync code in your components. You can just focus on making great apps.</Text>
       </div>
-      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 sm:min-w-[460px] mx-auto">
+      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 sm:min-w-[40px] mx-auto">
         <DemoSync />
       </div>
     </div>

@@ -39,7 +39,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
   });
 
   return (
-    <div className="relative max-w-lg px-4">
+    <div className="relative w-full max-w-lg">
       <Editor
         code={CodeDemoTop}
         noInline
@@ -77,7 +77,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
           //   .replace(/speed\$\./g, "state$.speed.")
         }
         classNameEditor="home-editor w-full md:w-auto"
-        classNamePreview="absolute right-0 top-0 !-mt-28 sm:!-mt-12 mr-4 sm:-mr-12 shadow-lg rounded-lg"
+        classNamePreview="absolute right-0 top-0 !-mt-36 xs:!-mt-28 sm:!-mt-12 -mr-2 xs:mr-4 sm:-mr-12 shadow-lg rounded-lg"
         previewCallout={
           <Show if={arrowVisible$} wrap={AnimatePresence}>
             {() => (
@@ -117,7 +117,7 @@ export const SectionTop = ({
   state$: Observable<{ speed: number }>;
 }) => {
   return (
-    <div className="lg:grid grid-cols-3 !mt-36 sm:!mt-24 md:!mt-16 lg:!-mt-4 mx-auto">
+    <div className="lg:grid grid-cols-3 !mt-48 xs:!mt-36 sm:!mt-24 md:!mt-16 lg:!-mt-4 mx-auto">
       <div className="hidden lg:block pointer-events-none" />
       <div className="lg:col-span-2 relative flex justify-center">
         <DemoTop state$={state$} />

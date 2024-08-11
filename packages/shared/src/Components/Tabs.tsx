@@ -32,7 +32,7 @@ const Tab = observer(function Tab<T extends string>({
   const isActive = name === activeTab$.get();
   return (
     <div
-      className="relative px-1 pb-1 mx-2 !mt-0 cursor-pointer "
+      className="relative px-1 pb-1 mx-2 !mt-0 cursor-pointer"
       onClick={() => activeTab$.set(name)}
     >
       <div

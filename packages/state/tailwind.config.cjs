@@ -1,5 +1,6 @@
 const colors = require("tailwindcss/colors");
 const starlightPlugin = require("@astrojs/starlight-tailwind");
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -49,6 +50,10 @@ module.exports = {
             blue: colors.sky,
             violet: colors.violet,
             "blue-accent": "#25A2E8",
+        },
+        screens: {
+            xs: "480px",
+            ...defaultTheme.screens,
         },
     },
     plugins: [starlightPlugin()],
