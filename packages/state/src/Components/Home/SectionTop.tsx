@@ -89,8 +89,8 @@ export const SectionTop = ({
   });
 
   return (
-    <div className="grid grid-cols-3 !-mt-4">
-      <div className="pointer-events-none" />
+    <div className="grid grid-cols-3 lg:!-mt-4">
+      <div className="hidden lg:block pointer-events-none" />
       <div className="col-span-2 relative">
         <DemoTop state$={state$} />
 

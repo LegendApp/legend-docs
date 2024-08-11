@@ -171,8 +171,8 @@ const DemoPerf2 = () => {
 
 export const SectionReactivityPerf = () => {
   return (
-    <div className="mt-section">
-      <div className="max-w-lg">
+    <div className="mt-section px-4">
+      <div className="max-w-lg mx-auto">
         <Header size="h2" className="flex-1">
           ⚡️ Fine-grained reactivity
         </Header>
@@ -182,13 +182,17 @@ export const SectionReactivityPerf = () => {
         </Text>
       </div>
       <div className="flex justify-center pt-8">
-        <div className="inline-flex mx-auto justify-center t-bg-dark t-border border rounded-xl shadow-dark">
-          <div className="flex-1 max-w-[460px] border-r t-border px-8 py-6">
-            <Header size="h4" className="text-center">Normal React</Header>
+        <div className="lg:flex mx-auto justify-center t-bg-dark t-border t-divide lg:divide-x border rounded-xl shadow-dark">
+          <div className="flex-1 lg:max-w-[460px] px-8 py-6 flex flex-col items-center">
+            <Header size="h4" className="text-center">
+              Normal React
+            </Header>
             <DemoPerf1 />
           </div>
-          <div className="flex-1 !-mt-0 max-w-[460px] px-8 py-6">
-            <Header size="h4" className="text-center">Legend-State</Header>
+          <div className="flex-1 !-mt-0 lg:max-w-[460px] px-8 py-6 flex flex-col items-center">
+            <Header size="h4" className="text-center">
+              Legend-State
+            </Header>
             <DemoPerf2 />
           </div>
         </div>

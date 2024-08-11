@@ -64,18 +64,18 @@ const DemoEasy = () => {
 
 export const SectionEasy = () => {
   return (
-    <div className="flex mt-section gap-16 items-center">
+    <div className="md:flex mt-section gap-16 items-center px-4">
       <div className="flex-1">
         <Header size="h2" className="!mt-0">
           🦄 Incredibly easy to use
         </Header>
-        <Text className="pt-2">
+        <Text className="pt-2 max-w-2xl mx-auto">
           When you get() values while observing, it tracks them and re-runs when
           they change. No boilerplate, no selectors, no dependency arrays, just
           easy reactivity.
         </Text>
       </div>
-      <div className="max-w-lg flex-2 !mt-0 [&>div]:!mt-0">
+      <div className="mx-auto max-w-lg flex-2 !mt-8 !md:mt-0 [&>div]:!mt-0 md:min-w-[480px]">
         <DemoEasy />
       </div>
     </div>

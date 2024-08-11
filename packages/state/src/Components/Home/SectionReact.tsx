@@ -26,7 +26,9 @@ const EasyComponent = observer(() => {
 
   return (
     <div>Count: {count} />
-    <Button onClick={add}>Increment</Button>
+    <Button onClick={add}>
+      Increment
+    </Button>
   )
 })
 `;
@@ -42,8 +44,10 @@ const Form = () => {
   return (
     <Reactive.input
       $value={form$.value}
-      $className={() => isValid(form$.value.get()) ?
-          'border-green-500' : 'border-red-500'
+      $className={() =>
+        isValid(form$.value.get()) ?
+          'border-green-500' :
+          'border-red-500'
       }
       $disabled={form$.submitting}
     />
@@ -103,12 +107,12 @@ const DemoReactive = () => {
 
 export const SectionReact = () => {
   return (
-    <div className="mt-section">
+    <div className="mt-section px-4">
       <Header size="h2" className="text-center">
         ✨ Makes React fun, fast, and easy
       </Header>
-      <div className="flex !mt-12 border-t-2 border-b-2 border-white/4">
-        <div className="flex-1 py-12 pr-12">
+      <div className="md:flex !mt-12 md:border-t-2 md:border-b-2 border-white/5">
+        <div className="flex-1 md:py-12 md:pr-6 lg:pr-12">
           <div>
             <Header size="h4" className="font-medium text-white">
               Reactive components with observer
@@ -121,7 +125,7 @@ export const SectionReact = () => {
           </div>
           <DemoObserver />
         </div>
-        <div className="flex-1 !mt-0 border-l-2 border-white/4 py-12 pl-12">
+        <div className="flex-1 !mt-0 md:border-l-2 border-white/5 pt-12 md:py-12 md:pl-6 lg:pl-12">
           <div>
             <Header size="h4" className="font-medium">
               Two-way binding

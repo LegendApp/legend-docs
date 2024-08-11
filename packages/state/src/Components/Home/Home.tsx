@@ -64,16 +64,16 @@ const LandingPage = () => {
       <main className="z-10 flex-grow !mt-0">
         <div className="relative" id="background-container">
           <div className="max-w-5xl mx-auto pt-28 px-4 !mt-0">
-            <AnimatedBackground state$={state$} />
+            {/* <AnimatedBackground state$={state$} /> */}
             <div className="max-w-3xl z-10 relative">
               <Header
                 size="h1"
-                className="!text-[3.5rem] !font-bold !leading-tight"
+                className="md:!text-[3.5rem] !font-bold !leading-tight text-center md:text-left"
               >
                 High performance state and local-first sync
               </Header>
               <div className="max-w-2xl pt-2 pb-4">
-                <Text className="text-lg">
+                <Text className="md:text-lg">
                   Legend State is an extremely fast signal-based state library
                   with fine-grained reactivity and a powerful sync system that
                   works with any backend.

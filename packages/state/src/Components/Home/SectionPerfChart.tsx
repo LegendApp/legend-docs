@@ -23,12 +23,12 @@ export const SectionPerfChart = () => {
     { name: "Valtio", value: 1.82 },
   ];
 
-  const minValue = 0.8;
+  const minValue = 0.82;
   const maxValue = 1;
 
   return (
-    <div className="mt-section gap-8 grid grid-cols-2" ref={ref}>
-      <div>
+    <div className="mt-section gap-8 md:grid grid-cols-2 px-4 flex-col-reverse flex" ref={ref}>
+      <div className="max-w-lg">
         {chartData.map((item, index) => (
           <div key={index} className="flex items-center [&>*]:!mt-0">
             <div className="w-28 flex-shrink-0 text-right mr-4">
@@ -83,7 +83,7 @@ export const SectionPerfChart = () => {
           </div>
         ))}
       </div>
-      <div className="-ml-16">
+      <div>
         <Header size="h2">🚀 The fastest React state library</Header>
         <Text className="pt-4 max-w-md">
           Legend-State is so fast that it even outperforms vanilla JS in some{" "}

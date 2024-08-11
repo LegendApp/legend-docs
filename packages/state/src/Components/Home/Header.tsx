@@ -23,9 +23,9 @@ export function Header({
     {
       className: classNames(
         color || "text-white",
-        className,
         leading || "!leading-normal",
-        fontWeight || "font-bold"
+        fontWeight || "font-bold",
+        className,
       ),
     },
     children

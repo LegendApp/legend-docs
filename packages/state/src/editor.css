@@ -49,7 +49,7 @@
 }
 
 .mt-section {
-    @apply mt-32 !important;
+    @apply mt-24 md:mt-32 !important;
 }
 
 .mt-subsection {
