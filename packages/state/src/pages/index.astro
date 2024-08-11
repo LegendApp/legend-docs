@@ -6,18 +6,20 @@ import Home from "../Components/Home/Home";
 <StarlightPage
   hasSidebar={false}
   headings={[]}
-  frontmatter={{ title: "Home", tableOfContents: false }}
+  frontmatter={{
+    title: "Legend State",
+    tableOfContents: false,
+    head: [{ tag: "title", content: "Legend State" }],
+  }}
 >
-    <Home client:load />
+  <Home client:load />
 </StarlightPage>
 
-
-
 <style is:global>
-    header {
-        background-color: transparent !important;
-        border-bottom: none !important;
-    }
+  header {
+    background-color: transparent !important;
+    border-bottom: none !important;
+  }
   main > .content-panel:first-child {
     display: none;
   }

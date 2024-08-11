@@ -10,7 +10,7 @@ export function SectionKitHeader() {
       </div>
       <Header
         size="h1"
-        className="!text-[3.25rem] !leading-tight max-w-3xl text-center mx-auto !mt-4"
+        className="md:!text-h1 !font-bold !leading-tight max-w-4xl text-center mx-auto !mt-4"
       >
         Legend Kit: Hyper optimized components and helpers
       </Header>

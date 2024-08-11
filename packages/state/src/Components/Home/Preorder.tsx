@@ -13,7 +13,7 @@ export const Preorder = observer(function Preorder() {
   };
 
   return (
-    <div className="flex items-center gap-8 mt-section">
+    <div className="sm:flex items-center gap-8 mt-section px-4">
       <div className="flex-1">
         <div className="max-w-lg">
           <Header size="h1">Buy once, yours forever</Header>
@@ -28,7 +28,7 @@ export const Preorder = observer(function Preorder() {
         </div>
       </div>
       <div
-        className="rounded-xl p-8 border t-border bg-gradient-to-br from-[#d556e3] to-[#3c59fd] max-w-sm"
+        className="rounded-xl p-8 border t-border bg-gradient-to-br from-[#d556e3] to-[#3c59fd] max-w-sm mx-auto !mt-8 sm:!mt-0"
         // style={{
         //   backgroundImage: "linear-gradient(132deg, #f85d7f, #6b81fa)",
         // }}

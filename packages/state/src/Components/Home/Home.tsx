@@ -65,10 +65,10 @@ const LandingPage = () => {
         <div className="relative" id="background-container">
           <div className="max-w-5xl mx-auto pt-28 px-4 !mt-0">
             {/* <AnimatedBackground state$={state$} /> */}
-            <div className="max-w-3xl z-10 relative">
+            <div className="max-w-3xl z-10 relative !mt-0">
               <Header
                 size="h1"
-                className="md:!text-[3.5rem] !font-bold !leading-tight text-center md:text-left"
+                className="md:!text-h1 !font-bold !leading-tight text-center md:text-left"
               >
                 High performance state and local-first sync
               </Header>

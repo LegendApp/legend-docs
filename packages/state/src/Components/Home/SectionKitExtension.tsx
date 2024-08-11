@@ -15,26 +15,42 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
   const isOpen$ = useObservable(false);
 
   return (
-    <div className="mt-subsection">
+    <div className="mt-subsection px-4">
       <Header size="h3">🧑‍💻 VS Code Extension</Header>
       <Text>
-        A contextually aware coding assistant to accelerate your development speed
+        A contextually aware coding assistant to accelerate your development
+        speed
       </Text>
-      <div className="flex items-center gap-4 pt-4">
+      <div className="lg:flex items-center gap-4 pt-4">
         <FeatureGrid />
         <motion.div
-          className="t-bg border t-border flex justify-center items-center rounded-lg shadow-dark cursor-pointer !mt-0 relative overflow-hidden"
+          className="!mt-8 lg:!mt-0 t-bg border t-border flex justify-center items-center rounded-lg shadow-dark cursor-pointer relative overflow-hidden mx-auto"
           style={{ width: 480, height: 270 }}
           onClick={isOpen$.toggle}
           layout
           layoutId="video-container"
           transition={TransitionSpringFast}
         >
-          <img src={videoFirstFrame} alt="VS Code Extension" width="100%" height="100%" className="object-cover" />
+          <img
+            src={videoFirstFrame}
+            alt="VS Code Extension"
+            width="100%"
+            height="100%"
+            className="object-cover"
+          />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-20 h-20 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-black">
-                <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-12 h-12 text-black"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
           </div>
@@ -50,7 +66,7 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
             onClick={isOpen$.toggle}
           >
             <motion.div
-              className="h-[720px] w-[1280px] max-h-[95%] max-w-[95%] t-bg border t-border flex justify-center items-center rounded-lg shadow-dark overflow-hidden"
+              className="w-[1280px] h-auto  max-h-[95%] max-w-[95%] t-bg border t-border flex justify-center items-center rounded-lg shadow-dark overflow-hidden"
               layoutId="video-container"
               transition={TransitionSpringFast}
               onClick={(e) => {
@@ -58,7 +74,13 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
                 e.stopPropagation();
               }}
             >
-              <video src={videoSrc} controls width="100%" height="100%" autoPlay />
+              <video
+                src={videoSrc}
+                controls
+                width="100%"
+                height="100%"
+                autoPlay
+              />
             </motion.div>
           </motion.div>
         )}

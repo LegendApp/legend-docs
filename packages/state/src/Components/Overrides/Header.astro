@@ -41,16 +41,17 @@ const options = versions.map(([version, label]) => ({
         height="20"
         class="opacity-60"
       />
-      <span class="pl-3">Legend Open Source</span>
+      <span class="hidden sm:block pl-3">Legend Open Source</span>
+      <span class="sm:hidden pl-3">Legend</span>
     </a>
     <div class="hidden sm:block">
-        <Select
-          icon={undefined as any}
-          label="version"
-          value="auto"
-          options={options}
-          width="auto"
-        />
+      <Select
+        icon={undefined as any}
+        label="version"
+        value="auto"
+        options={options}
+        width="auto"
+      />
     </div>
 
     <a class="hidden lg:block px-4" href="/"> Home </a>

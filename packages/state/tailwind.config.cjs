@@ -14,6 +14,12 @@ module.exports = {
                 3: "0.03",
                 4: "0.04",
             },
+            fontSize: {
+                h1: "3.5rem",
+            },
+            colors: {
+                "tBorder": "#31353e",
+            },
         },
         colors: {
             gray: {

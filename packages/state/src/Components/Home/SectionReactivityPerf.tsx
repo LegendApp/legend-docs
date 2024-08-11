@@ -20,23 +20,25 @@ const CodeDemoPerf1 = `
 
 function TreeRight() {
   const renderCount = useRef(1).current++
-  return <FlashingDiv bg="bg-gray-800" className="p-4 border border-gray-600 rounded !mt-0">
-                <div className="font-bold">Tree Right</div>
-                <div>Renders: {renderCount}</div>
-              </FlashingDiv>
+  return (
+    <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded !mt-0">
+        <div className="font-bold">Right</div>
+        <div>Renders: {renderCount}</div>
+    </FlashingDiv>
+)
 }
 function TreeLeft({ count }) {
   const renderCount = useRef(1).current++
-    return <FlashingDiv bg="bg-gray-800" className="p-4 border border-gray-600 rounded flex-1">
-                <div className="font-bold">Tree Left</div>
+    return <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded flex-1">
+                <div className="font-bold">Left</div>
                 <div className="mb-4">Renders: {renderCount}</div>
                 <TreeLeaf count={count} />
                </FlashingDiv>
 }
 function TreeLeaf({ count }) {
   const renderCount = useRef(1).current++
-  return <FlashingDiv bg="bg-gray-700" className="p-4 border border-gray-500 rounded w-36">
-                <div className="font-bold">Tree Leaf</div>
+  return <FlashingDiv bg="bg-gray-700" className="p-3 sm:p-4 border border-gray-500 rounded w-36">
+                <div className="font-bold">Leaf</div>
                 <div>Renders: {renderCount}</div>
                 <div>Count: {count}</div>
                </FlashingDiv>
@@ -50,7 +52,7 @@ function Tree() {
   }, 600)
 
   return (
-    <FlashingDiv className="p-4 bg-gray-900 border border-gray-700 rounded">
+    <FlashingDiv className="p-3 sm:p-4 bg-gray-900 border border-gray-700 rounded">
         <div className="font-bold">Tree</div>
         <div>Renders: {renderCount}</div>
         <div>Count: {count}</div>
@@ -66,21 +68,21 @@ const CodeDemoPerf2 = `
 // to a single div so no components ever re-render
 
 function TreeRight() {
-  return <FlashingDiv bg="bg-gray-800" className="p-4 border border-gray-600 rounded !mt-0">
-                <div className="font-bold">Tree Right</div>
+  return <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded !mt-0">
+                <div className="font-bold">Right</div>
                 <div>Renders: 1</div>
               </FlashingDiv>
 }
 function TreeLeft({ $count }) {
-    return <FlashingDiv bg="bg-gray-800" className="p-4 border border-gray-600 rounded flex-1">
-                <div className="font-bold">Tree Left</div>
+    return <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded flex-1">
+                <div className="font-bold">Left</div>
                 <div className="mb-4">Renders: 1</div>
                 <TreeLeaf $count={$count} />
                </FlashingDiv>
 }
 function TreeLeaf({ $count }) {
-  return <FlashingDiv bg="bg-gray-700" className="p-4 border border-gray-500 rounded w-36">
-                <div className="font-bold">Tree Leaf</div>
+  return <FlashingDiv bg="bg-gray-700" className="p-3 sm:p-4 border border-gray-500 rounded w-36">
+                <div className="font-bold">Leaf</div>
                 <div>Renders: 1</div>
                 <div>Count: <Memo>{$count}</Memo></div>
                </FlashingDiv>
@@ -93,7 +95,7 @@ function Tree() {
   }, 600)
 
   return (
-    <FlashingDiv className="p-4 bg-gray-900 border border-gray-700 rounded">
+    <FlashingDiv className="p-3 sm:p-4 bg-gray-900 border border-gray-700 rounded">
         <div className="font-bold">Tree</div>
         <div>Renders: 1</div>
         <div>Count: <Memo>{count}</Memo></div>
@@ -111,7 +113,6 @@ const DemoPerf1 = () => {
       code={CodeDemoPerf1}
       noInline
       renderCode={`;render(<div><Tree /></div>)`}
-      previewWidth={380}
       showEditing={false}
       scope={{
         useRef,
@@ -127,6 +128,7 @@ const DemoPerf1 = () => {
         useState,
       }}
       classNameEditor="home-editor"
+      classNamePreview="md:w-[380px]"
       hideCode
     />
   );
@@ -137,7 +139,6 @@ const DemoPerf2 = () => {
       code={CodeDemoPerf2}
       noInline
       renderCode={`;render(<div><Tree /></div>)`}
-      previewWidth={380}
       showEditing={false}
       scope={{
         useRef,
@@ -164,6 +165,7 @@ const DemoPerf2 = () => {
         })
       }
       classNameEditor="home-editor"
+      classNamePreview="md:w-[380px]"
       hideCode
     />
   );
@@ -182,7 +184,7 @@ export const SectionReactivityPerf = () => {
         </Text>
       </div>
       <div className="flex justify-center pt-8">
-        <div className="lg:flex mx-auto justify-center t-bg-dark t-border t-divide lg:divide-x border rounded-xl shadow-dark">
+        <div className="lg:flex mx-auto justify-center sm:t-bg-dark border-tBorder t-border t-divide lg:divide-x sm;border rounded-xl sm:shadow-dark">
           <div className="flex-1 lg:max-w-[460px] px-8 py-6 flex flex-col items-center">
             <Header size="h4" className="text-center">
               Normal React

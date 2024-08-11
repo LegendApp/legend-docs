@@ -14,7 +14,7 @@ export const SectionPerfChart = () => {
   const inView = useInView(ref, { once: true });
 
   const chartData = [
-    { name: "Legend-State", value: 1.02 },
+    { name: "Legend State", value: 1.02 },
     { name: "Jotai", value: 1.41 },
     { name: "MobX", value: 1.49 },
     { name: "Recoil", value: 1.53 },
@@ -31,7 +31,7 @@ export const SectionPerfChart = () => {
       <div className="max-w-lg">
         {chartData.map((item, index) => (
           <div key={index} className="flex items-center [&>*]:!mt-0">
-            <div className="w-28 flex-shrink-0 text-right mr-4">
+            <div className="w-24 whitespace-pre sm:w-28 flex-shrink-0 text-right mr-4">
               {item.name}
             </div>
             <div className="flex-1 text-sm">
@@ -75,7 +75,7 @@ export const SectionPerfChart = () => {
                     duration: 0.2,
                   }}
                 />
-                <motion.span className="pr-3 z-10 pointer-events-none" layout>
+                <motion.span className="pr-2 sm:pr-3 z-10 pointer-events-none" layout>
                   {item.value}
                 </motion.span>
               </motion.div>

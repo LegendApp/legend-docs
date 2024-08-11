@@ -18,6 +18,7 @@ interface Props {
   noError?: boolean;
   disabled?: boolean;
   transformCode?: (code: string) => string;
+  previewCallout?: React.ReactNode;
 }
 const emptyTheme = { plain: {}, styles: [] };
 
@@ -39,7 +40,8 @@ export const Editor = observer(function Editor({
   showEditing = true,
   noInline = false,
   noError = false,
-  disabled = false
+  disabled = false,
+  previewCallout
 }: Props) {
   code = code.trim();
   return (
@@ -79,6 +81,7 @@ export const Editor = observer(function Editor({
             style={{ width: previewWidth }}
           >
             <LivePreview />
+            {previewCallout}
           </div>
         )}
       </div>

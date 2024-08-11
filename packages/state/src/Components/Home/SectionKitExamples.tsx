@@ -5,7 +5,7 @@ import { Text } from "./Text";
 
 export function SectionKitExamples() {
   return (
-    <div className="mt-subsection">
+    <div className="mt-subsection px-4">
       <Header size="h3">👩‍🏫 Example projects</Header>
       <Text>
         Full open-source apps built with Legend-State that you can use as a

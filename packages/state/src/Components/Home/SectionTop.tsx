@@ -31,8 +31,15 @@ const EasyComponent = observer(() => {
 `;
 
 const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
+  const arrowVisible$ = observable(true);
+  useMount(() => {
+    state$.speed.onChange(() => {
+      arrowVisible$.set(false);
+    });
+  });
+
   return (
-    <div className="relative max-w-lg">
+    <div className="relative max-w-lg px-4">
       <Editor
         code={CodeDemoTop}
         noInline
@@ -69,8 +76,36 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
           //   .replace(/globalState\$.name/g, "state$.name")
           //   .replace(/speed\$\./g, "state$.speed.")
         }
-        classNameEditor="home-editor"
-        classNamePreview="absolute right-0 top-0 !-mt-12 -mr-12 shadow-lg rounded-lg"
+        classNameEditor="home-editor w-full md:w-auto"
+        classNamePreview="absolute right-0 top-0 !-mt-28 sm:!-mt-12 mr-4 sm:-mr-12 shadow-lg rounded-lg"
+        previewCallout={
+          <Show if={arrowVisible$} wrap={AnimatePresence}>
+            {() => (
+              <motion.div
+                className="absolute pointer-events-none w-56 right-28 sm:right-32 -top-12"
+                // style={{ right: 120, top: -50 }}
+                initial={{ opacity: 0.5 }}
+                animate={{
+                  opacity: 1,
+                  transition: {
+                    duration: 0.6,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    ease: "easeInOut",
+                  },
+                }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="rotate-12">
+                  <CurvedArrowCallout />
+                </div>
+                <div className="absolute top-0 left-0 !mt-10 -ml-6 text-md font-bold">
+                  Turn it up!
+                </div>
+              </motion.div>
+            )}
+          </Show>
+        }
       />
     </div>
   );
@@ -81,45 +116,11 @@ export const SectionTop = ({
 }: {
   state$: Observable<{ speed: number }>;
 }) => {
-  const arrowVisible$ = observable(true);
-  useMount(() => {
-    state$.speed.onChange(() => {
-      arrowVisible$.set(false);
-    });
-  });
-
   return (
-    <div className="grid grid-cols-3 lg:!-mt-4">
+    <div className="lg:grid grid-cols-3 !mt-36 sm:!mt-24 md:!mt-16 lg:!-mt-4 mx-auto">
       <div className="hidden lg:block pointer-events-none" />
-      <div className="col-span-2 relative">
+      <div className="lg:col-span-2 relative flex justify-center">
         <DemoTop state$={state$} />
-
-        <Show if={arrowVisible$} wrap={AnimatePresence}>
-          {() => (
-            <motion.div
-              className="absolute top-0 left-0 pointer-events-none"
-              style={{ marginLeft: 220, marginTop: -60 }}
-              initial={{ opacity: 0.5 }}
-              animate={{
-                opacity: 1,
-                transition:{
-                  duration: 0.6,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                  ease: "easeInOut",
-                }
-              }}
-              exit={{ opacity: 0 }}
-            >
-              <div className="rotate-12">
-                <CurvedArrowCallout />
-              </div>
-              <div className="absolute top-0 left-0 !mt-10 -ml-6 text-md font-bold">
-                Turn it up!
-              </div>
-            </motion.div>
-          )}
-        </Show>
       </div>
     </div>
   );

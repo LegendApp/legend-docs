@@ -37,7 +37,7 @@ const Component = observer(() => {
 })
 `;
 
-const DemoEasy = () => {
+const DemoSync = () => {
   return (
     <Editor
       code={CodeDemoTop}
@@ -64,9 +64,9 @@ const DemoEasy = () => {
 
 export const SectionSync = () => {
   return (
-    <div className="flex items-center mt-section gap-16">
+    <div className="md:flex items-center mt-section gap-16 px-4">
       <div className="flex-1">
-        <Header size="h2" className="text-nowrap">🤝 Local State = Remote State</Header>
+        <Header size="h2" className="md:text-nowrap">🤝 Local State = Remote State</Header>
         <Text className="pt-2">
           Just get and set observables and they{" "}
           <span className="text-white">sync themselves</span> with a powerful
@@ -78,8 +78,8 @@ export const SectionSync = () => {
         </Text>
         <Text className="pt-2">You don't need any sync code in your components. You can just focus on making great apps.</Text>
       </div>
-      <div className="max-w-lg flex-2 !mt-0 [&>div]:!mt-0">
-        <DemoEasy />
+      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 min-w-[460px] mx-auto">
+        <DemoSync />
       </div>
     </div>
   );

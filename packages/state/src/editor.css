@@ -53,7 +53,7 @@
 }
 
 .mt-subsection {
-    @apply mt-24 !important;
+    @apply mt-16 md:mt-24 !important;
 }
 
 .astro-code {

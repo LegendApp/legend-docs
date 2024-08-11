@@ -1,17 +1,19 @@
 import classNames from "classnames";
 
 export function BackgroundGradients() {
+    const light = "16161F";
+    const dark = "0d1117";
   return (
     <div
       className="absolute inset-0 background-gradients -z-10"
       style={{
         background: `linear-gradient(
             to bottom,
-            #000000 0%,
-            #262631 30%,
-            #262631 36%,
-            #000000 66%,
-            #262631 90%
+            #${dark} 0%,
+            #${light} 31%,
+            #${light} 35%,
+            #${dark} 66%,
+            #${light} 90%
           )`,
       }}
     />
