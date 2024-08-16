@@ -45,9 +45,13 @@
     @apply shadow-md shadow-tShadowDark
 }
 
+.home-editor {
+    @apply max-w-full;
+}
+
 .home-editor .prism-code {
     padding: 16px !important;
-    @apply border border-tBorder shadow-dark bg-[#161b22] !important;
+    @apply border border-tBorder shadow-dark bg-[#161b22] whitespace-pre !important;
 }
 
 code {

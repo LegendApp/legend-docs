@@ -94,7 +94,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                                 <div className="rotate-12">
                                     <CurvedArrowCallout />
                                 </div>
-                                <div className="absolute top-0 left-0 !mt-10 -ml-6 text-md font-bold">Turn it up!</div>
+                                <div className="absolute top-0 left-0 !mt-10 -ml-3 2xs:-ml-6 text-md font-bold">Turn it up!</div>
                             </motion.div>
                         )}
                     </Show>
