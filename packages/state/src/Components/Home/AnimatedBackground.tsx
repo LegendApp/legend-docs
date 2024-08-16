@@ -81,8 +81,11 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
     //   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const state = state$.get();
-      const speed = (+state.speed - 1) * 10 + 1;
+      const stateSpeed = +state.speed;
+      const speed = (stateSpeed - 1) * 10 + 1;
       const num = NumParticles + speed * 5;
+      const opacityRaw = (0.2 + (stateSpeed / 50))
+      const opacity = Math.round(opacityRaw * 100) / 100;
 
       if (num < particles.length) {
         particles.length = num;
@@ -104,7 +107,7 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
 
         ctx.beginPath();
         ctx.arc(x, y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(120, 171, 245, 0.6)";
+        ctx.fillStyle = `rgba(120, 171, 245, ${opacity})`;
         ctx.fill();
 
         for (let j = i; j < particles.length; j++) {

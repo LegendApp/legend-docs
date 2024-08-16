@@ -34,7 +34,7 @@ interface PropsBadges {
 const Badges = ({ badges, titleSize, titleWeight, className }: PropsBadges) => {
   return (
     <div className={classNames("flex justify-center max-w-5xl", className)}>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:flex justify-center border bg-tBg border-tBorder rounded-lg divide-x divide-tBorder shadow-tShadowDark">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:flex justify-center border bg-tBg border-tBorder rounded-lg divide-x divide-tBorder shadow-tShadowDark backdrop-blur-sm bg-opacity-0">
         {badges.map(({ title, subtitle }, i) => (
           <div
             key={title}
