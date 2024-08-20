@@ -14,10 +14,14 @@ export function SectionKitHeader() {
           >
               Legend Kit
           </Header>
-          <Text className="text-xl max-w-2xl mx-auto text-left">Both an expertly crafted starter kit and an intelligent coding assistant, it's the perfect starting point to build great apps even faster.</Text>
+          <Text className="text-xl max-w-2xl mx-auto text-left">
+              Both an expertly crafted starter kit and an intelligent coding assistant, it's the perfect starting point
+              to build great apps even faster.
+          </Text>
           <div className="!mt-8 text-center flex flex-col justify-center items-center">
               <div className="border-tBorder border p-6 rounded-lg bg-tBg">
-                  <Text className="text-white/60 text-sm pb-2">One time purchase</Text>
+                  <Text className="text-white/60 text-sm">One time purchase</Text>
+                  <Text className="text-white/60 text-sm !mt-1 pb-2">50% discount</Text>
                   <PreorderButton color="gradient" className="mx-auto">
                       Preorder for $199
                   </PreorderButton>

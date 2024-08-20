@@ -23,10 +23,10 @@ export const Preorder = observer(function Preorder() {
                     Get lifetime access to everything in Legend Kit for a single one-time purchase, including all future
                     updates. Preorder now to save $100 and accelerate Legend Kit's development.
                 </Text>
-                <div className="text-5xl !mt-8">$199</div>
+                <div className="text-4xl !mt-8 line-through opacity-60">$399</div>
+                <div className="text-5xl !mt-2">$199</div>
                 <Text className="!mt-2">
-                    <span className="line-through">$299</span>
-                    <span> Save $100 with preorder</span>
+                    Save $200 (50% off) with preorder!
                 </Text>
                 <PreorderButton color="white" className="!mt-8">
                     Preorder Now
