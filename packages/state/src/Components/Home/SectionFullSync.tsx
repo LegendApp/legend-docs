@@ -165,9 +165,9 @@ export const SectionFullSync = observer(function SectionFullSync() {
 
   return (
     <div className="mt-section max-w-3xl mx-auto sm:px-4">
-      <div className="sm:border border-tBorder rounded-xl px-4 sm:px-8 md:px-16 py-8 md:py-12 !mt-8 sm:bg-tBgDark sm:shadow-tShadowDark">
+      <div className="sm:border border-tBorder rounded-xl px-4 sm:px-8 md:px-12 py-8 md:py-12 !mt-8 sm:bg-tBgDark sm:shadow-tShadowDark">
         <Header size="h2" className="mb-4">
-          Local-First with any backend
+          Local First with any backend
         </Header>
         <div>
           <Text className="max-w-lg">

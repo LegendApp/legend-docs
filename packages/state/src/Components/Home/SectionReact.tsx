@@ -20,13 +20,9 @@ const EasyComponent = observer(() => {
   const increment = () =>
     count$.set(count => count + 1)
 
-  useObserveEffect(() => {
-    document.title = \`Count: \${count}\`;
-  })
-
   return (
     <div>Count: {count} />
-    <Button onClick={add}>
+    <Button onClick={increment}>
       Increment
     </Button>
   )
@@ -44,11 +40,6 @@ const Form = () => {
   return (
     <Reactive.input
       $value={form$.value}
-      $className={() =>
-        isValid(form$.value.get()) ?
-          'border-green-500' :
-          'border-red-500'
-      }
       $disabled={form$.submitting}
     />
   )
@@ -109,7 +100,7 @@ export const SectionReact = () => {
   return (
     <div className="mt-section px-4">
       <Header size="h2" className="text-center">
-        ✨ Makes React fun, fast, and easy
+        ✨ Makes React fun and fast
       </Header>
       <div className="md:flex !mt-12 md:border-t-2 md:border-b-2 border-white/5">
         <div className="flex-1 md:py-12 md:pr-6 lg:pr-12">

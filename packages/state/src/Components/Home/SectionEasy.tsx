@@ -30,11 +30,17 @@ const isDark$ = observable(() =>
     theme$.get() === 'dark'
 )
 
-// observers re-run when observables change
+// observe re-runs when observables change
 observe(() => {
   console.log(theme$.get())
 })
 
+// observer components re-render when observables change
+const Component = observer(() => {
+  const theme = theme$.get()
+
+  return <div>{theme}</div>
+})
 `;
 
 const DemoEasy = () => {

@@ -33,7 +33,7 @@ const Component = observer(() => {
   }
 
   // Two-way bind to remote data
-  return <Reactive.input $value={$name} />
+  return <Reactive.input $value={profile$.name} />
 })
 `;
 
@@ -78,7 +78,7 @@ export const SectionSync = () => {
         </Text>
         <Text className="pt-2">You don't need any sync code in your components. You can just focus on making great apps.</Text>
       </div>
-      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 sm:min-w-[40px] mx-auto">
+      <div className="max-w-lg flex-2 !md:mt-0 [&>div]:!mt-0 sm:min-w-[460px] mx-auto">
         <DemoSync />
       </div>
     </div>

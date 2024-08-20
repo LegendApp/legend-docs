@@ -84,7 +84,7 @@ export const AnimatedBackground: React.FC<Props> = ({ state$ }) => {
       const stateSpeed = +state.speed;
       const speed = (stateSpeed - 1) * 10 + 1;
       const num = NumParticles + speed * 5;
-      const opacityRaw = (0.2 + (stateSpeed / 50))
+      const opacityRaw = (0.3 + (stateSpeed / 50))
       const opacity = Math.round(opacityRaw * 100) / 100;
 
       if (num < particles.length) {

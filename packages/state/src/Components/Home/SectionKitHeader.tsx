@@ -12,9 +12,9 @@ export function SectionKitHeader() {
               size="h1"
               className="!text-3xl sm:!text-h1 !font-bold !leading-tight max-w-4xl text-center mx-auto !mt-4"
           >
-              Legend Kit: Hyper optimized components and helpers
+              Legend Kit
           </Header>
-          <Text>Tons of tools to accelerate your development, reduce your code, and speed up your apps.</Text>
+          <Text className="text-xl max-w-2xl mx-auto text-left">Both an expertly crafted starter kit and an intelligent coding assistant, it's the perfect starting point to build great apps even faster.</Text>
           <div className="!mt-8 text-center flex flex-col justify-center items-center">
               <div className="border-tBorder border p-6 rounded-lg bg-tBg">
                   <Text className="text-white/60 text-sm pb-2">One time purchase</Text>

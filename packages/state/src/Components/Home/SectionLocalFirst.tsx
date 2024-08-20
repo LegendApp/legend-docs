@@ -25,8 +25,8 @@ export const SectionLocalFirst = () => {
   return (
     <div className="!mt-20 max-w-3xl mx-auto">
       <SectionTitle
-        text="💾 Local-first is easy"
-        description="All the hard parts of local-first are built in."
+        text="💾 Local first is easy"
+        description="All the hard parts of local first are built in."
       />
       <div className="!mt-16 flex">
         <div>

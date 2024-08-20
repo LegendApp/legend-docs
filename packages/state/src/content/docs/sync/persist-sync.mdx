@@ -8,7 +8,7 @@ import Install from "shared/src/Components/Install/Install.astro"
 import SelectFramework from "shared/src/Components/SelectFramework/SelectFramework.astro"
 import PersistSync from "../../../Components/PersistSync/PersistSync.astro"
 
-A primary goal of Legend-State is to make automatic persisting and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local-first apps: any changes made while offline are persisted between sessions to be retried whenever connected. To do this, the sync system subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted and synced.
+A primary goal of Legend-State is to make automatic persisting and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local first apps: any changes made while offline are persisted between sessions to be retried whenever connected. To do this, the sync system subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted and synced.
 
 1. Save the pending changes to local persistence
 2. Save the changes to local persistence

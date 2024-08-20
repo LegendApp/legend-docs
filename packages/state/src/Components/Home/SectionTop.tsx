@@ -11,14 +11,19 @@ import CurvedArrowCallout from './CurvedArrowCallout';
 const CodeDemoTop = `
 const speed$ = observable(2)
 
-const EasyComponent = observer(() => {
+// Observe it
+const Component = observer(() => {
+  // Get it
   const speed = speed$.get()
 
-  const reset = () => speed$.set(1)
+  // Set it
+  const up = () => speed$.set(v => v % 10 + 1)
 
   return (<>
+    {/* Two way bind it */}
     <Reactive.input $value={speed$} type="number" />
-    <Button onClick={reset}>{speed} is too much 😱</Button>
+
+    <Button onClick={up}>{speed} is too slow 🤘</Button>
   </>)
 })
 `;
@@ -41,7 +46,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
             <Editor
                 code={CodeDemoTop}
                 noInline
-                renderCode={`;render(<div><Box blur><EasyComponent /></Box></div>)`}
+                renderCode={`;render(<div><Box blur><Component /></Box></div>)`}
                 previewWidth={190}
                 showEditing={false}
                 disabled

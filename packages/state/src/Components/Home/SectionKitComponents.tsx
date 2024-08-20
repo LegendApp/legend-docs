@@ -5,9 +5,9 @@ import { Text } from "./Text";
 export function SectionKitComponents() {
   return (
     <div className="mt-subsection px-4">
-      <Header size="h3">📚 Library of helpful code</Header>
+      <Header size="h3">📚 Tons of tools to get started quickly</Header>
       <Text className="max-w-4xl">
-        High performance headless components, helpful generic observables and transformational computed observables, React hooks that return observables (so they don't re-render), and observable tools for popular frameworks.
+        High performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks.
       </Text>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 text-sm sm:gap-4 sm:text-base">
         <List

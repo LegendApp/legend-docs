@@ -7,7 +7,7 @@ export function SectionBadges() {
     { title: "📚  App State", subtitle: "Local and global" },
     { title: "☁️  Remote State", subtitle: "Sync with any backend" },
     { title: "💾  Persistence", subtitle: "Both web and mobile" },
-    { title: "😀  Best DX", subtitle: "Easy and fun" },
+    { title: "😀  Great DX", subtitle: "Easy and intuitive" },
     { title: "🚀  Fast", subtitle: "#1 in performance" },
     { title: "⚡️  Fine-Grained", subtitle: "Reactivity" },
   ];
@@ -15,7 +15,7 @@ export function SectionBadges() {
   return (
     <div className="text-center pt-16 !mt-0">
       <Header size="h1">All in One</Header>
-      <Text className="max-w-lg mx-auto">
+      <Text className="max-w-lg mx-auto text-left">
         Legend-State is the fastest React state library, and it takes care of
         all of the hard sync and caching stuff for you.
       </Text>
