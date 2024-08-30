@@ -10,56 +10,6 @@ These functions add features and augment the TypeScript interface to add the new
 
 These configuration functions only need to be called once, before their effects are used, and then they will work anywhere. It should generally be at the top of the file that's the entry point of your app or is imported everywhere, or it could be at the top of a global state file.
 
-## enableReactTracking
-
-`enableReactTracking` has two modes, to either enable automatic tracking or warn if you forgot `observer`.
-
-### warnUnobserved
-
-This makes React components warn if using `get()` without being wrapped in `observer`. This is a very helpful way to catch the easy mistake of forgetting `observer`.
-
-It only runs when `process.env.NODE_ENV === 'development'` so it won't disrupt your app in production.
-
-```js
-import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
-enableReactTracking({
-    warnUnobserved: true,
-})
-```
-
-### auto tracking
-
-This makes React components auto-track observables without using `observer`, so all you need to do is `get()` an observable and the component will re-render when it changes. This is useful for rapid prototyping as observing is done for you.
-
-```js
-import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
-enableReactTracking({
-    auto: true,
-})
-```
-
-Now you can just `get()` and components will be automatically reactive.
-
-```jsx
-import { observable } from "@legendapp/state"
-const state$ = observable({ test: "hi" })
-
-function Component() {
-  // This makes this component responsive to test changing
-  const test = state$.test.get()
-
-  return <div>{test}</div>
-}
-```
-
-Note that `enableReactTracking` and `observer` can be used together - observer will optimize away the auto tracking behavior in favor of its more efficient tracking.
-
-:::caution[Caution: Rules of hooks]
-Under the hood this replaces the `get()` with a `useSelector` hook so it is subject to the rules of hooks. That means it can cause problems if you use `get()` conditionally or within a dynamic loop.
-
-We recommend that you use this while getting started and for rapid prototyping. Then wrap your components with [observer](../../react/react-api/#observer) for improved performance and safety.
-:::
-
 ## enableReactComponents, enableReactNativeComponents
 
 Legend-State provides reactive versions of all platform components with reactive props. To use these components first enable the version for your platform:
@@ -147,3 +97,57 @@ state$.test._ = "hello"
 // Assign objects too
 state$._ = { test: "hello" }
 ```
+
+## enableReactTracking
+
+`enableReactTracking` has two modes, to either enable automatic tracking or warn if you forgot `observer`.
+
+:::caution[Caution: This is a big hack]
+This method depends on secret React internals which don't work in React 19. We are looking into a new solution to try to make it work in React 19, but for now usage of this is generally discouraged, and we suggest the [observer](../../react/react-api/#observer) pattern.
+:::
+
+### warnUnobserved
+
+This makes React components warn if using `get()` without being wrapped in `observer`. This is a very helpful way to catch the easy mistake of forgetting `observer`.
+
+It only runs when `process.env.NODE_ENV === 'development'` so it won't disrupt your app in production.
+
+```js
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
+enableReactTracking({
+    warnUnobserved: true,
+})
+```
+
+### auto tracking
+
+This makes React components auto-track observables without using `observer`, so all you need to do is `get()` an observable and the component will re-render when it changes. This is useful for rapid prototyping as observing is done for you.
+
+```js
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
+enableReactTracking({
+    auto: true,
+})
+```
+
+Now you can just `get()` and components will be automatically reactive.
+
+```jsx
+import { observable } from "@legendapp/state"
+const state$ = observable({ test: "hi" })
+
+function Component() {
+  // This makes this component responsive to test changing
+  const test = state$.test.get()
+
+  return <div>{test}</div>
+}
+```
+
+Note that `enableReactTracking` and `observer` can be used together - observer will optimize away the auto tracking behavior in favor of its more efficient tracking.
+
+:::caution[Caution: Rules of hooks]
+Under the hood this replaces the `get()` with a `useSelector` hook so it is subject to the rules of hooks. That means it can cause problems if you use `get()` conditionally or within a dynamic loop.
+
+We recommend that you use this while getting started and for rapid prototyping. Then wrap your components with [observer](../../react/react-api/#observer) for improved performance and safety.
+:::
