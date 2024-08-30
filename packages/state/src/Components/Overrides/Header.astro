@@ -33,22 +33,31 @@ const options = versions.map(([version, label]) => ({
 
 <div class="header sl-flex">
   <div class="sl-flex items-center">
-    <a class="flex items-center pr-6 text-xl font-semibold" href="/">
+    <a class="flex items-center pr-6 font-medium" href="/">
       <Image
         src={logomark}
         alt="Legend homepage"
-        width="36"
-        height="36"
+        width="20"
+        height="20"
         class="opacity-60"
       />
-      <span class="pl-3">Legend Open Source</span>
+      <span class="hidden sm:block pl-3">Legend Open Source</span>
+      <span class="sm:hidden pl-3">Legend</span>
     </a>
-    <Select label="version" value="auto" options={options} width="auto" />
+    <div class="hidden sm:block">
+      <Select
+        icon={undefined as any}
+        label="version"
+        value="auto"
+        options={options}
+        width="auto"
+      />
+    </div>
 
-    <a class="px-4" href="/"> Home </a>
+    <a class="hidden lg:block px-4" href="/"> Home </a>
     <a class="px-4" href="/open-source/"> Blog </a>
     <a class="px-4 text-white" href="/open-source/state"> State </a>
-    <a class="px-4 mr-4" href="/open-source/motion"> Motion </a>
+    <a class="hidden lg:block px-4 mr-4" href="/open-source/motion"> Motion </a>
   </div>
   <div class="sl-flex items-center justify-end pr-4">
     <Search {...Astro.props} />
@@ -59,6 +68,17 @@ const options = versions.map(([version, label]) => ({
     </div>
   </div>
 </div>
+
+<style is:global>
+  header {
+    --tw-backdrop-blur: blur(8px);
+    backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+      var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
+      var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
+      var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+      var(--tw-backdrop-sepia);
+  }
+</style>
 
 <style>
   .header {

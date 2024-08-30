@@ -95,7 +95,7 @@ export const App = observer(function App() {
     const theme$ = useObservable<'light' | 'dark'>('dark')
     const theme = theme$.get()
 
-    const onClickClear = () => store$.todos.set({})
+    const onClickClear = () => store$.todos.set([])
 
     return (
         <Box theme={theme}>

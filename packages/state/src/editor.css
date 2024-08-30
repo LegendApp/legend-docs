@@ -1,7 +1,6 @@
 :root {
     --sl-text-code: var(--sl-text-xs);
     --sl-sidebar-width: 14rem;
-
     --color-fg-default: #c9d1d9;
     --color-bg-code-block: #0E1218;
     --color-border-code-block: #2E3238;
@@ -15,9 +14,7 @@
     --color-purple: #d2a8ff;
     --color-brown: #ffa657;
     --code-border-radius: 0.5em;
-
     --code-background: var(--astro-code-color-background) !important;
-
     --astro-code-color-text: var(--color-fg-default);
     --astro-code-color-background: var(--color-bg-code-block);
     --astro-code-token-constant: var(--color-green);
@@ -31,14 +28,36 @@
     --astro-code-token-link: var(--color-indigo);
 }
 
+.mt-section {
+    @apply mt-24 md:mt-32 !important;
+}
+
+.mt-subsection {
+    @apply mt-16 md:mt-24 !important;
+}
+
 .astro-code {
     border-radius: var(--code-border-radius);
     border-color: var(--color-border-code-block) !important;
 }
 
+.shadow-dark {
+    @apply shadow-md shadow-tShadowDark
+}
+
+.home-editor {
+    @apply max-w-full;
+}
+
+.home-editor .prism-code {
+    padding: 16px !important;
+    @apply border border-tBorder shadow-dark bg-[#161b22] whitespace-pre !important;
+}
+
 code {
     border-radius: 0.25rem;
 }
+
 
 /**
  * GitHub's theme skeleton for prism.js
@@ -63,7 +82,9 @@ pre[class*="language-"],
     border-radius: var(--code-border-radius) !important;
 }
 
+
 /* Code blocks */
+
 pre[class*="language-"] {
     font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
     padding: 1em;
@@ -72,7 +93,9 @@ pre[class*="language-"] {
     border-radius: var(--code-border-radius);
 }
 
+
 /* Inline code */
+
 :not(pre)>code[class*="language-"] {
     background-color: var(--color-bg-inline-code-block);
     padding: 0.2em 0.3em;
@@ -81,7 +104,7 @@ pre[class*="language-"] {
 }
 
 @media (width <=700px) {
-    :not(pre)>code[class*="language-"] {
+     :not(pre)>code[class*="language-"] {
         font-size: 0.875rem;
     }
 }
@@ -140,13 +163,17 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
+
 /* HTML overrides */
+
 .token.attr-value>.token.punctuation.attr-equals,
 .token.special-attr>.token.attr-value>.token.value.css {
     color: var(--color-fg-default);
 }
 
+
 /* CSS overrides */
+
 .language-css .token.selector {
     color: var(--color-green);
 }
@@ -160,7 +187,9 @@ pre[class*="language-"] {
     color: var(--color-red);
 }
 
+
 /* JS overrides */
+
 .language-js .token.keyword,
 .language-javascript .token.keyword {
     color: var(--color-red);
@@ -193,36 +222,47 @@ pre[class*="language-"] {
     color: var(--color-brown);
 }
 
+
 /* JSX overrides */
-.language-jsx .token.keyword, .language-tsx .token.keyword {
+
+.language-jsx .token.keyword,
+.language-tsx .token.keyword {
     color: var(--color-red);
 }
 
-.language-jsx .token.function, .language-tsx .token.function {
+.language-jsx .token.function,
+.language-tsx .token.function {
     color: var(--color-purple);
 }
 
-.language-jsx .token.function-variable, .language-tsx .token.function-variable {
+.language-jsx .token.function-variable,
+.language-tsx .token.function-variable {
     color: var(--color-brown);
 }
 
-.language-jsx .token.punctuation, .language-tsx .token.punctuation {
+.language-jsx .token.punctuation,
+.language-tsx .token.punctuation {
     color: var(--color-blue);
 }
 
-.language-jsx .token.class-name, .language-tsx .token.class-name {
+.language-jsx .token.class-name,
+.language-tsx .token.class-name {
     color: var(--color-green);
 }
 
-.language-jsx .token.attr-name, .language-tsx .token.attr-name {
+.language-jsx .token.attr-name,
+.language-tsx .token.attr-name {
     color: var(--color-blue);
 }
 
-.language-jsx .token.string, .language-tsx .token.string {
+.language-jsx .token.string,
+.language-tsx .token.string {
     color: var(--color-indigo);
 }
 
+
 /* JSON overrides */
+
 .language-json .token.operator {
     color: var(--color-fg-default);
 }
@@ -231,7 +271,9 @@ pre[class*="language-"] {
     color: var(--color-blue);
 }
 
+
 /* Java overrides */
+
 .language-java .token.keyword {
     color: var(--color-red);
 }
@@ -253,7 +295,9 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
+
 /* Kotlin overrides */
+
 .language-kotlin .token.keyword {
     color: var(--color-red);
 }
@@ -275,7 +319,9 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
+
 /* Go overrides */
+
 .language-go .token.keyword {
     color: var(--color-red);
 }
@@ -297,13 +343,17 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
+
 /* YAML overrides */
+
 .language-yml .token.atrule,
 .language-yaml .token.atrule {
     color: var(--color-green);
 }
 
+
 /* Dockerfile overrides */
+
 .language-dockerfile .token.keyword {
     color: var(--color-red);
 }
@@ -325,12 +375,13 @@ pre[class*="language-"] {
     color: var(--color-indigo);
 }
 
+
 /* General */
+
 .token.bold {
     font-weight: bold;
 }
 
-.token.comment,
 .token.italic {
     font-style: italic;
 }

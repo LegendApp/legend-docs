@@ -23,7 +23,7 @@ const Component = observer(function Component() {
     const state$ = useObservableSyncedQuery({
         queryClient,
         query: {
-            queryKey: ['todos'],
+            queryKey: ['user'],
             queryFn: async () => {
                 return fetch('https://reqres.in/api/users/1').then((v) => v.json())
             },
@@ -63,7 +63,7 @@ const queryClient = new QueryClient()
 const state$ = observable(syncedQuery({
     queryClient,
     query: {
-        queryKey: ['todos'],
+        queryKey: ['user'],
         queryFn: async () => {
             return fetch('https://reqres.in/api/users/1').then((v) => v.json())
         },
