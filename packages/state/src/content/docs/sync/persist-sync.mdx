@@ -31,6 +31,7 @@ These are built on top of the CRUD plugin.
 
 - [CRUD](../crud): Supports any backend with list, get, create, update, delete actions
 - [Fetch](../fetch): A wrapper around fetch to reduce boilerplate
+- [TanStack Query](../tanstack-query): Query updates observables rather than re-rendering
 
 ## Example
 
@@ -62,15 +63,8 @@ In this first example we create an observable with initial data and then use `sy
 
 ```ts
 import { observable } from "@legendapp/state"
-import { syncObservable, configureObservableSync } from "@legendapp/state/sync"
+import { syncObservable } from "@legendapp/state/sync"
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv"
-
-// Setup global persist configuration
-configureObservableSync({
-    persist: {
-        plugin: ObservablePersistMMKV
-    }
-})
 
 // Create an observable
 const store$ = observable({
@@ -81,6 +75,7 @@ const store$ = observable({
 syncObservable(store$, {
     persist: {
         name: 'persistKey',
+        plugin: ObservablePersistMMKV
     }
 })
 
@@ -211,11 +206,11 @@ First set the general sync and persist options, then configure your sync plugin 
 5. Set the `subscribe` option to subscribe to a realtime updater or set up polling.
 
 ```ts
-import { configureObservableSync, synced } from '@legendapp/state/sync'
+import { configureSynced, synced } from '@legendapp/state/sync'
 import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
-configureObservableSync({
+const mySyncPlugin = configureSynced(syncedCrud, {
     persist: {
         plugin: ObservablePersistLocalStorage,
         retrySync: true,
@@ -226,7 +221,7 @@ configureObservableSync({
     }
 })
 
-const profile$ = observable(syncedCrud({
+const profile$ = observable(mySyncPlugin({
     list: () => {/*...*/},
     create: () => {/*...*/},
     update: () => {/*...*/},
@@ -244,23 +239,25 @@ const profile$ = observable(syncedCrud({
 
 ## API
 
-### configureObservableSync
+### configureSynced
 
-First you most likely want to set a global persist/sync configuration with your preferred defaults. This is optional as these settings can be set or overriden per observable.
+Sync plugins have a lot of options so you'll likely want to set some defaults. You can do that with the `configureSynced` function to create a customized version of a plugin with your defaults. You will most likely want to at least set a default persistence plugin.
 
-This is a very basic example that uses localStorage for persistence web, but see [synced](#synced) for more options.
+```ts
+import { configureSynced, synced } from "@legendapp/state/sync"
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 
-```js
-import { configureObservableSync } from '@legendapp/state/sync'
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-
-// Global configuration
-configureObservableSync({
+// Create default options
+const myPersistOptions = configureSynced({
     persist: {
-        plugin: ObservablePersistLocalStorage
+        plugin: ObservablePersistMMKV
     }
-    retry: {
-        infinite: true
+})
+
+// Or create your own plugin derived from synced with defaulted options
+const mySyncPlugin = configureSynced(synced, {
+    persist: {
+        plugin: ObservablePersistMMKV
     }
 })
 ```
@@ -357,7 +354,7 @@ If you prefer to set up sync/persistence after the observable is already created
 
 ```js
 import { observable } from '@legendapp/state'
-import { synced } from '@legendapp/state/sync'
+import { syncObservable } from '@legendapp/state/sync'
 
 const state$ = observable({ initialKey: 'initialValue' })
 
@@ -370,6 +367,23 @@ syncObservable(state$, {
         name: 'test'
     }
 })
+```
+
+You can also use any sync plugin with syncObservable.
+
+```js
+import { observable } from '@legendapp/state'
+import { syncObservable } from '@legendapp/state/sync'
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
+
+const users$ = observable([])
+
+syncObservable(users$, syncedFetch({
+    // When the fetch resolves it will update the observable
+    get: 'https://reqres.in/api/users',
+    // When the observable is changed it will send the changes back to the server.
+    set: 'https://reqres.in/api/users'
+}))
 ```
 
 ### syncState
@@ -501,9 +515,6 @@ const state$ = observable(synced({
 }))
 ```
 
-
-#### Persist
-
 ## Persist plugins
 
 First choose and configure the storage plugin for your platform.
@@ -514,20 +525,10 @@ First choose and configure the storage plugin for your platform.
 import { configureObservableSync } from '@legendapp/state/sync'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
-// Global configuration
-configureObservableSync({
-    persist: {
-        plugin: ObservablePersistLocalStorage
-    }
-})
-```
-
-Then you can persist an observable with just its name in Local Storage.
-
-```js
 syncObservable(state$, {
     persist: {
-        name: "documents"
+        name: "documents",
+        plugin: ObservablePersistLocalStorage
     }
 })
 ```
@@ -544,17 +545,19 @@ It requires some extra configuration for the database name, the table names, and
 IndexedDB requires changing the version whenever the tables change, so you can start with version 1 and increment the version whenever you add/change tables.
 
 ```js
-import { syncObservable } from "@legendapp/state/sync"
-import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
+import { configureSynced, syncObservable } from "@legendapp/state/sync"
+import { observablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
 
-configureObservableSync({
+// Create default persist options
+const persistOptions = configureSynced({
     persist: {
-        plugin: ObservablePersistIndexedDB,
-        indexedDB: {
-            databaseName: "Legend",
-            version: 1,
-            tableNames: ["documents", "store"],
-        }
+        plugin: observablePersistIndexedDB({
+            indexedDB: {
+                databaseName: "Legend",
+                version: 1,
+                tableNames: ["documents", "store"]
+            }
+        })
     }
 })
 
@@ -564,33 +567,33 @@ const state$ = observable({
     obj2: { id: "obj2", text: "..." },
 })
 
-syncObservable(state$, {
+syncObservable(state$, persistOptions({
     persist: {
         name: "documents" // IndexedDB table name
     }
-})
+}))
 
 // Mode 2: Persist an object with itemId
 const settings$ = observable({ theme: "light" })
 
-syncObservable(settings$, {
+syncObservable(settings$, persistOptions({
     persist: {
         name: "store", // IndexedDB table name
         indexedDB: {
             itemID: "settings"
         }
     }
-})
+}))
 ```
 
 Because IndexedDB is an asynchronous API, you'll need to wait for it to load before you start reading from it. `syncObservable` returns an observable with load statuses that you can wait for.
 
 ```js
-const status$ = syncObservable(state$, {
+const status$ = syncObservable(state$, persistOptions({
     persist: {
         name: 'store' // IndexedDB table name
     }
-})
+}))
 await when(status$.isPersistLoaded)
 // Continue with load
 ```
@@ -604,24 +607,13 @@ First install react-native-mmkv:
 Then configure it as the persist plugin.
 
 ```js
-import { configureObservableSync } from '@legendapp/state/sync'
+import { syncObservable } from '@legendapp/state/sync'
 import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv'
 
-// Global configuration
-configureObservableSync({
-    // Use react-native-mmkv in React Native
-    persist: {
-        plugin: ObservablePersistMMKV
-    }
-})
-```
-
-Then you can persist an observable with just a name.
-
-```js
 syncObservable(state$, {
     persist: {
-        name: "documents"
+        name: "documents",
+        plugin: ObservablePersistMMKV
     }
 })
 ```
@@ -635,16 +627,16 @@ Older versions of React Native have AsyncStorage built in, but newer versions ma
 The AsyncStorage plugin needs an additional bit of global configuration, giving it the instance of AsyncStorage.
 
 ```js
-import { configureObservableSync } from '@legendapp/state/sync'
-import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
+import { configureSynced, syncObservable } from '@legendapp/state/sync'
+import { observablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Global configuration
-configureObservableSync({
-    // Use AsyncStorage in React Native
+const persistOptions = configureSynced({
     persist: {
-        plugin: ObservablePersistAsyncStorage,
-        asyncStorage: { AsyncStorage }
+        plugin: observablePersistAsyncStorage({
+            AsyncStorage
+        })
     }
 })
 ```
@@ -652,25 +644,28 @@ configureObservableSync({
 Because AsyncStorage is an asynchronous API, you'll need to wait for it to load before you start reading from it. `syncObservable` returns an observable with load statuses that you can wait for.
 
 ```js
-const status$ = syncObservable(state$, {
+const status$ = syncObservable(state$, persistOptions({
     persist: {
         name: 'store'
     }
-})
+}))
 await when(status$.isPersistLoaded)
 // Continue with load
 ```
 
 ## Making a sync plugin
 
-Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a `synced`. If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](../crud) which encapsulates a lot of logic for those specifics for you.
+Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a [synced](#synced). If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](../crud) which encapsulates a lot of logic for those specifics for you.
 
 It may be easiest to look at [the source of the built-in sync plugins](https://github.com/LegendApp/legend-state/tree/main/src/persist-plugins) to see what they look like.
 
 This is a simple contrived example to show what that could look like.
 
 ```ts
+import { observable } from '@legendapp/state'
 import { synced } from '@legendapp/state/sync'
+
+const isAuthed$ = observable(false);
 
 // Create a custom synced that just needs a name in your API
 const customSynced = ({ name }) => {
@@ -680,7 +675,7 @@ const customSynced = ({ name }) => {
     }
 
     return synced({
-        get: () => doFetch('list-' + name),
+        get: () => doFetch(`list-${name}s`),
         set: ({ value }) => {
             if (value === null || value === undefined) {
                 return doFetch('delete-' + name)
@@ -698,6 +693,8 @@ const customSynced = ({ name }) => {
         },
     })
 }
-```
 
-TODO: More details
+const store$ = observable({
+    users: customSynced('user')
+})
+```
