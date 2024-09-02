@@ -217,7 +217,7 @@ const data = await when(serverState$)
 console.log(data)
 ```
 
-You can access the status of an async observable with the [syncState](../../usage/persist-sync/#syncstate) helper, which is an observable itself. The most common usage is to check its loaded or error states:
+You can access the status of an async observable with the [syncState](../../sync/persist-sync/#syncstate) helper, which is an observable itself. The most common usage is to check its loaded or error states:
 
 ```js
 const status$ = syncState(serverState$)
