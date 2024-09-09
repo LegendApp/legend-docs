@@ -1,9 +1,6 @@
 import { type Observable } from "@legendapp/state";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { observer, Reactive } from "@legendapp/state/react";
 import { BiMoon, BiSun } from "react-icons/bi";
-
-enableReactComponents();
 
 export const ThemeButton = observer(function ThemeButton({
   $value,

@@ -2,7 +2,6 @@ import axios from "axios";
 import { useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useObservable, Reactive, Memo } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { Box } from "shared/src/Components/Box";
@@ -17,9 +16,6 @@ import axios from "axios"
 import { useRef } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useObservable, Reactive, Memo } from "@legendapp/state/react"
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-
-enableReactComponents()
 
 const queryClient = new QueryClient()
 
@@ -86,7 +82,6 @@ export function AutoSavingFormComponent() {
       code={AUTO_SAVING_FORM_CODE}
       scope={{
         useRef,
-        enableReactComponents,
         Reactive,
         QueryClient,
         QueryClientProvider,

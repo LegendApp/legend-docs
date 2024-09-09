@@ -1,5 +1,4 @@
 import { observable } from "@legendapp/state";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { syncObservable } from "@legendapp/state/sync";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { reactive, Reactive } from "@legendapp/state/react";
@@ -41,14 +40,11 @@ export const Footer = ({
 
 const PERSISTENCE_CODE = `
 import { observable } from "@legendapp/state"
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
 import { syncObservable } from "@legendapp/state/sync"
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 import { reactive, Reactive } from "@legendapp/state/react"
 import { motion } from "framer-motion"
 import { useRef } from "react"
-
-enableReactComponents()
 
 const state$ = observable({
   settings: { showSidebar: false, theme: 'light' },
@@ -107,7 +103,6 @@ export function PersistenceComponent() {
         useRef,
         observable,
         syncObservable,
-        enableReactComponents,
         ObservablePersistLocalStorage,
         reactive,
         motion,

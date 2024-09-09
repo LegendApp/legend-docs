@@ -1,4 +1,3 @@
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { useMount, useObservable } from "@legendapp/state/react";
 import React, { useMemo, useRef } from "react";
 import { Button } from "shared/src/Components/Button";
@@ -41,8 +40,6 @@ import { SectionKitHeader } from "./SectionKitHeader";
 //     };
 //   });
 // }
-
-enableReactComponents();
 
 const EnableKit = true;
 

@@ -49,20 +49,6 @@ Legend-State provides reactive versions of all platform components with reactive
 
 For input elements it can create a two-way binding to the value, so that the observable is always in sync with the displayed value of the element.
 
-To use these components first enable the version for your platform:
-
-```js
-// React
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-enableReactComponents();
-
-// React Native
-import { enableReactNativeComponents } from "@legendapp/state/config/enableReactNativeComponents";
-enableReactNativeComponents();
-```
-
-That will populate `Reactive` with reactive versions of the built-in components. This example shows some examples using web components.
-
 ```jsx
 import { Reactive } from "@legendapp/state/react"
 

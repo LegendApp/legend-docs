@@ -1,5 +1,4 @@
 import { observable, observe } from "@legendapp/state";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { For, observer, Reactive, useIsMounted, useObservable } from "@legendapp/state/react";
 import { configureSynced, synced, syncObservable } from "@legendapp/state/sync";
@@ -17,8 +16,6 @@ import { configureSynced, synced } from "@legendapp/state/sync"
 import { observer, Reactive, useObservable } from "@legendapp/state/react"
 import { ObservablePersistAsyncStorage } from
     "@legendapp/state/persist-plugins/async-storage"
-import { enableReactNativeComponents } from
-    "@legendapp/state/config/enableReactNativeComponents"
 
 interface Todo {
     id: number;
@@ -36,9 +33,6 @@ interface Store {
 interface TodoItemProps {
     item$: Observable<Todo>;
 }
-
-// Enable the Reactive components, only need to do this once
-enableReactNativeComponents();
 
 // Setup a configured persist options
 const mySynced = configureSynced(synced, {
@@ -121,7 +115,6 @@ export const GettingStarted = observer(function GettingStarted() {
         str
             .replace(/<View|<Text/g, '<div')
             .replace(/<\/View|<\/Text/g, '</div')
-            .replace(/enableReactNativeComponents/g, 'enableReactComponents')
             .replace(/,\n        asyncStorage: { AsyncStorage }/g, '')
             .replace(/observablePersistAsyncStorage\([^)]+\)/g, 'ObservablePersistLocalStorage')
             .replace(/ObservablePersistAsyncStorage/g, 'ObservablePersistLocalStorage')
@@ -143,7 +136,6 @@ export const GettingStarted = observer(function GettingStarted() {
         observer,
         For,
         Button,
-        enableReactComponents,
         Reactive,
         Box,
         Checkbox,
@@ -166,10 +158,6 @@ export const GettingStarted = observer(function GettingStarted() {
             )
             .replace(/className="row"/g, 'className="flex items-center"')
             .replace("<Box>", "<Box theme={theme}>")
-            .replace(
-              "enableReactNativeComponents",
-              "enableReactComponents"
-            )
         )
       }
     />

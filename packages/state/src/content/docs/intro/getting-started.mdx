@@ -82,10 +82,6 @@ Legend-State also includes `Reactive` components for both React and React Native
 
 ```tsx
 import { observer, Reactive, useObservable } from "@legendapp/state/react"
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-
-// Enable the Reactive components, only need to do this once
-enableReactComponents();
 
 export const App = observer(function App() {
     // Consume the computed observables from the global store$

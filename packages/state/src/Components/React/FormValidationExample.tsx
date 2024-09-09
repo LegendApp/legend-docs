@@ -6,7 +6,6 @@ import {
   Memo,
   Show,
 } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
@@ -14,9 +13,6 @@ import { Button } from "shared/src/Components/Button";
 const FORM_VALIDATION_CODE = `
 import { useRef } from "react"
 import { useObservable, useObserve, Reactive, Memo, Show } from "@legendapp/state/react"
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-
-enableReactComponents()
 
 function App() {
   const renderCount = ++useRef(0).current
@@ -97,7 +93,6 @@ export function FormValidationComponent() {
       code={FORM_VALIDATION_CODE}
       scope={{
         useRef,
-        enableReactComponents,
         Reactive,
         useObservable,
         useObserve,

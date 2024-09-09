@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { For, observer, useObservable } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
 
 const TODOS_CODE = `
 import { useEffect, useRef, useState } from "react"
 import { For, observer, useObservable } from "@legendapp/state/react"
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-
-enableReactComponents()
 
 let total = 0
 const TodosExample = () => {
@@ -63,7 +59,6 @@ export function TodosComponent() {
         For,
         useState,
         observer,
-        enableReactComponents,
         useEffect,
         Box,
         Button,

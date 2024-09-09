@@ -1,5 +1,4 @@
 import { observable, syncState } from "@legendapp/state";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { Memo, Reactive, observer, useIsMounted } from "@legendapp/state/react";
 import { configureSynced, syncObservable, synced } from "@legendapp/state/sync";
@@ -15,11 +14,6 @@ import { configureSynced } from "@legendapp/state/sync"
 import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
 import { ObservablePersistMMKV } from
     "@legendapp/state/persist-plugins/mmkv"
-import { enableReactNativeComponents } from
-    "@legendapp/state/config/enableReactNativeComponents"
-
-// Enable the Reactive components, only need to do this once
-enableReactNativeComponents()
 
 // Setup global sync and persist configuration. These can be overriden
 // per observable.
@@ -80,7 +74,6 @@ export const PersistSync = observer(function PersistSync() {
       str
         .replace(/<Text/g, "<div")
         .replace(/<\/Text/g, "<\/div")
-        .replace(/enableReactNativeComponents/g, "enableReactComponents")
         .replace(/\/mmkv/g, "/local-storage")
         .replace(/ObservablePersistMMKV/g, "ObservablePersistLocalStorage")
         .replace(/TextInput/g, "input")
@@ -97,7 +90,6 @@ export const PersistSync = observer(function PersistSync() {
           scope={{
               observable,
               observer,
-              enableReactComponents,
               Reactive,
               Box,
               syncedFetch,
@@ -118,7 +110,6 @@ export const PersistSync = observer(function PersistSync() {
                           /<Reactive\.(?:TextInput|input)/g,
                           `<Reactive.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 mb-4 w-[140px]"`,
                       )
-                      .replace('enableReactNativeComponents', 'enableReactComponents')
                       .replace('ObservablePersistMMKV', 'ObservablePersistLocalStorage')
                       .replace('<Footer>', `<div>`)
                       .replace('</Footer>', '</div>'),

@@ -10,7 +10,6 @@ export const ReactOrNativeCode = function ReactOrNativeCode({ onlyFirst }: Props
   useMount(() => {
     const mapSpans = new Map<Element, "View" | "Text">();
     const spans = document.querySelectorAll("code span");
-    const spansEnable = new Set<Element>();
     const spansMMKV = new Set<Element>();
     const spansMMKV2 = new Set<Element>();
     const spansTextInput = new Set<Element>();
@@ -18,8 +17,6 @@ export const ReactOrNativeCode = function ReactOrNativeCode({ onlyFirst }: Props
       const text = span.textContent as string;
       if (text === "View" || text === "Text") {
         mapSpans.set(span, text);
-      } else if (text?.includes("enableReact") && text.includes("Components")) {
-        spansEnable.add(span);
       } else if (text?.includes("ObservablePersistMMKV")) {
         if (!onlyFirst || spansMMKV.size < 2) {
           spansMMKV.add(span);
@@ -36,12 +33,6 @@ export const ReactOrNativeCode = function ReactOrNativeCode({ onlyFirst }: Props
       const isReact = state$.framework.get() === "React";
       mapSpans.forEach((text, span) => {
         span.textContent = isReact ? "div" : text;
-      });
-      spansEnable.forEach((span) => {
-        span.textContent = span.textContent!.replace(
-          /enableReact(?:Native)?Components/,
-          isReact ? "enableReactComponents" : "enableReactNativeComponents"
-        );
       });
       spansMMKV.forEach((span) => {
         span.textContent = span.textContent!.replace(

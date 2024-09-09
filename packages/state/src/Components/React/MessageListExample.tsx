@@ -1,6 +1,5 @@
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import {
   For,
   Memo,
@@ -13,12 +12,8 @@ import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
 
 const MESSAGE_LIST_CODE = `
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
 import { For, Reactive, Show, useObservable, useObservable } from "@legendapp/state/react"
 import { useFetch } from "@legendapp/state/react-hooks/useFetch"
-
-// Enable Reactive.input
-enableReactComponents()
 
 let nextID = 0
 function generateID() {
@@ -89,7 +84,6 @@ export function MessageListComponent() {
       code={MESSAGE_LIST_CODE}
       scope={{
         useRef,
-        enableReactComponents,
         Reactive,
         useFetch,
         useObservable,

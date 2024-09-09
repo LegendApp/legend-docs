@@ -1,16 +1,11 @@
-import classNames from "classnames";
-import { type ObservableParam} from "@legendapp/state";
-import { Reactive} from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-
-enableReactComponents();
+import { type ObservableParam } from "@legendapp/state";
+import { Reactive } from "@legendapp/state/react";
 
 export const Checkbox = ({
   $value,
 }: {
   $value: ObservableParam<boolean>;
 }) => {
-    const checked = $value.get();
   return (
     <div className="inline-flex items-center">
       <label

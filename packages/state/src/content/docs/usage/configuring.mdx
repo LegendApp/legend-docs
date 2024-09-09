@@ -10,39 +10,6 @@ These functions add features and augment the TypeScript interface to add the new
 
 These configuration functions only need to be called once, before their effects are used, and then they will work anywhere. It should generally be at the top of the file that's the entry point of your app or is imported everywhere, or it could be at the top of a global state file.
 
-## enableReactComponents, enableReactNativeComponents
-
-Legend-State provides reactive versions of all platform components with reactive props. To use these components first enable the version for your platform:
-
-```js
-// React
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-enableReactComponents()
-
-// React Native
-import { enableReactNativeComponents } from "@legendapp/state/config/enableReactNativeComponents"
-enableReactNativeComponents()
-```
-
-Now you can use `Reactive`.
-
-```jsx
-import { Reactive } from "@legendapp/state/react"
-
-function Component() {
-  return (
-    <Reactive.div
-      $style={() => ({
-        color: state.age.get() > 5 ? "green" : "red",
-      })}
-      $className={() => (state.age.get() > 5 ? "kid" : "baby")}
-    />
-  )
-}
-```
-
-See [Reactive components](../../react/fine-grained-reactivity/#reactive-components) for more details.
-
 ## enable$GetSet
 
 This enables accessing and setting the raw value of an observable directly. It's a shorthand for `get()` and `set(...)`.
