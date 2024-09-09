@@ -1,8 +1,8 @@
 import { observable, observe } from "@legendapp/state";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
-import { For, Reactive, observer, useIsMounted, useObservable } from "@legendapp/state/react";
-import { configureObservableSync, syncObservable } from "@legendapp/state/sync";
+import { For, observer, Reactive, useIsMounted, useObservable } from "@legendapp/state/react";
+import { configureSynced, synced, syncObservable } from "@legendapp/state/sync";
 import classNames from "classnames";
 import { Box } from "shared/src/Components/Box";
 import { Button } from "shared/src/Components/Button";
@@ -13,26 +13,13 @@ import { state$ } from "shared/src/state";
 
 const GETTING_STARTED_CODE = `
 import { observable, Observable } from "@legendapp/state"
-import { configureObservableSync, syncObservable } from
-    "@legendapp/state/sync"
+import { configureSynced, synced } from "@legendapp/state/sync"
 import { observer, Reactive, useObservable } from "@legendapp/state/react"
 import { ObservablePersistAsyncStorage } from
     "@legendapp/state/persist-plugins/async-storage"
 import { enableReactNativeComponents } from
     "@legendapp/state/config/enableReactNativeComponents"
 
-// Enable the Reactive components, only need to do this once
-enableReactNativeComponents();
-
-// Setup global persist configuration
-configureObservableSync({
-    persist: {
-        plugin: ObservablePersistAsyncStorage,
-        asyncStorage: { AsyncStorage }
-    }
-})
-
-// Type your Store interface
 interface Todo {
     id: number;
     text: string;
@@ -45,14 +32,32 @@ interface Store {
     numCompleted: number;
     addTodo: () => void;
 }
+
 interface TodoItemProps {
     item$: Observable<Todo>;
 }
 
+// Enable the Reactive components, only need to do this once
+enableReactNativeComponents();
+
+// Setup a configured persist options
+const mySynced = configureSynced(synced, {
+  persist: {
+    plugin: observablePersistAsyncStorage({
+      AsyncStorage
+    })
+  }
+})
+
 // Create a global observable for the Todos
 let nextId = 0;
 const store$ = observable<Store>({
-  todos: [],
+  todos: mySynced({
+    initial: [],
+    persist: {
+      name: 'getting-started'
+    },
+  }),
   // Computeds
   total: (): number => {
     return store$.todos.length;
@@ -68,13 +73,6 @@ const store$ = observable<Store>({
     store$.todos[todo.id].set(todo);
   },
 });
-
-// Persist the observable to the named key of the global persist plugin
-syncObservable(store$, {
-    persist: {
-        name: 'gettingStarted'
-    }
-})
 
 // Receives item$ prop from the For component
 function TodoItem({ item$ }: TodoItemProps) {
@@ -120,17 +118,15 @@ const App = observer(function App() {
 export const GettingStarted = observer(function GettingStarted() {
     const framework = state$.framework.get();
     const replacer = (str: string) =>
-      str
-        .replace(/<View|<Text/g, "<div")
-        .replace(/<\/View|<\/Text/g, "</div")
-        .replace(/enableReactNativeComponents/g, "enableReactComponents")
-        .replace(/,\n        asyncStorage: { AsyncStorage }/g, "")
-        .replace(
-          /ObservablePersistAsyncStorage/g,
-          "ObservablePersistLocalStorage"
-        )
-        .replace(/TextInput/g, "input")
-        .replace(/async-storage/g, "local-storage");
+        str
+            .replace(/<View|<Text/g, '<div')
+            .replace(/<\/View|<\/Text/g, '</div')
+            .replace(/enableReactNativeComponents/g, 'enableReactComponents')
+            .replace(/,\n        asyncStorage: { AsyncStorage }/g, '')
+            .replace(/observablePersistAsyncStorage\([^)]+\)/g, 'ObservablePersistLocalStorage')
+            .replace(/ObservablePersistAsyncStorage/g, 'ObservablePersistLocalStorage')
+            .replace(/TextInput/g, 'input')
+            .replace(/async-storage/g, 'local-storage');
 
     const isMounted = useIsMounted().get();
     const displayCode = isMounted && framework === "React"
@@ -153,8 +149,9 @@ export const GettingStarted = observer(function GettingStarted() {
         Checkbox,
         useObservable,
         ThemeButton,
-        configureObservableSync,
+        configureSynced,
         syncObservable,
+        synced,
         ObservablePersistLocalStorage,
       }}
       noInline
@@ -178,3 +175,4 @@ export const GettingStarted = observer(function GettingStarted() {
     />
   );
 })
+

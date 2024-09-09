@@ -2,7 +2,7 @@ import { observable, syncState } from "@legendapp/state";
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { Memo, Reactive, observer, useIsMounted } from "@legendapp/state/react";
-import { configureObservableSync, syncObservable, synced } from "@legendapp/state/sync";
+import { configureSynced, syncObservable, synced } from "@legendapp/state/sync";
 import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
 import { Box } from "shared/src/Components/Box";
 import { Editor } from "shared/src/Components/Editor/Editor";
@@ -11,7 +11,7 @@ import { state$ } from "shared/src/state";
 const PERSIST_SYNC_CODE = `
 import { observable } from "@legendapp/state"
 import { observer } from "@legendapp/state/react"
-import { configureObservableSync } from "@legendapp/state/sync"
+import { configureSynced } from "@legendapp/state/sync"
 import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
 import { ObservablePersistMMKV } from
     "@legendapp/state/persist-plugins/mmkv"
@@ -23,7 +23,7 @@ enableReactNativeComponents()
 
 // Setup global sync and persist configuration. These can be overriden
 // per observable.
-configureObservableSync({
+const mySyncedFetch = configureSynced(syncedFetch, {
     persist: {
         plugin: ObservablePersistMMKV,
         retrySync: true // Persist pending changes and retry
@@ -34,7 +34,7 @@ configureObservableSync({
 })
 
 // Create a synced observable
-const profile$ = observable(syncedFetch({
+const profile$ = observable(mySyncedFetch({
     get: 'https://reqres.in/api/users/1',
     set: 'https://reqres.in/api/users/1',
     setInit: { method: 'PUT' },
@@ -92,38 +92,38 @@ export const PersistSync = observer(function PersistSync() {
         : PERSIST_SYNC_CODE;
 
   return (
-    <Editor
-      code={displayCode}
-      scope={{
-        observable,
-        observer,
-        enableReactComponents,
-        Reactive,
-        Box,
-        syncedFetch,
-        configureObservableSync,
-        syncObservable,
-        ObservablePersistLocalStorage,
-        synced,
-        syncState,
-        Memo,
-      }}
-      noInline
-      renderCode=";render(<App />)"
-      previewWidth={180}
-      transformCode={(code) =>
-        replacer(
-          code
-            .replace(
-              /<Reactive\.(?:TextInput|input)/g,
-              `<Reactive.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 mb-4 w-[140px]"`
-            )
-            .replace("enableReactNativeComponents", "enableReactComponents")
-            .replace("ObservablePersistMMKV", "ObservablePersistLocalStorage")
-            .replace("<Footer>", `<div>`)
-            .replace("</Footer>", "</div>")
-        )
-      }
-    />
+      <Editor
+          code={displayCode}
+          scope={{
+              observable,
+              observer,
+              enableReactComponents,
+              Reactive,
+              Box,
+              syncedFetch,
+              configureSynced,
+              syncObservable,
+              ObservablePersistLocalStorage,
+              synced,
+              syncState,
+              Memo,
+          }}
+          noInline
+          renderCode=";render(<App />)"
+          previewWidth={180}
+          transformCode={(code) =>
+              replacer(
+                  code
+                      .replace(
+                          /<Reactive\.(?:TextInput|input)/g,
+                          `<Reactive.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 mb-4 w-[140px]"`,
+                      )
+                      .replace('enableReactNativeComponents', 'enableReactComponents')
+                      .replace('ObservablePersistMMKV', 'ObservablePersistLocalStorage')
+                      .replace('<Footer>', `<div>`)
+                      .replace('</Footer>', '</div>'),
+              )
+          }
+      />
   );
 })

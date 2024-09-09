@@ -144,15 +144,8 @@ Then all you have to do is `syncObservable` with the name you want it to have in
 
 ```ts
 import { observable } from "@legendapp/state"
-import { configureObservableSync, syncObservable } from '@legendapp/state/sync'
+import { syncObservable } from '@legendapp/state/sync'
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv"
-
-// Setup global persist configuration
-configureObservableSync({
-    persist: {
-        plugin: ObservablePersistMMKV
-    }
-})
 
 const store$ = observable<Store>({
     todos: {},
@@ -161,7 +154,8 @@ const store$ = observable<Store>({
 // Persist the observable to the named key of the global persist plugin
 syncObservable(store$, {
     persist: {
-        name: 'gettingStarted'
+        name: 'gettingStarted',
+        plugin: ObservablePersistMMKV
     }
 })
 ```

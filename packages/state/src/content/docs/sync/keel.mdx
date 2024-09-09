@@ -55,24 +55,29 @@ We'll start with a full example to see what a full setup looks like, then go int
 ```ts
 import { observable } from '@legendapp/state'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-import { configureObservableSync } from '@legendapp/state/sync/'
-import { configureSyncedKeel, generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { configureSynced } from '@legendapp/state/sync/'
+import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
 import { APIClient } from './keelClient'
 
 const client = new APIClient({
   baseUrl: process.env.API_BASE_URL
 })
 
-// configure global persistence
-configureObservableSync({
-    persist: {
-        plugin: ObservablePersistLocalStorage
-    }
-})
+const isAuthed$ = observable(false);
 
-// configure keel plugin with client
-configureSyncedKeel({
+// Set defaults
+const sync = configureSynced(syncedKeel, {
     client,
+    persist: {
+        plugin: ObservablePersistLocalStorage,
+        retrySync: true
+    },
+    debounceSet: 500,
+    retry: {
+        infinite: true,
+    },
+    changesSince: 'last-sync',
+    waitFor: isAuthed$
 })
 
 // enable sync after authentication succeeds
@@ -83,27 +88,20 @@ async function doAuth() {
     // check that the client is authenticated
     const isAuthenticated = await keel.auth.isAuthenticated()
 
-    // enable syncedKeel to start syncing it
-    configureSyncedKeel({
-        enabled: true
-    })
+    // Set isAuthed$ to start syncing
+    isAuthed$.set(true)
 }
 
 // Set up your observables with Keel queries
 const { mutations, queries } = client.api
 
 // create an observable with the action functions
-const messages$ = observable(syncedKeel({
+const messages$ = observable(sync({
     list: queries.getMessages,
     create: mutations.createMessage,
     update: mutations.updateMessage,
     delete: mutations.deleteMessage,
-    persist: { name: 'messages', retrySync: true },
-    debounceSet: 500,
-    retry: {
-        infinite: true,
-    },
-    changesSince: 'last-sync',
+    persist: { name: 'messages' },
 }))
 
 // get() activates and starts syncing
@@ -128,25 +126,30 @@ function updateMessage(id: string, text: string) {
 
 ## Configure globals
 
-The first step to using the Keel plugin is to set some global configuration options. The required options are:
+The first step to using the Keel plugin is to set some global configuration options. The suggested options are:
 
-- **client**: It needs the client in order to set enable the Keel realtime plugins.
-- **enabled**: Set enabled to true after you've [authenticated](https://docs.keel.so/apis/client#authenticating) with Keel. You can set this option separately whenever it's ready.
-
-This is what a basic configuration should look like. You'll want to configure the options before using `syncedKeel`, and update `enabled` after you've [authenticated](https://docs.keel.so/apis/client#authenticating).
+- **client**: It needs the client in order to enable the Keel realtime plugins.
+- **waitFor**: An observable that you set to true after signing in
 
 ```ts
 import { observable } from '@legendapp/state'
-import { configureSyncedKeel, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { configureSynced } from '@legendapp/state/sync/'
 import { APIClient } from './keelClient'
 
 const client = new APIClient({
   baseUrl: process.env.API_BASE_URL,
 })
 
-// configure client
-configureSyncedKeel({
+const isAuthed$ = observable(false);
+
+// Set defaults
+const sync = configureSynced(syncedKeel, {
     client,
+    persist: {
+        plugin: ObservablePersistLocalStorage,
+    },
+    waitFor: isAuthed$
 })
 
 // enable sync after authentication succeeds
@@ -157,10 +160,8 @@ async function doAuth() {
     // check that the client is authenticated
     const isAuthenticated = await keel.auth.isAuthenticated()
 
-    // enable syncedKeel to start syncing it
-    configureSyncedKeel({
-        enabled: true
-    })
+    // Set isAuthed$ to start syncing
+    isAuthed$.set(true)
 }
 ```
 
