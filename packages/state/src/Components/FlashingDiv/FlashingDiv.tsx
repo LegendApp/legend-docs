@@ -8,12 +8,14 @@ export function FlashingDiv({
   className,
   classNameOuter,
   bg,
+  pad,
   children,
 }: {
   span?: boolean;
   className?: string;
   classNameOuter?: string;
   bg?: boolean;
+  pad?: boolean;
   children: ReactNode;
 }) {
   const controls = useAnimation();
@@ -52,6 +54,7 @@ export function FlashingDiv({
         className={classNames(
           "relative z-10 rounded-lg",
           bg || "bg-gray-800",
+          pad && 'p-4',
           span ? "px-2" : "block",
           className
         )}

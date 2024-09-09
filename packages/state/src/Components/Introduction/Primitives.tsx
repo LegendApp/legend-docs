@@ -21,7 +21,7 @@ function NormalComponent() {
 
   // This re-renders when count changes
   return (
-    <FlashingDiv>
+    <FlashingDiv pad>
       <h5>Normal</h5>
       <div>Renders: {renderCount}</div>
       <div>Count: {count}</div>
@@ -38,7 +38,7 @@ function FineGrained() {
 
   // The text updates itself so the component doesn't re-render
   return (
-    <FlashingDiv>
+    <FlashingDiv pad>
       <h5>Fine-grained</h5>
       <div>Renders: {renderCount}</div>
       <div>Count: <Memo>{count$}</Memo></div>

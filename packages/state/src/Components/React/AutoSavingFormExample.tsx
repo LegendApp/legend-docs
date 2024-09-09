@@ -2,7 +2,8 @@ import axios from "axios";
 import { useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useObservable, Reactive, Memo } from "@legendapp/state/react";
-import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
+import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
+import { useQueryClient } from "@tanstack/react-query";
 import { Editor } from "shared/src/Components/Editor/Editor";
 import { Box } from "shared/src/Components/Box";
 
@@ -16,6 +17,8 @@ import axios from "axios"
 import { useRef } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useObservable, Reactive, Memo } from "@legendapp/state/react"
+import { useObservableSyncedQuery } from
+    '@legendapp/state/sync-plugins/tanstack-react-query'
 
 const queryClient = new QueryClient()
 
@@ -29,13 +32,16 @@ function App() {
 
 function Example() {
   const renderCount = ++useRef(0).current
-  const { data } = useObservableQuery({
+  const lastSaved$ = useObservable(0)
+  const data$ = useObservableSyncedQuery({
+    queryClient,
+    query: {
       queryKey: ["data"],
       queryFn: () =>
         axios.get("https://reqres.in/api/users/1")
           .then((res) => res.data.data),
     },
-    {
+    mutation: {
       mutationFn: (newData) => {
         // Uncomment to actually save
         /*
@@ -50,8 +56,7 @@ function Example() {
         lastSaved.set(Date.now())
       }
     }
-  )
-  const lastSaved$ = useObservable(0)
+  })
 
   return (
     <Box>
@@ -61,12 +66,12 @@ function Example() {
       <div>Name:</div>
       <Reactive.input
         className="input"
-        $value={data.first_name}
+        $value={data$.first_name}
       />
       <div>Email:</div>
       <Reactive.input
         className="input"
-        $value={data.email}
+        $value={data$.email}
       />
       <div>
         Last saved: <Memo>{lastSaved$}</Memo>
@@ -85,8 +90,9 @@ export function AutoSavingFormComponent() {
         Reactive,
         QueryClient,
         QueryClientProvider,
-        useObservableQuery,
         useObservable,
+        useObservableSyncedQuery,
+        useQueryClient,
         Memo,
         axios,
         Box,

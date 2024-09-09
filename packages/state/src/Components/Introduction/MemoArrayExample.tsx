@@ -23,8 +23,8 @@ function MemoArrayExample() {
       <div className="messages">
         <Memo>
           {() => (
-            messages$.map((m, i) => (
-              <div key={i}>{m}</div>
+            messages$.map((message$, i) => (
+              <div key={i}>{message$.get()}</div>
             ))
           )}
         </Memo>

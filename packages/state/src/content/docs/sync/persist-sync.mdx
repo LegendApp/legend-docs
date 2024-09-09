@@ -241,25 +241,32 @@ const profile$ = observable(mySyncPlugin({
 
 ### configureSynced
 
-Sync plugins have a lot of options so you'll likely want to set some defaults. You can do that with the `configureSynced` function to create a customized version of a plugin with your defaults. You will most likely want to at least set a default persistence plugin.
+Sync plugins have a lot of options so you'll likely want to set some defaults. You can do that with the `configureSynced` function to create a customized version of a plugin with your defaults, to reduce duplication and enforce consistency. You will most likely want to at least set a default persistence plugin.
 
 ```ts
-import { configureSynced, synced } from "@legendapp/state/sync"
+import { configureSynced, syncedCrud } from "@legendapp/state/sync"
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 
-// Create default options
-const myPersistOptions = configureSynced({
+// Configure the base `synced`
+const syncPlugin = configureSynced({
     persist: {
         plugin: ObservablePersistMMKV
     }
 })
 
-// Or create your own plugin derived from synced with defaulted options
-const mySyncPlugin = configureSynced(synced, {
+// Or configure options derived from another plugin
+const syncPlugin = configureSynced(syncedCrud, {
     persist: {
         plugin: ObservablePersistMMKV
     }
 })
+
+// Then using them will merge the options on top of the defaults.
+const state$ = observable(syncPlugin({
+    persist: {
+        name: 'test',
+    }
+}))
 ```
 
 ### synced

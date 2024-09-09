@@ -7,13 +7,13 @@ import {
   Show,
   useObservable,
 } from "@legendapp/state/react";
-import { useFetch } from "@legendapp/state/react-hooks/useFetch";
 import { useRef } from "react";
 import { Editor } from "shared/src/Components/Editor/Editor";
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
 
 const MESSAGE_LIST_CODE = `
 import { For, Reactive, Show, useObservable, useObservable } from "@legendapp/state/react"
-import { useFetch } from "@legendapp/state/react-hooks/useFetch"
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
 
 let nextID = 0
 function generateID() {
@@ -24,9 +24,9 @@ function App() {
   const renderCount = ++useRef(0).current
 
   // Create profile from fetch promise
-  const {
-    data: { data: profile },
-  } = useFetch('https://reqres.in/api/users/1')
+  const profile = useObservable(syncedFetch({
+    get: 'https://reqres.in/api/users/1'
+  }))
 
   // Username
   const userName = useObservable(() => {
@@ -85,7 +85,7 @@ export function MessageListComponent() {
       scope={{
         useRef,
         Reactive,
-        useFetch,
+        syncedFetch,
         useObservable,
         Show,
         Memo,

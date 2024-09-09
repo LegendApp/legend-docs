@@ -22,7 +22,7 @@ This example creates a global state object and persists it to Local Storage. Try
 
 ## Auto-saving Form
 
-This example uses the [useObservableQuery](../helpers-and-hooks#useobservablequery) hook to create an observable using [TanStack Query](https://tanstack.com/query/) that automatically sends mutations back to the server whenever the observable changes.
+This example uses the [useObservableSyncedQuery](../../sync/tanstack-query) hook to create an observable using [TanStack Query](https://tanstack.com/query/) that automatically sends mutations back to the server whenever the observable changes.
 
 It then uses the `Reactive` [two-way binding components](../fine-grained-reactivity#reactive-components) to bind those observable directly to the inputs.
 
@@ -38,7 +38,7 @@ This example uses [useObserve](../react-api#useobserve) to listen to changes in 
 
 ## List of messages
 
-This example uses the [useFetch](../helpers-and-hooks#usefetch) hook to get data from a server as an observable, [useComputed](../react-api#usecomputed) to create a computed observable, and [For](../fine-grained-reactivity#for) to display the array of messages in a high-performance way.
+This example uses the [syncedFetch](../../sync/fetch) helper to get data from a server as an observable, [useComputed](../react-api#usecomputed) to create a computed observable, and [For](../fine-grained-reactivity#for) to display the array of messages in a high-performance way.
 
 <MessageListExample />
 

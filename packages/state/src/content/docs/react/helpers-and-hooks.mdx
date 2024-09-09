@@ -8,36 +8,6 @@ Legend-State includes some helpful observables and hooks for common tasks. These
 
 ## Helper observables
 
-### observableFetch
-
-`observableFetch` creates an observable from the results of a `fetch` call, populating these values through the lifecycle of the `fetch`.
-
-```ts
-{
-    loading: boolean;
-    data?: T;
-    error?: any;
-    errorStr?: string;
-}
-```
-
-You can use it just like you would use fetch:
-
-```js
-import { observableFetch } from "@legendapp/state/helpers/fetch";
-
-const obsData$ = observableFetch(url);
-
-observe(() => {
-  const { loading, data, error, errorStr } = obsData$.get();
-  if (loading) console.log("Loading...");
-  else if (error) console.log("Error: ", errorStr);
-  else console.log("Data:", data);
-});
-```
-
-See also [useFetch](#usefetch) for the React hook version.
-
 ### currentDate
 
 `currentDate` is an observable containing the current date (with no time) that changes automatically at midnight.
@@ -95,31 +65,6 @@ pageHashParams.userid.set('newuser')
 ```
 
 ## Hooks
-
-### useFetch
-
-`useFetch` returns an [observableFetch](#observablefetch) populated with the results of a fetch call.
-
-This example uses a [Switch](../fine-grained-reactivity#switch) to render the first `Show` component whose `if` has a value, but you can just use `get()` as you would with any other observable.
-
-```jsx
-import { Show, Switch } from "@legendapp/state/react";
-import { useFetch } from "@legendapp/state/react-hooks/useFetch";
-
-function Component() {
-  const obsData = useFetch(url);
-
-  return (
-    <Switch>
-      <Show if={obsData.data}>{obsData.data.text}</Show>
-      <Show if={obsData.errorStr}>{obsData.errorStr}</Show>
-      <Show if={obsData.loading}>
-        <div>Loading...</div>
-      </Show>
-    </Switch>
-  );
-}
-```
 
 ### useHover (web)
 
@@ -208,103 +153,6 @@ function BottomSheet({ children }) {
     >
       <div ref={refInner}>{children}</div>
     </MotionDiv$>
-  );
-}
-```
-
-### useObservableQuery
-
-`useObservableQuery` is an observable wrapper around [TanStack Query](https://tanstack.com/query/), which is used in the exact same way as `useQuery` but it returns an observable and does not re-render on changes.
-
-```jsx
-import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
-
-function Component() {
-  const query$ = useObservableQuery({
-    queryKey: ["key"],
-    queryFn: () => axios.get(url).then((res) => res.data),
-  });
-
-  const { isLoading, error, data, isFetching } = query$.get();
-
-  if (isLoading) return <div>Loading...</div>;
-
-  if (error) return <div>An error has occurred: {error.message}</div>;
-
-  return (
-    <div>
-      <h2>{data.name}</h2>
-      <div>{isFetching ? "Updating..." : ""}</div>
-    </div>
-  );
-}
-```
-
-Additionally it can automatically mutate when the observable is changed. The second parameter takes the options you would pass to `useMutation`.
-
-```jsx
-import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
-
-function Component() {
-  const mutateResult$ = useObservable("");
-  const query$ = useObservableQuery(
-    {
-      queryKey: ["mutatingData"],
-      queryFn: () => axios.get(url).then((res) => res.data.data),
-    },
-    {
-      mutationFn: (newData) =>
-        axios
-          .post(url, newData)
-          .then((res) =>
-            mutateResult$.set(`Mutated: ${JSON.stringify(res, null, 4)}`)
-          ),
-    }
-  );
-
-  const { isLoading, error, data, isFetching } = query$.get();
-
-  if (isLoading) return <div>Loading...</div>;
-
-  if (error) return <div>An error has occurred: {error.message}</div>;
-
-  return (
-    <div>
-      <h2>{data.email}</h2>
-      <div>{isFetching ? "Updating..." : ""}</div>
-      <button onClick={() => query$.data.email.set("testemail")}>
-        Change email
-      </button>
-      <pre>{mutateResult.get()}</pre>
-    </div>
-  );
-}
-```
-
-See [an interactive CodeSandbox](https://codesandbox.io/s/legend-state-useobservablequery-0w1yil?file=/src/basic.tsx) for an example.
-
-### usePersistedObservable
-
-`usePersistedObservable` returns an observable like [useObservable](../react-api#useobservable) with options to automatically persist it, the same as [persistObservable](../../guides/persistence).
-
-```jsx
-import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable";
-
-function Component() {
-  const state$ = usePersistedObservable(
-    {
-      title: "Title",
-    },
-    {
-      local: "storeName",
-    }
-  );
-
-
-  return (
-    <div>
-      <Memo>{state$.title}</Memo>
-    </div>
   );
 }
 ```

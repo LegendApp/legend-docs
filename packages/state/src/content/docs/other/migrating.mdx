@@ -72,17 +72,17 @@ Persistence works in the same way but the API is changed for clarity and new fea
 
 Additionally, `persistObservable` was inserting a `state` property for the sync state, which caused compatibility issues with data that had its own `state` property. So the sync state is now accessible separately with `syncState`.
 
-Likewise, `configureObservablePersistence` is renamed to `configureObservableSync`.
+Global configuration was confusing and restricting, so instead of a global `configureObservablePersistence` you can now create customize synced functions.
 
 ```ts
 import { syncState } from "@legendapp/state"
-import { configureObservableSync, syncObservable } from "@legendapp/state/sync"
+import { configureSynced, syncObservable } from "@legendapp/state/sync"
 // Change
 configureObservablePersistence({
     pluginLocal: ObservablePersistLocalStorage
 })
 // To
-configureObservableSync({
+const syncPlugin = configureSynced({
     persist: {
         plugin: ObservablePersistLocalStorage
     }
@@ -95,11 +95,11 @@ const { state } = persistObservable(state$, {
     }
 })
 // To
-syncObservable(state$, {
+syncObservable(state$, syncPlugin({
     persist: {
         name: "store",
     }
-})
+}))
 const state = syncState(state$);
 ```
 
