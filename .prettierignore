@@ -1,0 +1,7 @@
+# Ignore artifacts:
+node_modules
+.vscode
+
+# Ignore files
+*.mdx
+*.md
