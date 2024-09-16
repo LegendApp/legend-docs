@@ -4,7 +4,7 @@ sidebar:
     order: 2
 ---
 
-## 2.x to 3.0 Alpha
+## 2.x to 3.0 Beta
 
 Version 3.0 is a big change focused mainly in four areas. If you have any trouble with the migration join the community on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-state) and we will help.
 
@@ -81,20 +81,17 @@ import { configureSynced, syncObservable } from "@legendapp/state/sync"
 configureObservablePersistence({
     pluginLocal: ObservablePersistLocalStorage
 })
-// To
-const syncPlugin = configureSynced({
-    persist: {
-        plugin: ObservablePersistLocalStorage
-    }
-})
-
-// Change
 const { state } = persistObservable(state$, {
     local: {
         name: "store",
     }
 })
 // To
+const syncPlugin = configureSynced({
+    persist: {
+        plugin: ObservablePersistLocalStorage
+    }
+})
 syncObservable(state$, syncPlugin({
     persist: {
         name: "store",
@@ -105,9 +102,7 @@ const state = syncState(state$);
 
 ### 4. Sync
 
-It's now much easier to sync individual observables with a new plugin system. The Firebase plugin is still in progress, so if you were using that you'll want to hold off on the upgrade until the full 3.0 release.
-
-See the [Persist and Sync docs](../../sync/persist-sync/) for the latest.
+It's now much easier to sync individual observables with a new plugin system. See the [Persist and Sync docs](../../sync/persist-sync/) for the latest documentation.
 
 If you had made a custom sync plugin on the old system, please post an issue on [Github](https://github.com/LegendApp/legend-state) or talk to us on [Discord](https://discord.gg/5CBaNtADNX), and we will help you with the migration.
 
