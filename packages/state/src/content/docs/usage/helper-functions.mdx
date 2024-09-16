@@ -4,21 +4,39 @@ sidebar:
   order: 5
 ---
 
-## opaqueObject
+## ObservableHint
 
-`opaqueObject` marks an object in an observable as opaque so that it will be treated as a primitive, so that properties inside the opaque object will not be observable.
+These hints tweak the default behavior of observables to improve their performance.
+
+### ObservableHint.opaque
+
+`ObservableHint.opaque` marks an object in an observable as opaque so that it will be treated as a primitive, so that properties inside the opaque object will not be observable.
 
 This is useful for storing DOM or React elements or other large objects in an observable when you don't care about tracking its properties changing.
 
 ```js
-import { observable. opaqueObject } from '@legendapp/state'
+import { observable. ObservableHint } from '@legendapp/state'
 
-const state$ = observable({ text: 'hi', body: opaqueObject(document.body) })
+const state$ = observable({ text: 'hi', body: ObservableHint.opaque(document.body) })
+```
+
+### ObservableHint.plain
+
+`ObservableHint.plain` marks an object as not having any child functions or observables. By default observables recurse through their children to find these and setup computed observables and observable links. This is a performance optimization to prevent needing to do that. Note that `ObservableHint.opaque` also prevents that recursion.
+
+This will break any descendant functions or computeds, so make sure to only use this when it is for sure a plain object/array.
+
+```js
+import { observable. ObservableHint } from '@legendapp/state'
+
+const bigObject = {}
+
+const state$ = observable({ text: 'hi', child: ObservableHint.plain(bigObject) })
 ```
 
 ## mergeIntoObservable
 
-If you want to merge a deep object into an observable, `mergeIntoObservable` can do that and retain all of the existing observables and listeners on the way, and fire listeners as values change. This is used by `persistObservable` under the hood.
+If you want to merge a deep object into an observable, `mergeIntoObservable` can do that and retain all of the existing observables and listeners on the way, and fire listeners as values change. This is used by `syncObservable` under the hood.
 
 ```js
 import { observable } from "@legendapp/state";
