@@ -12,16 +12,14 @@ There are two ways to use this plugin:
 
 ### 1. React Hook
 
-The `useObservableSyncedQuery` hook takes the normal Query parameters for the query and mutation, and additionally just needs a queryClient.
+The `useObservableSyncedQuery` hook takes the normal Query parameters for the query and mutation, and gets the queryClient from Context.
 
 ```tsx
 import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
 import { useQueryClient } from '@tanstack/react-query';
 
 const Component = observer(function Component() {
-    const queryClient = useQueryClient()
     const state$ = useObservableSyncedQuery({
-        queryClient,
         query: {
             queryKey: ['user'],
             queryFn: async () => {

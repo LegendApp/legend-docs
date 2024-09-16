@@ -1,29 +1,22 @@
-import axios from "axios";
-import { useRef } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useObservable, Reactive, Memo } from "@legendapp/state/react";
-import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
-import { useObservableQuery } from "@legendapp/state/react-hooks/useObservableQuery";
-import { Editor } from "shared/src/Components/Editor/Editor";
-import { Box } from "shared/src/Components/Box";
+import { enableReactComponents } from '@legendapp/state/config/enableReactComponents';
+import { Memo, Reactive } from '@legendapp/state/react';
+import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import axios from 'axios';
+import { useMemo, useRef } from 'react';
+import { Box } from 'shared/src/Components/Box';
+import { Editor } from 'shared/src/Components/Editor/Editor';
 
-let timeout: any;
-function debounce(fn: () => void, time: number) {
-  clearTimeout(timeout)
-  timeout = setTimeout(fn, time)
-}
 const AUTO_SAVING_FORM_CODE = `
 import axios from "axios"
 import { useRef } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useObservable, Reactive, Memo } from "@legendapp/state/react"
+import { useObservable, useMemo, Reactive, Memo } from "@legendapp/state/react"
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents"
-
-enableReactComponents()
-
-const queryClient = new QueryClient()
+import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
 
 function App() {
+  const queryClient = useMemo(() => new QueryClient(), [])
   return (
     <QueryClientProvider client={queryClient}>
       <Example />
@@ -33,13 +26,14 @@ function App() {
 
 function Example() {
   const renderCount = ++useRef(0).current
-  const { data } = useObservableQuery({
+  const { data } = useObservableSyncedQuery({
+    query: {
       queryKey: ["data"],
       queryFn: () =>
         axios.get("https://reqres.in/api/users/1")
           .then((res) => res.data.data),
     },
-    {
+    mutation: {
       mutationFn: (newData) => {
         // Uncomment to actually save
         /*
@@ -54,7 +48,7 @@ function Example() {
         lastSaved.set(Date.now())
       }
     }
-  )
+  })
   const lastSaved$ = useObservable(0)
 
   return (
@@ -78,33 +72,38 @@ function Example() {
     </Box>
   )
 }
+
+let timeout = undefined;
+function debounce(fn: () => void, time: number) {
+    clearTimeout(timeout);
+    timeout = setTimeout(fn, time);
+}
 `;
 
 export function AutoSavingFormComponent() {
-  return (
-    <Editor
-      code={AUTO_SAVING_FORM_CODE}
-      scope={{
-        useRef,
-        enableReactComponents,
-        Reactive,
-        QueryClient,
-        QueryClientProvider,
-        useObservableQuery,
-        useObservable,
-        Memo,
-        axios,
-        Box,
-        debounce,
-      }}
-      noInline={true}
-      renderCode=";render(<App />)"
-      transformCode={(code) =>
-        code.replace(
-          /className="input"/g,
-          'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"'
-        )
-      }
-    />
-  );
+    return (
+        <Editor
+            code={AUTO_SAVING_FORM_CODE}
+            scope={{
+                useRef,
+                enableReactComponents,
+                Reactive,
+                QueryClient,
+                QueryClientProvider,
+                useObservableSyncedQuery,
+                Memo,
+                axios,
+                Box,
+                useMemo,
+            }}
+            noInline={true}
+            renderCode=";render(<App />)"
+            transformCode={(code) =>
+                code.replace(
+                    /className="input"/g,
+                    'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"',
+                )
+            }
+        />
+    );
 }
