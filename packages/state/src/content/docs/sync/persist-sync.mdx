@@ -592,15 +592,11 @@ syncObservable(settings$, persistOptions({
 }))
 ```
 
-Because IndexedDB is an asynchronous API, you'll need to wait for it to load before you start reading from it. `syncObservable` returns an observable with load statuses that you can wait for.
+Because IndexedDB is an asynchronous API, observables will not load from persistence immediately, so if you're persisting a large amount of data you may want to show a loading state while persistence is loading.
 
 ```js
-const status$ = syncObservable(state$, persistOptions({
-    persist: {
-        name: 'store' // IndexedDB table name
-    }
-}))
-await when(status$.isPersistLoaded)
+const syncState$ = syncState(state$)
+await when(syncState$.isPersistLoaded)
 // Continue with load
 ```
 
@@ -645,17 +641,18 @@ const persistOptions = configureSynced({
         })
     }
 })
-```
-
-Because AsyncStorage is an asynchronous API, you'll need to wait for it to load before you start reading from it. `syncObservable` returns an observable with load statuses that you can wait for.
-
-```js
-const status$ = syncObservable(state$, persistOptions({
+syncObservable(state$, persistOptions({
     persist: {
         name: 'store'
     }
 }))
-await when(status$.isPersistLoaded)
+```
+
+Because AsyncStorage is an asynchronous API, observables will not load from persistence immediately, so if you're persisting a large amount of data you may want to show a loading state while persistence is loading.
+
+```js
+const syncState$ = syncState(state$)
+await when(syncState$.isPersistLoaded)
 // Continue with load
 ```
 
