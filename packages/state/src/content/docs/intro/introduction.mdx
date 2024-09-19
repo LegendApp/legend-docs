@@ -5,16 +5,39 @@ sidebar:
     order: 1
 ---
 
+import Primitives from "../../../Components/Introduction/Primitives.astro"
+import Intro from "../../../Components/Introduction/Intro.astro"
+
 :::caution
 Version 3 is in Alpha. You can use it by installing the @alpha version but keep in mind that the APIs may change slightly before release. If you're starting a new project we suggest starting with version 3 since it's much improved over version 2.
 
 See [Migrating](../../other/migrating) for details of the changes or [go back to the v2 docs](../../../v2).
 :::
 
-import Primitives from "../../../Components/Introduction/Primitives.astro"
-import Intro from "../../../Components/Introduction/Intro.astro"
+Legend-State is a super fast all-in-one local and remote state library that helps you write less code to make faster apps. We think you'll love it because it brings some huge benefits:
 
-Legend-State is a super fast all-in-one state and sync library that lets you write less code to make faster apps. Legend-State has four primary goals:
+##### 1. Local and remote state
+
+Legend-State handles local, global, and remote state all in one. Just `get()` and `set()` observables, and a robust sync system makes sure your state is persisted locally and synced with your server.
+
+##### 2. Great DX and less code
+
+Just `get()` in an `observer` to automatically re-render whenever state changes, and `set()` to update it. With the reduced boilerplate and everything that Legend-State does for you, you'll build better apps with less code.
+
+```jsx
+const Component = observer(() => {
+    const theme = state$.settings.theme.get()
+
+    return <div>Theme: {theme}</div>
+})
+```
+
+##### 3. Fine grained reactivity for the best possible performance
+
+Legend-State achieves much better performance than vanilla React and other state libraries because it does smaller re-renders less often, so your apps will load faster and run more smoothly.
+
+
+## Legend-State has four primary goals:
 
 ### 1. 🦄 As easy as possible to use
 
