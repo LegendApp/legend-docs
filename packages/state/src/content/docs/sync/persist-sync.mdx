@@ -20,10 +20,11 @@ A primary goal of Legend-State is to make automatic persisting and syncing both 
 
 The sync features are designed to be used through a plugin for your backend of choice. The plugins are all built on top of [synced](#synced) and are configurable with their own options as well as general sync and persist options.
 
-### SQL plugins
+### Database plugins
 
-- [Keel](../keel): The backend we use for Bravely
+- [Keel](../keel): Powerful schema-driven SQL backend we use in Bravely
 - [Supabase](../supabase): Popular PostgreSQL backend
+- Firebase RTDB: Documentation under construction
 
 These are built on top of the CRUD plugin.
 
@@ -197,43 +198,33 @@ The crud based plugins can be used to enable a robust offline-first sync system 
 - Persist saves locally so that they retry even after refresh
 - Sync in realtime
 
-First set the general sync and persist options, then configure your sync plugin with its specific options. In the [Keel](../keel) and [Supabase](../supabase) plugins you can configure these in their global configuration, or you can set them in their `synced` variant.
-
-1. Persist data locally by using the `persist` option
-2. Set the `retrySync` persist option to persist unsynced changes and keep retrying them after restart
-3. Set the `retry` option to keep retrying saves until they succeed
-4. (optionally) set the `changesSince` option to `last-sync` to sync only diffs since the last sync, along with an `updatedAt` field.
-5. Set the `subscribe` option to subscribe to a realtime updater or set up polling.
-
 ```ts
-import { configureSynced, synced } from '@legendapp/state/sync'
+import { observable } from '@legendapp/state'
 import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
-const mySyncPlugin = configureSynced(syncedCrud, {
-    persist: {
-        plugin: ObservablePersistLocalStorage,
-        retrySync: true,
-    },
-    debounceSet: 500,
-    retry: {
-        infinite: true,
-    }
-})
-
-const profile$ = observable(mySyncPlugin({
-    list: () => {/*...*/},
+const profile$ = observable(syncedCrud({
+    get: () => {/*...*/},
     create: () => {/*...*/},
     update: () => {/*...*/},
-    delete: () => {/*...*/},
-    changesSince: 'last-sync',
-    fieldUpdatedAt: 'updatedAt',
+    // Enable realtime. Some plugins have this built in so it's not required.
     subscribe: ({ refresh, update }) => {
         return realtime.subscribe({ /*...*/ }, () => {
             // Trigger a refresh of the list function
             refresh()
         })
-    }
+    },
+    // Local first configuration
+    persist: {
+        plugin: ObservablePersistLocalStorage, // Set the persistence plugin
+        name: 'profile', // Set the name of this object in persistence
+        retrySync: true, // Persist pending changes to retry
+    },
+    retry: {
+        infinite: true, // Keep retrying until it saves
+    },
+    changesSince: 'last-sync', // Sync only diffs
+    fieldUpdatedAt: 'updatedAt' // Required for syncing only diffs
 }))
 ```
 

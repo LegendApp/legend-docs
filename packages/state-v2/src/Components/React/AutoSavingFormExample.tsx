@@ -26,6 +26,8 @@ function App() {
 
 function Example() {
   const renderCount = ++useRef(0).current
+  const lastSaved$ = useObservable(0)
+
   const { data } = useObservableSyncedQuery({
     query: {
       queryKey: ["data"],
@@ -41,15 +43,14 @@ function Example() {
           axios
             .post("https://reqres.in/api/users/1", newData)
             .then((res) =>
-              lastSaved.set(Date.now())
+              lastSaved$.set(Date.now())
             )
         }, 1000)
         */
-        lastSaved.set(Date.now())
+        lastSaved$.set(Date.now())
       }
     }
   })
-  const lastSaved$ = useObservable(0)
 
   return (
     <Box>
