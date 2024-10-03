@@ -204,7 +204,7 @@ import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 const profile$ = observable(syncedCrud({
-    get: () => {/*...*/},
+    list: () => {/*...*/},
     create: () => {/*...*/},
     update: () => {/*...*/},
     // Enable realtime. Some plugins have this built in so it's not required.
