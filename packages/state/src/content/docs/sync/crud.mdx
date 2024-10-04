@@ -46,9 +46,9 @@ const profiles$ = observable(syncedCrud({
 // profile$.get() is a Record<string, Profile>
 ```
 
-The `list` function expects an array of rows to be returned from you API.
+The `list` function expects an array of rows to be returned from your API.
 
-The shape of the observable object returned from a `list` can be changed with the as parameter, which supports three options:
+The shape of the observable object returned from a `list` can be changed with the `as` parameter, which supports three options:
 
 1. `object`: The default, an object keyed by the row's `id` field.
 2. `array`: Treat the result of a query as an array
