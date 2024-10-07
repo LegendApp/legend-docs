@@ -1,6 +1,6 @@
 :root {
     --sl-color-accent-high: #09d;
-    /* --sl-color-bg-nav: #0d0e0fca; */
+    --sl-color-bg-nav: rgba(13, 14, 15, 0.8);
     --sl-color-bg-sidebar: #0d0e0f;
     --sl-font: 'Inter', ui-sans-serif, system-ui, sans-serif;
     @media (min-width: 80rem) {
@@ -18,13 +18,12 @@
 }
 
 .content a:hover {
-    color: #0AE !important;
+    color: #0ae !important;
 }
 
 aside {
     @apply rounded;
 }
-
 
 /* inter-300 - latin */
 
@@ -38,7 +37,6 @@ aside {
     /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-
 /* inter-regular - latin */
 
 @font-face {
@@ -50,7 +48,6 @@ aside {
     src: url('fonts/inter-v13-latin-regular.woff2') format('woff2');
     /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
-
 
 /* inter-500 - latin */
 
@@ -64,7 +61,6 @@ aside {
     /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-
 /* inter-600 - latin */
 
 @font-face {
@@ -76,7 +72,6 @@ aside {
     src: url('fonts/inter-v13-latin-600.woff2') format('woff2');
     /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
-
 
 /* inter-700 - latin */
 
@@ -90,7 +85,6 @@ aside {
     /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-
 /* inter-800 - latin */
 
 @font-face {
@@ -102,7 +96,6 @@ aside {
     src: url('fonts/inter-v13-latin-800.woff2') format('woff2');
     /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
-
 
 /* inter-900 - latin */
 
