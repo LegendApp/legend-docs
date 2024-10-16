@@ -16,7 +16,7 @@ The behavior when using `get` is:
 - **get**: Observable value is the value returned from get
 - **create**: If get returned null, then setting any value on the observable will create
 - **update**: If get returned a value, then updating any value on the observable will update
-- **create**: Setting the value to null or undefined, or calling `delete()`, will delete
+- **delete**: Setting the value to null or undefined, or calling `delete()`, will delete
 
 ```ts
 import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
