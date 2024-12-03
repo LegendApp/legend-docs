@@ -1,59 +1,59 @@
-import { defineConfig, passthroughImageService } from "astro/config";
-import starlight from "@astrojs/starlight";
-import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
-import tailwindcssNesting from "tailwindcss/nesting";
+import { defineConfig, passthroughImageService } from 'astro/config';
+import starlight from '@astrojs/starlight';
+import react from '@astrojs/react';
+import tailwind from '@astrojs/tailwind';
+import tailwindcssNesting from 'tailwindcss/nesting';
 
-const isPublish = process.argv[process.argv.length - 1] === "--publishlegend";
+const isPublish = process.argv[process.argv.length - 1] === '--publishlegend';
 
 // https://astro.build/config
 export default defineConfig({
     integrations: [
         starlight({
-            title: "Legend State",
-            customCss: [
-                "./src/tailwind.css",
-                "./src/editor.css",
-                "./src/overrides.css",
-            ],
-            favicon: "/favicon.ico",
+            title: 'Legend State',
+            customCss: ['./src/tailwind.css', './src/editor.css', './src/overrides.css'],
+            favicon: '/favicon.ico',
             social: {
-                github: "https://github.com/LegendApp/legend-state",
+                github: 'https://github.com/LegendApp/legend-state',
             },
             editLink: {
-                baseUrl: "https://github.com/LegendApp/legend-docs/edit/main/packages/state/",
+                baseUrl: 'https://github.com/LegendApp/legend-docs/edit/main/packages/state/',
             },
-            sidebar: [{
-                    label: "Intro",
-                    autogenerate: { directory: "intro" },
+            sidebar: [
+                {
+                    label: 'Intro',
+                    autogenerate: { directory: 'intro' },
                 },
                 {
-                    label: "Usage",
-                    autogenerate: { directory: "usage" },
+                    label: 'Usage',
+                    autogenerate: { directory: 'usage' },
                 },
                 {
-                    label: "React",
-                    autogenerate: { directory: "react" },
+                    label: 'React',
+                    autogenerate: { directory: 'react' },
                 },
                 {
-                    label: "Persist and Sync",
-                    autogenerate: { directory: "sync" },
+                    label: 'Persist and Sync',
+                    autogenerate: { directory: 'sync' },
                 },
                 {
-                    label: "Guides",
-                    autogenerate: { directory: "guides" },
+                    label: 'Guides',
+                    autogenerate: { directory: 'guides' },
                 },
                 {
-                    label: "Other",
-                    autogenerate: { directory: "other" },
+                    label: 'Other',
+                    autogenerate: { directory: 'other' },
                 },
             ],
-            components: isPublish ?
-                {
-                    Header: "./src/Components/Overrides/Header.astro",
-                    MobileMenuFooter: "./src/Components/Overrides/MobileMenuFooter.astro",
-                } :
-                undefined,
+            components: {
+                ThemeProvider: './src/Components/Overrides/ThemeProvider.astro',
+                ...(isPublish
+                    ? {
+                          Header: './src/Components/Overrides/Header.astro',
+                          MobileMenuFooter: './src/Components/Overrides/MobileMenuFooter.astro',
+                      }
+                    : {}),
+            },
         }),
         react(),
         tailwind({ applyBaseStyles: false }),
@@ -68,6 +68,6 @@ export default defineConfig({
                 plugins: [tailwindcssNesting()],
             },
         },
-        ssr: { noExternal: ["usehooks-ts", "react-icons"] },
+        ssr: { noExternal: ['usehooks-ts', 'react-icons'] },
     },
 });
