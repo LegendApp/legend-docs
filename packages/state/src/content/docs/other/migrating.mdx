@@ -4,6 +4,95 @@ sidebar:
     order: 2
 ---
 
+## 3.0.0-beta.19 to 3.0.0-beta.20
+
+Based on discussions with the React Compiler team and a lot of feedback from the community, we're changing the suggested way of using observables in React. The old ways will still work for a while so we don't break existing apps, and we have some tools to aid in the migration, which can be done slowly over time.
+
+Basically, we need to change from `observer` tracking all `get()` calls to using a `use$` hook instead.
+
+```jsx
+const state$ = observable({ value: 10 })
+
+// observer is now just an optional performance optimization
+const Component = observer(() => {
+    // ✅ The new way
+    const value = use$(state$.value)
+
+    // 🔴 The old way
+    const value = state$.value.get()
+})
+```
+
+To work best with React Compiler, render functions need to be pure, meaning that calling a function (like `state$.get()`) should always return the same value. So based on that assumption, Compiler will wrap function calls in `useMemo`. But Legend State's current usage of `observer` depends on `state$.get()` returning different values when it changes, so this would break Legend State's reactivity. But, Compiler will not memoize any hooks, so if we just use a `use$(state$)` hook instead of `state$.get()` then everything will work fine.
+
+So because Compiler is really great even in its first version and will continue to get better over time, Legend State needs to follow the rules of React perfectly to get all of the benefits.
+
+### The full details
+
+- ✅ A new hook `use$` (just `useSelector` with a new name) is now the default way to consume observables
+
+```jsx
+const state$ = observable({ value: 10 })
+const Component = () => {
+    const value = use$(state$.value)
+    // ...
+}
+```
+
+- ✅ observer is an optimization to merge all `use$` calls into a single hook, useful for large components
+
+```jsx
+const state$ = observable({ value1: 10, /* ... */ })
+const Component = observer(() => {
+    // Observer makes this run only a single hook
+    const value1 = use$(state$.value1)
+    const value2 = use$(state$.value2)
+    const value3 = use$(state$.value3)
+    const value4 = use$(state$.value)4
+    const value5 = use$(state$.value5)
+    const value6 = use$(state$.value6)
+    const value7 = use$(state$.value7)
+    // ...
+})
+```
+
+- ✅ If calling a function that consumes observables, wrap it in `use$`. This will have an additional benefit of only triggering re-renders if the return value changes.
+
+```jsx
+const state$ = observable({ v1: 10, v2: 20 })
+const getComputedData = () => {
+    return state$.v1.get() + state$.v2.get()
+}
+const Component = () => {
+    const v = use$(() => getComputedData())
+    // ...
+}
+```
+
+- 🔴 (Deprecated) Calling `.get()` directly within `observer`
+
+```jsx
+const state$ = observable({ value: 10 })
+const Component = observer(() => {
+    const value = state$.value.get()
+    // ...
+})
+```
+
+- 🔴 (Deprecated) enableReactTracking({ auto: true }) is discouraged and will be removed in a later version
+
+This was a shortcut to use `get()` without needing observer, but since we're discouraging `get()` anyway, this becomes less useful.
+
+```jsx
+enableReactAutoTracking({ auto: true })
+const state$ = observable({ value: 10 })
+const Component = () => {
+    const value = state$.value.get()
+    // ...
+}
+```
+
+
 ## 2.x to 3.0 Beta
 
 Version 3.0 is a big change focused mainly in four areas. If you have any trouble with the migration join the community on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-state) and we will help.

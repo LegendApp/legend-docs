@@ -67,13 +67,22 @@ state$._ = { test: "hello" }
 
 ## enableReactTracking
 
-`enableReactTracking` has two modes, to either enable automatic tracking or warn if you forgot `observer`.
+`enableReactTracking` is useful to warn if a `get()` is called within a React component without being wrapped in `use$`, which would break the reactivity.
 
-:::caution[Caution: This is a big hack]
-This method depends on secret React internals which don't work in React 19. We are looking into a new solution to try to make it work in React 19, but for now usage of this is generally discouraged, and we suggest the [observer](../../react/react-api/#observer) pattern.
+:::caution[Caution: Not working in React 19]
+This method depends on secret React internals which don't work in React 19. We are looking into a new solution to try to make it work in React 19.
 :::
 
-### warnUnobserved
+### warnMissingUse
+
+This will log a warning whenever `get()` is called within a React component. This can help you find places where you meant to use `use$` to track the observable in React, or you may want to change it to `peek()` to be clearer that it should not trigger updates.
+
+
+### (Deprecated) warnUnobserved
+
+:::note
+> In previous versions Legend State had some hacks that were unstable and broke compatibility with the React Compiler, and these deprecated options were to help with those. See [migrating](../../other/migrating) for more info. They will still work for now but will be removed in a later version.
+:::
 
 This makes React components warn if using `get()` without being wrapped in `observer`. This is a very helpful way to catch the easy mistake of forgetting `observer`.
 
@@ -86,7 +95,7 @@ enableReactTracking({
 })
 ```
 
-### auto tracking
+### (Deprecated) auto tracking
 
 This makes React components auto-track observables without using `observer`, so all you need to do is `get()` an observable and the component will re-render when it changes. This is useful for rapid prototyping as observing is done for you.
 

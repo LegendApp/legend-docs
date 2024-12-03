@@ -8,7 +8,7 @@ If you notice your components feeling too slow or seeming to render too often, t
 
 ## useTraceListeners()
 
-Call `useTraceListeners()` anywhere within `observer` or any React component to console.log a list of every observable being track for changes. This can help you find and reduce the number of listeners.
+Call `useTraceListeners()` anywhere within `observer` or any React component to console.log a list of every observable being tracked for changes. This can help you find and reduce the number of listeners.
 
 ```jsx
 import { useTraceListeners } from "@legendapp/state/trace";
@@ -17,7 +17,9 @@ const Component = observer(function Component(props) {
   // Call useTraceListeners anywhere inside the component
   useTraceListeners();
 
-  return <div>{state.count.get()}</div>;
+  const count = use$(state.count)
+
+  return <div>{count}</div>;
 
   /* This logs:
 
@@ -39,7 +41,9 @@ const Component = observer(function Component(props) {
   // Call useTraceUpdates anywhere inside the component
   useTraceUpdates();
 
-  return <div>{state.count.get()}</div>;
+  const count = use$(state$.count)
+
+  return <div>{count}</div>;
 
   /* This logs:
 
@@ -62,8 +66,10 @@ const Component = observer(function Component(props) {
   // Call useVerifyNotTracking anywhere inside the component
   useVerifyNotTracking();
 
+  const count = use$(state$.count)
+
   // This will log an error because get() makes it track
-  return <div>{state.count.get()}</div>;
+  return <div>{count}</div>;
 });
 const FineComponent = observer(function FineComponent(props) {
   // Call useVerifyNotTracking anywhere inside the component
@@ -71,7 +77,7 @@ const FineComponent = observer(function FineComponent(props) {
 
   // This will not log because rendering the observable directly
   // does not re-render this component
-  return <div>{state.count}</div>;
+  return <Memo>{state$.count}</Memo>;
 });
 ```
 
@@ -86,16 +92,21 @@ const Component = observer(function Component(props) {
   // Call useVerifyOneRender anywhere inside the component
   useVerifyOneRender();
 
+  const count = use$(state$.count)
+
   // This will log an error after one render when count is updated
-  return <div>{state.count.get()}</div>;
+  return <div>{count}</div>;
 });
 const Component = observer(function Component(props) {
   // Call useVerifyOneRender anywhere inside the component
   useVerifyOneRender();
 
+  const count = state$.count.peek()
+
+
   // This will not log because `get(false)` does not track observable
   // does not re-render this component
-  return <div>{state.count.get(false)}</div>;
+  return <div>{state.count.peek()}</div>;
 });
 ```
 

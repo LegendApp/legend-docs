@@ -1,14 +1,9 @@
-import { useRef } from "react";
-import {
-  useObservable,
-  useObserve,
-  Reactive,
-  Memo,
-  Show,
-} from "@legendapp/state/react";
-import { Editor } from "shared/src/Components/Editor/Editor";
-import { Box } from "shared/src/Components/Box";
-import { Button } from "shared/src/Components/Button";
+import { useRef } from 'react';
+import { useObservable, useObserve, Memo, Show } from '@legendapp/state/react';
+import { Editor } from 'shared/src/Components/Editor/Editor';
+import { Box } from 'shared/src/Components/Box';
+import { Button } from 'shared/src/Components/Button';
+import { $React } from '@legendapp/state/react-web';
 
 const FORM_VALIDATION_CODE = `
 import { useRef } from "react"
@@ -56,7 +51,7 @@ function App() {
     <Box>
       <div>Renders: {renderCount}</div>
       <div>Username:</div>
-      <Reactive.input
+      <$React.input
         className="input"
         $value={username$}
       />
@@ -64,7 +59,7 @@ function App() {
         <Memo>{usernameError$}</Memo>
       </div>
       <div>Password:</div>
-      <Reactive.input
+      <$React.input
         type="password"
         className="input"
         $value={password$}
@@ -88,33 +83,30 @@ function App() {
 `;
 
 export function FormValidationComponent() {
-  return (
-    <Editor
-      code={FORM_VALIDATION_CODE}
-      scope={{
-        useRef,
-        Reactive,
-        useObservable,
-        useObserve,
-        Memo,
-        Show,
-        Box,
-        Button
-      }}
-      noInline={true}
-      previewWidth={200}
-      renderCode=";render(<App />)"
-      transformCode={(code) =>
-        code
-          .replace(
-            /className="input"/g,
-            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"'
-          )
-          .replace(
-            /className="error"/g,
-            'className="text-sm text-red-500 mb-2 h-10 pt-1"'
-          )
-      }
-    />
-  );
+    return (
+        <Editor
+            code={FORM_VALIDATION_CODE}
+            scope={{
+                useRef,
+                $React,
+                useObservable,
+                useObserve,
+                Memo,
+                Show,
+                Box,
+                Button,
+            }}
+            noInline={true}
+            previewWidth={200}
+            renderCode=";render(<App />)"
+            transformCode={(code) =>
+                code
+                    .replace(
+                        /className="input"/g,
+                        'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
+                    )
+                    .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 h-10 pt-1"')
+            }
+        />
+    );
 }

@@ -49,8 +49,12 @@ Legend-State provides reactive versions of all platform components with reactive
 
 For input elements it can create a two-way binding to the value, so that the observable is always in sync with the displayed value of the element.
 
+Under the hood this extracts the reactive props to a separate component which re-renders when they change. This can be a big performance boost if these props change often and your outer component is very heavy, as it will move those re-renders down into a tiny wrapper component. But keep in mind that overdoing it can potentially add slightly extra overhead if it's adding more components to the React tree.
+
+### React Web
+
 ```jsx
-import { Reactive } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
 
 function Component() {
     // This component renders only once
@@ -58,27 +62,55 @@ function Component() {
 
     return (
         <div>
-            // Reactive styling
-            <Reactive.div
+            {/* Reactive styling */}
+            <$React.div
                 $style={() => ({
                     color: state$.age.get() > 5 ? 'green' : 'red'
                 })}
                 $className={() => state$.age.get() > 5 ? 'kid' : 'baby'}
             />
-            // Reactive children
-            <Reactive.div>
+            {/* Reactive children */}
+            <$React.div>
                 {() => (
                     <div>{state$.age.get() > 5 ? <Kid /> : <Baby />}</div>
                 )}
             />
-            // Two-way bind to inputs
-            <Reactive.textarea $value={state$.name} />
-            <Reactive.select $value={state$.age}>...</Reactive.select>
-            <Reactive.input
+            {/* Two-way bind to inputs */}
+            <$React.textarea $value={state$.name} />
+            <$React.select $value={state$.age}>...</$React.select>
+            <$React.input
                 $value={state$.name}
                 $className={() => !state$.name.get() && "border-red-500"}
                 $style={() => !state$.name.get() && { borderWidth: 1 }}
             />
+        </div>
+    )
+}
+```
+
+### React Native
+
+```jsx
+import { $View, $Text, $TextInput } from "@legendapp/state/react-native"
+
+function Component() {
+    // This component renders only once
+    const state$ = useObservable({ name: '', age: 18 })
+
+    return (
+        <div>
+            {/* Reactive styling */}
+            <$View
+                $style={() => ({
+                    color: state$.age.get() > 5 ? 'green' : 'red'
+                })}
+            />
+            {/* Reactive children */}
+            <$Text>
+                {() => state$.age.get() > 5 ? 'child' : 'baby'}
+            </$Text>
+            {/* Two-way bind to inputs */}
+            <$TextInput $value={state$.name} />
         </div>
     )
 }
@@ -223,14 +255,14 @@ Props:
 
 ```jsx
 import { observable } from "@legendapp/state"
-import { For, observer } from "@legendapp/state/react"
+import { For, use$ } from "@legendapp/state/react"
 
 const state$ = observable({ arr: [{ id: 1, text: 'hi' }]})
 
-const Row = observer(function Row({ item$ }) {
-    const text = item$.text.get()
+const Row = function Row({ item$ }) {
+    const text = use$(item$.text)
     return <div>{text}</div>
-})
+}
 function List() {
     // 1. Use the For component with an item prop
     return <For each={state$.arr} item={Row} />
@@ -309,20 +341,20 @@ In addition to wrapping your own functions, you can wrap external library compon
 import { reactive } from "@legendapp/state/react";
 import { motion } from "framer-motion";
 
-const ReactiveMotionDiv = reactive(motion.div);
+const $MotionDiv = reactive(motion.div);
 
 function Component() {
   // This component renders only once
   const width$ = useObservable(100);
 
   return (
-    <ReactiveMotionDiv
+    <$MotionDiv
       $animate={() => ({
         x: width$.get(),
       })}
     >
       ...
-    </ReactiveMotionDiv>
+    </$MotionDiv>
   );
 }
 ```
@@ -363,20 +395,20 @@ function App() {
 import { reactiveComponents } from "@legendapp/state/react";
 import { motion } from "framer-motion";
 
-const ReactiveMotion = reactiveComponents(motion);
+const $Motion = reactiveComponents(motion);
 
 function Component() {
   // This component renders only once
   const width$ = useObservable(100);
 
   return (
-    <ReactiveMotion.div
+    <$Motion.div
       $animate={() => ({
         x: width$.get(),
       })}
     >
       ...
-    </ReactiveMotion.div>
+    </$Motion.div>
   );
 }
 ```

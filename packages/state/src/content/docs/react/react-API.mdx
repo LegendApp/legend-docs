@@ -8,38 +8,13 @@ import PauseExample from "../../../Components/React/PauseExample.astro"
 
 ## Reading state
 
-### observer
+### use$
 
-`observer` is the suggested way of consuming observables for the best performance and safety.
-
-It makes the whole component into an observing context - it automatically tracks observables for changes when `get()` is called, even from within hooks or helper functions.
-
-:::note[The best option]
-Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. It tracks all overable access with a single hook so it is much more efficient than using multiple hooks.
+:::note
+In previous version this was called useSelector. If you were using `useSelector` it will still work for a while, but we suggest changing them to `use$` as we'll remove `useSelector` in a later version. Many people were unsure of what a "selector" was so it was unclear what it did. Plus, `use$` is shorter 😀
 :::
 
-See [Observing Contexts](../../usage/reactivity#observing-contexts) for more about when it tracks.
-
-```jsx
-import { observable } from "@legendapp/state"
-import { observer } from "@legendapp/state/react"
-
-const state$ = observable({ count: 0 })
-
-const Component = observer(function Component() {
-  // Accessing state automatically makes this component track changes to re-render
-  const count = state$.count.get()
-
-  // Re-renders whenever count changes
-  return <div>{count}</div>
-})
-```
-
-It's sometimes easy to forget to wrap every component in `observer` so we have an optional extension that can warn you when using `get()` in a component that's not an observer: [enableReactTracking](../../usage/configuring/#enablereacttracking).
-
-### useSelector
-
-`useSelector` computes a value and automatically listens to any observables accessed while running, and only re-renders if the computed value changes.
+`use$` computes a value and automatically listens to any observables accessed while running, and only re-renders if the computed value changes. This can take either an observable or a function that consumes observables.
 
 Props:
 
@@ -48,16 +23,16 @@ Props:
 
 ```jsx
 import { observable } from "@legendapp/state"
-import { useSelector } from "@legendapp/state/react"
+import { use$ } from "@legendapp/state/react"
 
 const state$ = observable({ selected: 1, theme })
 
 const Component = ({ id }) => {
     // Only re-renders if the return value changes
-    const isSelected = useSelector(() => id === state$.selected.get())
+    const isSelected = use$(() => id === state$.selected.get())
 
-    // Get the raw value of an observable and listen to it
-    const theme = useSelector(state$.theme)
+    // Get the raw value of an observable and re-render when it changes
+    const theme = use$(state$.theme)
 
     ...
 }
@@ -65,7 +40,7 @@ const Component = ({ id }) => {
 
 #### Using with React Suspense
 
-Using `{ suspense: true }` as the second parameter makes the component work with Suspense. If the observable is a Promise, Suspense will render the fallback until it resolves to a value.
+Using `{ suspense: true }` as the second parameter makes the component work with Suspense. If the observable is a Promise, Suspense will render the fallback until it resolves to a non-undefined value.
 
 ```jsx
 import { useObservable, useSelector } from "@legendapp/state/react"
@@ -95,6 +70,33 @@ export default function App() {
 }
 ```
 
+### observer
+
+`observer` is a good optimization if you have want to consume observables/selectors conditionally or if you consume many of them in one component. It inserts a single hook into the component and tracks all observables in the one hook. Because `use$` normally runs three hooks, this can drastically reduce the number of hooks in your components if you use `use$` many times.
+
+:::note
+Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. It tracks all overable access with a single hook so it is much more efficient than using multiple hooks.
+:::
+
+> In previous versions this allowed calling `get()` directly within components, but that is discouraged as of 3.0.0-beta.20. See [migrating](../../other/migrating) for more info.
+
+See [Observing Contexts](../../usage/reactivity#observing-contexts) for more about when it tracks.
+
+```jsx
+import { observable } from "@legendapp/state"
+import { observer, use$ } from "@legendapp/state/react"
+
+const state$ = observable({ count: 0 })
+
+const Component = observer(function Component() {
+  // Accessing state automatically makes this component track changes to re-render
+  const count = use$(state$.count)
+
+  // Re-renders whenever count changes
+  return <div>{count}</div>
+})
+```
+
 ### useObserve
 
 `useObserve` creates an [observe](../../usage/reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
@@ -105,6 +107,7 @@ Note that `useObserve` runs during component render, not after render like `useE
 
 ```jsx
 import { event } from "@legendapp/state"
+import { $React } from "@legendapp/state/react-web"
 import { useObserve, useObservable, Reactive } from "@legendapp/state/react"
 
 const eventUpdateTitle = event()
@@ -130,7 +133,7 @@ function ProfilePage() {
   return (
     <div>
       <span>Name:</span>
-      <Reactive.input $value={profile$.name} />
+      <$React.input $value={profile$.name} />
     </div>
   )
 }

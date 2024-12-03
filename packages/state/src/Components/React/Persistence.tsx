@@ -1,48 +1,48 @@
-import { observable } from "@legendapp/state";
-import { syncObservable } from "@legendapp/state/sync";
-import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
-import { reactive, Reactive } from "@legendapp/state/react";
-import classNames from "classnames";
-import { motion } from "framer-motion";
-import { useRef } from "react";
-import { Box } from "shared/src/Components/Box";
-import { Button } from "shared/src/Components/Button";
-import { Editor } from "shared/src/Components/Editor/Editor";
+import { observable } from '@legendapp/state';
+import { syncObservable } from '@legendapp/state/sync';
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
+import { reactive } from '@legendapp/state/react';
+import classNames from 'classnames';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { Box } from 'shared/src/Components/Box';
+import { Button } from 'shared/src/Components/Button';
+import { Editor } from 'shared/src/Components/Editor/Editor';
+import { $React } from '@legendapp/state/react-web';
 
 export const Footer = ({
-  className,
-  theme,
-  children,
-  width,
-  center,
+    className,
+    theme,
+    children,
+    width,
+    center,
 }: {
-  className?: string;
-  theme?: "light" | "dark";
-  center?: boolean;
-  children: any;
-  width?: number;
+    className?: string;
+    theme?: 'light' | 'dark';
+    center?: boolean;
+    children: any;
+    width?: number;
 }) => {
-  return (
-    <div
-      className={classNames(
-        "rounded-lg p-4",
-        center && "flex flex-col items-center",
-        theme === "light" ? "bg-gray-50 text-gray-900" : "bg-gray-800",
-        className
-      )}
-      style={{ width }}
-    >
-      {children}
-    </div>
-  );
+    return (
+        <div
+            className={classNames(
+                'rounded-lg p-4',
+                center && 'flex flex-col items-center',
+                theme === 'light' ? 'bg-gray-50 text-gray-900' : 'bg-gray-800',
+                className,
+            )}
+            style={{ width }}
+        >
+            {children}
+        </div>
+    );
 };
-
 
 const PERSISTENCE_CODE = `
 import { observable } from "@legendapp/state"
 import { syncObservable } from "@legendapp/state/sync"
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
-import { reactive, Reactive } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
 import { motion } from "framer-motion"
 import { useRef } from "react"
 
@@ -74,7 +74,7 @@ function App() {
     <Box>
       <div>Renders: {renderCount}</div>
       <div>Username:</div>
-      <Reactive.input
+      <$React.input
         className="input"
         $value={state$.user.profile.name}
       />
@@ -96,34 +96,34 @@ function App() {
 `;
 
 export function PersistenceComponent() {
-  return (
-    <Editor
-      code={PERSISTENCE_CODE}
-      scope={{
-        useRef,
-        observable,
-        syncObservable,
-        ObservablePersistLocalStorage,
-        reactive,
-        motion,
-        Reactive,
-        Button,
-        Box,
-      }}
-      noInline={true}
-      previewWidth={210}
-      renderCode=";render(<App />)"
-      transformCode={(code) =>
-        code
-          .replace(
-            /className="footer"/g,
-            'className="bg-gray-600 text-center text-white text-sm overflow-hidden"'
-          )
-          .replace(
-            /className="input"/g,
-            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"'
-          )
-      }
-    />
-  );
+    return (
+        <Editor
+            code={PERSISTENCE_CODE}
+            scope={{
+                useRef,
+                observable,
+                syncObservable,
+                ObservablePersistLocalStorage,
+                reactive,
+                motion,
+                $React,
+                Button,
+                Box,
+            }}
+            noInline={true}
+            previewWidth={210}
+            renderCode=";render(<App />)"
+            transformCode={(code) =>
+                code
+                    .replace(
+                        /className="footer"/g,
+                        'className="bg-gray-600 text-center text-white text-sm overflow-hidden"',
+                    )
+                    .replace(
+                        /className="input"/g,
+                        'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
+                    )
+            }
+        />
+    );
 }

@@ -12,7 +12,7 @@ export const InstallFrameworks = observer(function ({ className }: { className?:
             <InstallCode name={name} />
             {framework === 'React Native' && (
                 <div>
-                    <div>And install your preferred storage plugin</div>
+                    <div>And if you want to use persistence, install your preferred storage plugin</div>
                     <InstallCode name="react-native-mmkv" />
                     <div className="!mt-2 -mb-2">or</div>
                     <InstallCode name="@react-native-async-storage/async-storage" />

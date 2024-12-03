@@ -22,14 +22,14 @@ Legend-State handles local, global, and remote state all in one. Just `get()` an
 
 ##### 2. Great DX and less code
 
-Just `get()` in an `observer` to automatically re-render whenever state changes, and `set()` to update it. With the reduced boilerplate and everything that Legend-State does for you, you'll build better apps with less code.
+Just `use$` an observable to automatically re-render whenever it changes, and `set()` to update it. With the reduced boilerplate and everything that Legend-State does for you, you'll build better apps with less code.
 
 ```jsx
-const Component = observer(() => {
-    const theme = state$.settings.theme.get()
+const Component = () => {
+    const theme = use$(state$.settings.theme)
 
     return <div>Theme: {theme}</div>
-})
+}
 ```
 
 ##### 3. Fine grained reactivity for the best possible performance
@@ -62,14 +62,15 @@ observe(() => {
   console.log(settings$.theme.get())
 })
 
-const Component = observer(function Component() {
-    const theme = state$.settings.theme.get()
+const Component = function Component() {
+    const theme = use$(state$.settings.theme)
+    const isDark = use$(() => state$.settings.theme.get() === 'dark')
 
     return <div>Theme: {theme}</div>
-})
+}
 ```
 
-React components track access to `get()` on observables and automatically re-render whenever they change.
+`use$` tracks access to `get()` on observables and automatically re-renders whenever they change.
 
 :::note[Live editable]
 Many examples in these docs are editable so you can play around with the code and see how it works.

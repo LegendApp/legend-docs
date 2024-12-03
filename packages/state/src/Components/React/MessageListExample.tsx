@@ -1,15 +1,10 @@
-import { Box } from "shared/src/Components/Box";
-import { Button } from "shared/src/Components/Button";
-import {
-  For,
-  Memo,
-  Reactive,
-  Show,
-  useObservable,
-} from "@legendapp/state/react";
-import { useRef } from "react";
-import { Editor } from "shared/src/Components/Editor/Editor";
-import { syncedFetch } from "@legendapp/state/sync-plugins/fetch";
+import { Box } from 'shared/src/Components/Box';
+import { Button } from 'shared/src/Components/Button';
+import { For, Memo, Show, useObservable } from '@legendapp/state/react';
+import { useRef } from 'react';
+import { Editor } from 'shared/src/Components/Editor/Editor';
+import { syncedFetch } from '@legendapp/state/sync-plugins/fetch';
+import { $React } from '@legendapp/state/react-web';
 
 const MESSAGE_LIST_CODE = `
 import { For, Reactive, Show, useObservable, useObservable } from "@legendapp/state/react"
@@ -63,7 +58,7 @@ function App() {
         </For>
       </div>
       <div className="flex gap-2 items-center">
-        <Reactive.input
+        <$React.input
           className="input"
           placeholder="Enter message"
           $value={currentMessage}
@@ -79,33 +74,33 @@ function App() {
 `;
 
 export function MessageListComponent() {
-  return (
-    <Editor
-      code={MESSAGE_LIST_CODE}
-      scope={{
-        useRef,
-        Reactive,
-        syncedFetch,
-        useObservable,
-        Show,
-        Memo,
-        For,
-        Box,
-        Button,
-      }}
-      noInline={true}
-      renderCode=";render(<App />)"
-      transformCode={(code) =>
-        code
-          .replace(
-            /className="input"/g,
-            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1"'
-          )
-          .replace(
-            /className="messages"/g,
-            'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"'
-          )
-      }
-    />
-  );
+    return (
+        <Editor
+            code={MESSAGE_LIST_CODE}
+            scope={{
+                useRef,
+                $React,
+                syncedFetch,
+                useObservable,
+                Show,
+                Memo,
+                For,
+                Box,
+                Button,
+            }}
+            noInline={true}
+            renderCode=";render(<App />)"
+            transformCode={(code) =>
+                code
+                    .replace(
+                        /className="input"/g,
+                        'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1"',
+                    )
+                    .replace(
+                        /className="messages"/g,
+                        'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"',
+                    )
+            }
+        />
+    );
 }

@@ -76,20 +76,20 @@ Now that we have an observable for our Todos, let's hook it up to React.
 
 ### Observables in React
 
-The easiest and most optimized way to use Legend-State in React is to wrap components in [observer](../../react/react-api/#observer). Then whenever you call `get()` on an observable, it is tracked automatically so that the component re-renders whenever it changes. So since the `App` component is getting some computed values we wrap that in `observer`.
+To consume an observable in React, just `use$` it. This will track it automatically so that the component re-renders whenever it changes.
 
-Legend-State also includes `Reactive` components for both React and React Native. You just need to enable them once and then you can use them throughout your app.
+Legend-State also includes reactive components for both React and React Native. See [Reactive components](../../react/fine-grained-reactivity/#reactive-components) for more about that.
 
 ```tsx
-import { observer, Reactive, useObservable } from "@legendapp/state/react"
+import { observer, Reactive, use$, useObservable } from "@legendapp/state/react"
 
-export const App = observer(function App() {
+export function App() {
     // Consume the computed observables from the global store$
-    const total = store$.total.get()
-    const completed = store$.numCompleted.get()
+    const total = use$(store$.total)
+    const completed = use$(store$.numCompleted)
     // Create a local observable
     const theme$ = useObservable<'light' | 'dark'>('dark')
-    const theme = theme$.get()
+    const theme = use$(theme$)
 
     const onClickClear = () => store$.todos.set([])
 
@@ -105,7 +105,7 @@ export const App = observer(function App() {
             </View>
         </Box>
     )
-})
+}
 
 // Receives item$ prop from the For component
 function TodoItem({ item$ }: { item$: Observable<Todo> }) {
@@ -119,7 +119,7 @@ function TodoItem({ item$ }: { item$: Observable<Todo> }) {
     return (
         <View className="row">
             <Checkbox $value={item$.completed} />
-            <Reactive.TextInput
+            <$TextInput
                 $value={item$.text}
                 onKeyDown={onKeyDown}
             />
