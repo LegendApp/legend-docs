@@ -149,7 +149,7 @@ const state$ = observable({
 })
 ```
 
-Note that [observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, including within any called functions. So if a function called from within an observer calls `get()` that will be tracked too.
+Note that [observing contexts](../reactivity/#observing-contexts) track all observable `get()` calls, including within any called functions. So if a function called from within a `use$` hook calls `get()` that will be tracked too.
 
 ```jsx
 const state$ = observable({
@@ -158,11 +158,11 @@ const state$ = observable({
     fullName: () => state$.fname.get() + ' ' + state$.lname.get()
 })
 
-const Name = observer(function Name() {
+function Name() {
     // Tracks [state$.fname, state$.lname]
-    const name = state$.fullName()
+    const name = use$(() => state$.fullName())
     return <div>{name}</div>
-})
+}
 ```
 
 ### Computed Functions
@@ -186,6 +186,20 @@ const fullName = state$.fullName()
 
 // Calling .get() activates it as a computed observable that recomputes itself on changes
 const reactiveFullName = state$.fullName.get()
+```
+
+A computed function can be used like an observable or as a function.
+
+```jsx
+function Name() {
+    // Use it as a function
+    const name1 = use$(() => state$.fullName())
+
+    // Use it as an observable
+    const name2 = use$(state$.fullName)
+
+    return <div>{name2}</div>
+}
 ```
 
 The difference between using it as a function vs. as a computed observable is that a computed observable is an object that caches the value.

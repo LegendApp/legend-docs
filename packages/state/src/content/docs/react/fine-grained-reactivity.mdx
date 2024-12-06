@@ -365,13 +365,13 @@ This is a single HOC with the functionality of both `observer` and `reactive`. T
 
 ```js
 import { observable } from "@legendapp/state";
-import { reactiveObserver } from "@legendapp/state/react";
+import { reactiveObserver, use$ } from "@legendapp/state/react";
 
 const name$ = observable("Annyong");
 const isSignedIn$ = observable(false);
 
 const Component = reactiveObserver(function Component({ message }) {
-  const name = name$.get();
+  const name = use$(name$);
 
   return (
     <div>

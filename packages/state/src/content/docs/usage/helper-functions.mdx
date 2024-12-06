@@ -136,20 +136,23 @@ const state$ = observable({ todos: ["Get milk"] });
 
 const { undo, redo, undos$, redos$ } = undoRedo(state$.todos, { limit: 100 });
 
-export const UndoUI = observer(function UndoUI() {
+export function UndoUI() {
+  const undos = use$(undos$);
+  const redos = use$(redos$);
+
   return (
     <div>
-      {undos$.get() > 0 ? (
+      {undos > 0 ? (
         <button onClick={undo}>Undo</button>
       ) : (
         <button disabled={true}>Undo</button>
       )}
-      {redos$.get() > 0 ? (
+      {redos > 0 ? (
         <button onClick={undo}>Redo</button>
       ) : (
         <button disabled={true}>Redo</button>
       )}
     </div>
   );
-});
+}
 ```

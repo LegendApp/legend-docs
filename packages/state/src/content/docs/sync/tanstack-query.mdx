@@ -17,8 +17,9 @@ The `useObservableSyncedQuery` hook takes the normal Query parameters for the qu
 ```tsx
 import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
 import { useQueryClient } from '@tanstack/react-query';
+import { use$ } from '@legendapp/state/react';
 
-const Component = observer(function Component() {
+function Component() {
     const state$ = useObservableSyncedQuery({
         query: {
             queryKey: ['user'],
@@ -36,8 +37,8 @@ const Component = observer(function Component() {
         },
     })
 
-    // Call get to start the sync
-    const state = state$.get()
+    // get it with use$ to start the sync
+    const state = use$(state$)
 
     // Or bind an input directly to a property, which will also start the sync
     return (
@@ -45,7 +46,7 @@ const Component = observer(function Component() {
             <$React.input $value={state$.first_name} />
         </div>
     )
-})
+}
 ```
 
 ### 2. Outside of React

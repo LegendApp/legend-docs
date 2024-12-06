@@ -25,6 +25,10 @@ Legend-State handles local, global, and remote state all in one. Just `get()` an
 Just `use$` an observable to automatically re-render whenever it changes, and `set()` to update it. With the reduced boilerplate and everything that Legend-State does for you, you'll build better apps with less code.
 
 ```jsx
+const state$ = observable({
+    settings: { theme: 'dark' }
+})
+
 const Component = () => {
     const theme = use$(state$.settings.theme)
 
@@ -62,7 +66,7 @@ observe(() => {
   console.log(settings$.theme.get())
 })
 
-const Component = function Component() {
+function Component() {
     const theme = use$(state$.settings.theme)
     const isDark = use$(() => state$.settings.theme.get() === 'dark')
 

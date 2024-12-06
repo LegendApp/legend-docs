@@ -1,21 +1,21 @@
-import { observable, observe } from "@legendapp/state";
-import { observer } from "@legendapp/state/react";
-import classNames from "classnames";
-import { Box } from "shared/src/Components/Box";
-import { Button } from "shared/src/Components/Button";
-import { Editor } from "shared/src/Components/Editor/Editor";
+import { observable, observe } from '@legendapp/state';
+import { observer, use$ } from '@legendapp/state/react';
+import classNames from 'classnames';
+import { Box } from 'shared/src/Components/Box';
+import { Button } from 'shared/src/Components/Button';
+import { Editor } from 'shared/src/Components/Editor/Editor';
 
 const INTRO_EXAMPLE_CODE = `
 import { observable } from "@legendapp/state"
-import { observer } from "@legendapp/state/react"
+import { use$ } from "@legendapp/state/react"
 
 // Create an observable object
 const settings$ = observable({ theme: 'dark' })
 
 // This is the code for the example on your right ----->
-const Component = observer(function Component() {
+function Component() {
   // theme is automatically tracked for changes
-  const theme = settings$.theme.get()
+  const theme = use$(settings$.theme)
 
   const toggle = () => {
     settings$.theme.set(theme =>
@@ -31,24 +31,25 @@ const Component = observer(function Component() {
       </Button>
     </Box>
   )
-})
+}
 `;
 
 export function IntroExampleComponent() {
-  return (
-    <Editor
-      code={INTRO_EXAMPLE_CODE}
-      scope={{
-        observable,
-        observer,
-        classNames,
-        observe,
-        Button,
-        Box,
-      }}
-      noInline
-      renderCode=";render(<Component />)"
-      previewWidth={180}
-    />
-  );
+    return (
+        <Editor
+            code={INTRO_EXAMPLE_CODE}
+            scope={{
+                observable,
+                observer,
+                classNames,
+                observe,
+                Button,
+                Box,
+                use$,
+            }}
+            noInline
+            renderCode=";render(<Component />)"
+            previewWidth={180}
+        />
+    );
 }

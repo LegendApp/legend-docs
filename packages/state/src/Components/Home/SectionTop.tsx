@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { observable, type Observable } from '@legendapp/state';
-import { Memo, Reactive, Show, observer, useMount, useObservable } from '@legendapp/state/react';
+import { Memo, Reactive, Show, observer, use$, useMount, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from 'shared/src/Components/Button';
 import { Editor } from 'shared/src/Components/Editor/Editor';
@@ -11,10 +11,9 @@ import CurvedArrowCallout from './CurvedArrowCallout';
 const CodeDemoTop = `
 const speed$ = observable(2)
 
-// Observe it
-const Component = observer(() => {
-  // Get it
-  const speed = speed$.get()
+const Component = () => {
+  // Get and observe it
+  const speed = use$(speed$)
 
   // Set it
   const up = () => speed$.set(v => v % 10 + 1)
@@ -25,7 +24,7 @@ const Component = observer(() => {
 
     <Button onClick={up}>{speed} is too slow 🤘</Button>
   </>)
-})
+}
 `;
 
 const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
@@ -61,6 +60,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                     FlashingDiv,
                     Reactive,
                     observer,
+                    use$,
                 }}
                 transformCode={
                     (code) =>
@@ -99,7 +99,9 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                                 <div className="rotate-12">
                                     <CurvedArrowCallout />
                                 </div>
-                                <div className="absolute top-0 left-0 !mt-10 -ml-3 2xs:-ml-6 text-md font-bold">Turn it up!</div>
+                                <div className="absolute top-0 left-0 !mt-10 -ml-3 2xs:-ml-6 text-md font-bold">
+                                    Turn it up!
+                                </div>
                             </motion.div>
                         )}
                     </Show>
