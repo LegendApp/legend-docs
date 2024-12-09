@@ -60,7 +60,7 @@ state$.store === newValue.store; // ✅ true
 
 `trackHistory` creates an observable that tracks all changes in the target observable, with the previous value at the time it was changed.
 
-Since the history is an observable you can observe it or persist it like any other observable. This can be useful for saving a version history for a text editor. If you'd like to create an undo stack, check out the [undoRedo](#undoRedo) helper.
+Since the history is an observable you can observe it or persist it like any other observable. This can be useful for saving a version history for a text editor. If you'd like to create an undo stack, check out the [undoRedo](#undoredo) helper.
 
 An optional second parameter lets you use an existing observable for storing the history, which can be useful to save history into an existing state object.
 
