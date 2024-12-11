@@ -66,7 +66,7 @@ const store$ = observable<Store>({
       id: nextId++,
       text: "",
     };
-    store$.todos[todo.id].set(todo);
+    store$.todos.push(todo);
   },
 });
 
@@ -104,7 +104,7 @@ function App() {
             <For each={store$.todos} item={TodoItem} />
             <View className="flex justify-between">
                 <Button onClick={() => store$.addTodo()}>Add</Button>
-                <Button onClick={() => store$.todos.set({})}>Clear</Button>
+                <Button onClick={() => store$.todos.set([])}>Clear</Button>
             </View>
         </Box>
     )
