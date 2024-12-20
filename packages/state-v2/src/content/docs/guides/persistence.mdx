@@ -14,7 +14,7 @@ A primary goal of Legend-State is to make automatic persistence easy and very ro
 
 It also includes options to transform data in and/or out, and has event handlers for every step in the lifecycle.
 
-import Install from "shared/src/Components/Install/Install.astro"
+import Install from 'shared/src/Components/Install/Install.astro';
 
 <Install name="@legendapp/state" />
 
@@ -24,10 +24,10 @@ import Install from "shared/src/Components/Install/Install.astro"
 
 The second parameter to `persistObservable` provides some options:
 
-- `local`: A unique name for this observable in storage or options to configure it
-- `pluginLocal`: The local persistence plugin to use. This defaults to use the globally configured pluginLocal.
-- `remote`: Options to configure remote persistence
-- `pluginRemote`: The persistence plugin to use. This defaults to use the globally configured pluginRemote.
+-   `local`: A unique name for this observable in storage or options to configure it
+-   `pluginLocal`: The local persistence plugin to use. This defaults to use the globally configured pluginLocal.
+-   `remote`: Options to configure remote persistence
+-   `pluginRemote`: The persistence plugin to use. This defaults to use the globally configured pluginRemote.
 
 `persistObservable` returns the observable with an additional `state` child that can be used to check it's loading state.
 
@@ -40,43 +40,45 @@ First choose and configure the storage plugin for your platform.
 ##### Local Storage (React)
 
 ```js
-import { configureObservablePersistence } from '@legendapp/state/persist'
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+import { configureObservablePersistence } from '@legendapp/state/persist';
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
 
 // Global configuration
 configureObservablePersistence({
-    pluginLocal: ObservablePersistLocalStorage
-})
+    pluginLocal: ObservablePersistLocalStorage,
+});
 ```
 
 ##### IndexedDB (React)
 
 ```js
-import { configureObservablePersistence } from '@legendapp/state/persist'
-import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb'
+import { configureObservablePersistence } from '@legendapp/state/persist';
+import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb';
 
 // Global configuration
 configureObservablePersistence({
-    pluginLocal: ObservablePersistIndexedDB
-})
+    pluginLocal: ObservablePersistIndexedDB,
+});
 ```
 
 ##### MMKV (React Native)
+
 ```js
-import { configureObservablePersistence } from '@legendapp/state/persist'
-import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv'
+import { configureObservablePersistence } from '@legendapp/state/persist';
+import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv';
 
 // Global configuration
 configureObservablePersistence({
     // Use react-native-mmkv in React Native
-    pluginLocal: ObservablePersistMMKV
-})
+    pluginLocal: ObservablePersistMMKV,
+});
 ```
 
 ##### AsyncStorage (React Native)
+
 ```js
-import { configureObservablePersistence } from '@legendapp/state/persist'
-import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'
+import { configureObservablePersistence } from '@legendapp/state/persist';
+import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage';
 
 // Global configuration
 configureObservablePersistence({
@@ -85,10 +87,42 @@ configureObservablePersistence({
     localOptions: {
         asyncStorage: {
             // The AsyncStorage plugin needs to be given the implementation of AsyncStorage
-            AsyncStorage
-        }
-    }
+            AsyncStorage,
+        },
+    },
+});
+```
+
+Then call `persistObservable` for each observable you want to persist.
+
+```js
+import { persistObservable } from '@legendapp/state/persist'
+
+const store$ = observable({ store: { bigObject: { ... } } })
+
+// Persist this observable
+persistObservable(store$, {
+    local: 'store' // Unique name
 })
+```
+
+##### expo-sqlite/kv-store (React Native)
+
+```js
+import { configureObservablePersistence } from '@legendapp/state/persist';
+import { ObservablePersistSQLiteStorage } from '@legendapp/state/persist-plugins/expo-sqlite';
+
+// Global configuration
+configureObservablePersistence({
+    // Use SQLiteStorage in React Native
+    pluginLocal: ObservablePersistSQLiteStorage,
+    localOptions: {
+        asyncStorage: {
+            // The SQLiteStorage plugin needs to be given the implementation of SQLiteStorage
+            SQLiteStorage,
+        },
+    },
+});
 ```
 
 Then call `persistObservable` for each observable you want to persist.
@@ -116,41 +150,41 @@ It requires some extra configuration for the database name, the table names, and
 IndexedDB requires changing the version whenever the tables change, so you can start with version 1 and increment the version whenever you add/change tables.
 
 ```js
-import { persistObservable } from "@legendapp/state/persist"
-import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
+import { persistObservable } from '@legendapp/state/persist';
+import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb';
 
 configureObservablePersistence({
-  pluginLocal: ObservablePersistIndexedDB,
-  local: {
-    indexedDB: {
-      databaseName: "Legend",
-      version: 1,
-      tableNames: ["documents", "store"],
+    pluginLocal: ObservablePersistIndexedDB,
+    local: {
+        indexedDB: {
+            databaseName: 'Legend',
+            version: 1,
+            tableNames: ['documents', 'store'],
+        },
     },
-  },
-})
+});
 
 // Mode 1: Persist a dictionary
 const state$ = observable({
-  obj1: { id: "obj1", text: "..." },
-  obj2: { id: "obj2", text: "..." },
-})
+    obj1: { id: 'obj1', text: '...' },
+    obj2: { id: 'obj2', text: '...' },
+});
 
 persistObservable(state$, {
-  local: "documents", // IndexedDB table name
-})
+    local: 'documents', // IndexedDB table name
+});
 
 // Mode 2: Persist an object with itemId
-const settings$ = observable({ theme: "light" })
+const settings$ = observable({ theme: 'light' });
 
 persistObservable(settings$, {
-  local: {
-    name: "store", // IndexedDB table name
-    indexedDB: {
-      itemID: "settings",
+    local: {
+        name: 'store', // IndexedDB table name
+        indexedDB: {
+            itemID: 'settings',
+        },
     },
-  },
-})
+});
 ```
 
 Because IndexedDB is an asynchronous API, you'll need to wait for it to load before you start reading from it. `persistObservable` returns an Observable with load statuses that you can wait for.
@@ -165,25 +199,27 @@ await when(status.isLoadedLocal)
 
 ### React Native
 
-If you are on React Native you will need to install `react-native-mmkv` or `@react-native-async-storage/async-storage`, depending on which one you choose to use.
+If you are on React Native you will need to install `react-native-mmkv` or `@react-native-async-storage/async-storage` or `expo-sqlite`, depending on which one you choose to use.
 
 <Install name="react-native-mmkv" />
 
 <Install name="@react-native-async-storage/async-storage" />
 
+<Install name="expo-sqlite" />
+
 ## Remote Persistence
 
 Legend-State includes a few remote persistence plugins, and it's very easy to make a custom remote persistence plugin. When using the remote plugins there are some options that can be very useful.
 
-- `transform`: Transform data as it loads in from the remote source or out as it saves to the remote source. You could use this to encrypt the data or transform it into some other format.
-- `offlineBehavior`: `false` | `'retry'` determines whether to persist changes to retry them on the next load
-- `onBeforeSet`: Called before saving to the remote
-- `onGetError`: Called if load from remote fails
-- `onSet`: Called after successful save to the remote
-- `onSetError`: Called if save to remote fails
-- `waitForGet`: A Promise or Observable to wait for before getting from remote
-- `waitForSet`: A Promise or Observable to wait for before setting to remote
-- `manual`: If true it will not get immediately, but will wait for you to call sync() on the returned syncState
+-   `transform`: Transform data as it loads in from the remote source or out as it saves to the remote source. You could use this to encrypt the data or transform it into some other format.
+-   `offlineBehavior`: `false` | `'retry'` determines whether to persist changes to retry them on the next load
+-   `onBeforeSet`: Called before saving to the remote
+-   `onGetError`: Called if load from remote fails
+-   `onSet`: Called after successful save to the remote
+-   `onSetError`: Called if save to remote fails
+-   `waitForGet`: A Promise or Observable to wait for before getting from remote
+-   `waitForSet`: A Promise or Observable to wait for before setting to remote
+-   `manual`: If true it will not get immediately, but will wait for you to call sync() on the returned syncState
 
 Returns the observable itself along with a `state` child. Note that the `state` is not actually in the raw data and is only accessible through the observable.
 
@@ -207,38 +243,37 @@ when(state.isLoaded, () => console.log('Loaded from remote'))
 
 All you need to make a remote persistence plugin is a `get` and a `set` function. You could use this to load/save each observable in a different way or build your own custom plugins.
 
-- `get()`: Return a value or a Promise of a value
-- `set({ value, changes })`: Save the value somewhere, return a Promise.
+-   `get()`: Return a value or a Promise of a value
+-   `set({ value, changes })`: Save the value somewhere, return a Promise.
 
 ```js
-import { persistObservable } from "@legendapp/state/persist"
+import { persistObservable } from '@legendapp/state/persist';
 
 const obs$ = persistObservable(
-  { initialValue: "hello" },
-  {
-    pluginRemote: {
-      get: ({ onChange }) => {
-        const getFn = () =>
-          fetch("https://url.to.get").then((res) => res.json())
+    { initialValue: 'hello' },
+    {
+        pluginRemote: {
+            get: ({ onChange }) => {
+                const getFn = () => fetch('https://url.to.get').then((res) => res.json());
 
-        // Set a timer to poll every 10 seconds
-        setInterval(async () => {
-          const value = getFn()
-          onChange({ value })
-        }, 10000)
+                // Set a timer to poll every 10 seconds
+                setInterval(async () => {
+                    const value = getFn();
+                    onChange({ value });
+                }, 10000);
 
-        // Return the initial value
-        return getFn()
-      },
-      set: async ({ value, changes }) => {
-        await fetch("https://url.to.set", {
-          method: "POST",
-          body: JSON.stringify(value),
-        })
-      },
-    },
-  }
-)
+                // Return the initial value
+                return getFn();
+            },
+            set: async ({ value, changes }) => {
+                await fetch('https://url.to.set', {
+                    method: 'POST',
+                    body: JSON.stringify(value),
+                });
+            },
+        },
+    }
+);
 ```
 
 ### Fetch plugin
@@ -246,17 +281,17 @@ const obs$ = persistObservable(
 Try it in a [sandbox](https://codesandbox.io/s/legend-state-persist-fetch-jl723s?file=/src/App.tsx).
 
 ```js
-import { persistObservable } from "@legendapp/state/persist"
-import { persistPluginQuery } from "@legendapp/state/persist-plugins/query"
+import { persistObservable } from '@legendapp/state/persist';
+import { persistPluginQuery } from '@legendapp/state/persist-plugins/query';
 
-const state$ = observable({ name: '' })
+const state$ = observable({ name: '' });
 
 persistObservable(state$, {
-  pluginRemote: persistPluginFetch({
-    get: 'https://url.to.get',
-    set: 'https://url.to.set'
-  })
-})
+    pluginRemote: persistPluginFetch({
+        get: 'https://url.to.get',
+        set: 'https://url.to.set',
+    }),
+});
 ```
 
 ### TanStack Query Plugin
@@ -266,66 +301,64 @@ persistObservable(state$, {
 Try it in a [sandbox](https://codesandbox.io/s/legend-state-persist-query-dh4j59?file=/src/App.tsx).
 
 ```js
-import { observable } from "@legendapp/state"
-import { persistObservable } from "@legendapp/state/persist"
-import { persistPluginQuery } from "@legendapp/state/persist-plugins/query"
-import { QueryClient } from "@tanstack/react-query"
+import { observable } from '@legendapp/state';
+import { persistObservable } from '@legendapp/state/persist';
+import { persistPluginQuery } from '@legendapp/state/persist-plugins/query';
+import { QueryClient } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
-const page$ = observable(1)
+const page$ = observable(1);
 
 const obs$ = persistObservable(
-  { initialValue: "hello" },
-  {
-    pluginRemote: persistPluginQuery({
-      queryClient,
-      query: {
-        // queryKey is a computed function that updates the query when page$ changes
-        queryKey: () => ["key", page$.get()],
-        queryFn: () => {
-          return fetch("https://url.to.get?page=" + page$.get()).then((res) =>
-            res.json()
-          )
-        },
-      },
-    }),
-  }
-)
+    { initialValue: 'hello' },
+    {
+        pluginRemote: persistPluginQuery({
+            queryClient,
+            query: {
+                // queryKey is a computed function that updates the query when page$ changes
+                queryKey: () => ['key', page$.get()],
+                queryFn: () => {
+                    return fetch('https://url.to.get?page=' + page$.get()).then((res) => res.json());
+                },
+            },
+        }),
+    }
+);
 ```
 
 ### Firebase Realtime Database Plugin
 
 The Firebase Realtime Database plugin has some extra options. The only required option is `refPath` which is the ref path in the database. It also has some other useful options:
 
-- `refPath`: Given the user's UID (if available) return a string of the Firebase path
-- `requireAuth`: Wait until we have an active Firebase Auth user before loading
-- `query`: Given the reference to the refPath, you can adjust it further
-- `mode`: "once" | "realtime" - defaults to "realtime". "once" gets the value once and does not setup any listeners.
+-   `refPath`: Given the user's UID (if available) return a string of the Firebase path
+-   `requireAuth`: Wait until we have an active Firebase Auth user before loading
+-   `query`: Given the reference to the refPath, you can adjust it further
+-   `mode`: "once" | "realtime" - defaults to "realtime". "once" gets the value once and does not setup any listeners.
 
 ```js
-import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
-import { ObservablePersistFirebase } from "@legendapp/state/persist-plugins/firebase"
-import { persistObservable } from "@legendapp/state/persist"
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
+import { ObservablePersistFirebase } from '@legendapp/state/persist-plugins/firebase';
+import { persistObservable } from '@legendapp/state/persist';
 
 persistObservable(state.user, {
-  pluginLocal: ObservablePersistLocalStorage,
-  local: {
-    name: "user",
-  },
-  pluginRemote: ObservablePersistFirebase,
-  remote: {
-    transform: {
-      in: (value) => decrypt(value),
-      out: (value) => encrypt(value),
+    pluginLocal: ObservablePersistLocalStorage,
+    local: {
+        name: 'user',
     },
-    onSaveError: (err) => console.error(err),
-    firebase: {
-      refPath: (uid) => `/users/${uid}/`,
-      requireAuth: true,
+    pluginRemote: ObservablePersistFirebase,
+    remote: {
+        transform: {
+            in: (value) => decrypt(value),
+            out: (value) => encrypt(value),
+        },
+        onSaveError: (err) => console.error(err),
+        firebase: {
+            refPath: (uid) => `/users/${uid}/`,
+            requireAuth: true,
+        },
     },
-  },
-})
+});
 ```
 
 ## Roll your own plugin
