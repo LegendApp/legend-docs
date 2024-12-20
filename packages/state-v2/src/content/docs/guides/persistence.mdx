@@ -106,38 +106,6 @@ persistObservable(store$, {
 })
 ```
 
-##### expo-sqlite/kv-store (React Native)
-
-```js
-import { configureObservablePersistence } from '@legendapp/state/persist';
-import { ObservablePersistSQLiteStorage } from '@legendapp/state/persist-plugins/expo-sqlite';
-
-// Global configuration
-configureObservablePersistence({
-    // Use SQLiteStorage in React Native
-    pluginLocal: ObservablePersistSQLiteStorage,
-    localOptions: {
-        asyncStorage: {
-            // The SQLiteStorage plugin needs to be given the implementation of SQLiteStorage
-            SQLiteStorage,
-        },
-    },
-});
-```
-
-Then call `persistObservable` for each observable you want to persist.
-
-```js
-import { persistObservable } from '@legendapp/state/persist'
-
-const store$ = observable({ store: { bigObject: { ... } } })
-
-// Persist this observable
-persistObservable(store$, {
-    local: 'store' // Unique name
-})
-```
-
 ### IndexedDB
 
 The IndexedDB plugin can be used in two ways:
@@ -199,13 +167,11 @@ await when(status.isLoadedLocal)
 
 ### React Native
 
-If you are on React Native you will need to install `react-native-mmkv` or `@react-native-async-storage/async-storage` or `expo-sqlite`, depending on which one you choose to use.
+If you are on React Native you will need to install `react-native-mmkv` or `@react-native-async-storage/async-storage`, depending on which one you choose to use.
 
 <Install name="react-native-mmkv" />
 
 <Install name="@react-native-async-storage/async-storage" />
-
-<Install name="expo-sqlite" />
 
 ## Remote Persistence
 
@@ -272,7 +238,7 @@ const obs$ = persistObservable(
                 });
             },
         },
-    }
+    },
 );
 ```
 
@@ -323,7 +289,7 @@ const obs$ = persistObservable(
                 },
             },
         }),
-    }
+    },
 );
 ```
 
