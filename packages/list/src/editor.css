@@ -1,0 +1,395 @@
+:root {
+    --sl-text-code: var(--sl-text-xs);
+    --sl-sidebar-width: 14rem;
+    --color-fg-default: #c9d1d9;
+    --color-bg-code-block: #0E1218;
+    --color-border-code-block: #2E3238;
+    --color-bg-inline-code-block: rgb(110 118 129 / 40%);
+    --color-gray: #8b949e;
+    --color-red: #ff7b72;
+    --color-green: #7ee787;
+    --color-blue: #79c0ff;
+    --color-light-blue: #a5d6ff;
+    --color-indigo: #a5d6ff;
+    --color-purple: #d2a8ff;
+    --color-brown: #ffa657;
+    --code-border-radius: 0.5em;
+    --code-background: var(--astro-code-color-background) !important;
+    --astro-code-color-text: var(--color-fg-default);
+    --astro-code-color-background: var(--color-bg-code-block);
+    --astro-code-token-constant: var(--color-green);
+    --astro-code-token-string: var(--color-light-blue);
+    --astro-code-token-comment: var(--color-gray);
+    --astro-code-token-keyword: var(--color-red);
+    --astro-code-token-parameter: var(--color-purple);
+    --astro-code-token-function: var(--color-purple);
+    --astro-code-token-string-expression: var(--color-blue);
+    --astro-code-token-punctuation: var(--color-gray);
+    --astro-code-token-link: var(--color-indigo);
+}
+
+.mt-section {
+    @apply mt-24 md:mt-32 !important;
+}
+
+.mt-subsection {
+    @apply mt-16 md:mt-24 !important;
+}
+
+.astro-code {
+    border-radius: var(--code-border-radius);
+    border-color: var(--color-border-code-block) !important;
+}
+
+.shadow-dark {
+    @apply shadow-md shadow-tShadowDark
+}
+
+.home-editor {
+    @apply max-w-full;
+}
+
+.home-editor .prism-code {
+    padding: 16px !important;
+    @apply border border-tBorder shadow-dark bg-[#161b22] whitespace-pre !important;
+}
+
+code {
+    border-radius: 0.25rem;
+}
+
+
+/**
+ * GitHub's theme skeleton for prism.js
+ * @author Jongwoo Han (@jongwooo)
+ * https: //github.com/jongwooo/prism-theme-github/blob/main/themes/prism-github-default-dark.css
+ */
+
+code[class*="language-"],
+pre[class*="language-"],
+.expressive-code pre {
+    background-color: var(--color-bg-code-block) !important;
+    color: var(--color-fg-default) !important;
+    border-color: var(--color-border-code-block) !important;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    line-height: 1.5;
+    tab-size: 2;
+    hyphens: none;
+    border-radius: var(--code-border-radius) !important;
+}
+
+
+/* Code blocks */
+
+pre[class*="language-"] {
+    font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: var(--code-border-radius);
+}
+
+
+/* Inline code */
+
+:not(pre)>code[class*="language-"] {
+    background-color: var(--color-bg-inline-code-block);
+    padding: 0.2em 0.3em;
+    border-radius: var(--code-border-radius);
+    white-space: normal;
+}
+
+@media (width <=700px) {
+     :not(pre)>code[class*="language-"] {
+        font-size: 0.875rem;
+    }
+}
+
+.token.comment,
+.token.prolog,
+.token.cdata {
+    color: var(--color-gray);
+}
+
+.token.doctype,
+.token.punctuation,
+.token.entity {
+    color: var(--color-fg-default);
+}
+
+.token.attr-name,
+.token.class-name,
+.token.boolean,
+.token.constant,
+.token.number,
+.token.atrule {
+    color: var(--color-blue);
+}
+
+.token.keyword {
+    color: var(--color-indigo);
+}
+
+.token.property,
+.token.tag,
+.token.symbol,
+.token.deleted,
+.token.important {
+    color: var(--color-green);
+}
+
+.token.selector,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted,
+.token.regex,
+.token.attr-value,
+.token.attr-value>.token.punctuation {
+    color: var(--color-light-blue);
+}
+
+.token.variable,
+.token.operator,
+.token.function {
+    color: var(--color-indigo);
+}
+
+.token.url {
+    color: var(--color-green);
+}
+
+
+/* HTML overrides */
+
+.token.attr-value>.token.punctuation.attr-equals,
+.token.special-attr>.token.attr-value>.token.value.css {
+    color: var(--color-fg-default);
+}
+
+
+/* CSS overrides */
+
+.language-css .token.selector {
+    color: var(--color-green);
+}
+
+.language-css .token.property {
+    color: var(--color-blue);
+}
+
+.language-css .token.important,
+.language-css .token.atrule .token.rule {
+    color: var(--color-red);
+}
+
+
+/* JS overrides */
+
+.language-js .token.keyword,
+.language-javascript .token.keyword {
+    color: var(--color-red);
+}
+
+.language-js .token.operator,
+.language-js .token.constant,
+.language-js .token.boolean,
+.language-js .token.number,
+.language-js .token.atrule,
+.language-javascript .token.operator,
+.language-javascript .token.constant,
+.language-javascript .token.boolean,
+.language-javascript .token.number,
+.language-javascript .token.atrule {
+    color: var(--color-blue);
+}
+
+.language-js .token.function,
+.language-javascript .token.function {
+    color: var(--color-purple);
+}
+
+.language-js .token.attr-name,
+.language-js .token.class-name,
+.language-js .token.function-variable,
+.language-javascript .token.attr-name,
+.language-javascript .token.class-name,
+.language-javascript .token.function-variable {
+    color: var(--color-brown);
+}
+
+
+/* JSX overrides */
+
+.language-jsx .token.keyword,
+.language-tsx .token.keyword {
+    color: var(--color-red);
+}
+
+.language-jsx .token.function,
+.language-tsx .token.function {
+    color: var(--color-purple);
+}
+
+.language-jsx .token.function-variable,
+.language-tsx .token.function-variable {
+    color: var(--color-brown);
+}
+
+.language-jsx .token.punctuation,
+.language-tsx .token.punctuation {
+    color: var(--color-blue);
+}
+
+.language-jsx .token.class-name,
+.language-tsx .token.class-name {
+    color: var(--color-green);
+}
+
+.language-jsx .token.attr-name,
+.language-tsx .token.attr-name {
+    color: var(--color-blue);
+}
+
+.language-jsx .token.string,
+.language-tsx .token.string {
+    color: var(--color-indigo);
+}
+
+
+/* JSON overrides */
+
+.language-json .token.operator {
+    color: var(--color-fg-default);
+}
+
+.language-json .token.null.keyword {
+    color: var(--color-blue);
+}
+
+
+/* Java overrides */
+
+.language-java .token.keyword {
+    color: var(--color-red);
+}
+
+.language-java .token.operator,
+.language-java .token.constant,
+.language-java .token.boolean,
+.language-java .token.number,
+.language-java .token.atrule {
+    color: var(--color-blue);
+}
+
+.language-java .token.function {
+    color: var(--color-purple);
+}
+
+.language-java .token.attr-name,
+.language-java .token.function-variable {
+    color: var(--color-green);
+}
+
+
+/* Kotlin overrides */
+
+.language-kotlin .token.keyword {
+    color: var(--color-red);
+}
+
+.language-kotlin .token.operator,
+.language-kotlin .token.constant,
+.language-kotlin .token.boolean,
+.language-kotlin .token.number,
+.language-kotlin .token.atrule {
+    color: var(--color-blue);
+}
+
+.language-kotlin .token.function {
+    color: var(--color-purple);
+}
+
+.language-kotlin .token.attr-name,
+.language-kotlin .token.function-variable {
+    color: var(--color-green);
+}
+
+
+/* Go overrides */
+
+.language-go .token.keyword {
+    color: var(--color-red);
+}
+
+.language-go .token.operator,
+.language-go .token.constant,
+.language-go .token.boolean,
+.language-go .token.number,
+.language-go .token.atrule {
+    color: var(--color-blue);
+}
+
+.language-go .token.function {
+    color: var(--color-purple);
+}
+
+.language-go .token.attr-name,
+.language-go .token.function-variable {
+    color: var(--color-green);
+}
+
+
+/* YAML overrides */
+
+.language-yml .token.atrule,
+.language-yaml .token.atrule {
+    color: var(--color-green);
+}
+
+
+/* Dockerfile overrides */
+
+.language-dockerfile .token.keyword {
+    color: var(--color-red);
+}
+
+.language-dockerfile .token.function {
+    color: var(--color-purple);
+}
+
+.language-dockerfile .token.punctuation {
+    color: var(--color-blue);
+}
+
+.language-dockerfile .token.attr-name,
+.language-dockerfile .token.class-name {
+    color: var(--color-green);
+}
+
+.language-dockerfile .token.string {
+    color: var(--color-indigo);
+}
+
+
+/* General */
+
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+.token.namespace {
+    opacity: 0.8;
+}
