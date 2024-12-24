@@ -273,8 +273,8 @@ Or it could be used to automatically deserialize/serialize a string value.
 ```js
 const str$ = observable('[1,2,3]')
 const arr$ = observable(linked({
-  get: () => JSON.parse(arr$.get())
-  set: (value) => arr$.set(JSON.stringify(value))
+  get: () => JSON.parse(str$.get())
+  set: (value) => str$.set(JSON.stringify(value))
 }))
 ```
 
