@@ -32,7 +32,7 @@ const profile$ = observable(syncedCrud({
 
 The behavior when using `list` is:
 - **list**: Observable value is an object containing the listed values keyed by id
-- **create**: Adding a new value to the object will will create
+- **create**: Adding a new value to the object will create
 - **update**: Updating a child value will update it with the changed fields
 - **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
 
@@ -183,7 +183,7 @@ const profile$ = observable(syncedCrud({
 
 ## Sync only diffs
 
-An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce badwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
+An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce bandwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
 
 1. Save the maximum updatedAt to the local persistence
 2. In subsequent syncs or after refresh it will list by `updatedAt: lastSync + 1` to get only recent changes
