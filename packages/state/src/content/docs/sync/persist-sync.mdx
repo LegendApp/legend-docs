@@ -579,14 +579,12 @@ import { observablePersistIndexedDB } from '@legendapp/state/persist-plugins/ind
 const persistOptions = configureSynced({
     persist: {
         plugin: observablePersistIndexedDB({
-            indexedDB: {
-                databaseName: 'Legend',
-                version: 1,
-                tableNames: ['documents', 'store'],
-            },
-        }),
-    },
-});
+            databaseName: "Legend",
+            version: 1,
+            tableNames: ["documents", "store"]
+        })
+    }
+})
 
 // Mode 1: Persist a dictionary
 const state$ = observable({
