@@ -1,6 +1,7 @@
 import { observable, syncState } from '@legendapp/state';
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
-import { Memo, Reactive, observer, use$, useIsMounted } from '@legendapp/state/react';
+import { Memo, observer, use$, useIsMounted } from '@legendapp/state/react';
+import { $React } from '@legendapp/state/react-web';
 import { configureSynced, syncObservable, synced } from '@legendapp/state/sync';
 import { syncedFetch } from '@legendapp/state/sync-plugins/fetch';
 import { Box } from 'shared/src/Components/Box';
@@ -39,7 +40,7 @@ const profile$ = observable(mySyncedFetch({
     },
 
     // Update observable with updatedAt time from server
-    onSaved: (result) => ({ updatedAt: new Date(result.updatedAt) }),
+    onSaved: (result) => ({ updatedAt: new Date(result.saved.updatedAt) }),
 
     // Persist in local storage
     persist: {
@@ -56,8 +57,8 @@ function App() {
 
     return (
         <Box>
-            <Reactive.TextInput $value={profile$.first_name} />
-            <Reactive.TextInput $value={profile$.last_name} />
+            <$TextInput $value={profile$.first_name} />
+            <$TextInput $value={profile$.last_name} />
             <Text>
                 Saved: {saved}
             </Text>
@@ -74,7 +75,7 @@ export const PersistSync = observer(function PersistSync() {
             .replace(/<\/Text/g, '</div')
             .replace(/\/mmkv/g, '/local-storage')
             .replace(/ObservablePersistMMKV/g, 'ObservablePersistLocalStorage')
-            .replace(/TextInput/g, 'input')
+            .replace(/\$TextInput/g, '$React.input')
             .replace(/async-storage/g, 'local-storage');
 
     const isMounted = useIsMounted().get();
@@ -86,7 +87,7 @@ export const PersistSync = observer(function PersistSync() {
             scope={{
                 observable,
                 observer,
-                Reactive,
+                $React,
                 Box,
                 syncedFetch,
                 configureSynced,
@@ -104,8 +105,8 @@ export const PersistSync = observer(function PersistSync() {
                 replacer(
                     code
                         .replace(
-                            /<Reactive\.(?:TextInput|input)/g,
-                            `<Reactive.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 mb-4 w-[140px]"`,
+                            /<(?:\$TextInput|\$React.input)/g,
+                            `<$React.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 mb-4 w-[140px]"`,
                         )
                         .replace('ObservablePersistMMKV', 'ObservablePersistLocalStorage')
                         .replace('<Footer>', `<div>`)

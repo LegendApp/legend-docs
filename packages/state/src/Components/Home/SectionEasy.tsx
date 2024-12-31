@@ -1,10 +1,10 @@
-import { observable, type Observable } from '@legendapp/state';
-import { Memo, Reactive, observer, useObservable } from '@legendapp/state/react';
+import { observable } from '@legendapp/state';
+import { Memo, observer, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from 'shared/src/Components/Button';
 import { Editor } from 'shared/src/Components/Editor/Editor';
 import { FlashingDiv } from '../FlashingDiv/FlashingDiv';
-import { DemoBox, SectionTitle } from './Components';
+import { DemoBox } from './Components';
 import { Header } from './Header';
 import { Text } from './Text';
 
@@ -53,7 +53,6 @@ const DemoEasy = () => {
                 observable,
                 Box: DemoBox,
                 FlashingDiv,
-                Reactive,
                 observer,
             }}
             classNameEditor="home-editor"

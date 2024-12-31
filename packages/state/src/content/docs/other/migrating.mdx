@@ -6,6 +6,8 @@ sidebar:
 
 ## 3.0.0-beta.19 to 3.0.0-beta.20
 
+### observer -> use$
+
 Based on discussions with the React Compiler team and a lot of feedback from the community, we're changing the suggested way of using observables in React. The old ways will still work for a while so we don't break existing apps, and we have some tools to aid in the migration, which can be done slowly over time.
 
 Basically, we need to change from `observer` tracking all `get()` calls to using a `use$` hook instead.
@@ -27,7 +29,7 @@ To work best with React Compiler, render functions need to be pure, meaning that
 
 So because Compiler is really great even in its first version and will continue to get better over time, Legend State needs to follow the rules of React perfectly to get all of the benefits.
 
-### The full details
+#### The full details
 
 - ✅ A new hook `use$` (just `useSelector` with a new name) is now the default way to consume observables
 
@@ -48,7 +50,7 @@ const Component = observer(() => {
     const value1 = use$(state$.value1)
     const value2 = use$(state$.value2)
     const value3 = use$(state$.value3)
-    const value4 = use$(state$.value)4
+    const value4 = use$(state$.value4)
     const value5 = use$(state$.value5)
     const value6 = use$(state$.value6)
     const value7 = use$(state$.value7)
@@ -79,9 +81,9 @@ const Component = observer(() => {
 })
 ```
 
-- 🔴 (Deprecated) enableReactTracking({ auto: true }) is discouraged and will be removed in a later version
+- 🔴 (Deprecated) `enableReactTracking({ auto: true })` is deprecated and will be removed in a later version
 
-This was a shortcut to use `get()` without needing observer, but since we're discouraging `get()` anyway, this becomes less useful.
+This was a shortcut to use `get()` without needing observer, but since we're discouraging `get()` anyway, this becomes less useful. It's broken in React 19, so we're deprecating it rather than try to fix it for no ongoing benefit.
 
 ```jsx
 enableReactAutoTracking({ auto: true })
@@ -89,6 +91,40 @@ const state$ = observable({ value: 10 })
 const Component = () => {
     const value = state$.value.get()
     // ...
+}
+```
+
+### Reactive -> $React and individual exports
+
+Based on conversations with users of reactive components in React Native, many were finding it confusing to have to configure to enable them, and the typing of `Reactive` did not work very well. Plus we want to make sure that bundle size is minimized so we don't need to include the web code in React Native. So we're just going to do a more standard thing and have different exports.
+
+In React on web there is now a `$React` namespace that includes all of the DOM components. And on React Native there's separate exports for each of the built-in components.
+
+#### Web
+
+```tsx
+import { $React } from "@legendapp/state/react-web"
+
+function Component() {
+    return (
+        <$React.div
+            $className={() => state$.age.get() > 5 ? 'kid' : 'baby'}
+        />
+    )
+}
+```
+
+#### React Native
+
+```tsx
+import { $TextInput } from "@legendapp/state/react-native"
+
+function Component() {
+    return (
+        <$TextInput
+            $value={state$.name}
+        />
+    )
 }
 ```
 
@@ -157,7 +193,7 @@ const state$ = useObservable(() => state$.text.get())
 
 ### 3. Persist
 
-Persistence works in the same way but the API is changed for clarity and new features with the new more robust sync system. `persistObservable` is changed to `syncObservable` and the persisting features are under the `persist` option instead of `local`.
+Persistence works in the same way but the API is changed for clarity and new features with the new more robust sync engine. `persistObservable` is changed to `syncObservable` and the persisting features are under the `persist` option instead of `local`.
 
 Additionally, `persistObservable` was inserting a `state` property for the sync state, which caused compatibility issues with data that had its own `state` property. So the sync state is now accessible separately with `syncState`.
 
@@ -191,13 +227,13 @@ const state = syncState(state$);
 
 ### 4. Sync
 
-It's now much easier to sync individual observables with a new plugin system. See the [Persist and Sync docs](../../sync/persist-sync/) for the latest documentation.
+It's now much easier to sync individual observables with a new plugin engine. See the [Persist and Sync docs](../../sync/persist-sync/) for the latest documentation.
 
 If you had made a custom sync plugin on the old system, please post an issue on [Github](https://github.com/LegendApp/legend-state) or talk to us on [Discord](https://discord.gg/5CBaNtADNX), and we will help you with the migration.
 
 ### 5. Removed old sync plugins
 
-Version 2 had inconsistent and varied ways to sync with fetch or Query, and they are now aligned into the Sync system.
+Version 2 had inconsistent and varied ways to sync with fetch or Query, and they are now aligned into the Sync engine.
 
 - Fetch: [syncedFetch](../../sync/fetch)
 - TanStack Query: [syncedQuery](../../sync/tanstack-query)

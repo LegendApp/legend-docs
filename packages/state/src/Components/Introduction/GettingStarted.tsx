@@ -1,6 +1,6 @@
 import { observable, observe } from '@legendapp/state';
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
-import { For, observer, Reactive, useIsMounted, useObservable, useSelector } from '@legendapp/state/react';
+import { For, observer, useIsMounted, useObservable, useSelector } from '@legendapp/state/react';
 import { configureSynced, synced, syncObservable } from '@legendapp/state/sync';
 import classNames from 'classnames';
 import { Box } from 'shared/src/Components/Box';
@@ -14,7 +14,7 @@ import { $React } from '@legendapp/state/react-web';
 const GETTING_STARTED_CODE = `
 import { observable, Observable } from "@legendapp/state"
 import { configureSynced, synced } from "@legendapp/state/sync"
-import { observer, Reactive, use$, useObservable } from "@legendapp/state/react"
+import { observer, $React, use$, useObservable } from "@legendapp/state/react"
 import { $TextInput } from "@legendapp/state/react-native"
 import { ObservablePersistAsyncStorage } from
     "@legendapp/state/persist-plugins/async-storage"
@@ -141,7 +141,6 @@ export const GettingStarted = observer(function GettingStarted() {
                 observer,
                 For,
                 Button,
-                Reactive,
                 Box,
                 Checkbox,
                 useObservable,
@@ -160,8 +159,8 @@ export const GettingStarted = observer(function GettingStarted() {
                 replacer(
                     code
                         .replace(
-                            /<Reactive\.(?:TextInput|input)/g,
-                            `<Reactive.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 ml-2 w-[120px]"`,
+                            /<(?:\$TextInput|\$React.input)/g,
+                            `<$React.input style={{ color: 'inherit' }} className="bg-white/10 text-inherit border rounded border-gray-500 px-2 py-1 ml-2 w-[120px]"`,
                         )
                         .replace(/className="row"/g, 'className="flex items-center"')
                         .replace('<Box>', '<Box theme={theme}>'),

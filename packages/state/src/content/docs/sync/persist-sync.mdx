@@ -8,7 +8,7 @@ import Install from "shared/src/Components/Install/Install.astro"
 import SelectFramework from "shared/src/Components/SelectFramework/SelectFramework.astro"
 import PersistSync from "../../../Components/PersistSync/PersistSync.astro"
 
-A primary goal of Legend-State is to make automatic persisting and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local first apps: any changes made while offline are persisted between sessions to be retried whenever connected. To do this, the sync system subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted and synced.
+A primary goal of Legend-State is to make automatic persisting and syncing both easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it was built as the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support local first apps: any changes made while offline are persisted between sessions to be retried whenever connected. To do this, the sync engine subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted and synced.
 
 1. Save the pending changes to local persistence
 2. Save the changes to local persistence
@@ -128,7 +128,7 @@ await when(status$.isPersistLoaded)
 
 ### Sync with a server
 
-Legend-State makes syncing remote data very easy, while being very powerful under the hood. You can setup your sync system directly in the observable itself, so that your application code only interacts with observables, and the observables handle the sync for you.
+Legend-State makes syncing remote data very easy, while being very powerful under the hood. You can setup your sync engine directly in the observable itself, so that your application code only interacts with observables, and the observables handle the sync for you.
 
 This is a great way to isolate your syncing code in one place away from your UI, and then your UI code justs gets/sets observables.
 
@@ -191,7 +191,7 @@ store$.usersPage.set(page => page + 1)
 
 ### Local first robust real-time sync
 
-The crud based plugins can be used to enable a robust offline-first sync system by setting a few options. These options will:
+The crud based plugins can be used to enable a robust offline-first sync engine by setting a few options. These options will:
 
 - Persist all data locally so the app can work offline
 - Continually retry saves so that failure is not an option

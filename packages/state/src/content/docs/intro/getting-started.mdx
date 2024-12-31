@@ -81,7 +81,8 @@ To consume an observable in React, just `use$` it. This will track it automatica
 Legend-State also includes reactive components for both React and React Native. See [Reactive components](../../react/fine-grained-reactivity/#reactive-components) for more about that.
 
 ```tsx
-import { observer, Reactive, use$, useObservable } from "@legendapp/state/react"
+import { observer, use$, useObservable } from "@legendapp/state/react"
+import { $TextInput } from "@legendapp/state/react-native"
 
 export function App() {
     // Consume the computed observables from the global store$

@@ -108,7 +108,7 @@ Note that `useObserve` runs during component render, not after render like `useE
 ```jsx
 import { event } from "@legendapp/state"
 import { $React } from "@legendapp/state/react-web"
-import { useObserve, useObservable, Reactive } from "@legendapp/state/react"
+import { useObserve, useObservable, $React } from "@legendapp/state/react"
 
 const eventUpdateTitle = event()
 
@@ -145,7 +145,7 @@ function ProfilePage() {
 
 ### useWhen, useWhenReady
 
-These are hook version of [when](../../usage/reactivity#when).
+These are hook versions of [when](../../usage/reactivity#when).
 
 ## Hooks for creating local state
 
@@ -211,11 +211,19 @@ Passing an observable object through Context gives you all the benfits of Contex
 
 Simply set an observable as a Context value and consume it from a child component as usual. The observable itself is a stable object so useContext will never cause a re-render - only observing contexts will be updated as usual.
 
-```jsx
+```tsx
 import { createContext, useContext } from "react"
 import { observer, useObservable } from "@legendapp/state/react"
 
-const StateContext = createContext()
+interface UserState {
+    profile: {
+        name: string;
+    };
+}
+
+// Create a typed context. It can have a default value of undefined because
+// the Provider will always be created with an Observable.
+const StateContext = createContext<Observable<UserState>>(undefined as any);
 
 function App() {
   const state$ = useObservable({
@@ -289,7 +297,7 @@ const Component = () => {
 
 ### usePauseProvider
 
-This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useSelector, Reactive, Memo, etc... But normal renders coming from React or other state is not affected.
+This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useSelector, $React, Memo, etc... But normal renders coming from React or other state is not affected.
 
 This can be very useful to stop all updating when UI is not even visible, such as when a fullscreen modal is covering app UI or in inactivate tabs in React Native.
 

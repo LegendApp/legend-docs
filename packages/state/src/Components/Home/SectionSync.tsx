@@ -1,5 +1,5 @@
 import { observable } from '@legendapp/state';
-import { Memo, Reactive, observer, use$, useObservable } from '@legendapp/state/react';
+import { Memo, observer, use$, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from 'shared/src/Components/Button';
 import { Editor } from 'shared/src/Components/Editor/Editor';
@@ -28,7 +28,7 @@ const Component = () => {
   }
 
   // Two-way bind to remote data
-  return <Reactive.input $value={profile$.name} />
+  return <$React.input $value={profile$.name} />
 }
 `;
 
@@ -47,7 +47,6 @@ const DemoSync = () => {
                 observable,
                 Box: DemoBox,
                 FlashingDiv,
-                Reactive,
                 observer,
                 use$,
             }}

@@ -1,11 +1,11 @@
-import { observable, type Observable } from '@legendapp/state';
-import { Memo, Reactive, observer, useObservable } from '@legendapp/state/react';
+import { observable } from '@legendapp/state';
+import { Memo, observer, useObservable } from '@legendapp/state/react';
 import { useRef, useState } from 'react';
 import { Button } from 'shared/src/Components/Button';
 import { Editor } from 'shared/src/Components/Editor/Editor';
-import { FlashingDiv } from '../FlashingDiv/FlashingDiv';
-import { DemoBox, SectionTitle } from './Components';
 import { useInterval } from 'usehooks-ts';
+import { FlashingDiv } from '../FlashingDiv/FlashingDiv';
+import { DemoBox } from './Components';
 import { Header } from './Header';
 import { Text } from './Text';
 
@@ -117,7 +117,6 @@ const DemoPerf1 = () => {
                 observable,
                 Box: DemoBox,
                 FlashingDiv,
-                Reactive,
                 observer,
                 useInterval,
                 useState,
@@ -143,7 +142,6 @@ const DemoPerf2 = () => {
                 observable,
                 Box: DemoBox,
                 FlashingDiv,
-                Reactive,
                 observer,
                 useInterval,
             }}
@@ -173,7 +171,10 @@ export const SectionFineGrained = () => {
                 <Header size="h2" className="flex-1">
                     ⚡️ Fine-grained reactivity in React
                 </Header>
-                <Text className="flex-1 !mt-4">Achieve incredible performance by minimizing the number and size of renders. <br/>Legend State makes apps fast by default because they just do less work.</Text>
+                <Text className="flex-1 !mt-4">
+                    Achieve incredible performance by minimizing the number and size of renders. <br />
+                    Legend State makes apps fast by default because they just do less work.
+                </Text>
             </div>
             <div className="flex justify-center pt-8">
                 <div className="lg:flex mx-auto justify-center sm:bg-tBgDark border-tBorder divide-tBorder lg:divide-x sm:border rounded-xl sm:shadow-md sm:shadow-tShadowDark">

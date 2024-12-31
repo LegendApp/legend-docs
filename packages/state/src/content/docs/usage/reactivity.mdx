@@ -12,7 +12,7 @@ The core power of Legend-State is the "observing contexts". Calling `get()` with
 
 Most functions in Legend-State take what we call a "Selector", which is either a single observable or a function that calls `get()` on some observables and returns a value.
 
-Most functions in Legend-State are observing contexts, including computed observables, `observe`, `when`, linked/synced `get` functions, as well as `observer` and Reactive components in React. When you call `get()` on an observable inside an observing context it will track it for changes and re-run whenever it changes.
+Most functions in Legend-State are observing contexts, including computed observables, `observe`, `when`, linked/synced `get` functions, as well as `observer` and reactive components in React. When you call `get()` on an observable inside an observing context it will track it for changes and re-run whenever it changes.
 
 ```js
 observe(() => {
@@ -192,13 +192,10 @@ const state$ = observable({ ok: false });
 await when(state$.ok);
 
 // Option 2: callback
-const dispose = when(
+when(
   () => state$.ok.get(),
   () => console.log("Don't worry, it's ok")
 );
-
-// Cancel listening manually
-dispose();
 ```
 
 ### whenReady

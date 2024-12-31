@@ -18,7 +18,7 @@ Legend-State is a super fast all-in-one local and remote state library that help
 
 ##### 1. Local and remote state
 
-Legend-State handles local, global, and remote state all in one. Just `get()` and `set()` observables, and a robust sync system makes sure your state is persisted locally and synced with your server.
+Legend-State handles local, global, and remote state all in one. Just `get()` and `set()` observables, and a robust sync engine makes sure your state is persisted locally and synced with your server.
 
 ##### 2. Great DX and less code
 
@@ -28,6 +28,8 @@ Just `use$` an observable to automatically re-render whenever it changes, and `s
 const state$ = observable({
     settings: { theme: 'dark' }
 })
+
+state$.settings.theme.set('light')
 
 const Component = () => {
     const theme = use$(state$.settings.theme)
@@ -45,21 +47,23 @@ Legend-State achieves much better performance than vanilla React and other state
 
 ### 1. 🦄 As easy as possible to use
 
-There is no boilerplate and there are no contexts, actions, reducers, dispatchers, sagas, thunks, or epics. You can structure your data however you want in local or global stores. It doesn't modify your data at all, and you can just call `get()` to get the raw data and `set()` to change it.
+There is no boilerplate and there are no contexts, actions, reducers, dispatchers, sagas, thunks, or epics. You can structure your data however you want in local state or global stores. It doesn't modify your data at all, and you can just call `get()` to get the raw data and `set()` to change it.
 
 ```jsx
 import { observable, observe } from "@legendapp/state"
 import { observer } from "@legendapp/state/react"
 
-const settings$ = observable({ theme: 'dark' })
+// Observables can be primitives or deep objects
+const settings$ = observable({
+    theme: 'dark'
+    // Computed observables with just a function
+    isDark: () => settings$.theme.get() === 'dark'
+})
 
 // get returns the raw data
 settings$.theme.get() // 'dark'
 // set sets
 settings$.theme.set('light')
-
-// Computed observables with just a function
-const isDark$ = observable(() => settings$.theme.get() === 'dark')
 
 // observing contexts re-run when tracked observables change
 observe(() => {
@@ -68,13 +72,13 @@ observe(() => {
 
 function Component() {
     const theme = use$(state$.settings.theme)
+    // use$ tracks get() calls to automatically re-render on changes
     const isDark = use$(() => state$.settings.theme.get() === 'dark')
 
     return <div>Theme: {theme}</div>
 }
 ```
 
-`use$` tracks access to `get()` on observables and automatically re-renders whenever they change.
 
 :::note[Live editable]
 Many examples in these docs are editable so you can play around with the code and see how it works.
@@ -95,13 +99,13 @@ See [Fast 🔥](../fast) for more details of why Legend-State is so fast.
 
 ### 3. 🔥 Fine-grained reactivity for minimal renders
 
-Legend-State helps your re-renders smaller and less frequent, making your apps faster 🔥.
+Legend-State helps your re-renders be smaller and less frequent, making your apps faster 🔥.
 
 <Primitives />
 
 ### 4. 💾 Powerful sync and persistence
 
-Legend-State includes a powerful [sync and persistence system](../../sync/persist-sync). It easily enables local first apps by optimistically applying all changes locally first, retrying changes even after restart until they eventually sync, and syncing minimal diffs. We use Legend-State as the sync systems in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
+Legend-State includes a powerful [persistence and sync engine](../../sync/persist-sync). It easily enables local first apps by optimistically applying all changes locally first, retrying changes even after restart until they eventually sync, and syncing minimal diffs. We use Legend-State as the sync engines in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
 
 Local persistence plugins for the browser and React Native are included, with sync plugins for [Keel](https://www.keel.so), [Supabase](https://www.supabase.com), [TanStack Query](https://tanstack.com/query), and `fetch`.
 
@@ -139,7 +143,7 @@ me$.name.set('Annyong')
 
 import Install from "shared/src/Components/Install/Install.astro";
 
-Version 3 is currently available in the @beta version and may change before the final release.
+Version 3 is currently available in the @beta version and may change slightly before the final release.
 
 <Install name="@legendapp/state@beta" />
 
@@ -149,7 +153,8 @@ Version 3 is currently available in the @beta version and may change before the 
 - ✨ Super fast ⚡️
 - ✨ Super small at 4kb 🐥
 - ✨ Fine-grained reactivity 🔥
-- ✨ Built-in sync system
+- ✨ Built-in sync engine
+- ✨ Works great with React Compiler
 - ✨ No boilerplate
 - ✨ Designed for maximum performance and scalability
 - ✨ React components re-render only on changes

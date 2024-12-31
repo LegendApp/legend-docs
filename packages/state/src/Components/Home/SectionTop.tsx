@@ -1,11 +1,12 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import { observable, type Observable } from '@legendapp/state';
-import { Memo, Reactive, Show, observer, use$, useMount, useObservable } from '@legendapp/state/react';
+import { Memo, Show, observer, use$, useMount, useObservable } from '@legendapp/state/react';
+import { $React } from '@legendapp/state/react-web';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRef } from 'react';
 import { Button } from 'shared/src/Components/Button';
 import { Editor } from 'shared/src/Components/Editor/Editor';
 import { FlashingDiv } from '../FlashingDiv/FlashingDiv';
-import { DemoBox, SectionTitle } from './Components';
+import { DemoBox } from './Components';
 import CurvedArrowCallout from './CurvedArrowCallout';
 
 const CodeDemoTop = `
@@ -20,7 +21,7 @@ const Component = () => {
 
   return (<>
     {/* Two way bind it */}
-    <Reactive.input $value={speed$} type="number" />
+    <$React.input $value={speed$} type="number" />
 
     <Button onClick={up}>{speed} is too slow 🤘</Button>
   </>)
@@ -58,7 +59,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                     state$,
                     Box: DemoBox,
                     FlashingDiv,
-                    Reactive,
+                    $React,
                     observer,
                     use$,
                 }}
@@ -67,8 +68,8 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                         code
                             .replace(`const speed$ = observable(2)`, '')
                             .replace(
-                                '<Reactive.input',
-                                '<div className="font-bold pb-4 text-center">Particle Speed</div><Reactive.input className="w-20 rounded bg-gray-700 px-2 py-2" min="1" max="10"',
+                                '<$React.input',
+                                '<div className="font-bold pb-4 text-center">Particle Speed</div><$React.input className="w-20 rounded bg-gray-700 px-2 py-2" min="1" max="10"',
                             )
                             .replace('<div>Speed', '<div className="mt-8">Speed')
                             .replace('<Button ', '<Button className="bg-blue-800 hover:bg-blue-700"')

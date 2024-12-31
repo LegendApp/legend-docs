@@ -13,6 +13,9 @@ export const ReactOrNativeCode = function ReactOrNativeCode({ onlyFirst }: Props
         const spansMMKV = new Set<Element>();
         const spansMMKV2 = new Set<Element>();
         const spansTextInput = new Set<Element>();
+        const spansTextInputImport1 = new Set<Element>();
+        const spansTextInputImport2 = new Set<Element>();
+
         spans.forEach((span) => {
             const text = span.textContent as string;
             if (text === 'View' || text === 'Text') {
@@ -27,8 +30,12 @@ export const ReactOrNativeCode = function ReactOrNativeCode({ onlyFirst }: Props
                 }
             } else if (text?.includes('Reactive.TextInput')) {
                 spansTextInput.add(span as HTMLSpanElement);
-            } else if (text?.includes('$TextInput')) {
+            } else if (text === '$TextInput') {
                 spansTextInput.add(span as HTMLSpanElement);
+            } else if (text === ' { $TextInput } ') {
+                spansTextInputImport1.add(span as HTMLSpanElement);
+            } else if (text === '@legendapp/state/react-native') {
+                spansTextInputImport2.add(span as HTMLSpanElement);
             }
         });
         const dispose = observe(() => {
@@ -47,6 +54,12 @@ export const ReactOrNativeCode = function ReactOrNativeCode({ onlyFirst }: Props
             });
             spansTextInput.forEach((span) => {
                 span.textContent = isReact ? '$React.input' : '$TextInput';
+            });
+            spansTextInputImport1.forEach((span) => {
+                span.textContent = isReact ? ' { $React } ' : ' { $TextInput } ';
+            });
+            spansTextInputImport2.forEach((span) => {
+                span.textContent = isReact ? '@legendapp/state/react-web' : '@legendapp/state/react-native';
             });
         });
 

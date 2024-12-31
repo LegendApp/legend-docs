@@ -70,7 +70,7 @@ const LandingPage = () => {
                             <div className="max-w-2xl pt-2 pb-4">
                                 <Text className="md:text-lg">
                                     Legend State is an extremely fast signal-based state library with fine-grained
-                                    reactivity and a powerful sync system that works with any backend.
+                                    reactivity and a powerful sync engine that works with any backend.
                                 </Text>
                             </div>
                             <div className="flex flex-col xs:flex-row xs:gap-8 !mt-0 items-center">

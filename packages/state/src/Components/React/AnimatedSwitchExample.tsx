@@ -1,18 +1,18 @@
-import { reactive } from "@legendapp/state/react";
-import { motion } from "framer-motion";
-import { useRef } from "react";
-import { observable } from "@legendapp/state";
-import { useComputed, Memo } from "@legendapp/state/react";
-import { Editor } from "shared/src/Components/Editor/Editor";
-import { Box } from "shared/src/Components/Box";
-import { Button } from "shared/src/Components/Button";
+import { reactive, useObservable } from '@legendapp/state/react';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { observable } from '@legendapp/state';
+import { useComputed, Memo } from '@legendapp/state/react';
+import { Editor } from 'shared/src/Components/Editor/Editor';
+import { Box } from 'shared/src/Components/Box';
+import { Button } from 'shared/src/Components/Button';
 
 const ANIMATED_SWITCH_CODE = `
 import { reactive } from "@legendapp/state/react"
 import { motion } from "framer-motion"
 import { useRef } from "react"
 import { observable } from "@legendapp/state"
-import { useComputed, Memo } from "@legendapp/state/react"
+import { useComputed, useObservable, Memo } from "@legendapp/state/react"
 
 const MotionDiv = reactive(motion.div)
 
@@ -43,9 +43,9 @@ function App() {
   const renderCount = ++useRef(0).current
 
   // Computed text value
-  const text$ = () => (
+  const text$ = useObservable(() => (
     settings$.enabled.get() ? 'Yes' : 'No'
-  )
+))
 
   return (
     <Box>
@@ -60,33 +60,31 @@ function App() {
 `;
 
 export function AnimatedSwitchComponent() {
-  return (
-    <Editor
-      code={ANIMATED_SWITCH_CODE}
-      scope={{
-        useRef,
-        observable,
-        reactive,
-        motion,
-        useComputed,
-        Memo,
-        Box,
-        Button,
-      }}
-      noInline={true}
-      renderCode=";render(<App />)"
-      previewWidth={128}
-      transformCode={(code) =>
-        code
-          .replace(
-            /className="toggle"/g,
-            'className="border border-[#717173] rounded-full select-none cursor-pointer"'
-          )
-          .replace(
-            /className="thumb"/g,
-            'className="bg-white rounded-full shadow"'
-          )
-      }
-    />
-  );
+    return (
+        <Editor
+            code={ANIMATED_SWITCH_CODE}
+            scope={{
+                useRef,
+                observable,
+                reactive,
+                motion,
+                useComputed,
+                useObservable,
+                Memo,
+                Box,
+                Button,
+            }}
+            noInline={true}
+            renderCode=";render(<App />)"
+            previewWidth={128}
+            transformCode={(code) =>
+                code
+                    .replace(
+                        /className="toggle"/g,
+                        'className="border border-[#717173] rounded-full select-none cursor-pointer"',
+                    )
+                    .replace(/className="thumb"/g, 'className="bg-white rounded-full shadow"')
+            }
+        />
+    );
 }

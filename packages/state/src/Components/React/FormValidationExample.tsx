@@ -7,7 +7,7 @@ import { $React } from '@legendapp/state/react-web';
 
 const FORM_VALIDATION_CODE = `
 import { useRef } from "react"
-import { useObservable, useObserve, Reactive, Memo, Show } from "@legendapp/state/react"
+import { useObservable, useObserve, $React, Memo, Show } from "@legendapp/state/react"
 
 function App() {
   const renderCount = ++useRef(0).current
@@ -29,7 +29,7 @@ function App() {
       passwordError$.set(
         pass.length < 10 ?
           'Password must be > 10 characters' :
-          !pass.match(/\d/) ?
+          !pass.match(/\\d/) ?
             'Password must include a number' :
             ''
       )
@@ -105,7 +105,7 @@ export function FormValidationComponent() {
                         /className="input"/g,
                         'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
                     )
-                    .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 h-10 pt-1"')
+                    .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 pt-1"')
             }
         />
     );

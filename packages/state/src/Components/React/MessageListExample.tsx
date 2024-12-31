@@ -7,7 +7,7 @@ import { syncedFetch } from '@legendapp/state/sync-plugins/fetch';
 import { $React } from '@legendapp/state/react-web';
 
 const MESSAGE_LIST_CODE = `
-import { For, Reactive, Show, useObservable, useObservable } from "@legendapp/state/react"
+import { For, $React, Show, useObservable, useObservable } from "@legendapp/state/react"
 import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
 
 let nextID = 0
@@ -19,13 +19,13 @@ function App() {
   const renderCount = ++useRef(0).current
 
   // Create profile from fetch promise
-  const profile = useObservable(syncedFetch({
+  const profile$ = useObservable(syncedFetch({
     get: 'https://reqres.in/api/users/1'
   }))
 
   // Username
   const userName = useObservable(() => {
-    const p = profile.get()
+    const p = profile$.data.get()
     return p ?
         p.first_name + ' ' + p.last_name :
         ''
