@@ -1,0 +1,35 @@
+{
+    "name": "list-docs",
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+        "dev": "astro dev",
+        "devlegend": "astro dev --publishlegend",
+        "start": "astro dev",
+        "build": "astro build",
+        "publish": "astro build --base /open-source/list --publishlegend",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@astrojs/react": "3.1.0",
+        "@astrojs/starlight": "0.21.2",
+        "@astrojs/starlight-tailwind": "2.0.1",
+        "@astrojs/tailwind": "5.1.0",
+        "@legendapp/state": "2.2.0-next.76",
+        "@tanstack/react-query": "^4",
+        "@types/react": "^18.2.69",
+        "@types/react-dom": "^18.2.22",
+        "astro": "4.5.9",
+        "axios": "^1.6.8",
+        "classnames": "^2.5.1",
+        "framer-motion": "^11.0.20",
+        "prettier": "^3.3.3",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-icons": "^5.0.1",
+        "shared": "workspace:*",
+        "tailwindcss": "^3.4.1",
+        "usehooks-ts": "^3.0.2"
+    }
+}

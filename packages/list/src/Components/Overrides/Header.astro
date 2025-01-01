@@ -1,33 +1,11 @@
 ---
 import type { Props } from '@astrojs/starlight/props';
 
-import Select from '@astrojs/starlight/components/Select.astro';
 import Search from '@astrojs/starlight/components/Search.astro';
 import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
 import { Image } from 'astro:assets';
 import logomark from '../../assets/Logomark_(White).svg';
-import { versions, defaultVersion } from 'shared/config';
-
-const url = new URL(Astro.url);
-const urlBase = '/open-source/state/';
-const versionMatch = new RegExp(urlBase + '(v\\d)').exec(url.pathname);
-const currentVersion = versionMatch?.[1] || defaultVersion;
-const options = versions.map(([version, label]) => ({
-    label,
-    selected: currentVersion === version,
-    value: `/open-source/state/${version}`,
-}));
 ---
-
-<script>
-    const select = document.querySelector('select');
-    select?.addEventListener('change', () => {
-        const url = new URL(window.location.href);
-        const pathname = select.value;
-        url.pathname = pathname.replace(/\/$/, '');
-        window.location.href = url.href;
-    });
-</script>
 
 <div class="header sl-flex">
     <div class="sl-flex items-center">
@@ -36,14 +14,11 @@ const options = versions.map(([version, label]) => ({
             <span class="hidden sm:block pl-3">Legend Open Source</span>
             <span class="sm:hidden pl-3">Legend</span>
         </a>
-        <div class="hidden sm:block">
-            <Select icon={undefined as any} label="version" value="auto" options={options} width="auto" />
-        </div>
 
         <a class="hidden lg:block px-4" href="/"> Home </a>
         <a class="px-4" href="/open-source/"> Blog </a>
-        <a class="px-4 text-white" href="/open-source/state"> State </a>
-        <a class="px-4" href="/open-source/list"> List </a>
+        <a class="px-4" href="/open-source/state"> State </a>
+        <a class="px-4 text-white" href="/open-source/list"> List </a>
         <a class="hidden lg:block px-4 mr-4" href="/open-source/motion"> Motion </a>
     </div>
     <div class="sl-flex items-center justify-end pr-4">
