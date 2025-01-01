@@ -8,9 +8,29 @@ sidebar:
 
 ### observer -> use$
 
-Based on discussions with the React Compiler team and a lot of feedback from the community, we're changing the suggested way of using observables in React. The old ways will still work for a while so we don't break existing apps, and we have some tools to aid in the migration, which can be done slowly over time.
+Based on discussions with the React Compiler team and a lot of feedback from the community, we're changing the suggested primary way of using observables in React. The old ways will still work for a while so we don't break existing apps and we have some tools to aid in the migration, which can be done slowly over time.
 
-Basically, we need to change from `observer` tracking all `get()` calls to using a `use$` hook instead.
+Basically, we need to change from `observer` tracking all `get()` calls to using a `use$` hook instead, which is just a renamed `useSelector`.
+
+#### useSelector to use$
+
+`useSelector` is renamed to `use$`, because the term "Selector" has a lot of baggage from other state libraries and many new users found it confusing. `useSelector` will still work for a while so you can make the change slowly if you want, or a global find and replace should work.
+
+```jsx
+// 🔴 From
+const value = useSelector(state$.value)
+// ✅ To
+const value = use$(state$.value)
+```
+
+#### observer to use$
+
+We are now encouraging using the `use$` hooking rather than using `observer` to track all `get()` calls. `observer` will still work for a while so you can migrate slowly. But we have rewritten the docs to use `use$` everywhere and will be focusing on that going forward.
+
+The reason for this is that `observer` is not compatible with React Compiler. To work best with the Compiler, render functions need to be pure, meaning that calling a function (like `state$.get()`) should always return the same value. So based on that assumption, Compiler will wrap function calls in `useMemo`. But Legend State's current usage of `observer` depends on each `state$.get()` function call to returning a different value when it changes, so memoizing its value would break Legend State's reactivity.
+
+But, Compiler will not memoize any hooks (functions starting with "use"), so if we just use a `use$(state$)` hook instead of `state$.get()` then everything will work fine. So because Compiler is a really great optimization already in its first version and will continue to get better over time, we want to be perfectly compatible with the Compiler to get all of the benefits.
+
 
 ```jsx
 const state$ = observable({ value: 10 })
@@ -24,10 +44,6 @@ const Component = observer(() => {
     const value = state$.value.get()
 })
 ```
-
-To work best with React Compiler, render functions need to be pure, meaning that calling a function (like `state$.get()`) should always return the same value. So based on that assumption, Compiler will wrap function calls in `useMemo`. But Legend State's current usage of `observer` depends on `state$.get()` returning different values when it changes, so this would break Legend State's reactivity. But, Compiler will not memoize any hooks, so if we just use a `use$(state$)` hook instead of `state$.get()` then everything will work fine.
-
-So because Compiler is really great even in its first version and will continue to get better over time, Legend State needs to follow the rules of React perfectly to get all of the benefits.
 
 #### The full details
 
