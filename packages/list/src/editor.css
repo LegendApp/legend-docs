@@ -1,9 +1,9 @@
 :root {
     --sl-text-code: var(--sl-text-xs);
-    --sl-sidebar-width: 14rem;
+    --sl-sidebar-width: 16rem;
     --color-fg-default: #c9d1d9;
-    --color-bg-code-block: #0E1218;
-    --color-border-code-block: #2E3238;
+    --color-bg-code-block: #0e1218;
+    --color-border-code-block: #2e3238;
     --color-bg-inline-code-block: rgb(110 118 129 / 40%);
     --color-gray: #8b949e;
     --color-red: #ff7b72;
@@ -42,7 +42,7 @@
 }
 
 .shadow-dark {
-    @apply shadow-md shadow-tShadowDark
+    @apply shadow-md shadow-tShadowDark;
 }
 
 .home-editor {
@@ -58,15 +58,14 @@ code {
     border-radius: 0.25rem;
 }
 
-
 /**
  * GitHub's theme skeleton for prism.js
  * @author Jongwoo Han (@jongwooo)
  * https: //github.com/jongwooo/prism-theme-github/blob/main/themes/prism-github-default-dark.css
  */
 
-code[class*="language-"],
-pre[class*="language-"],
+code[class*='language-'],
+pre[class*='language-'],
 .expressive-code pre {
     background-color: var(--color-bg-code-block) !important;
     color: var(--color-fg-default) !important;
@@ -82,21 +81,19 @@ pre[class*="language-"],
     border-radius: var(--code-border-radius) !important;
 }
 
-
 /* Code blocks */
 
-pre[class*="language-"] {
-    font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
+pre[class*='language-'] {
+    font-family: 'Fira Code', 'Fira Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace !important;
     padding: 1em;
     margin: 0.5em 0;
     overflow: auto;
     border-radius: var(--code-border-radius);
 }
 
-
 /* Inline code */
 
-:not(pre)>code[class*="language-"] {
+:not(pre) > code[class*='language-'] {
     background-color: var(--color-bg-inline-code-block);
     padding: 0.2em 0.3em;
     border-radius: var(--code-border-radius);
@@ -104,7 +101,7 @@ pre[class*="language-"] {
 }
 
 @media (width <=700px) {
-     :not(pre)>code[class*="language-"] {
+    :not(pre) > code[class*='language-'] {
         font-size: 0.875rem;
     }
 }
@@ -149,7 +146,7 @@ pre[class*="language-"] {
 .token.inserted,
 .token.regex,
 .token.attr-value,
-.token.attr-value>.token.punctuation {
+.token.attr-value > .token.punctuation {
     color: var(--color-light-blue);
 }
 
@@ -163,14 +160,12 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
-
 /* HTML overrides */
 
-.token.attr-value>.token.punctuation.attr-equals,
-.token.special-attr>.token.attr-value>.token.value.css {
+.token.attr-value > .token.punctuation.attr-equals,
+.token.special-attr > .token.attr-value > .token.value.css {
     color: var(--color-fg-default);
 }
-
 
 /* CSS overrides */
 
@@ -186,7 +181,6 @@ pre[class*="language-"] {
 .language-css .token.atrule .token.rule {
     color: var(--color-red);
 }
-
 
 /* JS overrides */
 
@@ -221,7 +215,6 @@ pre[class*="language-"] {
 .language-javascript .token.function-variable {
     color: var(--color-brown);
 }
-
 
 /* JSX overrides */
 
@@ -260,7 +253,6 @@ pre[class*="language-"] {
     color: var(--color-indigo);
 }
 
-
 /* JSON overrides */
 
 .language-json .token.operator {
@@ -270,7 +262,6 @@ pre[class*="language-"] {
 .language-json .token.null.keyword {
     color: var(--color-blue);
 }
-
 
 /* Java overrides */
 
@@ -295,7 +286,6 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
-
 /* Kotlin overrides */
 
 .language-kotlin .token.keyword {
@@ -318,7 +308,6 @@ pre[class*="language-"] {
 .language-kotlin .token.function-variable {
     color: var(--color-green);
 }
-
 
 /* Go overrides */
 
@@ -343,14 +332,12 @@ pre[class*="language-"] {
     color: var(--color-green);
 }
 
-
 /* YAML overrides */
 
 .language-yml .token.atrule,
 .language-yaml .token.atrule {
     color: var(--color-green);
 }
-
 
 /* Dockerfile overrides */
 
@@ -374,7 +361,6 @@ pre[class*="language-"] {
 .language-dockerfile .token.string {
     color: var(--color-indigo);
 }
-
 
 /* General */
 
