@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-Legend List is a recycling list view that can massively increase performance of rendering long lists. Rather than rendering every item in the list, it only renders the items that are in view, which significantly reduces the amount of items that need to render.
+Legend List is a virtualized ScrollView component for React Native with optional recycling, that can massively increase performance of rendering long lists. Rather than rendering every item in the list, it only renders the items that are in view, which significantly reduces the amount of items that need to render.
 
 Legend List is a drop-in replacement for FlatList or FlashList. So since you're likely coming from one of those, we'll start with a guide on how to switch.
 
@@ -51,9 +51,18 @@ Legend List is very optimized by default, so it may already be working well with
 ```ts
 estimatedItemSize?: number;
 getEstimatedItemSize?: (index: number, item: T) => number;
+onItemSizeChanged?: (info: {
+        size: number;
+        previous: number;
+        index: number;
+        itemKey: string;
+        itemData: ItemT;
+    }) => void;
 ```
 
 It's important to provide an `estimatedItemSize` (if items are the same size or all dynamic sizes) or `getEstimatedItemSize` (if items are different known sizes). Legend List uses this as the default item size, then as items are rendered it updates their positions with the actual size. So getting this estimate as close as possible to the real size will reduce layout shifting and blank spaces as items render. If not provided it will use `100px` as the default.
+
+The `onItemSizeChanged` event can also help with your estimations - it will be called whenever an item's size changes. So you can use it to log what the actual rendered size is to adjust your estimates.
 
 ### Use keyExtractor
 
@@ -72,6 +81,14 @@ drawDistance?: number
 The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. So for example if your screen is `2000px` tall and your draw distance is `1000`, then it will render double your screen size, from `-1000px` above the viewport to `1000px` below the viewport.
 
 This can help reduce the amount of blank space while scrolling quickly. But if your items are computationally expensive, it may reduce performance because more items are rendering at once. So you should experiment with it to find the most optimal behavior for your app.
+
+### waitForInitialLayout
+
+```ts
+waitForInitialLayout?: boolean
+```
+
+If the size of your list items differs significantly from the estimate, you may see a layout jump after the first render. If so, the `waitForInitialLayout` prop solves that by delaying displaying list items by one frame so they start at the correct position.
 
 ### Recycling items
 
@@ -412,3 +429,17 @@ viewabilityConfigCallbackPairs?: ViewabilityConfigCallbackPairs | undefined;
 List of `ViewabilityConfig`/`onViewableItemsChanged` pairs. A specific `onViewableItemsChanged` will be called when its corresponding `ViewabilityConfig`'s conditions are met.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#viewabilityconfigcallbackpairs).
+
+### onItemSizeChanged
+
+```ts
+onItemSizeChanged?: (info: {
+        size: number;
+        previous: number;
+        index: number;
+        itemKey: string;
+        itemData: ItemT;
+    }) => void;
+```
+
+Called whenever an item's rendered size changes. This can be used to adjust the estimatedItemSize to match the actual size, which can improve performance or reduce layout shifting.
