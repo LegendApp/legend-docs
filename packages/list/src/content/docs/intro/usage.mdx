@@ -145,6 +145,8 @@ The `maintainVisibleContentPosition` prop automatically adjusts item positions w
 - When using `initialScrollOffset` or `initialScrollIndex`, items will not jump around when scrolling up if they're different sizes than the estimate
 - When scrolling to an index far down the list and then back up, items will not jump around as they layout
 
+LegendList utilizes ScrollView's [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) prop internally, so your target react-native version should support that prop. To use maintainVisibleContentPosition on Android you will need at least React Native version [0.72](https://github.com/facebook/react-native/commit/c19548728c9be3ecc91e6fefb35bc14929109d60).
+
 ### Chat interfaces without inverse
 
 ```ts
@@ -233,7 +235,7 @@ An estimated size for each item which is used to estimate the list layout before
 initialScrollIndex?: number;
 ```
 
-Start scrolled with this item at the top.
+Start scrolled with this item at the top. By default, to have accurate scrolling position you will need to provide accurate element positions to the [getEstimatedItemSize](#getestimateditemsize) function(similar FlatList). When accurate positions are not known(e.g., for dynamically sized list items), please enable [maintainVisibleContentPosition](#maintain-visible-content-position) prop. This will allow LegendList to automatically adjust it's top boundary, when elements below initialScrollIndex will be measured.
 
 ### initialScrollOffset
 
