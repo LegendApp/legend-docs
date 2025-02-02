@@ -56,8 +56,10 @@ const state$ = observable({
 
 // Persist state
 syncObservable(state$, {
-  local: 'persistenceExample',
-  pluginLocal: ObservablePersistLocalStorage,
+  persist:{
+    name: 'persistenceExample',
+    plugin: ObservablePersistLocalStorage,
+  }
 })
 
 // Create a reactive Framer-Motion div
