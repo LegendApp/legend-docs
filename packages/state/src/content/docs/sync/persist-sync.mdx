@@ -645,6 +645,35 @@ await when(syncState$.isPersistLoaded)
 // Continue with load
 ```
 
+### Expo SQLite (RN)
+
+First install Expo SQLite.
+
+<Install name="expo-sqlite" />
+
+The Expo SQLite Storage plugin needs an additional bit of global configuration, giving it the instance of Storage.
+
+```js
+import { configureSynced, syncObservable } from '@legendapp/state/sync';
+import { observablePersistSqlite } from '@legendapp/state/persist-plugins/expo-sqlite';
+import Storage from 'expo-sqlite/kv-store';
+
+// Global configuration
+const persistOptions = configureSynced({
+    persist: {
+        plugin: observablePersistSqlite(Storage)
+    },
+});
+syncObservable(
+    state$,
+    persistOptions({
+        persist: {
+            name: 'store',
+        },
+    }),
+);
+```
+
 ## Making a sync plugin
 
 Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a [synced](#synced). If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](../crud) which encapsulates a lot of logic for those specifics for you.
