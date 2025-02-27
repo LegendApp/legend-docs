@@ -15,7 +15,7 @@ These hints tweak the default behavior of observables to improve their performan
 This is useful for storing DOM or React elements or other large objects in an observable when you don't care about tracking its properties changing.
 
 ```js
-import { observable. ObservableHint } from '@legendapp/state'
+import { observable, ObservableHint } from '@legendapp/state'
 
 const state$ = observable({ text: 'hi', body: ObservableHint.opaque(document.body) })
 ```
@@ -27,7 +27,7 @@ const state$ = observable({ text: 'hi', body: ObservableHint.opaque(document.bod
 This will break any descendant functions or computeds, so make sure to only use this when it is for sure a plain object/array.
 
 ```js
-import { observable. ObservableHint } from '@legendapp/state'
+import { observable, ObservableHint } from '@legendapp/state'
 
 const bigObject = {}
 
