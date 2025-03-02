@@ -122,7 +122,7 @@ Alternatively if you do soft deletes, you can provide a `fieldDeleted` option in
 const profile$ = observable(syncedCrud({
     // ...
     update: () => {/* ... */},
-    fieldUpdated: 'deleted'
+    fieldDeleted: 'deleted'
 }))
 ```
 
