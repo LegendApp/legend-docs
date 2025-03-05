@@ -24,12 +24,15 @@ export default defineConfig({
                     autogenerate: { directory: 'intro' },
                 },
             ],
-            components: isPublish
-                ? {
-                      // Override the default `SocialLinks` component.
-                      Header: './src/Components/Overrides/Header.astro',
-                  }
-                : undefined,
+            components: {
+                ThemeProvider: './src/Components/Overrides/ThemeProvider.astro',
+                ...(isPublish
+                    ? {
+                          // Override the default `SocialLinks` component.
+                          Header: './src/Components/Overrides/Header.astro',
+                      }
+                    : {}),
+            },
         }),
         react(),
         tailwind({ applyBaseStyles: false }),

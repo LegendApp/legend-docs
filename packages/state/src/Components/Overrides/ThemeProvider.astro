@@ -4,6 +4,7 @@ import type { Props } from '@astrojs/starlight/props';
 
 {/* This is intentionally inlined to avoid FOUC. */}
 <script is:inline>
+    localStorage.setItem('starlight-theme', 'dark');
     window.StarlightThemeProvider = (() => {
         document.documentElement.dataset.theme = 'dark';
         return {
