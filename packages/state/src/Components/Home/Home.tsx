@@ -20,6 +20,7 @@ import { Text } from './Text';
 import { BackgroundGradients } from './BackgroundGradients';
 import { SectionKitHeader } from './SectionKitHeader';
 import { Footer } from './Footer';
+import { SectionKitCLI } from './SectionKitCLI';
 
 // function useScrollForHeader() {
 //   useMount(() => {
@@ -41,8 +42,6 @@ import { Footer } from './Footer';
 //     };
 //   });
 // }
-
-const EnableKit = true;
 
 const LandingPage = () => {
     const state$ = useObservable({ speed: 2 });
@@ -70,7 +69,7 @@ const LandingPage = () => {
                             <div className="max-w-2xl pt-2 pb-4">
                                 <Text className="md:text-lg">
                                     Legend State is an extremely fast signal-based state library with fine-grained
-                                    reactivity and a powerful sync engine that works with any backend.
+                                    reactivity and a powerful sync system that works with any backend.
                                 </Text>
                             </div>
                             <div className="flex flex-col xs:flex-row xs:gap-8 !mt-0 items-center">
@@ -106,18 +105,15 @@ const LandingPage = () => {
                         {/* <SectionLocalFirst /> */}
                         <div ref={refKit} />
 
-                        {EnableKit && (
-                            <>
-                                <SectionKitHeader />
+                        <SectionKitHeader />
 
-                                <SectionKitComponents />
-                                <SectionKitExtension />
-                                <SectionKitWrappers />
-                                <SectionKitExamples />
-                                {/* <SectionKitDevTools /> */}
-                                <Preorder />
-                            </>
-                        )}
+                        <SectionKitCLI />
+                        <SectionKitComponents />
+                        <SectionKitExtension />
+                        <SectionKitWrappers />
+                        <SectionKitExamples />
+                        {/* <SectionKitDevTools /> */}
+                        <Preorder />
                         <Footer />
                     </div>
                 </div>

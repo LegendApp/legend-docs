@@ -58,3 +58,22 @@ export const Install = observer(function ({
     </div>
   );
 });
+
+
+export function CodeLine({ children }: { children: React.ReactNode }) {
+    return (
+        <pre
+            className="!mt-4 astro-code css-variables inline-block"
+            style={{
+                backgroundColor: 'var(--astro-code-color-background)',
+                overflowX: 'auto',
+            }}
+        >
+            <code className="language-bash code-highlight">
+                <span className="code-line px-4">
+                    <span className="text-white">{children}</span>
+                </span>
+            </code>
+        </pre>
+    );
+}
