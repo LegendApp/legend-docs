@@ -56,7 +56,7 @@ const store$ = observable<Store>({
   }),
   // Computeds
   total: (): number => {
-    return store$.todos.length;
+    return store$.todos.get().length;
   },
   numCompleted: (): number => {
     return store$.todos.get().filter((todo) => todo.completed).length;
