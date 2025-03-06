@@ -67,7 +67,7 @@ const store$ = observable<Store>({
       id: nextId++,
       text: "",
     };
-    store$.todos[todo.id].set(todo);
+    store$.todos.push(todo);
   },
 });
 ```
