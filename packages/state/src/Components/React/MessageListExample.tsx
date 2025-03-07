@@ -7,7 +7,8 @@ import { syncedFetch } from '@legendapp/state/sync-plugins/fetch';
 import { $React } from '@legendapp/state/react-web';
 
 const MESSAGE_LIST_CODE = `
-import { For, $React, Show, useObservable, useObservable } from "@legendapp/state/react"
+import { For, Show, useObservable, useObservable } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
 import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
 
 let nextID = 0

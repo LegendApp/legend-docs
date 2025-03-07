@@ -14,7 +14,8 @@ import { $React } from '@legendapp/state/react-web';
 const GETTING_STARTED_CODE = `
 import { observable, Observable } from "@legendapp/state"
 import { configureSynced, synced } from "@legendapp/state/sync"
-import { observer, $React, use$, useObservable } from "@legendapp/state/react"
+import { observer, use$, useObservable } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
 import { $TextInput } from "@legendapp/state/react-native"
 import { observablePersistAsyncStorage } from
     "@legendapp/state/persist-plugins/async-storage"

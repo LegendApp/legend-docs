@@ -107,8 +107,9 @@ Note that `useObserve` runs during component render, not after render like `useE
 
 ```jsx
 import { event } from "@legendapp/state"
+import { useObserve, useObservable } from "@legendapp/state/react"
 import { $React } from "@legendapp/state/react-web"
-import { useObserve, useObservable, $React } from "@legendapp/state/react"
+
 
 const eventUpdateTitle = event()
 

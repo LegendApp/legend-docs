@@ -16,7 +16,8 @@ const AUTO_SAVING_FORM_CODE = `
 import axios from "axios"
 import { useRef } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useObservable, $React, Memo } from "@legendapp/state/react"
+import { useObservable, Memo } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
 import { useObservableSyncedQuery } from
     '@legendapp/state/sync-plugins/tanstack-react-query'
 

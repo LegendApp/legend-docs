@@ -7,7 +7,8 @@ import { $React } from '@legendapp/state/react-web';
 
 const FORM_VALIDATION_CODE = `
 import { useRef } from "react"
-import { useObservable, useObserve, $React, Memo, Show } from "@legendapp/state/react"
+import { useObservable, useObserve, Memo, Show } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
 
 function App() {
   const renderCount = ++useRef(0).current
