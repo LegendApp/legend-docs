@@ -16,7 +16,7 @@ import { observable, Observable } from "@legendapp/state"
 import { configureSynced, synced } from "@legendapp/state/sync"
 import { observer, $React, use$, useObservable } from "@legendapp/state/react"
 import { $TextInput } from "@legendapp/state/react-native"
-import { ObservablePersistAsyncStorage } from
+import { observablePersistAsyncStorage } from
     "@legendapp/state/persist-plugins/async-storage"
 
 interface Todo {
