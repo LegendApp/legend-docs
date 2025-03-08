@@ -3,11 +3,13 @@ import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import tailwindcssNesting from 'tailwindcss/nesting';
+import sitemap from '@astrojs/sitemap';
 
 const isPublish = process.argv[process.argv.length - 1] === '--publishlegend';
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'https://legendapp.com/open-source/state',
     integrations: [
         starlight({
             title: 'Legend State',
@@ -57,6 +59,7 @@ export default defineConfig({
         }),
         react(),
         tailwind({ applyBaseStyles: false }),
+        sitemap(),
     ],
     // Process images with sharp: https://docs.astro.build/en/guides/assets/#using-sharp
     image: {
