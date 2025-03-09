@@ -445,3 +445,19 @@ onItemSizeChanged?: (info: {
 ```
 
 Called whenever an item's rendered size changes. This can be used to adjust the estimatedItemSize to match the actual size, which can improve performance or reduce layout shifting.
+
+## Methods
+
+### scrollToIndex
+
+```
+scrollToIndex: (params: {
+  index: number;
+  animated?: boolean;
+});
+```
+
+Scrolls to the item at the specified index. By default ([maintainVisibleContentPosition](#maintainvisiblecontentposition) is false), accurate scroll is guaranteed only if all accurate sizes of elements are provided to [getEstimatedItemSize](#getestimateditemsize) function(similar FlatList).
+
+If estimated item sizes are not known, [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop need to be set to true. In this mode, list would automatically select element you are scrolling to as anchor element and guarantee accurate scroll.
+
