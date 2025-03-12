@@ -445,3 +445,65 @@ onItemSizeChanged?: (info: {
 ```
 
 Called whenever an item's rendered size changes. This can be used to adjust the estimatedItemSize to match the actual size, which can improve performance or reduce layout shifting.
+
+## Methods
+
+### scrollToIndex
+
+```
+scrollToIndex: (params: {
+  index: number;
+  animated?: boolean;
+});
+```
+
+Scrolls to the item at the specified index. By default ([maintainVisibleContentPosition](#maintainvisiblecontentposition) is false), accurate scroll is guaranteed only if all accurate sizes of elements are provided to [getEstimatedItemSize](#getestimateditemsize) function(similar FlatList).
+
+If estimated item sizes are not known, [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop need to be set to true. In this mode, list would automatically select element you are scrolling to as anchor element and guarantee accurate scroll.
+
+### scrollToOffset
+
+```ts
+scrollToOffset(params: {
+  offset: number;
+  animated?: boolean;
+});
+```
+
+Scroll to a specific content pixel offset in the list.
+
+Valid parameters:
+
+- *offset* (number) - The offset to scroll to. In case of horizontal being true, the offset is the x-value, in any other case the offset is the y-value. Required.
+- *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
+
+### scrollToItem
+
+```ts
+scrollToItem(params: {
+  animated?: ?boolean,
+  item: Item,
+});
+```
+
+Requires linear scan through data - use [scrollToIndex](#scrolltoindex) instead if possible. Provided for compatibility with FlatList only.
+
+Valid parameters:
+
+- *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
+- *item* (object) - The item to scroll to. Required.
+
+### scrollToEnd
+
+```ts
+scrollToEnd(params?: {
+  animated?: boolean,
+});
+```
+
+Scrolls to the end of the list.
+
+Valid parameters:
+
+- *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
+
