@@ -251,7 +251,7 @@ Start scrolled to this offset.
 ItemSeparatorComponent?: React.ComponentType<any>;
 ```
 
-Rendered in between each item, but not at the top or bottom. By default, highlighted and leadingItem Called when the viewability of rows changes, as defined by the viewabilityConfig prop.t), or a React element.
+Rendered in between each item, but not at the top or bottom.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#itemseparatorcomponent).
 
@@ -268,7 +268,7 @@ Highly recommended. The `keyExtractor` prop lets Legend List save item layouts b
 ```ts
 ListEmptyComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
 ```
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.eComponent />).
+Rendered when the list is empty.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listemptycomponent).
 
@@ -276,9 +276,8 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listemptycomponent
 
 ```ts
 ListEmptyComponentStyle?: StyleProp<ViewStyle> | undefined;
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.al View for ListEmptyComponent.
-
-See [React Native Docs](https://reactnative.dev/docs/flatlist#listemptycomponent).
+```
+Styling for internal View for `ListEmptyComponent`.
 
 
 ### ListFooterComponent
@@ -286,7 +285,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listemptycomponent
 ```ts
 ListFooterComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
 ```
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.eComponent />).
+Rendered at the bottom of all the items.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listfootercomponent).
 
@@ -295,7 +294,8 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listfootercomponen
 
 ```ts
 ListFooterComponentStyle?: StyleProp<ViewStyle> | undefined;
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.al View for ListFooterComponent.
+```
+Styling for internal View for `ListFooterComponent`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listfootercomponentstyle).
 
@@ -304,15 +304,14 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listfootercomponen
 ```ts
 ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
 ```
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.nt />).
+Rendered at the top of all the items.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponent).
 
 ### ListHeaderComponentStyle
 
 ```ts
-ListHeaderComponentStyle?: StyleProp<ViewStyle> | undefined;
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.al View for ListHeaderComponent.
+Styling for internal View for `ListHeaderComponent`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponentstyle).
 
@@ -395,7 +394,7 @@ The distance from the start as a percentage that the scroll should be from the e
 onViewableItemsChanged?: OnViewableItemsChanged | undefined;
 ```
 
-Called when the viewability of rows changes, as defined by the viewabilityConfig prop.
+Called when the viewability of rows changes, as defined by the `viewabilityConfig` prop.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#onviewableitemschanged).
 
