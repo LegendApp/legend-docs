@@ -22,8 +22,16 @@ export default defineConfig({
             },
             sidebar: [
                 {
-                    label: 'Intro',
-                    autogenerate: { directory: 'intro' },
+                    label: 'Documentation',
+                    autogenerate: { directory: 'api' },
+                },
+                {
+                    label: 'Examples',
+                    autogenerate: { directory: 'examples' },
+                },
+                {
+                    label: 'Plugins',
+                    autogenerate: { directory: 'plugins' },
                 },
             ],
             components: {
