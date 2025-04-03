@@ -1,0 +1,91 @@
+---
+title: Getting Started
+description: Basic intro to Legend List
+sidebar:
+    order: 1
+---
+
+Legend List is a high performance virtualized ScrollView library for React Native. Compared to FlatList and FlashList it's faster, simpler, and has useful features they don't support.
+
+- ✨ Extremely fast
+- ✨ Dynamic item sizes
+- ✨ Optional recycling
+- ✨ Bidirectional infinite lists
+- ✨ Chat list without inverting
+- ✨ Maintain content view position
+- ✨ Recycling hooks
+
+For more information, listen to Jay's conversation on React Native Radio [here](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich).
+
+## Install
+
+import Install from "shared/src/Components/Install/Install.astro";
+
+<Install name="@legendapp/list" />
+
+## Usage
+
+Legend List is a virtualized ScrollView component for React Native with optional recycling, that can massively increase performance of rendering long lists. Rather than rendering every item in the list, it only renders the items that are in view, which significantly reduces the amount of items that need to render.
+
+Legend List is a drop-in replacement for FlatList or FlashList. So since you're likely coming from one of those, we'll start with a guide on how to switch.
+
+### Switch from FlashList
+
+If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`.
+
+```diff
+return (
+-  <FlashList
++  <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
+      estimatedItemSize={320}
++      recycleItems
+  />
+)
+```
+
+### Switch from FlatList
+
+If you're coming from FlatList, you'll just want to add at least one prop, the `estimatedItemSize`. Legend List automatically lays out your items in a very high performance way, and a hint for what size the items are likely to be will help it be as fast as possible.
+
+```diff
+return (
+-  <FlatList
++  <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
++      estimatedItemSize={320}
+  />
+)
+```
+
+If you first render a LegendList without an `estimatedItemSize` it will suggest an optimal item size based on the rendered items, so that can help you find the right number.
+
+See [Props](../props) for all properties of LegendList.
+
+## Beta
+
+Legend List is in beta. It seems to be feature complete and reliable, but we are just taking some time to take feedback from the community and make sure it's stable for a 1.0 release.
+
+This documentation is still early.
+
+## Supported Platforms
+
+- Android
+- IOS
+- MacOS
+
+## Community
+
+Join us on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-list) to get involved with the Legend community.
+
+Talk to Jay on [Bluesky](https://bsky.app/profile/jayz.us) or [Twitter](https://twitter.com/jmeistrich).
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-list) on Github. And we welcome documentation PRs in our [documentation repo](https://github.com/LegendApp/legend-docs).
+
+## Legend Kit
+
+Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.
