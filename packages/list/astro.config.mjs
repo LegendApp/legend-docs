@@ -33,6 +33,10 @@ export default defineConfig({
                     label: 'Plugins',
                     autogenerate: { directory: 'plugins' },
                 },
+                {
+                    label: 'Benchmarks',
+                    autogenerate: { directory: 'benchmarks' },
+                },
             ],
             components: {
                 ThemeProvider: './src/Components/Overrides/ThemeProvider.astro',
