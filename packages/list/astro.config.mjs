@@ -29,14 +29,14 @@ export default defineConfig({
                     label: 'Examples',
                     autogenerate: { directory: 'examples' },
                 },
-                {
-                    label: 'Plugins',
-                    autogenerate: { directory: 'plugins' },
-                },
-                {
-                    label: 'Benchmarks',
-                    autogenerate: { directory: 'benchmarks' },
-                },
+                // {
+                //     label: 'Plugins',
+                //     autogenerate: { directory: 'plugins' },
+                // },
+                // {
+                //     label: 'Benchmarks',
+                //     autogenerate: { directory: 'benchmarks' },
+                // },
             ],
             components: {
                 ThemeProvider: './src/Components/Overrides/ThemeProvider.astro',

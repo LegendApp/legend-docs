@@ -44,7 +44,7 @@ ___
 keyExtractor?: (item: ItemT, index: number) => string;
 ```
 
-Highly recommended. The `keyExtractor` prop lets Legend List save item layouts by key, so that if the `data` array changes it can reuse previous layout information and only update the changed items. See [Use key extractor](../optimizations/#use-keyextractor).
+Highly recommended. The `keyExtractor` prop lets Legend List save item layouts by key, so that if the `data` array changes it can reuse previous layout information and only update the changed items. The value it returns should be unique to each item - if a value is reused for a different item it will cause big problems. It is okay to return the index, if list items are reordered or prepended, it will also cause big problems. See [Use key extractor](../optimizations/#use-keyextractor).
 
 If LegendList detects duplicate keys, it will log a warning.
 
@@ -110,10 +110,10 @@ Renders all items in the list in horizontal.
 ### initialContainerPoolRatio
 
 ```ts
-initialContainerPoolRatio?: number; // default: 1
+initialContainerPoolRatio?: number; // default: 2
 ```
 
-Ratio of initial container pool size to data length.
+Ratio of initial container pool size to data length. The container pool is extra unallocated containers that are used in case the actual size is smaller than the estimated size. This defaults to `2` which we've found to cover most usage. If your items are a fixed size you could set it closer to `1`, or if your items or viewport can resize signficantly it may help to increase it. If the number of containers needed exceeds the pool, LegendList will allocate more containers and re-render the outer list, which may cause a frame stutter.
 
 ### initialScrollIndex
 
@@ -134,7 +134,7 @@ Start scrolled to this offset.
 ### ItemSeparatorComponent
 
 ```ts
-ItemSeparatorComponent?: React.ComponentType<any>;
+ItemSeparatorComponent?: React.ComponentType<{ leadingItem: ItemT }>
 ```
 
 Rendered in between each item, but not at the top or bottom.
@@ -340,7 +340,21 @@ This will reuse the component rendered by your `renderItem` function. For more i
 renderScrollComponent?: (props: ScrollViewProps) => ReactNode
 ```
 
-Render custom ScrollView component. Allows customization of the underlying ScrollView.
+Render a custom ScrollView component. This allows customization of the underlying ScrollView.
+
+Note that passing `renderScrollComponent` as an inline function might cause you to lose scroll position if the list is rerendered.
+
+```tsx
+renderScrollComponent={(props) => <BottomSheetScrollView {...props} />}
+```
+
+Instead, it's better to extract it as a custom component.
+
+```tsx
+const CustomScrollView = (props: ScrollViewProps) => {
+  return <BottomSheetScrollView {...props} />;
+};
+```
 
 ### style
 
