@@ -84,10 +84,10 @@ The `drawDistance` (defaults to `250`) is the buffer size in pixels above and be
 ### extraData
 
 ```ts
-extraData?: any; 
+extraData?: any;
 ```
 
-Extra data to trigger re-rendering when changed. 
+Extra data to trigger re-rendering when changed.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
@@ -303,7 +303,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#onviewableitemscha
 ### progressViewOffset
 
 ```ts
-progressViewOffset?: number | undefined; 
+progressViewOffset?: number | undefined;
 ```
 
 Offset in pixels for the refresh indicator.
@@ -311,7 +311,7 @@ Offset in pixels for the refresh indicator.
 ### ref
 
 ```ts
-ref?: LegendListRef; 
+ref?: LegendListRef;
 ```
 
 Used to call `scrollTo` [methods](#ref-methods).
@@ -379,7 +379,7 @@ waitForInitialLayout?: boolean; // default false
 If true, delays rendering until initial layout is complete
 
 
-## Ref Methods 
+## Ref Methods
 ___
 ### scrollToIndex
 
@@ -441,32 +441,141 @@ Valid parameters:
 - *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
 
 ## Hooks
-___
-### Recycling hooks
+
+### useRecyclingState
 
 ```ts
-useRecyclingEffect: (effect: (info: LegendListRecyclingState) => void | (() => void)) => void;
-useRecyclingState: <T>(updateState: ((info: LegendListRecyclingState) => T) | T) => [T, Dispatch<T>];
+interface LegendListRecyclingState<T> {
+    item: T;
+    prevItem: T | undefined;
+    index: number;
+    prevIndex: number | undefined;
+}
+useRecyclingState: <T>(updateState: ((info: LegendListRecyclingState<T>) => T) | T) => [T, Dispatch<T>];
 ```
 
-`renderItem` receives two hooks to help you manage the recycling.
-
-1. `useRecyclingState` automatically resets the state when it recycles into a new item
-2. `useRecyclingEffect` can be used to reset any side effects when an item gets recycled.
+`useRecyclingState` automatically resets the state when an item is recycled into a new item.
 
 ```tsx
-export function ItemComponent({ item, useRecyclingEffect, useRecyclingState }) {
-
+import { useRecyclingState } from "@legendapp/list"
+export function ItemComponent({ item }) {
     // Like useState but it resets when the item is recycled
     const [isExpanded, setIsExpanded] = useRecyclingState(() => false);
 
+    // ...
+}
+```
+
+### useRecyclingEffect
+
+```ts
+interface LegendListRecyclingState<T> {
+    item: T;
+    prevItem: T | undefined;
+    index: number;
+    prevIndex: number | undefined;
+}
+useRecyclingEffect: <T>(effect: (info: LegendListRecyclingState<T>) => void | (() => void)) => void;
+```
+
+`useRecyclingEffect` can be used to reset any side effects when an item gets recycled.
+
+```tsx
+import { useRecyclingEffect } from "@legendapp/list"
+
+export function ItemComponent({ item, useRecyclingEffect }) {
     // A callback when the item is recycled into a new item
-    useRecyclingEffect?.(({ item, prevItem, index, prevIndex }) => {
+    useRecyclingEffect(({ item, prevItem, index, prevIndex }) => {
         // Reset any side effects from the previous item
         refSwipeable?.current?.close();
         refVideo?.current?.reset();
     });
 
     // ...
+}
+```
+
+### useViewability
+
+```ts
+interface ViewToken<ItemT = any> {
+    containerId: number;
+    index: number;
+    isViewable: boolean;
+    item: ItemT;
+    key: string;
+}
+useViewability: (configId: string, callback: (viewToken: ViewToken) => void) => void;
+```
+
+A hook that provides callbacks when an item's viewability changes. This hook registers a callback that will be invoked whenever the item's visibility status changes, providing detailed information about the item through the ViewToken interface. It is similar to [onViewableItemsChanged](#onviewableitemschanged) but runs for only the rendering item. If you defined multiple viewability configs using [viewabilityConfigCallbackPairs](#viewabilityconfigcallbackpairs) then provide the id of the one you're interested in with `configId`.
+
+```tsx
+import { useViewability } from "@legendapp/list"
+
+export function ItemComponent({ item }) {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useViewability((viewToken) => {
+        // Called when viewability changes
+        setIsVisible(viewToken.isViewable);
+
+        if (viewToken.isViewable) {
+            console.log("Item visible:", viewToken.item);
+            console.log("Item index:", viewToken.index);
+        }
+    }, "main");
+
+    return (
+        <View>
+            {isVisible ? <ExpensiveComponent /> : <PlaceholderComponent />}
+        </View>
+    );
+}
+```
+
+### useViewabilityAmount
+
+```ts
+interface ViewAmountToken<ItemT = any> {
+    containerId: number;
+    index: number;
+    isViewable: boolean;
+    item: ItemT;
+    key: string;
+    percentOfScroller: number;
+    percentVisible: number;
+    scrollSize: number;
+    size: number;
+    sizeVisible: number;
+}
+
+useViewabilityAmount: (callback: (viewAmountToken: ViewAmountToken) => void) => void;
+```
+
+A hook that provides detailed metrics about how much of an item is visible in the viewport. The callback receives a ViewAmountToken with information like the pixel measurements (sizeVisible, size), percentage visible, and more.
+
+```tsx
+import { useViewabilityAmount } from "@legendapp/list"
+
+export function ItemComponent({ item }) {
+    const [opacity, setOpacity] = useState(0);
+
+    useViewabilityAmount((viewAmountToken) => {
+        // Get detailed visibility information
+        setOpacity(viewAmountToken.percentVisible);
+
+        // Additional metrics available:
+        // viewAmountToken.sizeVisible - pixels of item visible in viewport
+        // viewAmountToken.size - total size of the item
+        // viewAmountToken.percentOfScroller - what percent of the scroller this item takes up
+        // viewAmountToken.scrollSize - size of the viewport
+    });
+
+    return (
+        <Animated.View style={{ opacity }}>
+            <Text>{item.title}</Text>
+        </Animated.View>
+    );
 }
 ```
