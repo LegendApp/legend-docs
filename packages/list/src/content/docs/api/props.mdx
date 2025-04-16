@@ -454,6 +454,79 @@ Valid parameters:
 
 - *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
 
+### scrollIndexIntoView
+
+Scrolls the index into view. If the index is above the viewable range it will be scrolled to the top of the screen, and if it's below the viewable range it will be scrolled to the bottom of the screen.
+
+```ts
+scrollIndexIntoView(params: {
+  animated?: boolean | undefined;
+  index: number;
+}): void
+```
+
+```jsx
+import { LegendList } from "@legendapp/list";
+import { useRef } from "react";
+
+export function ScrollExample() {
+  const listRef = useRef(null);
+
+  const scrollToItem = () => {
+    // Scroll to the item at index 10
+    listRef.current?.scrollIndexIntoView(10);
+  };
+
+  return (
+    <>
+      <Button title="Scroll to item 10" onPress={scrollToItem} />
+      <LegendList
+        ref={listRef}
+        data={data}
+        renderItem={renderItem}
+      />
+    </>
+  );
+}
+```
+
+### scrollItemIntoView
+
+Scrolls the item into view. If the item is above the viewable range it will be scrolled to the top of the screen, and if it's below the viewable range it will be scrolled to the bottom of the screen.
+
+```ts
+scrollItemIntoView(params: {
+  animated?: boolean | undefined;
+  item: any;
+}): void;
+```
+
+```jsx
+import { LegendList } from "@legendapp/list";
+import { useRef } from "react";
+
+export function ScrollToItemExample() {
+  const listRef = useRef(null);
+  const targetItem = { id: "item-5", text: "Target Item" };
+
+  const scrollToSpecificItem = () => {
+    // Scroll to the item that matches targetItem
+    listRef.current?.scrollItemIntoView(targetItem);
+  };
+
+  return (
+    <>
+      <Button title="Scroll to target item" onPress={scrollToSpecificItem} />
+      <LegendList
+        ref={listRef}
+        data={data}
+        renderItem={renderItem}
+      />
+    </>
+  );
+}
+```
+
 ## Hooks
 
 ### useRecyclingState
