@@ -17,15 +17,6 @@ data: ItemT[];
 
 An array of the items to render. This can also be an array of keys if you want to get the item by key in [renderItem](#renderitem).
 
-### estimatedItemSize
-
-```ts
-estimatedItemSize?: number;
-```
-
-An estimated size for all items which is used to estimate the list layout before items actually render. If you don't provide this, it will log a suggested value for optimal performance.
-
-
 ### renderItem
 
 ```ts
@@ -56,8 +47,19 @@ recycleItems?: boolean; // default: false
 
 This will reuse the component rendered by your `renderItem` function. This can be a big performance improvement, but if your list items have internal state there's potential for undesirable behavior. For more information, see [Performance](../performance#recycling-list-items) for more information.
 
+### estimatedItemSize
+
+```ts
+estimatedItemSize?: number;
+```
+
+An estimated size for all items which is used to estimate the list layout before items actually render. This can help to provide a hint for how large items will be in the first frame and can speed up initial layout, but subsequent renders will use the average item size.
+
+
 ## Optional Props
+
 ___
+
 ### alignItemsAtEnd
 ```ts
 alignItemsAtEnd?: boolean; // default: false
