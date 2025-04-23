@@ -48,6 +48,14 @@ Highly recommended. The `keyExtractor` prop lets Legend List save item layouts b
 
 If LegendList detects duplicate keys, it will log a warning.
 
+### recycleItems
+
+```ts
+recycleItems?: boolean; // default: false
+```
+
+This will reuse the component rendered by your `renderItem` function. This can be a big performance improvement, but if your list items have internal state there's potential for undesirable behavior. For more information, see [Performance](../performance#recycling-list-items) for more information.
+
 ## Optional Props
 ___
 ### alignItemsAtEnd
@@ -55,7 +63,7 @@ ___
 alignItemsAtEnd?: boolean; // default: false
 ```
 
-Aligns to the end of the screen, so if there's only a few items there will be enough padding at the top to make them appear to be at the bottom. See [Chat interfaces without inverse](#chat-interfaces-without-inverse) for more.
+Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces without inverse](#chat-interfaces-without-inverse) for more.
 
 ### columnWrapperStyle
 
@@ -326,14 +334,6 @@ Set this true while waiting for new data from a refresh.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#refreshing).
 
-### recycleItems
-
-```ts
-recycleItems?: boolean; // default: false
-```
-
-This will reuse the component rendered by your `renderItem` function. For more information, see [Performance](../performance#recycling-list-items) for more information.
-
 ### renderScrollComponent
 
 ```ts
@@ -395,9 +395,28 @@ If true, delays rendering until initial layout is complete
 
 ## Ref Methods
 ___
+
+### getState
+
+```ts
+getState: () => {
+    contentLength: number;
+    end: number;
+    endBuffered: number;
+    isAtEnd: boolean;
+    isAtStart: boolean;
+    scroll: number;
+    scrollLength: number;
+    start: number;
+    startBuffered: number;
+}
+```
+
+Returns the internal scroll state of the list.
+
 ### scrollToIndex
 
-```
+```ts
 scrollToIndex: (params: {
   index: number;
   animated?: boolean;
