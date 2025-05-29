@@ -42,6 +42,30 @@ Legend List is a virtualized ScrollView component for React Native with optional
 
 Legend List is a drop-in replacement for FlatList or FlashList. So since you're likely coming from one of those, we'll start with a guide on how to switch.
 
+### Quick Start
+
+```jsx
+import { Text } from "react-native";
+import { LegendList } from "@legendapp/list";
+
+const items = [
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
+];
+
+export function MyList() {
+  return (
+    <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
+      keyExtractor={(item) => item.id}
+      recycleItems
+    />
+  );
+}
+```
+
 ### Switch from FlashList
 
 If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`. See [Recycling Items](../performance#recycling-list-items) for more details of recycling behavior.
