@@ -241,14 +241,14 @@ import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/
 // Configure the base `synced`
 const syncPlugin = configureSynced({
     persist: {
-        plugin: ObservablePersistMMKV
+        plugin: ObservablePersistLocalStorage
     }
 })
 
 // Or configure options derived from another plugin
 const syncPlugin = configureSynced(syncedCrud, {
     persist: {
-        plugin: ObservablePersistMMKV
+        plugin: ObservablePersistLocalStorage
     }
 })
 
