@@ -16,10 +16,9 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
 
   return (
     <div className="mt-subsection px-4">
-      <Header size="h3">🧑‍💻 VS Code Extension</Header>
+      <Header size="h3">🧑‍💻 VS Code Extension (Planned)</Header>
       <Text>
-        A contextually aware coding assistant to accelerate your development
-        speed
+        A contextually aware coding assistant to accelerate your development speed.
       </Text>
       <div className="lg:flex items-center gap-4 pt-4">
         <FeatureGrid />
