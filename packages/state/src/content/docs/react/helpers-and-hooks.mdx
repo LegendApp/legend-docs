@@ -8,15 +8,15 @@ Legend-State includes some helpful observables and hooks for common tasks. These
 
 ## Helper observables
 
-### currentDate
+### currentDay
 
-`currentDate` is an observable containing the current date (with no time) that changes automatically at midnight.
+`currentDay` is an observable containing the current day (with no time) that changes automatically at midnight.
 
 ```js
-import { currentDate } from "@legendapp/state/helpers/time"
+import { currentDay } from "@legendapp/state/helpers/time"
 
 observe(() => {
-    console.log('Today is': currentDate.get())
+    console.log('Today is': currentDay.get())
 })
 ```
 
