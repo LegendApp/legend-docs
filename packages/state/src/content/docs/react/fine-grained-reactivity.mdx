@@ -95,6 +95,7 @@ function Component() {
 Legend State includes reactive versions of all of the built-in React Native components, prefixed with `$` to differentiate them from the normal components.
 
 ```jsx
+import { View } from "react-native";
 import { $View, $Text, $TextInput } from "@legendapp/state/react-native"
 
 function Component() {
@@ -102,20 +103,21 @@ function Component() {
     const state$ = useObservable({ name: '', age: 18 })
 
     return (
-        <div>
+        <View>
             {/* Reactive styling */}
             <$View
-                $style={() => ({
-                    color: state$.age.get() > 5 ? 'green' : 'red'
-                })}
+                $style={{
+                    height: 32,
+                    backgroundColor: state$.age.get() > 5 ? '#22c55e' : '#ef4444'
+                }}
             />
             {/* Reactive children */}
             <$Text>
-                {() => state$.age.get() > 5 ? 'child' : 'baby'}
+                {state$.age.get() > 5 ? 'child' : 'baby'}
             </$Text>
             {/* Two-way bind to inputs */}
             <$TextInput $value={state$.name} />
-        </div>
+        </View>
     )
 }
 ```
