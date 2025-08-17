@@ -33,6 +33,36 @@ const Component = () => {
 }
 ```
 
+<Editor
+  code={`function ThemeExample() {
+  const [theme, setTheme] = useState('dark');
+  
+  return (
+    <div style={{ 
+      padding: '20px', 
+      backgroundColor: theme === 'dark' ? '#1f2937' : '#f9fafb',
+      color: theme === 'dark' ? '#f9fafb' : '#1f2937',
+      borderRadius: '8px'
+    }}>
+      <p>Current theme: {theme}</p>
+      <button 
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Toggle Theme
+      </button>
+    </div>
+  );
+}`}
+/>
+
 ##### 3. Fine grained reactivity for the best possible performance
 
 Legend-State achieves much better performance than vanilla React and other state libraries because it does smaller re-renders less often, so your apps will load faster and run more smoothly.
