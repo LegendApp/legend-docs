@@ -1,0 +1,112 @@
+---
+title: Reactivity
+description: Tracking changes and observing contexts
+---
+
+Listening for changes is the core purpose of observables, so Legend-State provides many options. You can listen to changes at any level in an object's hierarchy and it will be notified by changes in any children.
+
+## Observing contexts
+
+The core power of Legend-State is the "observing contexts". Calling `get()` within an observing context will track changes in that node, and re-run itself whenever it changes.
+
+Most functions in Legend-State take what we call a "Selector", which is either a single observable or a function that calls `get()` on some observables and returns a value.
+
+Most functions in Legend-State are observing contexts, including computed observables, `observe`, `when`, linked/synced `get` functions, as well as `observer` and reactive components in React. When you call `get()` on an observable inside an observing context it will track it for changes and re-run whenever it changes.
+
+```js
+observe(() => {
+    console.log(settings$.theme.get())
+})
+```
+
+### What tracks
+
+`get()` is the primary way to access observables and track for changes, but there are actually a few ways:
+
+1. Call `get()` on an observable: `settings.get()`
+2. Array looping functions (shallow listener): `arr.map(settings.accounts, () => ...)`
+3. Accessing array length (shallow listener): `if (arr.length > 0) ...`
+4. Object.keys (shallow listener): `Object.keys(settings)`
+4. Object.values (shallow listener): `Object.values(settings)`
+
+These operation do not track:
+
+1. Accessing through an observable: `state$.settings`
+2. Call `peek()` on an observable: `settings.peek()`
+
+### observe
+
+`observe` can run arbitrary code when observables change, and automatically tracks the observables accessed while running, so it will update whenever any accessed observable changes.
+
+```js
+import { observe, observable } from "@legendapp/state";
+const state$ = observable({ isOnline: false, toasts: [] });
+
+const dispose = observe((e) => {
+  // This observe will automatically track state.isOnline for changes
+  if (!state$.isOnline.get()) {
+    // Show an "Offline" toast when offline
+    const toast = { id: "offline", text: "Offline", color: "red" };
+    state$.toasts.push(toast);
+
+    // Remove the toast when the observe is re-run, which will be when isOnline becomes true
+    e.onCleanup = () => state$.toasts.splice(state$.toasts.indexOf(toast), 1);
+  }
+});
+
+// Cancel the observe
+dispose();
+```
+
+### when
+
+`when` runs the given callback **only once** when the Selector returns a truthy value, and automatically tracks the observables accessed while running the Selector so it will update whenever one of them changes.
+
+```js
+import { when } from "@legendapp/state";
+
+const state$ = observable({ ok: false });
+
+// Option 1: Promise
+await when(state$.ok);
+
+// Option 2: callback
+when(
+  () => state$.ok.get(),
+  () => console.log("Don't worry, it's ok")
+);
+```
+
+### onChange
+
+`onChange` listens to an observable for any changes anywhere within it. Use this as specifically as possible because it will fire notifications for every change recursively up the tree.
+
+```js
+const state$ = observable({ text: "hi" });
+
+state$.text.onChange(({ value }) => console.log("text changed to", value));
+state$.onChange(({ value }) => console.log("state changed to", value));
+
+state$.text.set("hello");
+
+// Log: text changed to "hello"
+// Log: state changed to { text: "hello" }
+```
+
+## Batching
+
+You may want to modify multiple observables at once without triggering callbacks for each change. Batching postpones renders and listeners until the end of the batch.
+
+```js
+import { batch, beginBatch, endBatch } from "@legendapp/state";
+
+// Wrap in begin and end
+beginBatch();
+doManyChanges();
+endBatch();
+
+// Or batch with a callback
+batch(() => {
+  doManyChanges();
+});
+```

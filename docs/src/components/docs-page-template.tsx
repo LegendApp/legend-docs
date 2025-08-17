@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 
-interface DocsSource {
+type DocsSource = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getPage: (slug?: string[]) => any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     generateParams: () => any;
 }
 
@@ -34,7 +36,7 @@ export default async function DocsPageTemplate({ source, params }: DocsPageTempl
             <DocsBody>
                 <MDX
                     components={getMDXComponents({
-                        pre: ({ ref: _ref, ...props }) => (
+                        pre: (props) => (
                             <CodeBlock {...props}>
                                 <Pre>{props.children}</Pre>
                             </CodeBlock>

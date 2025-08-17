@@ -1,0 +1,9 @@
+{
+  "title": "Core Usage",
+  "pages": [
+    "observable",
+    "reactivity", 
+    "helper-functions",
+    "configuring"
+  ]
+}
