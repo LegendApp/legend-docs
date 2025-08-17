@@ -18,7 +18,4 @@ export const baseOptions: BaseLayoutProps = {
             </>
         ),
     },
-    toc: {
-        style: 'clerk',
-    },
 };

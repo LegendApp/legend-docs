@@ -5,9 +5,14 @@
 :root {
     --fd-nav-height: 50px !important;
     --fd-toc-nav-height: 50px !important;
+    --fd-color-primary: #0099dd !important;
 }
 
 #nd-docs-layout > div:first-child {
     left: 4px;
     top: calc(var(--fd-nav-height) + 8px) !important;
+}
+
+.bg-fd-primary {
+    background-color: #0099dd;
 }

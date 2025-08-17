@@ -11,6 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             {...baseOptions}
             nav={{ component: <CustomNavbar /> }}
             sidebar={{
+                defaultOpenLevel: 1,
                 tabs: [
                     {
                         title: 'Version 1',
