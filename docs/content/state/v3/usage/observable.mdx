@@ -7,9 +7,9 @@ You can put anything in an observable: primitives, deeply nested objects, arrays
 
 Observables do not modify the underlying data at all. They use [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) to expose observable functions and track changes, so an observable is a Proxy pointing to the actual data.
 
-:::note
+<Callout>
 We use a `$` suffix on variables as a naming convention to indicate an observable but it's not required. It just helps differentiate between observables and regular variables.
-:::
+</Callout>
 
 ```js
 import { observable } from "@legendapp/state"

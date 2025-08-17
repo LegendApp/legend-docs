@@ -11,18 +11,8 @@ Select React or React Native to customize this guide for your platform.
 
 ### Install Legend-State
 
-```bash
-# npm
+```npm
 npm install @legendapp/state@beta
-
-# yarn
-yarn add @legendapp/state@beta
-
-# pnpm
-pnpm add @legendapp/state@beta
-
-# bun
-bun add @legendapp/state@beta
 ```
 
 ## Quick Start
@@ -215,7 +205,7 @@ function TodoItem({ item$ }) {
                 value={use$(item$.text)}
                 onChange={(e) => item$.text.set(e.target.value)}
                 onKeyDown={onKeyDown}
-                style={{ 
+                style={{
                   color: 'inherit',
                   backgroundColor: 'rgba(255,255,255,0.1)',
                   border: '1px solid #6b7280',
