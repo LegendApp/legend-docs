@@ -7,7 +7,7 @@
     --fd-toc-nav-height: 50px !important;
 }
 
-#nd-docs-layout div:first-child {
+#nd-docs-layout > div:first-child {
     left: 4px;
     top: calc(var(--fd-nav-height) + 8px) !important;
 }
