@@ -16,3 +16,9 @@
 .bg-fd-primary {
     background-color: #0099dd;
 }
+
+.liveEditor pre {
+    padding: 5px 3px !important;
+    font-size: 13px !important;
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+}
