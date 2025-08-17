@@ -163,3 +163,94 @@ And that's it! Now we have a full React app that persists its changes.
 ### Full Example
 
 Now let's put it all together into a live editable example. Feel free to play around in this sandbox on the left and see it running to the right.
+
+<Editor
+  code={`import { observable } from "@legendapp/state"
+import { observer, use$, useObservable } from "@legendapp/state/react"
+
+interface Todo {
+    id: number;
+    text: string;
+    completed?: boolean;
+}
+
+interface Store {
+    todos: Todo[];
+    total: number;
+    numCompleted: number;
+    addTodo: () => void;
+}
+
+// Create a global observable for the Todos
+let nextId = 0;
+const store$ = observable<Store>({
+  todos: [],
+  // Computeds
+  total: (): number => {
+    return store$.todos.length;
+  },
+  numCompleted: (): number => {
+    return store$.todos.get().filter((todo) => todo.completed).length;
+  },
+  addTodo: () => {
+    const todo: Todo = {
+      id: nextId++,
+      text: "New todo",
+    };
+    store$.todos.push(todo);
+  },
+});
+
+// Receives item$ prop from the For component
+function TodoItem({ item$ }) {
+    const onKeyDown = (e) => {
+        // Call addTodo from the global store$
+        if (e.key === 'Enter') store$.addTodo()
+    }
+
+    return (
+        <div className="flex items-center">
+            <Checkbox $value={item$.completed} />
+            <input
+                value={use$(item$.text)}
+                onChange={(e) => item$.text.set(e.target.value)}
+                onKeyDown={onKeyDown}
+                style={{ 
+                  color: 'inherit',
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  border: '1px solid #6b7280',
+                  borderRadius: '4px',
+                  padding: '4px 8px',
+                  marginLeft: '8px',
+                  width: '120px'
+                }}
+            />
+        </div>
+    );
+}
+
+function App() {
+    const theme$ = useObservable('dark')
+    const theme = use$(theme$)
+    const total = use$(store$.total)
+    const completed = use$(store$.numCompleted)
+
+    const onClickClear = () => store$.todos.set([])
+
+    return (
+        <Box theme={theme}>
+            <ThemeButton $value={theme$} />
+            <div>Total: {total}</div>
+            <div>Completed: {completed}</div>
+            <For each={store$.todos} item={TodoItem} />
+            <div className="flex justify-between">
+                <Button onClick={store$.addTodo}>Add</Button>
+                <Button onClick={onClickClear}>Clear</Button>
+            </div>
+        </Box>
+    )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  previewWidth={180}
+/>

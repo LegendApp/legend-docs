@@ -33,36 +33,6 @@ const Component = () => {
 }
 ```
 
-<Editor
-  code={`function ThemeExample() {
-  const [theme, setTheme] = useState('dark');
-  
-  return (
-    <div style={{ 
-      padding: '20px', 
-      backgroundColor: theme === 'dark' ? '#1f2937' : '#f9fafb',
-      color: theme === 'dark' ? '#f9fafb' : '#1f2937',
-      borderRadius: '8px'
-    }}>
-      <p>Current theme: {theme}</p>
-      <button 
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        style={{
-          padding: '8px 16px',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
-      >
-        Toggle Theme
-      </button>
-    </div>
-  );
-}`}
-/>
-
 ##### 3. Fine grained reactivity for the best possible performance
 
 Legend-State achieves much better performance than vanilla React and other state libraries because it does smaller re-renders less often, so your apps will load faster and run more smoothly.
@@ -108,6 +78,38 @@ function Component() {
 :::note[Live editable]
 Many examples in these docs are editable so you can play around with the code and see how it works.
 :::
+
+<Editor
+  code={`import { observable } from "@legendapp/state"
+import { use$ } from "@legendapp/state/react"
+
+// Create an observable object
+const settings$ = observable({ theme: 'dark' })
+
+// This is the code for the example on your right ----->
+function Component() {
+  // theme is automatically tracked for changes
+  const theme = use$(settings$.theme)
+
+  const toggle = () => {
+    settings$.theme.set(theme =>
+      theme === 'dark' ? 'light' : 'dark'
+    )
+  }
+
+  return (
+    <Box theme={theme}>
+      <div>Theme: {theme}</div>
+      <Button theme={theme} onClick={toggle}>
+        Toggle theme
+      </Button>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<Component />)"
+  previewWidth={180}
+/>
 
 ### 2. ⚡️ The fastest React state library
 
