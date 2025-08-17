@@ -1,0 +1,484 @@
+---
+title: Keel plugin
+---
+
+[Keel](https://keel.so/developers) pairs especially well with Legend-State because it's designed for strong typing and developer experience, and because they've worked with us to make Legend-State and Keel pair perfectly together. All you need to do is provide the actions in the generated `keelClient.ts` and the observables will be fully typed and handle calling the correct action functions for you.
+
+As a basic example, if you have a Keel model that looks like this:
+
+```
+model Profile {
+    fields {
+        name Text
+    }
+
+    actions {
+        get getProfile()
+        create createProfile() with (name)
+        update updateProfile(id) with (name)
+        delete deleteProfile(id)
+    }
+}
+```
+
+Then you can pass the functions from the generated keelClient.ts into `syncedKeel` to create a fully typed observable:
+
+```ts
+import { observable } from '@legendapp/state'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
+const { mutations, queries } = client.api
+
+const profile$ = observable(syncedKeel({
+    get: queries.getProfile,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    delete: mutations.deleteProfile,
+}))
+```
+
+Then you can just get and modify the observable to two-way sync your data with Keel.
+
+## Install
+
+Follow [Keel's](https://www.keel.so) instructions to get everything setup with Keel. Then install the `ksuid` library, which the Keel plugin uses to generate IDs locally in the same way that Keel's backend generates IDs.
+
+```bash
+npm install ksuid
+```
+
+## Full Example
+
+We'll start with a full example to see what a full setup looks like, then go into specific details.
+
+```ts
+import { observable } from '@legendapp/state'
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+import { configureSynced } from '@legendapp/state/sync/'
+import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { APIClient } from './keelClient'
+
+const client = new APIClient({
+  baseUrl: process.env.API_BASE_URL
+})
+
+const isAuthed$ = observable(false);
+
+// Set defaults
+const sync = configureSynced(syncedKeel, {
+    client,
+    persist: {
+        plugin: ObservablePersistLocalStorage,
+        retrySync: true
+    },
+    debounceSet: 500,
+    retry: {
+        infinite: true,
+    },
+    changesSince: 'last-sync',
+    waitFor: isAuthed$
+})
+
+// enable sync after authentication succeeds
+async function doAuth() {
+    // authenticate the client
+    await keel.auth.authenticateWithPassword(email, pass)
+
+    // check that the client is authenticated
+    const isAuthenticated = await keel.auth.isAuthenticated()
+
+    // Set isAuthed$ to start syncing
+    isAuthed$.set(true)
+}
+
+// Set up your observables with Keel queries
+const { mutations, queries } = client.api
+
+// create an observable with the action functions
+const messages$ = observable(sync({
+    list: queries.getMessages,
+    create: mutations.createMessage,
+    update: mutations.updateMessage,
+    delete: mutations.deleteMessage,
+    persist: { name: 'messages' },
+}))
+
+// get() activates and starts syncing
+const messages = messages$.get()
+
+function addMessage(text: string) {
+    const id = generateKeelId()
+    // Add keyed by id to the messages$ observable to trigger the create action
+    messages$[id].set({
+        id,
+        text,
+        createdAt: undefined,
+        updatedAt: undefined
+    })
+}
+
+function updateMessage(id: string, text: string) {
+    // Just set valudes in the observable to trigger the update action
+    messages$[id].text.set(text)
+}
+```
+
+## Configure globals
+
+The first step to using the Keel plugin is to set some global configuration options. The suggested options are:
+
+- **client**: It needs the client in order to enable the Keel realtime plugins.
+- **waitFor**: An observable that you set to true after signing in
+
+```ts
+import { observable } from '@legendapp/state'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { configureSynced } from '@legendapp/state/sync/'
+import { APIClient } from './keelClient'
+
+const client = new APIClient({
+  baseUrl: process.env.API_BASE_URL,
+})
+
+const isAuthed$ = observable(false);
+
+// Set defaults
+const sync = configureSynced(syncedKeel, {
+    client,
+    persist: {
+        plugin: ObservablePersistLocalStorage,
+    },
+    waitFor: isAuthed$
+})
+
+// enable sync after authentication succeeds
+async function doAuth() {
+    // authenticate the client
+    await keel.auth.authenticateWithPassword(email, pass)
+
+    // check that the client is authenticated
+    const isAuthenticated = await keel.auth.isAuthenticated()
+
+    // Set isAuthed$ to start syncing
+    isAuthed$.set(true)
+}
+```
+
+TODO: Other config options
+
+## get and list
+
+The Keel plugin has two slightly different patterns depending on whether you're using a `get` or a `list` action.
+
+The behavior when using `get` or `as: 'value'` is:
+- **get**: Observable value is the value returned from get
+- **create**: If get returned null, then setting any value on the observable will create
+- **update**: If get returned a value, then updating any value on the observable will update
+- **create**: Setting the value to null or undefined, or calling `delete()`, will delete
+
+```ts
+const { mutations, queries } = client.api
+
+const profile$ = observable(syncedKeel({
+    get: queries.getProfile,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    delete: mutations.deleteProfile,
+}))
+// profile$.get() is a Profile
+```
+
+The behavior when using `list` is:
+- **list**: Observable value is an object containing the listed values keyed by id
+- **create**: Adding a new value to the object will will create
+- **update**: Updating a child value will update it with the changed fields
+- **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
+
+```ts
+const { mutations, queries } = client.api
+
+const profiles$ = observable(syncedKeel({
+    list: queries.listProfiles,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    delete: mutations.deleteProfile,
+}))
+// profile$.get() is a Record<string, Profile>
+```
+
+The shape of the observable object can be changed with the `as` parameter, which supports three options:
+
+1. `object`: The default, an object keyed by the row's `id` field.
+2. `array`: Treat the result of a query as an array
+3. `Map`: A Map, which can be more efficient for accessing rows by key
+4. `value`: Treat the result of a query as a single value like a `get`
+
+## where
+
+When using a `list` function you may want to provide more options to the `where` query. You can do that by [customizing actions](#customizing-actions), but it is most easily done with the `where` parameter.
+
+In this example of using a [lookup table](../../usage/observable#lookup-table) by room, we can pass the `roomId` into the query:
+
+```ts
+const { mutations, queries } = client.api
+
+const messages$ = observable({
+    room: (roomId: string) =>
+        syncedKeel({
+            list: queries.listMessages,
+            where: { roomId }
+        })
+})
+// profile$.get() is a Record<string, Profile>
+```
+
+## Action functions
+
+Using Legend-State with Keel puts some requirements on your model structure:
+
+##### 1. id parameter in create actions
+
+Because Legend-State generate ids locally, `id` needs to be include in create functions in your Keel models. You can make it optional if you may sometimes not create with an id.
+
+##### 2. Include all possibly changeable fields as optional in create/update actions
+
+This plugin sends updates with only the changed fields, so having some fields as required in update could cause the update action to fail. And if it changes any field that's not included in the action, that will also fail.
+
+Additionally, using the debounceSet option may result in the `create` action being delayed until after your code has added more fields to the initial value.
+
+So we suggest:
+- **create** actions should have required fields required and include all other fields as optional
+- **update** actions should include all changeable fields as optional
+
+##### 3. Include updatedAt? in list actions
+
+This is only needed if you're using `changesSince: 'last-sync'`. See [sync only diffs](#sync-only-diffs).
+
+##### Example model structure
+
+```
+model Message {
+    fields {
+        // Cannot change after create
+        user User
+        // Changeable
+        text Text
+        status Boolean?
+    }
+    actions {
+        list listUsers(updatedAt?)
+        create createUser() with (id?, user.id, name, status?)
+        create updateUser(id) with (name?, status?)
+        delete deleteUser(id)
+    }
+}
+```
+
+## Customizing actions
+
+In the previous examples we provided the Keel function directly, but you can also provide your own function which calls the Keel action. That can be useful for adding extra query or creation options, such as with a [lookup table](../../usage/observable#lookup-table).
+
+```ts
+import { mutations, queries, CreateProfileInput } from './keelClient'
+
+const profiles$ = observable({
+    user: (userId: string) =>
+        syncedKeel({
+            get: () => queries.getProfile({ userId }),
+            create: (data: CreateProfileInput) =>
+                mutations.createProfile({ user: { id: staffId }, ...data }),
+            update: mutations.updateProfile,
+            delete: mutations.deleteProfile,
+        })
+})
+```
+
+## Sync only diffs
+
+An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce badwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
+
+1. Save the maximum updatedAt to the local persistence
+2. In subsequent syncs or after refresh it will list by `updatedAt: lastSync + 1` to get only recent changes
+3. The new changes will be merged into the observable
+
+To enable this on the Keel side, just include `updatedAt?` in the list parameters to enable querying by updatedAt.
+
+```
+model Message {
+    ...
+    actions {
+        list listMessages(updatedAt?)
+    }
+}
+```
+
+And to enable this feature in Legend-State, use the `changesSince` option in combination with `list`. It can not work with get, but you can emulate a get with a list by creating a `list` action with an `id` parameter and the `as: 'value'` option in `syncedKeel`.
+
+
+```ts
+// Sync diffs of a list
+syncedKeel({
+    list: queries.listMessages,
+    changesSince: 'last-sync',
+    persist: {
+        name: 'messages'
+    }
+})
+// Sync diffs of a single value
+syncedKeel({
+    list: queries.listUserById,
+    where: { id: myId },
+    as: 'value',
+    changesSince: 'last-sync',
+    persist: {
+        name: 'me'
+    }
+})
+```
+
+<Callout type="warn">
+The list function needs to include rows deleted in Keel so they can be removed from the local persistence. So use one of these two options:
+</Callout>
+
+### Soft deletes
+
+The delete parameter does not need to be an actual `delete` action in Keel. You could also implement it as a soft delete if you prefer, just setting a `deleted` field to true. To do that you can have a `deleted` field on your model, or provide a `fieldDeleted` with a custom field name.
+
+Then when you delete an element it will internally call the update action with `{ deleted: true }` and the list action will remove deleted elements from the observable.
+
+```ts
+const { mutations, queries } = client.api
+
+const profiles$ = observable(syncedKeel({
+    list: queries.listProfiles,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    fieldDeleted: 'deleted'
+}))
+```
+
+### List deletes from audit table
+
+We have a helper function that we use in Keel code to get deleted rows from Keel's built-in audit log. If the query has an `updatedAt` timestamp, this will get all values updated since `updatedAt` as well as get all rows deleted since `updatedAt` and include them as `{ id, deleted: true }`. The plugin will internally remove those deleted rows from the observable for you.
+
+```ts
+export async function listTableWithDeletes<T extends keyof ModelsAPI>(
+    tableName: T,
+    inputs: { where: { updatedAt?: TimestampQueryInput } },
+): Promise<Awaited<ReturnType<ModelsAPI[T]['create']>>[]> {
+    const ret = await models[tableName].findMany(inputs);
+
+    return ret.concat(await listDeletes(tableName, inputs)) as any;
+}
+async function listDeletes(
+    tableName: keyof ModelsAPI,
+    inputs: { where: { updatedAt?: TimestampQueryInput } },
+): Promise<any[]> {
+    const {
+        where: { updatedAt },
+    } = inputs;
+    if (updatedAt) {
+        const db = useDatabase().withTables<{ keel_audit }>();
+        const res = await db
+            .selectFrom('keel_audit')
+            .selectAll()
+            .where('table_name', '=', camelCaseToSnakeCase(tableName))
+            .where('op', '=', 'delete')
+            .where('created_at', '>', updatedAt.after)
+            .execute();
+
+        return res.map((r) => ({ id: r.data.id, deleted: true }));
+    } else {
+        return [];
+    }
+}
+function camelCaseToSnakeCase(input: string) {
+    return input.replace(/([A-Z])/g, ' $1').split(' ').join('_').toLowerCase();
+}
+```
+
+Then you can use `listTableWithDeletes` in your `beforeQuery` hooks. You will need to add this to any `beforeQuery` hooks that you want to list with deletes.
+
+```ts
+const hooks: ListMessagesHooks = {
+    async beforeQuery(ctx, inputs, query) {
+        return listTableWithDeletes('message', inputs)
+    }
+}
+```
+
+## Usage
+
+#### Add new element to table with id
+
+To add a new element to an observable and use it locally before it has been created remotely, you can create it with a local id, and then it will be updated with `createdAt` and `updatedAt` after it's created in Keel.
+
+Note that since `createdAt` and `updatedAt` are defined as required in the types they should to be set to undefined when creating.
+
+```ts
+import { Message } from './keelClient'
+import { observable } from '@legendapp/state'
+import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+
+
+const profile$ = observable(syncedKeel({
+    get: queries.getProfile,
+    create: mutations.createProfile,
+    update: mutations.updateProfile,
+    delete: mutations.deleteProfile,
+}))
+
+function addMessage(text: string) {
+    const id = generateKeelId()
+    // Add keyed by id to the messages$ observable
+    messages$[id].set({
+        id,
+        text,
+        createdAt: undefined,
+        updatedAt: undefined
+    })
+}
+addMessage('test')
+```
+
+#### Wait for remote load
+
+Because Keel automatically adds a `createdAt` field after it creates, you can know that data has been successfully saved to Keel if it has a `createdAt` field. Just make sure that you don't set `createdAt` yourself as it's automatically created by Keel.
+
+```ts
+// Wait for profile to have saved
+await when(profile$.createdAt)
+```
+
+#### waitFor another table
+
+If you have a table dependant on another table, it needs to wait for the dependant table to be created, otherwise it will fail because the relationship doesn't exist. For example you can't create messages in a chat room before that chat room exists. You can ensure the related table is created first using `waitForSet` and `createdAt`:
+
+```ts
+const rooms$ = observable(syncedKeel({
+    list: queries.listRooms,
+    create: mutations.createRoom,
+    update: mutations.updateRoom,
+}))
+const roomMessages$ = observable(
+    (roomId: string) => syncedKeel({
+        list: queries.getRoomMessages,
+        where: { roomId },
+        create: (message) => mutations.createMessage({ roomId, ...message }),
+        update: mutations.updateMessage,
+        waitForSet: rooms$[roomId].createdAt
+    })
+)
+```
+
+## TODO
+
+### Realtime
+
+Keel does not have realtime built in, but it's very easy to build a realtime system on top of it.
+
+More details coming soon.
+
+Other todo
+- options
+    - transforms
+- Persist in full example
