@@ -1,3 +1,13 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+:root {
+    --fd-nav-height: 50px !important;
+    --fd-toc-nav-height: 50px !important;
+}
+
+#nd-docs-layout div:first-child {
+    left: 4px;
+    top: calc(var(--fd-nav-height) + 8px) !important;
+}
