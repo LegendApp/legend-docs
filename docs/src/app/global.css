@@ -6,6 +6,7 @@
     --fd-nav-height: 50px !important;
     --fd-toc-nav-height: 50px !important;
     --fd-color-primary: #0099dd !important;
+    --color-fd-primary: #0099dd !important;
 }
 
 #nd-docs-layout > div:first-child {
@@ -21,4 +22,8 @@
     padding: 5px 3px !important;
     font-size: 13px !important;
     line-height: var(--tw-leading, var(--text-sm--line-height));
+}
+
+.prose p a {
+    color: #0099dd !important;
 }
