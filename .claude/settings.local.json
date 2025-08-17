@@ -7,7 +7,9 @@
       "Bash(npm create:*)",
       "Bash(bun create:*)",
       "Bash(rm:*)",
-      "Bash(bun run:*)"
+      "Bash(bun run:*)",
+      "WebFetch(domain:fumadocs.vercel.app)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

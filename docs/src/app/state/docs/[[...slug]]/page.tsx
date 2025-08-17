@@ -2,6 +2,8 @@ import { source } from '@/lib/sources/state';
 import type { Metadata } from 'next';
 import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
+import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import { getMDXComponents } from '@/mdx-components';
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
     const params = await props.params;
@@ -21,7 +23,15 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
             <DocsTitle>{page.data.title}</DocsTitle>
             <DocsDescription>{page.data.description}</DocsDescription>
             <DocsBody>
-                <MDX />
+                <MDX
+                    components={getMDXComponents({
+                        pre: ({ ref: _ref, ...props }) => (
+                            <CodeBlock {...props}>
+                                <Pre>{props.children}</Pre>
+                            </CodeBlock>
+                        ),
+                    })}
+                />
             </DocsBody>
         </DocsPage>
     );
