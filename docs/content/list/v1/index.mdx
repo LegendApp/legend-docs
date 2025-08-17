@@ -1,12 +1,83 @@
 ---
-title: Welcome to Legend List v1
-description: Getting started with Legend List version 1
+title: Legend List
+description: Fast React Native list component with optional recycling
 ---
 
-# Legend List v1 Documentation
+# Legend List
 
-Hello World - This is the Legend List v1 documentation page.
+Legend List is a high performance virtualized ScrollView library for React Native. Compared to FlatList and FlashList it's faster, simpler, and has useful features they don't support.
 
-## Getting Started
+## Key Features
 
-This is a placeholder for the Legend List v1 documentation content.
+- ✨ **Extremely fast** - Optimized for high performance scrolling
+- ✨ **Dynamic item sizes** - Automatically handles varying item heights
+- ✨ **Optional recycling** - Choose when to enable view recycling for extra performance
+- ✨ **Bidirectional infinite lists** - Support for infinite scrolling in both directions
+- ✨ **Chat list without inverting** - Build chat interfaces without transform scaling issues
+- ✨ **Maintain content view position** - Keep content stable when items change above viewport
+- ✨ **Recycling hooks** - Built-in hooks to manage state in recycled views
+
+For more information, listen to Jay's conversation on React Native Radio [here](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich).
+
+## Quick Start
+
+Install Legend List:
+
+```bash
+npm install @legendapp/list
+# or
+yarn add @legendapp/list
+# or
+pnpm add @legendapp/list
+```
+
+Basic usage:
+
+```jsx
+import { Text } from "react-native";
+import { LegendList } from "@legendapp/list";
+
+const items = [
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
+];
+
+export function MyList() {
+  return (
+    <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
+      keyExtractor={(item) => item.id}
+      recycleItems
+    />
+  );
+}
+```
+
+## Version 1.0
+
+Legend List recently reached 1.0. While we are confident that it's stable for use in production, the documentation is continuously being improved.
+
+## Supported Platforms
+
+- Android
+- iOS  
+- React Native Web
+- React Native MacOS
+- React Native Windows (likely but untested)
+- Any React Native platform should work since there's no native code
+
+## Community
+
+Join us on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-list) to get involved with the Legend community.
+
+Talk to Jay on [Bluesky](https://bsky.app/profile/jayz.us) or [Twitter](https://twitter.com/jmeistrich).
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-list) on Github. And we welcome documentation PRs in our [documentation repo](https://github.com/LegendApp/legend-docs).
+
+## Legend Kit
+
+Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.

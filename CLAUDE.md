@@ -4,96 +4,109 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is the documentation repository for Legend's open-source projects, primarily Legend-State and Legend-Motion. The documentation is built using Astro with Starlight, featuring live code editing via React-Live and React component examples.
+This is the documentation repository for Legend's open-source projects, containing both legacy Astro-based documentation and a new FumaDocs-based migration. The repository serves documentation for Legend-State, Legend-Motion, and Legend-List projects.
 
-## Package Structure
+## Dual Documentation Architecture
 
-This is a monorepo with the following workspace packages:
+### Legacy Astro Documentation (`packages/`)
+- **Location**: Monorepo workspace packages in `packages/` directory
+- **Framework**: Astro with Starlight theme, React-Live for interactive examples
+- **Packages**: `state/`, `motion/`, `list/`, `state-v2/`, `shared/`
+- **Status**: Original documentation system, still functional
 
-- `packages/state/` - Legend-State documentation (main docs site)
-- `packages/motion/` - Legend-Motion documentation 
-- `packages/list/` - Legend-List documentation
-- `packages/state-v2/` - Alternative version of state docs
-- `packages/shared/` - Common components and utilities shared across all docs
+### New FumaDocs Migration (`docs/`)
+- **Location**: Standalone Next.js application in `docs/` directory 
+- **Framework**: FumaDocs with Next.js 15, TypeScript, Tailwind CSS
+- **Purpose**: Modern documentation platform with versioned docs and improved navigation
 
 ## Development Commands
 
-### Running the Documentation
-
-Each package can be run independently. Use bun as the package manager:
-
+### FumaDocs (New System)
 ```bash
-# For Legend-State docs (most common)
-cd packages/state
-bun i
+# Run FumaDocs development server
+cd docs
 bun dev
 
-# For Legend-Motion docs
-cd packages/motion
-bun i  
-bun dev
-
-# For Legend-List docs
-cd packages/list
-bun i
-bun dev
-```
-
-### Building for Production
-
-```bash
-# Standard build
+# Build FumaDocs for production  
+cd docs
 bun build
 
-# Build for Legend website deployment (state docs)
-cd packages/state
-bun publish
+# Start production server
+cd docs
+bun start
 ```
 
-### Development Server Options
+### Legacy Astro Documentation
+```bash
+# Run individual package docs (legacy)
+cd packages/state
+bun i && bun dev
 
-- `bun dev` - Standard development server
-- `bun devlegend` - Development with Legend-specific publishing flags (state package only)
+cd packages/motion  
+bun i && bun dev
 
-## Architecture
+cd packages/list
+bun i && bun dev
+```
 
-### Documentation Framework
-- **Astro** with **Starlight** theme for static site generation
-- **React** components for interactive examples
-- **React-Live** for live code editing capabilities
-- **Tailwind CSS** for styling with custom configurations
+## FumaDocs Architecture
+
+### Multi-Package Structure
+The FumaDocs implementation supports multiple documentation packages with versioned content:
+
+- **Package Routes**: `/list` and `/state` with dedicated homepages
+- **Versioned Documentation**: `/list/docs/v1`, `/list/docs/v2`, `/state/docs/v1`, `/state/docs/v2`
+- **Unified Navigation**: Custom navbar with "Home", "List", "State" links
+
+### Source Configuration
+- **`source.config.ts`**: Defines separate document collections (`listDocs`, `stateDocs`) for package-specific content
+- **Generated Sources**: Auto-generated `.source/index.ts` with runtime document mapping
+- **Package Sources**: `src/lib/sources/list.ts` and `src/lib/sources/state.ts` filter content for each package
+
+### Custom Navigation System
+- **Custom Navbar**: `src/components/navbar.tsx` replaces default FumaDocs navigation
+- **Layout Integration**: Custom navbar injected into docs layouts with `nav={{ component: <CustomNavbar /> }}`
+- **Sidebar Tabs**: Version switching (V1/V2) implemented using FumaDocs sidebar tabs
 
 ### Content Organization
-- Documentation content is in MDX format located in `src/content/docs/`
-- Interactive examples are React components in `src/Components/`
-- Shared components and utilities live in the `shared` package
-- Assets (videos, images, fonts) are in `src/assets/` and `public/`
+```
+docs/content/
+├── list/
+│   ├── v1/index.mdx + meta.json  
+│   └── v2/index.mdx + meta.json
+└── state/
+    ├── v1/index.mdx + meta.json
+    └── v2/index.mdx + meta.json
+```
 
-### Key Configuration Files
-- `astro.config.mjs` - Astro and Starlight configuration with custom sidebar structure
-- `tailwind.config.cjs` - Tailwind CSS configuration
-- `tsconfig.json` - TypeScript configuration
-- Package-specific configurations exist in each workspace
+### Route Structure
+```
+docs/src/app/
+├── list/
+│   ├── page.tsx (homepage)
+│   └── docs/[[...slug]]/page.tsx (versioned docs)
+├── state/  
+│   ├── page.tsx (homepage)
+│   └── docs/[[...slug]]/page.tsx (versioned docs)
+└── layout.config.tsx (shared navigation config)
+```
 
-### Content Structure
-Each documentation package follows this pattern:
-- `intro/` - Introduction and getting started guides
-- `usage/` - Core usage documentation  
-- `react/` - React-specific guides and examples
-- `guides/` - Advanced guides and patterns
-- `sync/` - Persistence and synchronization (state docs)
-- `other/` - Migration guides and framework comparisons
+## Key Configuration Files
 
-### Component Architecture
-- Astro components (`.astro`) for static content and layouts
-- React components (`.tsx`) for interactive examples and live demos
-- Shared components imported from the `shared` workspace
-- Custom Starlight overrides in `src/Components/Overrides/`
+### FumaDocs
+- **`source.config.ts`**: Document collections and MDX configuration
+- **`next.config.mjs`**: Next.js configuration with FumaDocs optimizations  
+- **`src/lib/sources/*.ts`**: Package-specific source loaders
+- **`src/app/layout.config.tsx`**: Shared layout and navigation configuration
+
+### Legacy Astro
+- **`astro.config.mjs`**: Astro and Starlight configuration (per package)
+- **`tailwind.config.cjs`**: Tailwind CSS configuration (per package)
 
 ## Package Manager
 
-This project uses **bun** as the primary package manager. While other package managers might work, bun is explicitly mentioned in the README and used in the lock files.
+Uses **bun** as the primary package manager across both systems. The FumaDocs system includes `postinstall: "fumadocs-mdx"` for automatic source generation.
 
-## Live Examples
+## Version Management
 
-The documentation features interactive examples that can be edited in real-time using React-Live. These are typically structured as paired `.astro` and `.tsx` files where the Astro file handles the layout and the React component provides the interactive functionality.
+FumaDocs implements version tabs using `meta.json` files with `"root": true` property to create sidebar tab navigation between documentation versions. Each package maintains separate V1 and V2 documentation branches.

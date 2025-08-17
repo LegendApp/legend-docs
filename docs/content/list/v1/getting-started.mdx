@@ -1,0 +1,88 @@
+---
+title: Getting Started
+description: Basic intro to Legend List
+---
+
+# Getting Started
+
+Legend List is a high performance virtualized ScrollView library for React Native. Compared to FlatList and FlashList it's faster, simpler, and has useful features they don't support.
+
+- ✨ Extremely fast
+- ✨ Dynamic item sizes
+- ✨ Optional recycling
+- ✨ Bidirectional infinite lists
+- ✨ Chat list without inverting
+- ✨ Maintain content view position
+- ✨ Recycling hooks
+
+## Install
+
+```bash
+npm install @legendapp/list
+# or
+yarn add @legendapp/list
+# or
+pnpm add @legendapp/list
+```
+
+## Usage
+
+Legend List is a virtualized ScrollView component for React Native with optional recycling, that can massively increase performance of rendering long lists. Rather than rendering every item in the list, it only renders the items that are in view, which significantly reduces the amount of items that need to render.
+
+Legend List is a drop-in replacement for FlatList or FlashList. So since you're likely coming from one of those, we'll start with a guide on how to switch.
+
+### Quick Start
+
+```jsx
+import { Text } from "react-native";
+import { LegendList } from "@legendapp/list";
+
+const items = [
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
+];
+
+export function MyList() {
+  return (
+    <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
+      keyExtractor={(item) => item.id}
+      recycleItems
+    />
+  );
+}
+```
+
+### Switch from FlashList
+
+If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`. See [Performance Guide](./performance#recycling-list-items) for more details of recycling behavior.
+
+```diff
+return (
+-  <FlashList
++  <LegendList
+     data={items}
+     renderItem={({ item }) => <Text>{item.title}</Text>}
++     recycleItems
+  />
+)
+```
+
+### Switch from FlatList
+
+If you're coming from FlatList, Legend List should immediately be much faster. But you may want to add the `recycleItems` prop to add extra performance.
+
+```diff
+return (
+-  <FlatList
++  <LegendList
+     data={items}
+     renderItem={({ item }) => <Text>{item.title}</Text>}
++     recycleItems
+  />
+)
+```
+
+See [API Reference](./api-reference) for all properties of LegendList.

@@ -1,5 +1,12 @@
 {
   "title": "Version 1",
   "description": "Current stable version",
-  "root": true
+  "root": true,
+  "pages": [
+    "getting-started",
+    "api-reference", 
+    "performance",
+    "animated",
+    "examples"
+  ]
 }
