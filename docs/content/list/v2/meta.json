@@ -1,5 +1,12 @@
 {
   "title": "Version 2", 
-  "description": "Next version",
-  "root": true
+  "description": "Latest version with enhanced features",
+  "root": true,
+  "pages": [
+    "getting-started",
+    "props", 
+    "performance",
+    "animated",
+    "examples"
+  ]
 }

@@ -10,7 +10,10 @@
       "Bash(bun run:*)",
       "WebFetch(domain:fumadocs.vercel.app)",
       "Bash(cat:*)",
-      "Bash(bun add:*)"
+      "Bash(bun add:*)",
+      "Bash(cp:*)",
+      "Bash(touch:*)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "ask": []
