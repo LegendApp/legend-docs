@@ -6,7 +6,17 @@ import { BiPencil } from 'react-icons/bi';
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { observable } from '@legendapp/state';
-import { use$, useObservable, For } from '@legendapp/state/react';
+import { use$, useObservable, For, Memo, Show, Switch, reactive, useObserve, useComputed } from '@legendapp/state/react';
+import { $React } from '@legendapp/state/react-web';
+import { syncObservable } from '@legendapp/state/sync';
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
+import { syncedFetch } from '@legendapp/state/sync-plugins/fetch';
+import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { pageHash } from '@legendapp/state/helpers/pageHash';
+import { pageHashParams } from '@legendapp/state/helpers/pageHashParams';
+import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
 import type { Observable } from '@legendapp/state';
 
 interface Props {
@@ -23,7 +33,7 @@ interface Props {
     showEditing?: boolean;
     noError?: boolean;
     disabled?: boolean;
-    transformCode?: (code: string) => string;
+    transformCode?: string; // Now a string identifier instead of function
     previewCallout?: React.ReactNode;
 }
 
@@ -32,6 +42,77 @@ const emptyTheme = { plain: {}, styles: [] };
 function removeImports(code: string) {
     return code.replace(/import .*?\n/g, '');
 }
+
+// Predefined transform functions based on original examples
+const transformFunctions: Record<string, (code: string) => string> = {
+    'persistence': (code) => 
+        code
+            .replace(
+                /className="footer"/g,
+                'className="bg-gray-600 text-center text-white text-sm overflow-hidden"',
+            )
+            .replace(
+                /className="input"/g,
+                'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
+            ),
+    'autoSaving': (code) =>
+        code.replace(
+            /className="input"/g,
+            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"',
+        ),
+    'formValidation': (code) =>
+        code
+            .replace(
+                /className="input"/g,
+                'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
+            )
+            .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 pt-1"'),
+    'messageList': (code) =>
+        code
+            .replace(
+                /className="input"/g,
+                'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1"',
+            )
+            .replace(
+                /className="messages"/g,
+                'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"',
+            ),
+    'animatedSwitch': (code) =>
+        code
+            .replace(
+                /className="toggle"/g,
+                'className="border border-[#717173] rounded-full select-none cursor-pointer"',
+            )
+            .replace(/className="thumb"/g, 'className="bg-white rounded-full shadow"'),
+    'modal': (code) =>
+        code
+            .replace(
+                /className="pageText"/g,
+                'className="flex-1 flex justify-center items-center"'
+            )
+            .replace(
+                /className="pageButton"/g,
+                'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500 !mt-0"'
+            )
+            .replace(
+                /className="modal"/g,
+                'className="relative bg-gray-700 rounded-xl flex flex-col p-4"'
+            )
+            .replace(/className="modalButtons"/g, 'className="flex justify-center gap-4"'),
+    'primitives': (code) =>
+        code.replace(
+            `<div>Count: <Memo>{count$}</Memo></div>`,
+            `<div>Count:{" "}
+                <Memo>
+                    {() => (
+                        <FlashingDiv span>
+                            {count$.get()}
+                        </FlashingDiv>
+                    )}
+                </Memo>
+            </div>`
+        )
+};
 
 // UI Components for the live examples styled to match shared components
 const Box = ({
@@ -118,10 +199,73 @@ const Checkbox = ({ $value }: { $value: Observable<boolean> }) => {
     );
 };
 
+// FlashingDiv component for showing re-renders
+const FlashingDiv = ({
+    pad,
+    span,
+    children,
+}: {
+    pad?: boolean;
+    span?: boolean;
+    children: React.ReactNode;
+}) => {
+    const [flash, setFlash] = useState(false);
+
+    React.useEffect(() => {
+        setFlash(true);
+        const timer = setTimeout(() => setFlash(false), 100);
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <span
+            className={classNames(
+                'relative',
+                span ? 'inline-block p-1' : 'block p-1'
+            )}
+        >
+            <div
+                className={classNames(
+                    'absolute inset-0 bg-blue-500 rounded-lg transition-opacity duration-200',
+                    flash ? 'opacity-20' : 'opacity-0'
+                )}
+            />
+            <span
+                className={classNames(
+                    'relative z-10 bg-gray-800 text-white rounded-lg',
+                    pad && 'p-4',
+                    span ? 'px-2' : 'block'
+                )}
+            >
+                {children}
+            </span>
+        </span>
+    );
+};
+
+// useInterval hook for examples
+const useInterval = (callback: () => void, delay: number | null) => {
+    React.useEffect(() => {
+        if (delay !== null) {
+            const id = setInterval(callback, delay);
+            return () => clearInterval(id);
+        }
+    }, [callback, delay]);
+};
+
+// debounce utility for AutoSaving example
+let timeout: NodeJS.Timeout;
+function debounce(fn: () => void, time: number) {
+    clearTimeout(timeout);
+    timeout = setTimeout(fn, time);
+}
+
 // Default scope with commonly used React elements and Legend-State functions
 const defaultScope = {
     React,
     useState,
+    useRef: React.useRef,
+    useEffect: React.useEffect,
     createElement: React.createElement,
     Fragment: React.Fragment,
     // Legend-State functions
@@ -129,11 +273,39 @@ const defaultScope = {
     use$,
     useObservable,
     For,
+    Memo,
+    Show,
+    Switch,
+    reactive,
+    useObserve,
+    useComputed,
+    // Legend-State web components
+    $React,
+    // Sync and persistence
+    syncObservable,
+    ObservablePersistLocalStorage,
+    syncedFetch,
+    useObservableSyncedQuery,
+    // TanStack Query
+    QueryClient,
+    QueryClientProvider,
+    // Router helpers
+    pageHash,
+    pageHashParams,
+    // Motion components
+    motion,
+    AnimatePresence,
+    // HTTP client
+    axios,
     // UI Components
     Box,
     Button,
     ThemeButton,
     Checkbox,
+    FlashingDiv,
+    // Utility hooks and functions
+    useInterval,
+    debounce,
 };
 
 export function Editor({
@@ -157,11 +329,14 @@ export function Editor({
     const mergedScope = { ...defaultScope, ...scope };
     const [liveCode, setLiveCode] = useState(trimmedCode);
 
+    // Get transform function by string key
+    const transformFn = transformCode ? transformFunctions[transformCode] : undefined;
+
     return (
         <LiveProvider
             code={liveCode}
             transformCode={(output) =>
-                removeImports((transformCode ? transformCode(output) : output) + (renderCode || ''))
+                removeImports((transformFn ? transformFn(output) : output) + (renderCode || ''))
             }
             scope={mergedScope}
             enableTypeScript={true}

@@ -14,7 +14,8 @@
       "Bash(cp:*)",
       "Bash(touch:*)",
       "Bash(mv:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

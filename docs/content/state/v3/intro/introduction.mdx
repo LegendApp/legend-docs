@@ -130,74 +130,47 @@ Legend-State helps your re-renders be smaller and less frequent, making your app
 <Editor
   code={`
 import { observable } from "@legendapp/state"
-import { use$ } from "@legendapp/state/react"
+import { Memo, useObservable } from "@legendapp/state/react"
+import { useRef, useState } from "react"
 
-// Create observables for different primitive types
-const count$ = observable(0)
-const name$ = observable('Legend')
-const isVisible$ = observable(true)
+function NormalComponent() {
+  const [count, setCount] = useState(1)
+  const renderCount = useRef(1).current++
 
-function PrimitivesExample() {
-  const count = use$(count$)
-  const name = use$(name$)
-  const isVisible = use$(isVisible$)
+  useInterval(() => {
+    setCount((v) => v + 1)
+  }, 600)
 
+  // This re-renders when count changes
   return (
-    <div style={{ padding: '16px', fontFamily: 'system-ui' }}>
-      <h3>Fine-grained reactivity with primitives</h3>
+    <FlashingDiv pad>
+      <h5>Normal</h5>
+      <div>Renders: {renderCount}</div>
+      <div>Count: {count}</div>
+    </FlashingDiv>
+  )
+}
+function FineGrained() {
+  const count$ = useObservable(1)
+  const renderCount = useRef(1).current++
 
-      <div style={{ marginBottom: '16px' }}>
-        <label>Count: {count}</label>
-        <div>
-          <button
-            onClick={() => count$.set(c => c - 1)}
-            style={{ marginRight: '8px' }}
-          >
-            -
-          </button>
-          <button onClick={() => count$.set(c => c + 1)}>
-            +
-          </button>
-        </div>
-      </div>
+  useInterval(() => {
+    count$.set((v) => v + 1)
+  }, 600)
 
-      <div style={{ marginBottom: '16px' }}>
-        <label>Name: </label>
-        <input
-          value={name}
-          onChange={e => name$.set(e.target.value)}
-          style={{ marginLeft: '8px', padding: '4px' }}
-        />
-      </div>
-
-      <div style={{ marginBottom: '16px' }}>
-        <label>
-          <input
-            type="checkbox"
-            checked={isVisible}
-            onChange={e => isVisible$.set(e.target.checked)}
-            style={{ marginRight: '8px' }}
-          />
-          Show message
-        </label>
-      </div>
-
-      {isVisible && (
-        <div style={{
-          padding: '12px',
-          backgroundColor: '#e3f2fd',
-          borderRadius: '4px',
-          border: '1px solid #2196f3'
-        }}>
-          Hello {name}, you clicked {count} times!
-        </div>
-      )}
-    </div>
+  // The text updates itself so the component doesn't re-render
+  return (
+    <FlashingDiv pad>
+      <h5>Fine-grained</h5>
+      <div>Renders: {renderCount}</div>
+      <div>Count: <Memo>{count$}</Memo></div>
+    </FlashingDiv>
   )
 }`}
   noInline={true}
-  renderCode=";render(<PrimitivesExample />)"
-  previewWidth={300}
+  renderCode=";render(<div><NormalComponent /><div className='!mt-4' /><FineGrained /></div>)"
+  previewWidth={150}
+  transformCode="primitives"
 />
 
 ### 4. 💾 Powerful sync and persistence
