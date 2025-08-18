@@ -6,7 +6,17 @@ import { BiPencil } from 'react-icons/bi';
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { observable } from '@legendapp/state';
-import { use$, useObservable, For, Memo, Show, Switch, reactive, useObserve, useComputed } from '@legendapp/state/react';
+import {
+    use$,
+    useObservable,
+    For,
+    Memo,
+    Show,
+    Switch,
+    reactive,
+    useObserve,
+    useComputed,
+} from '@legendapp/state/react';
 import { $React } from '@legendapp/state/react-web';
 import { syncObservable } from '@legendapp/state/sync';
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
@@ -45,29 +55,26 @@ function removeImports(code: string) {
 
 // Predefined transform functions based on original examples
 const transformFunctions: Record<string, (code: string) => string> = {
-    'persistence': (code) => 
+    persistence: (code) =>
         code
-            .replace(
-                /className="footer"/g,
-                'className="bg-gray-600 text-center text-white text-sm overflow-hidden"',
-            )
+            .replace(/className="footer"/g, 'className="bg-gray-600 text-center text-white text-sm overflow-hidden"')
             .replace(
                 /className="input"/g,
                 'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
             ),
-    'autoSaving': (code) =>
+    autoSaving: (code) =>
         code.replace(
             /className="input"/g,
             'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"',
         ),
-    'formValidation': (code) =>
+    formValidation: (code) =>
         code
             .replace(
                 /className="input"/g,
                 'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
             )
             .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 pt-1"'),
-    'messageList': (code) =>
+    messageList: (code) =>
         code
             .replace(
                 /className="input"/g,
@@ -77,29 +84,23 @@ const transformFunctions: Record<string, (code: string) => string> = {
                 /className="messages"/g,
                 'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"',
             ),
-    'animatedSwitch': (code) =>
+    animatedSwitch: (code) =>
         code
             .replace(
                 /className="toggle"/g,
                 'className="border border-[#717173] rounded-full select-none cursor-pointer"',
             )
             .replace(/className="thumb"/g, 'className="bg-white rounded-full shadow"'),
-    'modal': (code) =>
+    modal: (code) =>
         code
-            .replace(
-                /className="pageText"/g,
-                'className="flex-1 flex justify-center items-center"'
-            )
+            .replace(/className="pageText"/g, 'className="flex-1 flex justify-center items-center"')
             .replace(
                 /className="pageButton"/g,
-                'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500 !mt-0"'
+                'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500 !mt-0"',
             )
-            .replace(
-                /className="modal"/g,
-                'className="relative bg-gray-700 rounded-xl flex flex-col p-4"'
-            )
+            .replace(/className="modal"/g, 'className="relative bg-gray-700 rounded-xl flex flex-col p-4"')
             .replace(/className="modalButtons"/g, 'className="flex justify-center gap-4"'),
-    'primitives': (code) =>
+    primitives: (code) =>
         code.replace(
             `<div>Count: <Memo>{count$}</Memo></div>`,
             `<div>Count:{" "}
@@ -110,8 +111,8 @@ const transformFunctions: Record<string, (code: string) => string> = {
                         </FlashingDiv>
                     )}
                 </Memo>
-            </div>`
-        )
+            </div>`,
+        ),
 };
 
 // UI Components for the live examples styled to match shared components
@@ -126,7 +127,7 @@ const Box = ({
 }) => (
     <div
         className={classNames(
-            'rounded-lg p-2 relative max-w-sm',
+            'rounded-lg p-4 relative max-w-sm',
             theme === 'light' ? 'bg-gray-50 text-gray-900' : 'bg-gray-800 text-gray-100',
             className,
         )}
@@ -200,15 +201,7 @@ const Checkbox = ({ $value }: { $value: Observable<boolean> }) => {
 };
 
 // FlashingDiv component for showing re-renders
-const FlashingDiv = ({
-    pad,
-    span,
-    children,
-}: {
-    pad?: boolean;
-    span?: boolean;
-    children: React.ReactNode;
-}) => {
+const FlashingDiv = ({ pad, span, children }: { pad?: boolean; span?: boolean; children: React.ReactNode }) => {
     const [flash, setFlash] = useState(false);
 
     React.useEffect(() => {
@@ -218,23 +211,18 @@ const FlashingDiv = ({
     }, []);
 
     return (
-        <span
-            className={classNames(
-                'relative',
-                span ? 'inline-block p-1' : 'block p-1'
-            )}
-        >
+        <span className={classNames('relative', span ? 'inline-block p-1' : 'block p-1')}>
             <div
                 className={classNames(
                     'absolute inset-0 bg-blue-500 rounded-lg transition-opacity duration-200',
-                    flash ? 'opacity-20' : 'opacity-0'
+                    flash ? 'opacity-20' : 'opacity-0',
                 )}
             />
             <span
                 className={classNames(
                     'relative z-10 bg-gray-800 text-white rounded-lg',
                     pad && 'p-4',
-                    span ? 'px-2' : 'block'
+                    span ? 'px-2' : 'block',
                 )}
             >
                 {children}
@@ -335,9 +323,7 @@ export function Editor({
     return (
         <LiveProvider
             code={liveCode}
-            transformCode={(output) =>
-                removeImports((transformFn ? transformFn(output) : output) + (renderCode || ''))
-            }
+            transformCode={(output) => removeImports((transformFn ? transformFn(output) : output) + (renderCode || ''))}
             scope={mergedScope}
             enableTypeScript={true}
             theme={emptyTheme}
@@ -388,7 +374,7 @@ export function Editor({
                 {!hideDemo && (
                     <div
                         className={classNames(
-                            'border rounded-lg p-4 bg-white dark:bg-gray-800 dark:border-gray-700',
+                            'border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700',
                             name ? `preview-${name}` : 'col-span-1',
                             classNamePreview,
                         )}

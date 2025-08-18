@@ -17,11 +17,11 @@ Props:
 - `selector`: Observable or computation function that listens to observables accessed while running
 - `options`: `{ suspense: boolean }`: Enable suspense when the value is a Promise and you're using it within React.Suspense.
 
-<Editor
-  code={`import { observable } from "@legendapp/state"
+```jsx
+import { observable } from "@legendapp/state"
 import { use$ } from "@legendapp/state/react"
 
-const state$ = observable({ selected: 1, theme: 'dark' })
+const state$ = observable({ selected: 1, theme })
 
 const Component = ({ id }) => {
     // Only re-renders if the return value changes
@@ -30,23 +30,9 @@ const Component = ({ id }) => {
     // Get the raw value of an observable and re-render when it changes
     const theme = use$(state$.theme)
 
-    return (
-        <div>
-            <div>Selected: {isSelected ? 'Yes' : 'No'}</div>
-            <div>Theme: {theme}</div>
-            <button onClick={() => state$.selected.set(id)}>
-                Select me
-            </button>
-            <button onClick={() => state$.theme.set(theme === 'dark' ? 'light' : 'dark')}>
-                Toggle theme
-            </button>
-        </div>
-    )
-}`}
-  noInline={true}
-  renderCode=";render(<Component id={1} />)"
-  previewWidth={280}
-/>
+    ...
+}
+```
 
 #### Using with React Suspense
 
