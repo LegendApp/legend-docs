@@ -79,7 +79,6 @@ function Component() {
 Many examples in these docs are editable so you can play around with the code and see how it works.
 </Callout>
 
-{/* TODO: Add Intro interactive component here */}
 <Editor
   code={`
 import { observable } from "@legendapp/state"
@@ -128,7 +127,78 @@ See [Fast 🔥](../fast) for more details of why Legend-State is so fast.
 
 Legend-State helps your re-renders be smaller and less frequent, making your apps faster 🔥.
 
-{/* TODO: Add Primitives interactive component here */}
+<Editor
+  code={`
+import { observable } from "@legendapp/state"
+import { use$ } from "@legendapp/state/react"
+
+// Create observables for different primitive types
+const count$ = observable(0)
+const name$ = observable('Legend')
+const isVisible$ = observable(true)
+
+function PrimitivesExample() {
+  const count = use$(count$)
+  const name = use$(name$)
+  const isVisible = use$(isVisible$)
+
+  return (
+    <div style={{ padding: '16px', fontFamily: 'system-ui' }}>
+      <h3>Fine-grained reactivity with primitives</h3>
+
+      <div style={{ marginBottom: '16px' }}>
+        <label>Count: {count}</label>
+        <div>
+          <button
+            onClick={() => count$.set(c => c - 1)}
+            style={{ marginRight: '8px' }}
+          >
+            -
+          </button>
+          <button onClick={() => count$.set(c => c + 1)}>
+            +
+          </button>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '16px' }}>
+        <label>Name: </label>
+        <input
+          value={name}
+          onChange={e => name$.set(e.target.value)}
+          style={{ marginLeft: '8px', padding: '4px' }}
+        />
+      </div>
+
+      <div style={{ marginBottom: '16px' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={isVisible}
+            onChange={e => isVisible$.set(e.target.checked)}
+            style={{ marginRight: '8px' }}
+          />
+          Show message
+        </label>
+      </div>
+
+      {isVisible && (
+        <div style={{
+          padding: '12px',
+          backgroundColor: '#e3f2fd',
+          borderRadius: '4px',
+          border: '1px solid #2196f3'
+        }}>
+          Hello {name}, you clicked {count} times!
+        </div>
+      )}
+    </div>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<PrimitivesExample />)"
+  previewWidth={300}
+/>
 
 ### 4. 💾 Powerful sync and persistence
 
