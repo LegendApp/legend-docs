@@ -1,8 +1,5 @@
 ---
 title: Props
-description: Legend List Props
-sidebar:
-    order: 2
 ---
 
 Below is a list of all the properties for LegendList:
@@ -27,6 +24,8 @@ Takes an item from data and renders it into the list. The `itemType` parameter i
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#renderItem).
 
+<br />
+
 ## Recommended Props
 ___
 ### keyExtractor
@@ -46,6 +45,8 @@ recycleItems?: boolean; // default: false
 ```
 
 This will reuse the component rendered by your `renderItem` function. This can be a big performance improvement, but if your list items have internal state there's potential for undesirable behavior. For more information, see [Performance](../performance#recycling-list-items) for more information.
+
+<br />
 
 ## Optional Props
 
@@ -425,6 +426,7 @@ waitForInitialLayout?: boolean; // default false
 
 If true, delays rendering until initial layout is complete
 
+<br />
 
 ## Ref Methods
 ___
@@ -580,6 +582,8 @@ export function ScrollToItemExample() {
   );
 }
 ```
+
+<br />
 
 ## Hooks
 

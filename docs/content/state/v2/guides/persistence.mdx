@@ -1,7 +1,5 @@
 ---
 title: Persistence
-sidebar:
-    order: 1
 ---
 
 A primary goal of Legend-State is to make automatic persistence easy and very robust, as it's meant to be used to power all storage and sync of complex apps - it's the backbone of both [Legend](https://legendapp.com) and [Bravely](https://bravely.io). It's designed to support offline-first apps: any changes made while offline can be persisted between sessions to be retried in a future session when connected. To do this, the persistence system simply subscribes to changes on an observable, then on change goes through a multi-step flow to ensure that changes are persisted.

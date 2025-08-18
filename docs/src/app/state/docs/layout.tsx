@@ -14,14 +14,14 @@ export default function Layout({ children }: { children: ReactNode }) {
                 defaultOpenLevel: 1,
                 tabs: [
                     {
-                        title: 'Version 1',
+                        title: 'Version 2',
                         description: 'Current stable version',
-                        url: '/state/docs/v1',
+                        url: '/state/docs/v2',
                     },
                     {
-                        title: 'Version 2',
-                        description: 'Next version',
-                        url: '/state/docs/v2',
+                        title: 'Version 3',
+                        description: 'Beta version',
+                        url: '/state/docs/v3',
                     },
                 ],
             }}

@@ -1,4 +1,5 @@
 {
-  "title": "Legend-State v2",
-  "root": true
+    "title": "Legend-State v2",
+    "root": true,
+    "pages": ["intro", "usage", "react", "guides", "other"]
 }
