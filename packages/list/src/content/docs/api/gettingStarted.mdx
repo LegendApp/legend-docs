@@ -30,11 +30,17 @@ import legendList1 from "../../../assets/legendlist1.mp4";
     />
 </div>
 
+<br />
+
+:::note[v2 Beta]
+Version 2 is in beta and is much faster/better, so the docs encourage using the beta. But if you feel more comfortable with a stable version, just remove the @next from the install.
+:::
+
 ## Install
 
 import Install from "shared/src/Components/Install/Install.astro";
 
-<Install name="@legendapp/list" />
+<Install name="@legendapp/list@beta" />
 
 ## Usage
 
@@ -98,10 +104,6 @@ return (
 
 See [Props](../props) for all properties of LegendList.
 
-## 1.0
-
-Legend List recently reached 1.0. So while we are confident that it's stable for use in production, the documentation still needs more work.
-
 ## Supported Platforms
 
 - Android
@@ -109,6 +111,7 @@ Legend List recently reached 1.0. So while we are confident that it's stable for
 - React Native Web
 - React Native MacOS
 - React Native Windows (likely but untested)
+- TV platforms
 - Any React Native platform should work since there's no native code, but if not please let us know!
 
 ## Community

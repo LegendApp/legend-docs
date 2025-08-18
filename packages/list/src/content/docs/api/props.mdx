@@ -20,10 +20,10 @@ An array of the items to render. This can also be an array of keys if you want t
 ### renderItem
 
 ```ts
-renderItem?: (props: LegendListRenderItemProps<ItemT>) => ReactNode;
+renderItem?: (props: { item: ItemT; index: number; extraData: any; itemType?: string }) => ReactNode;
 ```
 
-Takes an item from data and renders it into the list.
+Takes an item from data and renders it into the list. The `itemType` parameter is available when using `getItemType`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#renderItem).
 
@@ -46,15 +46,6 @@ recycleItems?: boolean; // default: false
 ```
 
 This will reuse the component rendered by your `renderItem` function. This can be a big performance improvement, but if your list items have internal state there's potential for undesirable behavior. For more information, see [Performance](../performance#recycling-list-items) for more information.
-
-### estimatedItemSize
-
-```ts
-estimatedItemSize?: number;
-```
-
-An estimated size for all items which is used to estimate the list layout before items actually render. This can help to provide a hint for how large items will be in the first frame and can speed up initial layout, but subsequent renders will use the average item size.
-
 
 ## Optional Props
 
@@ -89,7 +80,15 @@ Style applied to the underlying ScrollView's content container.
 drawDistance?: number;
 ```
 
-The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. See [Performance](../performance#set-drawdistance-prop)  for more.
+The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. See [Performance](../performance#set-drawdistance-prop) for more.
+
+### estimatedItemSize
+
+```ts
+estimatedItemSize?: number;
+```
+
+An estimated size for all items which is used to estimate the list layout before items actually render. This can help to provide a hint for how large items will be in the first frame and can speed up initial layout, but subsequent renders will use the average item size.
 
 ### extraData
 
@@ -104,10 +103,26 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 ### getEstimatedItemSize
 
 ```ts
-getEstimatedItemSize?: (index: number, item: ItemT) => number;
+getEstimatedItemSize?: (index: number, item: ItemT, itemType?: string) => number;
 ```
 
 An estimated size for each item which is used to estimate the list layout before items actually render. If you don't provide this, it will log a suggested value for optimal performance.
+
+### getFixedItemSize (v2)
+
+```ts
+getFixedItemSize?: (index: number, item: ItemT, itemType?: string) => number | undefined;
+```
+
+For items with known fixed sizes, this enables optimal performance as it disables the overhead of measuring and updating item size. Return a number for fixed-size items or undefined for dynamic-size items.
+
+### getItemType (v2)
+
+```ts
+getItemType?: (item: ItemT, index: number) => string;
+```
+
+Allows categorizing different item types for better performance optimization. Items with the same type can be recycled more efficiently.
 
 ### horizontal
 
@@ -226,7 +241,7 @@ See [Chat interfaces without `inverted`](../../examples/chatinterfaces) for more
 ### maintainVisibleContentPosition
 
 ```ts
-maintainVisibleContentPosition?: boolean;
+maintainVisibleContentPosition?: boolean; // default: true
 ```
 
 The `maintainVisibleContentPosition` prop automatically adjusts item positions when items are added/removed/resized above the viewport so that there is no shift in the visible content. This is very helpful for some scenarios, but if you have a static list of fixed sized items you probably don't need it.
@@ -358,6 +373,22 @@ const CustomScrollView = (props: ScrollViewProps) => {
 };
 ```
 
+### snapToIndices (v2)
+
+```ts
+snapToIndices?: number[];
+```
+
+An array of indices that the scroll position can snap to. When scrolling stops near one of these indices, the scroll position will automatically adjust to align with that item.
+
+### stickyIndices (v2)
+
+```ts
+stickyIndices?: number[];
+```
+
+An array of indices for items that should stick to the top of the list while scrolling. Sticky headers remain visible at the top of the viewport as you scroll past them.
+
 ### style
 
 ```ts
@@ -403,10 +434,12 @@ ___
 ```ts
 getState: () => {
     contentLength: number;
+    data: ItemT[];
     end: number;
     endBuffered: number;
     isAtEnd: boolean;
     isAtStart: boolean;
+    positionAtIndex: (index: number) => number;
     scroll: number;
     scrollLength: number;
     start: number;
@@ -414,7 +447,7 @@ getState: () => {
 }
 ```
 
-Returns the internal scroll state of the list.
+Returns the internal scroll state of the list. New in v2: includes `data` for debugging, `positionAtIndex` function for getting the scroll position of any index.
 
 ### scrollToIndex
 
@@ -684,6 +717,31 @@ export function ItemComponent({ item }) {
         <Animated.View style={{ opacity }}>
             <Text>{item.title}</Text>
         </Animated.View>
+    );
+}
+```
+
+### useSyncLayout (v2)
+
+```ts
+useSyncLayout: (callback: () => void) => void;
+```
+
+A hook for synchronizing layout operations. This is useful for advanced use cases where you need to coordinate layout updates with other components or operations.
+
+```tsx
+import { useSyncLayout } from "@legendapp/list"
+
+export function ItemComponent({ item }) {
+    useSyncLayout(() => {
+        // This callback will be called when layout operations are synchronized
+        console.log("Layout synchronized for item:", item.id);
+    });
+
+    return (
+        <View>
+            <Text>{item.title}</Text>
+        </View>
     );
 }
 ```

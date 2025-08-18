@@ -37,7 +37,8 @@ So there are some tradeoffs with recycling:
 
 ```ts
 estimatedItemSize?: number;
-getEstimatedItemSize?: (index: number, item: T) => number;
+getEstimatedItemSize?: (index: number, item: T, itemType?: string) => number;
+getFixedItemSize?: (index: number, item: T, itemType?: string) => number | undefined; // (v2)
 onItemSizeChanged?: (info: {
         size: number;
         previous: number;
@@ -46,6 +47,10 @@ onItemSizeChanged?: (info: {
         itemData: ItemT;
     }) => void;
 ```
+
+Providing accurate item size estimates helps improve smooth scrolling and prevent layout shifts. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. Use `getFixedItemSize` (v2) when you know exact sizes for certain item types. The more accurate your initial estimates, the better the first render experience.
+
+Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
 
 ### Set DrawDistance Prop
 
