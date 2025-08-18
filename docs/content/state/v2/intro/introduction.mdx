@@ -1,0 +1,140 @@
+---
+title: Introduction
+description: Basic intro to Legend State
+sidebar:
+    order: 1
+---
+
+:::caution
+Version 3 is in Beta. If you're starting a new project we suggest starting with version 3 since it's much improved over version 2.
+
+[Switch to version 3](../../../v3)
+:::
+
+import Primitives from "../../../Components/Introduction/Primitives.astro";
+import Intro from "../../../Components/Introduction/Intro.astro";
+
+Legend-State is a super fast and powerful state library for modern JavaScript apps with four primary goals:
+
+### 1. <span className="text-lg">🦄</span> As easy as possible to use
+
+There is no boilerplate and there are no contexts, actions, reducers, dispatchers, sagas, thunks, or epics. It doesn't modify your data at all, and you can just call `get()` to get the raw data and `set()` to change it.
+
+React components can track access to `get()` on any observable and automatically re-render whenever it changes.
+
+:::note
+We use a `$` suffix on variables as a convention to indicate an observable but it's not required.
+:::
+
+```jsx
+// Create an observable object
+const state$ = observable({ settings: { theme: "dark" } });
+
+// Just get and set
+const theme = state$.settings.theme.get();
+state$.settings.theme.set("light");
+
+// observe re-runs when accessed observables change
+observe(() => {
+  console.log(state$.settings.theme.get());
+});
+
+// Enable React components to automatically track observables
+enableReactTracking({ auto: true });
+
+const Component = function Component() {
+  // get() makes this component re-render whenever theme changes
+  const theme = state$.settings.theme.get();
+
+  return <div>Theme: {theme}</div>;
+};
+```
+
+### 2. <span className="text-lg">⚡️</span> The fastest React state library
+
+Legend-State beats every other state library on just about every metric and is so optimized for arrays that it even beats vanilla JS on the "swap" and "replace all rows" benchmarks. At only `4kb` and with the massive reduction in boilerplate code, you'll have big savings in file size too.
+
+<img
+  src="https://legendapp.com/img/dev/state/times.png"
+  style={{ borderRadius: "1rem" }}
+/>
+
+See [Fast 🔥](../fast) for more details of why Legend-State is so fast.
+
+### 3. 🔥 Fine-grained reactivity for minimal renders
+
+Legend-State lets you make your renders super fine-grained allowing only the leaves of your component tree to re-render when required, thus making your apps go faster 🔥, and removing unnecessary overhead from React's render cycle.
+
+
+<Primitives />
+
+### 4. 💾 Powerful persistence
+
+Legend-State includes a powerful [persistence plugin system](../../guides/persistence) for local caching and remote sync. It easily enables offline-first apps by tracking changes made while offline that save when coming online, managing conflict resolution, and syncing only small diffs. We use Legend-State as the sync engines in [Legend](https://legendapp.com) and [Bravely](https://bravely.io), so it is by necessity very full featured while being simple to set up.
+
+Local persistence plugins for the browser and React Native are included, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
+
+```js
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+import { ObservablePersistFirebase } from "@legendapp/state/persist-plugins/firebase"
+import { persistObservable } from '@legendapp/state/persist'
+import { observable } from '@legendapp/state'
+
+const state$ = observable({ store: { bigObject: { ... } } })
+
+// Persist this observable
+persistObservable(state$, {
+    pluginLocal: ObservablePersistLocalStorage,
+    local: 'store',
+    pluginRemote: ObservablePersistFirebase,
+    remote: {
+        firebase: {
+            refPath: (uid) => `/users/${uid}/`,
+            requireAuth: true,
+        },
+    }
+})
+```
+
+[Read more](../../guides/persistence)
+
+## Install
+
+```npm
+npm install @legendapp/state
+```
+
+## Highlights
+
+- ✨ Super easy to use 😌
+- ✨ Super fast ⚡️
+- ✨ Super small at 4kb 🐥
+- ✨ Fine-grained reactivity 🔥
+- ✨ No boilerplate
+- ✨ Designed for maximum performance and scalability
+- ✨ React components re-render only on changes
+- ✨ Very strongly typed with TypeScript
+- ✨ Persistence plugins for automatically saving/loading from storage
+- ✨ State can be global or within components
+
+The core is platform agnostic so you can use it in vanilla JS or any framework to create and listen to observables. It includes support for React and React Native, and has plugins for automatically persisting to storage.
+
+[Read more](../why) about why you'll love Legend-State ❤️
+
+## Example
+
+This example shows an overview of what using Legend-State looks like. See [Getting Started](./getting-started) to dive into how it works.
+
+<Intro />
+
+## Getting Started
+
+Continue on to [Getting Started](../getting-started) to get started!
+
+## Community
+
+Join us on [Discord](https://discord.gg/5CBaNtADNX) to get involved with the Legend community.
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-state) on Github

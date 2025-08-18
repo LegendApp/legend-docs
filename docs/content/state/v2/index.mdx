@@ -1,12 +1,36 @@
 ---
-title: Welcome to Legend State v2
-description: Getting started with Legend State version 2
+title: Legend State
+description: Reactive State Management Library you will fall in love with
+template: splash
+hero:
+  tagline: React State Management Library
+  image:
+    file: ../../assets/logo.png
+  actions:
+    - text: Introduction
+      link: intro/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: From the builders of Legend App
+      link: https://legendapp.com
+      icon: external
 ---
 
-# Legend State v2 Documentation
+import { Card, CardGrid } from "@astrojs/starlight/components";
 
-Hello World - This is the Legend State v2 documentation page.
+## Why Legend State?
 
-## Getting Started
-
-This is a placeholder for the Legend State v2 documentation content.
+<CardGrid stagger>
+  <Card title="Easy to Use" icon="pencil">
+    You can start sprinkling legend state without worrying about how to setup
+  </Card>
+  <Card title="Built for the New Era" icon="add-document">
+    Legend State brings back reactivity from knockout with a cool API for React
+  </Card>
+  <Card title="Blazingly Fast" icon="setting">
+    Check the [Krausest benchmarks](./intro/fast)
+  </Card>
+  <Card title="Read the docs" icon="open-book">
+    Learn more in [the Legend Docs](./intro/introduction).
+  </Card>
+</CardGrid>
