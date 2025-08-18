@@ -17,30 +17,29 @@ Legend List is a high performance virtualized ScrollView library for React Nativ
 
 For more information, listen to Jay's conversation on React Native Radio [here](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich).
 
-import legendList1 from "../../../assets/legendlist1.mp4";
-
-<div style="width: 600px; margin: 32px auto 0 auto; border-radius: 4px; overflow: hidden;">
+<div style={{width: 600, margin: '32px auto 0 auto', borderRadius: 4, overflow: 'hidden'}}>
     <video
-        src={legendList1}
+        src="/assets/legendlist1.mp4"
         controls
         width="100%"
         height="100%"
         autoPlay
         loop
+        muted
     />
 </div>
 
 <br />
 
-:::note[v2 Beta]
+<Callout title="v2 Beta">
 Version 2 is in beta and is much faster/better, so the docs encourage using the beta. But if you feel more comfortable with a stable version, just remove the @next from the install.
-:::
+</Callout>
 
 ## Install
 
-import Install from "shared/src/Components/Install/Install.astro";
-
-<Install name="@legendapp/list@beta" />
+```npm
+npm install @legendapp/list
+```
 
 ## Usage
 

@@ -13,11 +13,11 @@ sidebar:
 
 It makes the whole component into an observing context - it automatically tracks observables for changes when `get()` is called, even from within hooks or helper functions.
 
-:::note[The best option]
+<Callout title="The best option">
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. So it is much more efficient than using multiple hooks, and much more efficient and safer than [enableReactTracking](../../usage/configuring#enablereacttracking).
 
 `enableReactTracking` and `observer` can be used together - observer will optimize away the auto tracking behavior in favor of its more efficient tracking.
-:::
+</Callout>
 
 See [Tracking](../reactivity#observing-contexts) for more about when it tracks.
 
@@ -314,9 +314,9 @@ const Component = () => {
 
 ### usePauseProvider
 
-:::note
+<Callout>
 Version >= 2.1.1
-:::
+</Callout>
 
 This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useSelector, Reactive, Memo, etc... But normal renders coming from React or other state is not affected.
 

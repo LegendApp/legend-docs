@@ -5,7 +5,6 @@ sidebar:
     order: 3
 ---
 
-import MemoExample from "../../../Components/React/MemoExample.astro";
 
 Legend-State is the result of years of iteration and dozens of experiments and rewrites to build the fastest possible state system. The primary reason it's so fast is that it optimizes for the fewest number of renders - components are only re-rendered when the state they truly care about is changed.
 
@@ -66,7 +65,7 @@ Extensive care is taken to ensure that components are rendered only when their s
 
 Legend-State has [built-in helpers](../../usage/reactivity) to easily extract children so that their changes do not affect the parent. This keeps large parent components from rendering often just because their children change.
 
-<MemoExample />
+{/* TODO: Add MemoExample interactive component */}
 
 ### Shallow listeners
 

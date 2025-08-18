@@ -191,9 +191,9 @@ An optional but very useful feature is the `changesSince: 'last-sync'` option. T
 
 Enabling this on the Supabase side requires adding `created_at` and `updated_at` columns and a trigger to your table. You can run this snippet to set it up, just replace the two instances of YOUR_TABLE_NAME.
 
-:::caution[Requires soft deletes]
+<Callout type="warn" title="Requires soft deletes">
 It's not possible to list rows deleted in supabase to remove them from the local persistence, so you will have to use [soft deletes](#soft-deletes) described in the next session. If you don't need to delete you can remove that column from the script.
-:::
+</Callout>
 
 ```sql
 -- Add new columns to table named `created_at` and `updated_at`

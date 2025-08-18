@@ -4,8 +4,6 @@ sidebar:
     order: 1
 ---
 
-import Persistence from "../../../Components/React/Persistence.astro";
-import EasyExample from "../../../Components/React/EasyExample.astro";
 
 This is a high level overview for how to work with Legend-State in React. See [React API](../react-api) for more specific details. Legend-State supports both React and React Native, but most of the examples are in React for ease of showing live demos.
 
@@ -41,9 +39,9 @@ We recommend using this to get started and for rapid prototyping, but it's alway
 
 [observer](../react-api/#observer) turns the component into an [observing context](../reactivity#observing-contexts) so that `.get()` will trigger re-render when observable change. This is the best and most efficient way to use observables in React. Just wrap your components in `observer` to make them efficiently track all accessed observables.
 
-:::note[Not an HOC]
+<Callout title="Not an HOC">
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost, so it is extremely efficient.
-:::
+</Callout>
 
 ```jsx
 import { observable } from "@legendapp/state";
@@ -119,7 +117,7 @@ A new (and fun) pattern with Legend-State is to make re-renders fine-grained so 
 
 The most basic way to optimize renders is to have observable text or numbers render themselves, so their parent component doesn't have to.
 
-<EasyExample />
+{/* TODO: Add EasyExample interactive component */}
 
 You can take it even further with the `Reactive` components and control-flow components like `For`, `Show`, and `Switch`. Combining these we can use what we call a "render once" style - components render only the first time and state changes trigger only the tiniest possible re-renders. Especially with very large components, rendering the full component less often can give you a huge performance boost.
 
@@ -173,4 +171,4 @@ This example shows:
 1. State persisted to local storage
 2. Reactive components
 
-<Persistence />
+{/* TODO: Add Persistence interactive component */}

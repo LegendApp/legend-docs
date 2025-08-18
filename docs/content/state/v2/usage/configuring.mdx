@@ -35,11 +35,11 @@ function Component() {
 }
 ```
 
-:::caution[Caution: Rules of hooks]
+<Callout type="warn" title="Caution: Rules of hooks">
 Under the hood this replaces the `get()` with a `useSelector` hook so it is subject to the rules of hooks. That means it can cause problems if you use `get()` conditionally or within a dynamic loop.
 
 We recommend that you use this while getting started and for rapid prototyping. Then wrap your components with [observer](../../react/react-api/#observer) for improved performance and safety.
-:::
+</Callout>
 
 ### enableReactComponents, enableReactNativeComponents
 
@@ -131,9 +131,9 @@ state$._ = { test: "hello" }
 
 ### enableReactUse (deprecated)
 
-:::caution
+<Callout type="warn">
 This was recommended before the introduction enableReactTracking. It is now deprecated and will be removed in version 3.0.
-:::
+</Callout>
 
 This adds a `use()` function to all observables, which gets the value and makes the component reactive to the observable changing. It simply runs `useSelector(obs)` under the hood.
 
@@ -159,9 +159,9 @@ function Component() {
 ### enableReactDirectRender (deprecated)
 ### enableLegendStateReact (deprecated)
 
-:::caution
+<Callout type="warn">
 Note that these are deprecated in favor of using [Memo](../fine-grained-reactivity/#render-an-observableselector-directly). Although it was cool and terse, it was unclear at a glance that the element was reactive. Memo is exactly the same behavior, but more descriptive.
-:::
+</Callout>
 
 This enables rendering observables directly into React, creates an element that's reactive to the observable changing.
 
@@ -179,9 +179,9 @@ function Component() {
 ```
 
 
-:::caution
+<Callout type="warn">
 Note that these are deprecated in favor of using [Memo](../fine-grained-reactivity/#render-an-observableselector-directly). Although it was cool and terse, it was unclear at a glance that the element was reactive. Memo is exactly the same behavior, but more descriptive.
-:::
+</Callout>
 
 This enables rendering observables directly into React, creates an element that's reactive to the observable changing.
 

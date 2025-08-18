@@ -5,14 +5,12 @@ sidebar:
     order: 1
 ---
 
-:::caution
+<Callout type="warn">
 Version 3 is in Beta. If you're starting a new project we suggest starting with version 3 since it's much improved over version 2.
 
 [Switch to version 3](../../../v3)
-:::
+</Callout>
 
-import Primitives from "../../../Components/Introduction/Primitives.astro";
-import Intro from "../../../Components/Introduction/Intro.astro";
 
 Legend-State is a super fast and powerful state library for modern JavaScript apps with four primary goals:
 
@@ -22,9 +20,9 @@ There is no boilerplate and there are no contexts, actions, reducers, dispatcher
 
 React components can track access to `get()` on any observable and automatically re-render whenever it changes.
 
-:::note
+<Callout>
 We use a `$` suffix on variables as a convention to indicate an observable but it's not required.
-:::
+</Callout>
 
 ```jsx
 // Create an observable object
@@ -66,7 +64,7 @@ See [Fast 🔥](../fast) for more details of why Legend-State is so fast.
 Legend-State lets you make your renders super fine-grained allowing only the leaves of your component tree to re-render when required, thus making your apps go faster 🔥, and removing unnecessary overhead from React's render cycle.
 
 
-<Primitives />
+{/* TODO: Add Primitives interactive component */}
 
 ### 4. 💾 Powerful persistence
 
@@ -125,7 +123,7 @@ The core is platform agnostic so you can use it in vanilla JS or any framework t
 
 This example shows an overview of what using Legend-State looks like. See [Getting Started](./getting-started) to dive into how it works.
 
-<Intro />
+{/* TODO: Add Intro interactive component */}
 
 ## Getting Started
 
