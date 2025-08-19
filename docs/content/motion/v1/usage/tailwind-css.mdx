@@ -1,0 +1,43 @@
+---
+title: Tailwind CSS
+---
+
+Legend-Motion includes a special set of Motion components that support TailwindCSS `className` by using [NativeWind](https://www.nativewind.dev).
+
+
+  ```jsx
+  <Motion.View
+    className="items-center justify-center p-4"
+    animate={{ x: value * 50 }}
+  >
+    <Motion.Text className="font-bold text-white">RN View</Motion.Text>
+  </Motion.View>
+  <Motion.View
+    className="items-center justify-center p-4 mt-8"
+    whileHover={{ scale: 1.1 }}
+    whileTap={{ x: 30 }}
+  >
+    <Motion.Text className="font-bold text-white">Press me</Motion.Text>
+  </Motion.View>
+  ```
+
+
+## Installation
+
+1. This depends on [NativeWind](https://www.nativewind.dev) so first follow its [installation steps](https://www.nativewind.dev).
+
+2. Then pass `styled` into `configureMotion`
+
+```js
+import { styled } from "nativewind";
+import { configureMotion } from "@legendapp/motion";
+
+configureMotion({ styled });
+```
+
+<br />
+3. Then just change the Motion import to `/styled`
+
+```js
+import { Motion } from "@legendapp/motion/styled";
+```

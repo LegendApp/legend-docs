@@ -1,0 +1,24 @@
+---
+title: Transform Origin
+---
+
+A crucial animation feature that's missing from React Native Animated is `transformOrigin`. React Native does transformations from the center of the component, but sometimes you need to scale or rotate from one side. So Legend-Motion adds a `transformOrigin` prop.
+
+You can see in the following example the difference between scaling from the top left vs. the bottom right.
+
+
+  ```jsx
+  <Motion.View
+    animate={{ scale: value ? 1 : 0.5 }}
+    transformOrigin={{ x: 0, y: 0 }}
+  />
+  <Motion.View
+    animate={{ scale: value ? 1 : 0.5 }}
+    transformOrigin={{ x: "100%", y: "100%" }}
+  />
+  ```
+
+
+Possible values are a number of pixels or a percentage, and it defaults to `50%` as usual in React Native.
+
+**Note**: Using `transformOrigin` adds a hook, so setting `transformOrigin` conditionally would cause crashes.

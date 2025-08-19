@@ -37,6 +37,16 @@ export const stateDocs = defineDocs({
   },
 });
 
+export const motionDocs = defineDocs({
+  dir: 'content/motion',
+  docs: {
+    schema: frontmatterSchema,
+  },
+  meta: {
+    schema: metaSchema,
+  },
+});
+
 export default defineConfig({
   mdxOptions: {
     // MDX options

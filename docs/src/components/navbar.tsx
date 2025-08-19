@@ -20,6 +20,9 @@ export function CustomNavbar() {
                 <Link href="/state" className="text-sm font-medium hover:text-foreground/80 transition-colors">
                     State
                 </Link>
+                <Link href="/motion" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+                    Motion
+                </Link>
             </div>
         </nav>
     );
