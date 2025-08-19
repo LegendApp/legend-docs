@@ -28,6 +28,10 @@ import { pageHashParams } from '@legendapp/state/helpers/pageHashParams';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import type { Observable } from '@legendapp/state';
+import { View, Text, Pressable } from 'react-native-web';
+import { ExampleAnim } from './motion/ExampleAnim';
+import { IntroComponent } from './motion/IntroComponent';
+import { IntroUsageComponent } from './motion/IntroUsageComponent';
 
 interface Props {
     code: string;
@@ -242,11 +246,30 @@ const useInterval = (callback: () => void, delay: number | null) => {
 };
 
 // debounce utility for AutoSaving example
-let timeout: NodeJS.Timeout;
+let timeout: ReturnType<typeof setTimeout>;
 function debounce(fn: () => void, time: number) {
     clearTimeout(timeout);
     timeout = setTimeout(fn, time);
 }
+
+// Mock Motion components for Legend Motion examples
+const Motion = {
+    View: ({ children, style, ...props }: { children?: React.ReactNode; style?: object; [key: string]: unknown }) => (
+        <View style={style} {...props}>
+            {children}
+        </View>
+    ),
+    Text: ({ children, style, ...props }: { children?: React.ReactNode; style?: object; [key: string]: unknown }) => (
+        <Text style={style} {...props}>
+            {children}
+        </Text>
+    ),
+    Pressable: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
+        <Pressable {...props}>
+            {children}
+        </Pressable>
+    ),
+};
 
 // Default scope with commonly used React elements and Legend-State functions
 const defaultScope = {
@@ -294,6 +317,15 @@ const defaultScope = {
     // Utility hooks and functions
     useInterval,
     debounce,
+    // React Native Web components
+    View,
+    Text,
+    Pressable,
+    // Motion example components
+    ExampleAnim,
+    IntroComponent,
+    IntroUsageComponent,
+    Motion,
 };
 
 export function Editor({

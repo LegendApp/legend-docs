@@ -1,4 +1,3 @@
-import { source } from '@/lib/sources/motion';
 import { redirect } from 'next/navigation';
 
 export default function MotionPage() {
