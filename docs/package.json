@@ -26,7 +26,8 @@
     "react-icons": "^5.5.0",
     "react-live": "^4.1.8",
     "react-native": "^0.81.0",
-    "react-native-web": "^0.21.0"
+    "react-native-web": "^0.21.0",
+    "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
