@@ -265,9 +265,7 @@ const Motion = {
         </Text>
     ),
     Pressable: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-        <Pressable {...props}>
-            {children}
-        </Pressable>
+        <Pressable {...props}>{children}</Pressable>
     ),
 };
 
@@ -363,7 +361,7 @@ export function Editor({
             noInline={noInline}
             language="tsx"
         >
-            <div className="flex gap-4 text-sm mt-6 items-center">
+            <div className="flex gap-4 text-sm items-center">
                 {!hideCode && (
                     <div className={classNames('relative flex-1', classNameEditor)}>
                         <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm overflow-auto">

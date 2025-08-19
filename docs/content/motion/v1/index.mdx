@@ -4,20 +4,23 @@ title: Legend Motion
 
 Legend-Motion is a declarative animations library for React Native, to make it easy to transition between styles without needing to manage animations.
 
-<Editor
-  code={`<IntroComponent />`}
-  hideCode
-/>
-
+<div className="flex gap-x-4 items-center">
+    <div className="flex-1">
 ```jsx
 <Motion.View
-  initial={{ y: -50 }}
-  animate={{ x: value * 100, y: 0 }}
-  whileHover={{ scale: 1.2 }}
-  whileTap={{ y: 20 }}
-  transition={{ type: "spring" }}
+    initial={{ y: -50 }}
+    animate={{ x: value * 100, y: 0 }}
+    whileHover={{ scale: 1.2 }}
+    whileTap={{ y: 20 }}
+    transition={{ type: "spring" }}
 />
 ```
+    </div>
+    <Editor
+        code={`<IntroComponent />`}
+        hideCode
+    />
+</div>
 
 ## Highlights
 
