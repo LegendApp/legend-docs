@@ -44,8 +44,17 @@ export function SectionKitCLI() {
 
             <CodeLine>npx @legendapp/kit</CodeLine>
 
-            <div className="!mt-8 p-4 bg-gray-900 border border-gray-700 rounded-lg">
-                <p className="text-gray-400 text-sm text-center">Video demo would appear here in the original</p>
+            <div className="!mt-8 bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-auto"
+                >
+                    <source src="/assets/legend-kit-cli.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
             </div>
         </div>
     );
