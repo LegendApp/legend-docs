@@ -4,7 +4,7 @@ import { state$ } from '../../state';
 import { InstallCode, InstallTabs } from '../Install/Install';
 
 export const InstallFrameworks = observer(function ({ className }: { className?: string }) {
-    const name = '@legendapp/state@beta';
+    const name = '@legendapp/state';
     const framework = state$.framework.get();
     return (
         <div className={classNames('mt-6', className)}>
