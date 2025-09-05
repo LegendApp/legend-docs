@@ -23,14 +23,11 @@ export function MigrationSection() {
 
     const scrollViewDiff = `return (
 -  <ScrollView>
--    {items.map((item) => (
--      <Text key={item.id}>{item.title}</Text>
--    ))}
++  <LegendList>
+     {items.map((item) => (
+       <Text key={item.id}>{item.title}</Text>
+     ))}
 -  </ScrollView>
-+  <LegendList data={items}>
-+    {(item) => (
-+      <Text key={item.id}>{item.title}</Text>
-+    )}
 +  </LegendList>
 )`;
 
@@ -49,35 +46,38 @@ export function MigrationSection() {
 
                 {/* Migration examples */}
                 <div className="grid lg:grid-cols-3 gap-6">
-                    {/* FlatList */}
-                    <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-                        <div className="bg-white/5 border-b border-white/10 px-4 py-3">
-                            <Text className="text-sm text-white/70 font-mono">From FlatList</Text>
-                        </div>
-                        <div className="p-4">
-                            <DynamicCodeBlock code={flatListDiff} lang="diff" />
-                        </div>
-                    </div>
+                    <DynamicCodeBlock
+                        code={flatListDiff}
+                        lang="diff"
+                        options={{
+                            meta: {
+                                title: 'From FlatList',
+                            },
+                            theme: 'github-dark',
+                        }}
+                    />
 
-                    {/* FlashList */}
-                    <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-                        <div className="bg-white/5 border-b border-white/10 px-4 py-3">
-                            <Text className="text-sm text-white/70 font-mono">From FlashList</Text>
-                        </div>
-                        <div className="p-4">
-                            <DynamicCodeBlock code={flashListDiff} lang="diff" />
-                        </div>
-                    </div>
+                    <DynamicCodeBlock
+                        code={flashListDiff}
+                        lang="diff"
+                        options={{
+                            meta: {
+                                title: 'From FlashList',
+                            },
+                            theme: 'github-dark',
+                        }}
+                    />
 
-                    {/* ScrollView */}
-                    <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-                        <div className="bg-white/5 border-b border-white/10 px-4 py-3">
-                            <Text className="text-sm text-white/70 font-mono">From ScrollView</Text>
-                        </div>
-                        <div className="p-4">
-                            <DynamicCodeBlock code={scrollViewDiff} lang="diff" />
-                        </div>
-                    </div>
+                    <DynamicCodeBlock
+                        code={scrollViewDiff}
+                        lang="diff"
+                        options={{
+                            meta: {
+                                title: 'From ScrollView',
+                            },
+                            theme: 'github-dark',
+                        }}
+                    />
                 </div>
 
                 {/* Benefits */}
