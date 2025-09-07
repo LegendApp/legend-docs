@@ -12,8 +12,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     const MDX = page.data.body;
 
     return (
-        <>
-            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left max-w-none col-span-4 xl:col-span-3">
+        <div className="pt-12">
+            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left xl:max-w-3xl mx-auto max-w-(--fd-page-width)">
                 <div className="mb-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
                     <div className="flex flex-wrap gap-3">
                         <span className="inline-flex items-center gap-1.5">
@@ -89,7 +89,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     </DocsBody>
                 </DocsPage>
             </DocsLayout>
-        </>
+        </div>
     );
 }
 
