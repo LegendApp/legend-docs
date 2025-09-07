@@ -4,6 +4,7 @@ import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { CustomNavbar } from '@/components/navbar';
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
     const page = source.getPage([params.slug]);
@@ -12,7 +13,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     const MDX = page.data.body;
 
     return (
-        <DocsLayout tree={source.pageTree}>
+        <DocsLayout tree={source.pageTree} nav={{ component: <CustomNavbar /> }}>
             <DocsPage toc={page.data.toc} full>
                 <DocsBody>
                     <div className="mb-8">
