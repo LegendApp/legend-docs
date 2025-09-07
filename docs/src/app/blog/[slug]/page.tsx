@@ -1,0 +1,111 @@
+import { source } from '@/lib/sources/blog';
+import type { Metadata } from 'next';
+import { DocsPage, DocsBody } from 'fumadocs-ui/page';
+import { notFound } from 'next/navigation';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { CustomNavbar } from '@/components/navbar';
+
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+    const page = source.getPage([params.slug]);
+    if (!page) notFound();
+
+    const MDX = page.data.body;
+
+    return (
+        <>
+            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left max-w-none col-span-4 xl:col-span-3">
+                <div className="mb-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    <div className="flex flex-wrap gap-3">
+                        <span className="inline-flex items-center gap-1.5">
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                            </svg>
+                            {new Date(page.data.date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
+                        </span>
+                        {page.data.author && (
+                            <>
+                                <span>•</span>
+                                <span className="inline-flex items-center gap-1.5">
+                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                        />
+                                    </svg>
+                                    {page.data.author}
+                                </span>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                <h1 className="text-left dark:text-white text-4xl font-bold mb-4">{page.data.title}</h1>
+
+                {page.data.description && (
+                    <p className="text-left mt-3 dark:text-gray-300 text-lg">{page.data.description}</p>
+                )}
+            </div>
+
+            <DocsLayout
+                nav={{ component: <CustomNavbar /> }}
+                tree={{
+                    name: 'Tree',
+                    children: [],
+                }}
+                sidebar={{ enabled: false, prefetch: false, tabs: false }}
+                containerProps={{
+                    className:
+                        'flex-row-reverse relative container [--fd-nav-height:calc(var(--spacing)*14)] md:[--fd-nav-height:57px]',
+                }}
+            >
+                <DocsPage
+                    toc={page.data.toc}
+                    full={page.data.full}
+                    footer={{
+                        enabled: false,
+                    }}
+                    tableOfContent={{
+                        style: 'clerk',
+                        single: false,
+                    }}
+                    article={{
+                        className:
+                            'col-span-4 xl:col-span-3 order-last !m-[unset] max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12',
+                    }}
+                >
+                    <DocsBody>
+                        <MDX />
+                    </DocsBody>
+                </DocsPage>
+            </DocsLayout>
+        </>
+    );
+}
+
+export async function generateStaticParams() {
+    const params = source.generateParams();
+    return params.map((param) => ({
+        slug: param.slug[0],
+    }));
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+    const page = source.getPage([params.slug]);
+    if (!page) notFound();
+
+    return {
+        title: page.data.title,
+        description: page.data.description,
+    };
+}
