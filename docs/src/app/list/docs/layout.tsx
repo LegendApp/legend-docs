@@ -16,13 +16,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                 tabs: [
                     {
                         title: 'Version 1',
-                        description: 'Current stable version',
+                        description: 'first version',
                         url: '/list/docs/v1',
                         icon: <TbHexagonNumber1Filled size={20} />,
                     },
                     {
                         title: 'Version 2',
-                        description: 'Beta version',
+                        description: 'Current stable version',
                         url: '/list/docs/v2',
                         icon: <TbHexagonNumber2Filled size={20} />,
                     },

@@ -1,9 +1,11 @@
 import {
   defineConfig,
   defineDocs,
+  defineCollections,
   frontmatterSchema,
   metaSchema,
 } from 'fumadocs-mdx/config';
+import { z } from 'zod';
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.vercel.app/docs/mdx/collections#define-docs
@@ -45,6 +47,15 @@ export const motionDocs = defineDocs({
   meta: {
     schema: metaSchema,
   },
+});
+
+export const blogPosts = defineCollections({
+  type: 'doc',
+  dir: 'content/blog',
+  schema: frontmatterSchema.extend({
+    author: z.string(),
+    date: z.string().date().or(z.date()).transform((date) => new Date(date)),
+  }),
 });
 
 export default defineConfig({

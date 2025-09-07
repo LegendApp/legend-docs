@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { createElement } from 'react';
 import classNames from 'classnames';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { HomePageLayout } from '@/components/HomePageLayout';
 
 interface LibrarySectionProps {
     title: string;
@@ -217,59 +218,45 @@ function AnimatedCard() {
     ];
 
     return (
-        <div className="absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col text-white">
-            {/* Background */}
-            <div className="fixed inset-0 bg-[#0d1117]">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-cyan-900/10 animate-pulse"></div>
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float-delayed"></div>
-            </div>
+        <HomePageLayout>
+            <div className="absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col text-white">
+                {/* Background */}
+                <div className="fixed inset-0 bg-[#0d1117]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-cyan-900/10 animate-pulse"></div>
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float-delayed"></div>
+                </div>
 
-            <main className="z-10 flex-grow">
-                <div className="max-w-6xl mx-auto px-6 pt-32 pb-20">
-                    {/* Hero Section */}
-                    <div className="text-center mb-40 relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-cyan-600/5 blur-3xl opacity-50"></div>
-                        <div className="relative z-10">
-                            <Header
-                                size="h1"
-                                className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white mb-8 animate-fade-in"
-                            >
-                                Legend
-                            </Header>
-                            <Text className="text-2xl sm:text-3xl max-w-4xl mx-auto mb-6 leading-relaxed text-white/90">
-                                Open-source libraries for building exceptional React applications
-                            </Text>
-                            <Text className="text-lg max-w-2xl mx-auto text-white/40">
-                                Fast, reliable, and developer-friendly tools that scale with your needs
-                            </Text>
+                <main className="z-10 flex-grow">
+                    <div className="max-w-6xl mx-auto px-6 pt-32 pb-20">
+                        {/* Hero Section */}
+                        <div className="text-center mb-40 relative">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-cyan-600/5 blur-3xl opacity-50"></div>
+                            <div className="relative z-10">
+                                <Header
+                                    size="h1"
+                                    className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white mb-8 animate-fade-in"
+                                >
+                                    Legend
+                                </Header>
+                                <Text className="text-2xl sm:text-3xl max-w-4xl mx-auto mb-6 leading-relaxed text-white/90">
+                                    Open-source libraries for building exceptional React applications
+                                </Text>
+                                <Text className="text-lg max-w-2xl mx-auto text-white/40">
+                                    Fast, reliable, and developer-friendly tools that scale with your needs
+                                </Text>
+                            </div>
+                        </div>
+
+                        {/* Library Sections */}
+                        <div>
+                            {libraries.map((library) => (
+                                <LibrarySection key={library.title} {...library} />
+                            ))}
                         </div>
                     </div>
-
-                    {/* Library Sections */}
-                    <div>
-                        {libraries.map((library) => (
-                            <LibrarySection key={library.title} {...library} />
-                        ))}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="text-center pt-32 border-t border-white/10 relative">
-                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                        <Text className="text-white/60 mb-6 text-xl">Ready to build something amazing?</Text>
-                        <Link
-                            href="/docs"
-                            className="group inline-flex items-center gap-2 text-lg font-medium text-white hover:text-white/80 transition-all duration-300 relative"
-                        >
-                            <span className="relative">
-                                Get Started
-                                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-white/50 to-white/30 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                            </span>
-                            <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-                        </Link>
-                    </div>
-                </div>
-            </main>
-        </div>
+                </main>
+            </div>
+        </HomePageLayout>
     );
 }

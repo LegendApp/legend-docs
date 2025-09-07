@@ -1,3 +1,4 @@
+import { getFirstDocsPath } from '@/lib/getDocsPath';
 import Link from 'next/link';
 
 export function CustomNavbar() {
@@ -14,14 +15,23 @@ export function CustomNavbar() {
                 <Link href="/" className="text-sm font-medium hover:text-foreground/80 transition-colors">
                     Home
                 </Link>
-                <Link href="/list" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+                <Link
+                    href={getFirstDocsPath('list')}
+                    className="text-sm font-medium hover:text-foreground/80 transition-colors"
+                >
                     List
                 </Link>
                 <Link href="/state" className="text-sm font-medium hover:text-foreground/80 transition-colors">
                     State
                 </Link>
-                <Link href="/motion" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+                <Link
+                    href={getFirstDocsPath('motion')}
+                    className="text-sm font-medium hover:text-foreground/80 transition-colors"
+                >
                     Motion
+                </Link>
+                <Link href="/blog" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+                    Blog
                 </Link>
             </div>
         </nav>
