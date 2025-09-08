@@ -16,7 +16,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     return (
         <div className="pt-12">
-            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left mx-auto fd-nav-height max-w-(--fd-page-width)">
+            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left mx-auto max-w-(--fd-page-width)">
                 <div className="mb-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
                     <div className="flex flex-wrap gap-3">
                         <span className="inline-flex items-center gap-1.5">
@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 }}
                 sidebar={{ enabled: false, prefetch: false, tabs: false }}
                 containerProps={{
-                    className: 'flex-row-reverse relative container [--fd-nav-height:0] md:[--fd-nav-height:0]',
+                    className: 'flex-row-reverse relative container',
                 }}
             >
                 <DocsPage
@@ -81,9 +81,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         style: 'clerk',
                         single: false,
                     }}
+                    container={{
+                        className: 'border-t border-white/10',
+                    }}
                     article={{
                         className:
-                            'col-span-4 xl:col-span-3 order-last !m-[unset] max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12',
+                            'col-span-4 xl:col-span-3 order-last !m-[unset] max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12 border-l border-r border-white/10',
                     }}
                 >
                     <DocsBody>

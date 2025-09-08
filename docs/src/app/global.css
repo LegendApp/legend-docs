@@ -7,6 +7,7 @@
     --fd-toc-nav-height: 50px !important;
     --fd-color-primary: #0099dd !important;
     --color-fd-primary: #0099dd !important;
+    --fd-tocnav-height: 0 !important;
 }
 
 #nd-docs-layout > div:first-child {
@@ -140,7 +141,8 @@ article h1 {
 }
 
 @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0px);
     }
     50% {
@@ -149,7 +151,8 @@ article h1 {
 }
 
 @keyframes float-delayed {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0px);
     }
     50% {
@@ -180,12 +183,7 @@ article h1 {
 }
 
 .animate-shimmer {
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     background-size: 200% 100%;
     animation: shimmer 3s infinite;
 }
@@ -197,9 +195,17 @@ article h1 {
         transform: translateY(30px);
         transition: all 0.6s ease-out;
     }
-    
+
     .scroll-fade.in-view {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+#nd-page {
+    padding-top: 0 !important;
+}
+#nd-tocnav {
+    /* top: var(--fd-nav-height) !important; */
+    display: none;
 }
