@@ -1,0 +1,116 @@
+---
+title: "Legend-State 2.0: Performance and Persistence"
+description: Introducing the official Legend blog, where we'll share updates, tutorials, and insights about Legend-State, Legend-Motion, and Legend-List.
+author: Legend Team
+date: 2023-10-17
+---
+
+It's been five months since we released Legend-State 1.0 and we've been so happy to watch it grow to over 2,000 stars on GitHub and see all the feedback and PRs that people have contributed!
+
+> If you're new to Legend-State you may want to start at [the introduction](/open-source/state/) first.
+
+We initially started Legend-State to power the state the and sync system of both [Legend](https://legendapp.com/) and [Bravely](https://www.bravely.io/). We released 1.0 when the state part was solid and stable, while we were still perfecting and beta testing the persistence plugin. And then this wonderful community grew up around it ❤️ and we've learned how to improve it for more varied usage.
+
+Since 1.0 we've made a lot of little improvements, but 2.0 brings a leap forward in remote persistence plugins, DX for beginners, and performance.
+
+## 💾 A powerful sync system
+
+We recently released the [big Legend update](/blog/sync/) that we've been working on for a year, with the new sync system using Legend-State. Legend was already very fast, but users are reporting that update reduced load time by up to 7x and cut memory usage in half 🔥. We're very excited about this massive improvement and we're even more excited to open source the whole sync system.
+
+Legend-State now includes a [powerful persistence/sync](/open-source/state/guides/persistence/) system with many features required for large local-first apps:
+
+- Easy to cache all data offline
+- Saves last sync time to optimize queries to only get the diffs since the last sync
+- Cache unsynced changes offline and retry on next load
+- Transform data before syncing it, for client-side encryption or compression
+- Conflict resolution of local vs. remote data
+
+But the main benefit is that it separates the sync logic from the application/UI logic. You define how an observable should sync itself, and then your app can just work with the observables and not worry about sync.
+
+That's all in the core persistence layer with `persistObservable`, and 2.0 includes a few plugins: `fetch`, TanStack-Query, and Firebase Realtime Database. The Firebase one is what we built Legend and Bravely on, and is very full featured. Next we'll expand on the other plugins and add plugins for more providers. Let us know on [GitHub](https://github.com/LegendApp/legend-state/) if you want to see/make a plugin for another provider.
+
+An example of using the TanStack-Query plugin:
+```js
+import { observable } from "@legendapp/state"
+import { persistObservable } from "@legendapp/state/persist"
+import { persistPluginQuery } from "@legendapp/state/persist-plugins/query"
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
+import { QueryClient } from "@tanstack/react-query"
+
+const queryClient = new QueryClient();
+
+const page$ = observable(1)
+
+const obs$ = persistObservable(
+  { initialValue: "hello" },
+  {
+    pluginLocal: ObservablePersistLocalStorage,
+    local: {
+        name: "user",
+    },
+    pluginRemote: persistPluginQuery({
+      queryClient,
+      query: {
+        // queryKey is a computed function that updates the query when page$ changes
+        queryKey: () => ["key", page$.get()],
+        queryFn: () => {
+          return fetch("https://url.to.get?page=" + page$.get()).then((res) =>
+            res.json()
+          )
+        },
+      },
+    }),
+  }
+)
+```
+
+See the [Persistence Guide](https://preview.legend.pages.dev/open-source/state/guides/persistence/) for more details. And please let us know on [GitHub](https://www.legendapp.com/open-source/state) if anything is confusing, needs more explanation, or doesn't work as expected.
+
+## 🪄 Auto tracking
+
+We learned from our community that new users were confused about when to use `get()` vs. `use()`. It wasn't clear whether to use `use()` or `useSelector()` or `observer()`. Even advanced users would sometimes forget to wrap components in `observer` and wonder why they weren't updating. And there were just too many ways to do the same thing.
+
+So we came up with a way to auto-track usage of `get()` and we're going to remove `use()` (in a later version). Now you can just `enableReactTracking({ auto: true})` once, and components (and their hooks) will track all accessed observables.
+
+```jsx
+// Enable React components to automatically track observables
+enableReactTracking({ auto: true });
+
+const Component = function Component() {
+  // get() makes this component re-render whenever theme changes
+  const theme = state$.settings.theme.get()
+
+  return <div>Theme: {theme}</div>
+}
+```
+
+Note that this does not hack up React internals so it's perfectly safe to use. But, we suggest this mainly for beginners or rapid prototyping because it makes `get()` into a hook, so it has all the downsides of the rules of hooks. `observer` is the safest and most performant option.
+
+## 📖 New docs
+
+Our original documentation was custom built and depended on features in the Legend homepage to run, which made it hard for the community to contribute. So one of our community members, [Subramanya Chakravarthy](https://twitter.com/chakrihacker), rebuilt the whole thing from scratch with [Starlight](https://starlight.astro.build/). The new documentation is much easier to navigate, has full-site search, and has editable live-examples using [React Live](https://github.com/FormidableLabs/react-live) which is super cool! So if you'd like to help us improve the docs, you can now clone the docs repo and run it locally yourself, which makes it easy to create/edit example code or see your changes as they'll appear on the site. Check out the [new state docs](https://www.legendapp.com/open-source/state) and the [new docs repo](https://github.com/LegendApp/legend-docs). Big thanks to [Subramanya Chakravarthy](https://twitter.com/chakrihacker) for all of his hard work on this!
+
+## ⚡️ Perf
+
+Legend-State 2.0 includes a big change under the hood - observable nodes are now created on demand as you access them. So there's no longer any performance cost to creating or setting observables with big objects. And there's no longer any issues with putting large/recursive objects like DOM elements in state.
+
+## 💔 Breaking changes
+
+The reason this is a major version update is that there's some breaking changes. Some were required as we finalized persistence, and others were deprecated long ago and are finally being removed.
+
+- Change: Setting a promise into an observable now creates a child prop `state` which is not in the raw data and is only accessible through the observable containing `{ isLoaded, error }`
+- Change: Renamed some parameters in `persistObservable` and `configureObservablePersistence`
+- Change: `afterBatch` removed and functionality merged into `batch`
+- Removed: `/react-components` exports
+- Removed: `enableLegendStateReact`
+- Removed: `eachValues` prop from `For`
+- Deprecated: `enableReactDirectRender`
+- Deprecated: Reactive props ending in $ in favor of starting with $
+
+See [Migrating](https://www.legendapp.com/open-source/other/migrating/) for more details on migrating. And feel free to contact us on [GitHub](https://www.legendapp.com/open-source/state) or [Twitter](https://twitter.com/jmeistrich) if you have any issues.
+
+## 👉 What's next
+
+We're actually already working on a big DX and performance improvement that we hope to release soon in a version 2.1. And we want to go deeper on making it easy to sync observables with remote data.
+
+Join us in [Discord](https://discord.gg/5CBaNtADNX) or [GitHub](https://www.legendapp.com/open-source/state), or [talk to me on Twitter](https://twitter.com/jmeistrich) to get involved with the Legend community.

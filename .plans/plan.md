@@ -1,0 +1,1 @@
+`document.title = ` in .mdx files should be replaced by transforms into a no-op, and remove whereever it was commented.

@@ -4,16 +4,19 @@ import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
+import { getMDXComponents } from '@/mdx-components';
+import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-    const page = source.getPage([params.slug]);
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+    const resolvedParams = await params;
+    const page = source.getPage([resolvedParams.slug]);
     if (!page) notFound();
 
     const MDX = page.data.body;
 
     return (
         <div className="pt-12">
-            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left xl:max-w-3xl mx-auto max-w-(--fd-page-width)">
+            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left mx-auto fd-nav-height max-w-(--fd-page-width)">
                 <div className="mb-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
                     <div className="flex flex-wrap gap-3">
                         <span className="inline-flex items-center gap-1.5">
@@ -65,8 +68,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 }}
                 sidebar={{ enabled: false, prefetch: false, tabs: false }}
                 containerProps={{
-                    className:
-                        'flex-row-reverse relative container [--fd-nav-height:calc(var(--spacing)*14)] md:[--fd-nav-height:57px]',
+                    className: 'flex-row-reverse relative container [--fd-nav-height:0] md:[--fd-nav-height:0]',
                 }}
             >
                 <DocsPage
@@ -85,7 +87,15 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     }}
                 >
                     <DocsBody>
-                        <MDX />
+                        <MDX
+                            components={getMDXComponents({
+                                pre: (props) => (
+                                    <CodeBlock {...props}>
+                                        <Pre>{props.children}</Pre>
+                                    </CodeBlock>
+                                ),
+                            })}
+                        />
                     </DocsBody>
                 </DocsPage>
             </DocsLayout>
@@ -100,8 +110,9 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-    const page = source.getPage([params.slug]);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const resolvedParams = await params;
+    const page = source.getPage([resolvedParams.slug]);
     if (!page) notFound();
 
     return {

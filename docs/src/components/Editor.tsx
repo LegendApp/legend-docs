@@ -16,6 +16,7 @@ import {
     reactive,
     useObserve,
     useComputed,
+    Computed,
 } from '@legendapp/state/react';
 import { $React } from '@legendapp/state/react-web';
 import { syncObservable } from '@legendapp/state/sync';
@@ -282,6 +283,7 @@ const defaultScope = {
     use$,
     useObservable,
     For,
+    Computed,
     Memo,
     Show,
     Switch,

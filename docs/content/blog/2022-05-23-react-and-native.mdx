@@ -1,0 +1,286 @@
+---
+title: React and React Native finally feel the same
+description: Introducing the official Legend blog, where we'll share updates, tutorials, and insights about Legend-State, Legend-Motion, and Legend-List.
+author: Legend Team
+date: 2022-05-23
+---
+
+If you're a developer of both React and React Native apps, it can be tough to switch between platforms because they **feel** so different. And in many ways React Native feels relatively... well, backwards.
+
+Despite great improvements in DX (Developer Experience) for web development with animation libraries like [Framer Motion](https://www.framer.com/motion/) and much easier styling with [Tailwind CSS](https://tailwindcss.com/), React Native is still mired in the madness of creating StyleSheets and managing animation states with Animated or Reanimated.
+
+Yes, I know it's basically all JSX. But jumping from CSS and declarative animations on web to React Native's Animated.spring and StyleSheet.create is just a real big pain, and requires a lot of learning.
+
+This is a **big problem for small teams** - vastly different platforms means developers need to learn a lot more to do both, or you need to hire more developers on separate web and mobile teams.
+
+
+**But this problem is finally solved 🎉**
+
+<Editor
+  code={`
+function BasicExample() {
+  const [value, setValue] = useState(0)
+  
+  useInterval(() => {
+    setValue(v => v === 0 ? 1 : 0)
+  }, 1000)
+  
+  return (
+    <div>
+      <motion.div
+        className="p-4 bg-gray-800 rounded-lg text-white"
+        animate={{ x: value * 100 }}
+      >
+        React component
+      </motion.div>
+      
+      <Motion.View
+        className="p-4 bg-gray-800 rounded-lg mt-4"
+        animate={{ x: value * 100 }}
+      >
+        <Motion.Text className="text-white">
+          React Native component
+        </Motion.Text>
+      </Motion.View>
+    </div>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<BasicExample />)"
+/>
+
+Using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](/dev/motion) we can now write React and React Native code using the same styling and animation patterns, and even mix them together in React Native Web.
+
+In this example you can see an HTML element in React right next to a React Native element in React Native Web, styled and animated in the same way 🤯.
+
+## The Problem
+
+React and React Native are similar but different in significant ways, so although React components and React Native components share the same concepts, they need to be written fundamentally differently because:
+
+1. **Styling is different**: React uses CSS and React Native uses StyleSheet.
+2. **Animations are different**: React uses CSS transitions or libraries like [Framer Motion](https://www.framer.com/motion/) while React Native uses the built-in Animated or [Reanimated](https://docs.swmansion.com/react-native-reanimated/).
+3. **Navigation is different**: Web and mobile apps are just fundamentally different, so (for now) we're fine with having separate navigation systems and we're focusing on the components themselves. Though, [Solito](https://solito.dev/) is an interesting project trying to align them that we're watching closely.
+
+## The Solution
+
+React developers have recently aligned around using [Tailwind CSS](https://tailwindcss.com/) for styling and [Framer Motion](https://www.framer.com/motion/) for animations. These both have great DX that feels in many ways easier than the built-in React Native solutions. So if we use libraries for React Native that bring our favorite APIs to React Native, then we can have the same developer nirvana on both platforms.
+
+### 1. Styling with nativewind
+
+[NativeWind](https://www.nativewind.dev) is a new library that uses Tailwind CSS as a universal design system for all React Native platforms. It has three features that are crucial for us:
+1. It uses `className` as a string, just like React components.
+2. It has great performance because it converts `className` to styles with a Babel plugin so there is almost no runtime cost.
+3. In React Native Web it simply passes `className` straight through to the DOM components, so it uses normal Tailwind CSS with no overhead.
+
+This means we can have convenient and familiar Tailwind CSS usage on mobile with no overhead, and on React Native Web it just uses Tailwind CSS directly. If you inspect the example below in your browser developer tools you'll see the classNames passed through to the rendered div element.
+
+<Editor
+  code={`
+/**
+ * A button that changes color when hovered or pressed
+ * The text will change font weight when the Pressable is pressed
+ */
+function MyFancyButton(props) {
+  return (
+    <Pressable
+        className="p-4 rounded-xl component bg-violet-500 hover:bg-violet-600 active:bg-violet-700"
+    >
+        <Text
+            className="font-bold component-active:font-extrabold text-white"
+            {...props}
+        >
+          Press me!
+        </Text>
+    </Pressable>
+  );
+}
+`}
+  noInline={true}
+  renderCode=";render(<MyFancyButton />)"
+/>
+
+### 2. Animations with Legend-Motion
+
+[Legend-Motion](/dev/motion) is a new library (that we built) to bring the API of [Framer Motion](https://www.framer.com/motion/) to React Native, with no dependencies by using the built-in Animated. This lets us create animations declaratively with an `animate` prop, and the animation will update automatically whenever the value in the prop changes.
+
+Try hovering over and clicking the box to see it spring around.
+
+<Editor
+  code={`
+function IntroExample() {
+  const [value, setValue] = useState(0)
+  
+  useInterval(() => {
+    setValue(v => v === 0 ? 1 : 0)
+  }, 1000)
+  
+  return (
+    <Motion.View
+        className="w-20 h-20 bg-blue-500 rounded-lg flex items-center justify-center"
+        initial={{ y: -50 }}
+        animate={{ x: value * 100, y: 0 }}
+        whileHover={{ scale: 1.2 }}
+        whileTap={{ y: 20 }}
+        transition={{ type: "spring" }}
+    >
+      <Motion.Text className="text-white font-bold">
+        Box
+      </Motion.Text>
+    </Motion.View>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<IntroExample />)"
+/>
+
+### 3. Mix React and React Native Web
+React Native Web supports mixing HTML and React Native elements together, so it's easy to incrementally drop React Native Web components into a React app. That's a huge boon because we can drop our React Native components into our web apps without needing to write the whole thing with React Native Web.
+
+<Editor
+  code={`
+function MixedExample() {
+  return (
+    <motion.div
+        className="p-5 text-xs text-black bg-blue-200 rounded-lg"
+        whileHover={{ scale: 1.1 }}
+        transition={{ type: 'spring' }}
+    >
+        <div>DIV element</div>
+        <Motion.View
+            className="p-5 mt-6 bg-blue-400 rounded-lg"
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: 'spring' }}
+        >
+            <Motion.Text className="text-black">
+                React Native Element
+            </Motion.Text>
+            <motion.div
+                className="p-5 mt-6 bg-blue-600 rounded-lg"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: 'spring' }}
+            >
+                DIV text
+            </motion.div>
+        </Motion.View>
+    </motion.div>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<MixedExample />)"
+/>
+
+## Putting it all together
+
+Using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](/dev/motion) together we can build complex React Native components in an easy declarative way that will look very familiar to React developers:
+
+<Editor
+  code={`
+function AllTogetherExample() {
+  const [value, setValue] = useState(0)
+  
+  useInterval(() => {
+    setValue(v => v === 0 ? 1 : 0)
+  }, 1000)
+  
+  return (
+    <div>
+      <Motion.View
+        className="p-4 font-bold bg-gray-800 rounded-lg mb-4"
+        animate={{ x: value * 50 }}
+      >
+        <Motion.Text className="text-white">
+          Animating View
+        </Motion.Text>
+      </Motion.View>
+      <Motion.View
+        className="p-4 font-bold bg-gray-800 rounded-lg"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ x: 30 }}
+      >
+        <Motion.Text className="text-white">
+          Press me
+        </Motion.Text>
+      </Motion.View>
+    </div>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<AllTogetherExample />)"
+/>
+
+## Try it now
+
+### 1. Legend-Motion
+[Legend-Motion](/dev/motion) has no dependencies so it's easy to install.
+
+<Install name="@legendapp/motion" />
+
+Then using it is easy:
+
+<Editor
+  code={`
+function SimpleExample() {
+  const [value, setValue] = useState(0)
+  
+  useInterval(() => {
+    setValue(v => v === 0 ? 1 : 0)
+  }, 1000)
+  
+  return (
+    <Motion.View
+        className="p-4 bg-green-500 rounded-lg"
+        animate={{
+            x: value * 100,
+            opacity: value ? 1 : 0.5,
+            scale: value ? 1 : 0.7
+        }}
+    >
+        <Motion.Text className="text-white font-bold">
+          Animating View
+        </Motion.Text>
+    </Motion.View>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<SimpleExample />)"
+/>
+
+See [the docs](https://www.legendapp.com/dev/motion) for more details and advanced usage.
+
+### 2. nativewind
+
+[NativeWind](https://www.nativewind.dev) has some tailwindcss configuration and a babel plugin so see [its docs](https://www.nativewind.dev) to get started.
+
+### 3. React Native Web
+
+React Native Web support for this is right on the bleeding edge. The pre-release version of [React Native Web 0.18](https://github.com/necolas/react-native-web/pull/2248) adds the style extraction features that [NativeWind](https://www.nativewind.dev) depends on. But there's an [issue](https://github.com/necolas/react-native-web/pull/2248#issuecomment-1120237228) in its implementation of Animated that breaks all other styles when using using extracted styles. I have [a fork of the pre-release 0.18](https://github.com/jmeistrich/react-native-web/tree/0.18-animated) version that fixes this, so if you want to try it now, install `react-native-web` from my fork:
+
+<Install name="https://gitpkg.now.sh/jmeistrich/react-native-web/packages/react-native-web?0.18-animated" />
+
+It's a pre-release version so of course be careful when using it in production, but we're using it for the examples on this site and another app in development and haven't found any issues. Hopefully RNW 0.18 will release soon with Animated working well, and we can stop using my fork 🤞.
+
+## Towards Developer Utopia 🌟☀️✨🌈
+
+To get to the utopic future of one platform that runs everywhere there's basically three paths:
+
+1. **All web**: This has long been the only viable solution, but mobile web apps can be slow and clunky if not done right. It is possible to build great mobile web apps, and we'll have a future blog post on that, but it's hard.
+2. **All React Native**: [React Native Web](https://github.com/necolas/react-native-web) is getting there! But it still needs to progress further, and we hope it does! See [The Case for the React Native Web Singularity](https://www.swyx.io/react-native-web-singularity) for a deeper dive. For now, it has a performance overhead compared to normal web apps and doesn't support all web features yet.
+
+The problem with both of those solutions is you have to go all in on one platform and accept the limitations. We prefer what I like to call:
+
+3. **A Pleasant Mix 🥰**: We use React Native for mobile apps where it shines. We use React for web apps where it shines, and we drop in React Native Web components when we want to share components. For example, we have an admin dashboard in React with a Preview button that embeds the actual React Native components users see in the mobile apps.
+
+Now that we finally can use the same styling and animation patterns, it's much easier for one team to work on both React and React Native. Until recently we had separate web and mobile teams, but in just the past few weeks that we've been using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](/dev/motion), we've already merged everyone into one team that can do anything 🚀.
+
+## Stay tuned
+
+We are very excited about this new world of React and React Native working beautifully together! And we hope you are too 🎉🥳.
+
+A huge shoutout to [NativeWind](https://www.nativewind.dev) for being so great. Give it a star on Github and follow [Mark Lawlor](https://twitter.com/mark__lawlor) for updates.
+
+[Legend-Motion](https://github.com/LegendApp/legend-motion) is our first open source library and we plan to keep improving it. We're also working on pulling out more of our core code into open source projects, so keep an eye on this blog and follow us or me on Twitter for updates: [@LegendAppHQ](https://twitter.com/LegendAppHQ) or [@jmeistrich](https://twitter.com/jmeistrich).
