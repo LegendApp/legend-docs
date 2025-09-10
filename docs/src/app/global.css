@@ -202,9 +202,6 @@ article h1 {
     }
 }
 
-#nd-page {
-    padding-top: 0 !important;
-}
 #nd-tocnav {
     /* top: var(--fd-nav-height) !important; */
     display: none;

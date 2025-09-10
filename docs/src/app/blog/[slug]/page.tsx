@@ -15,7 +15,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const MDX = page.data.body;
 
     return (
-        <div className="pt-12">
+        <div className="pt-12 blog-page">
             <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left mx-auto max-w-(--fd-page-width)">
                 <div className="mb-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
                     <div className="flex flex-wrap gap-3">
@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 }}
                 sidebar={{ enabled: false, prefetch: false, tabs: false }}
                 containerProps={{
-                    className: 'flex-row-reverse relative container',
+                    className: 'flex-row-reverse relative container pt-0 [&>*]:pt-0',
                 }}
             >
                 <DocsPage

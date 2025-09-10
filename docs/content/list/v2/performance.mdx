@@ -45,7 +45,9 @@ onItemSizeChanged?: (info: {
     }) => void;
 ```
 
-Providing accurate item size estimates helps improve smooth scrolling and prevent layout shifts. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. Use `getFixedItemSize` (v2) when you know exact sizes for certain item types. The more accurate your initial estimates, the better the first render experience.
+If your list elements are a fixed size, then use `getFixedItemSize` to skip all of the work of measuring and adjusting items.
+
+Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the better the first render experience.
 
 Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
 
