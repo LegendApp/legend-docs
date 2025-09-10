@@ -56,7 +56,7 @@ Each node keeps a `Set` of listeners so that you can listen to changes to any va
 
 ### Granular renders
 
-Extensive care is taken to ensure that components are rendered only when their state truly changes. Legend-State provides [functions](../../usage/reactivity) to be extra specific about when it tracks changes and [useSelector](../../react/react-introduction/#2-useselector) to isolate a tracking computation to return one value. The best thing for your app's performance is to render less, less often.
+Extensive care is taken to ensure that components are rendered only when their state truly changes. Legend-State provides [functions](../../usage/reactivity) to be extra specific about when it tracks changes and [useSelector](../../react/react-introduction#2-useselector) to isolate a tracking computation to return one value. The best thing for your app's performance is to render less, less often.
 
 ### Easy fine-grained reactivity
 
@@ -66,11 +66,11 @@ Legend-State has [built-in helpers](../../usage/reactivity) to easily extract ch
 
 ### Shallow listeners
 
-[Shallow listeners](../../usage/reactivity/#shallow-modifier) are called on objects only when keys are added or removed, but not when children are changed. This lets the child components manage their own rendering and large parent components don't need to render.
+[Shallow listeners](../../usage/reactivity#shallow-modifier) are called on objects only when keys are added or removed, but not when children are changed. This lets the child components manage their own rendering and large parent components don't need to render.
 
 ### Array optimizations
 
-Optimizing list rendering is a primary goal because Legend-State is built for [Legend](https://www.legendapp.com) and its huge documents and lists, so it aims to render parent list components as little as possible. When changes to an array only modify children or transpose elements, and do not add or remove elements, it can render only the changed elements and skip rendering the parent list. See [Arrays](../../usage/observable/#arrays) for more details.
+Optimizing list rendering is a primary goal because Legend-State is built for [Legend](https://www.legendapp.com) and its huge documents and lists, so it aims to render parent list components as little as possible. When changes to an array only modify children or transpose elements, and do not add or remove elements, it can render only the changed elements and skip rendering the parent list. See [Arrays](../../usage/observable#arrays) for more details.
 
 ### Minimal closures and object creation
 

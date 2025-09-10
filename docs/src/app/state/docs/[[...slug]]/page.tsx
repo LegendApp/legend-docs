@@ -5,10 +5,11 @@ import { redirect } from 'next/navigation';
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
     console.log('params', props);
-    console.log('params', props);
     const params = await props.params;
-    if (params.slug?.length === 1 && params.slug[0] === 'v2') {
+    if (params.slug?.length === 1 && params.slug[0] === 'v3') {
         redirect(getFirstDocsPath('state'));
+    } else if (params.slug?.length === 1 && params.slug[0] === 'v2') {
+        redirect(getFirstDocsPath('state2'));
     } else {
         return <DocsPageTemplate source={source} params={props.params} />;
     }

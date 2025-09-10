@@ -16,17 +16,17 @@ The sync features are designed to be used through a plugin for your backend of c
 
 ### Database plugins
 
-- [Keel](../keel): Powerful schema-driven SQL backend we use in Bravely
-- [Supabase](../supabase): Popular PostgreSQL backend
+- [Keel](./keel): Powerful schema-driven SQL backend we use in Bravely
+- [Supabase](./supabase): Popular PostgreSQL backend
 - Firebase RTDB: Documentation under construction
 
 These are built on top of the CRUD plugin.
 
 ### General
 
-- [CRUD](../crud): Supports any backend with list, get, create, update, delete actions
-- [Fetch](../fetch): A wrapper around fetch to reduce boilerplate
-- [TanStack Query](../tanstack-query): Query updates observables rather than re-rendering
+- [CRUD](./crud): Supports any backend with list, get, create, update, delete actions
+- [Fetch](./fetch): A wrapper around fetch to reduce boilerplate
+- [TanStack Query](./tanstack-query): Query updates observables rather than re-rendering
 
 ## Example
 
@@ -666,7 +666,7 @@ syncObservable(
 
 ## Making a sync plugin
 
-Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a [synced](#synced). If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](../crud) which encapsulates a lot of logic for those specifics for you.
+Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a [synced](#synced). If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](./crud) which encapsulates a lot of logic for those specifics for you.
 
 It may be easiest to look at [the source of the built-in sync plugins](https://github.com/LegendApp/legend-state/tree/main/src/persist-plugins) to see what they look like.
 

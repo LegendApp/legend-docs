@@ -35,7 +35,7 @@ We recommend using this to get started and for rapid prototyping, but it's alway
 
 ### observer
 
-[observer](../react-api/#observer) turns the component into an [observing context](../reactivity#observing-contexts) so that `.get()` will trigger re-render when observable change. This is the best and most efficient way to use observables in React. Just wrap your components in `observer` to make them efficiently track all accessed observables.
+[observer](../react-api#observer) turns the component into an [observing context](../reactivity#observing-contexts) so that `.get()` will trigger re-render when observable change. This is the best and most efficient way to use observables in React. Just wrap your components in `observer` to make them efficiently track all accessed observables.
 
 <Callout title="Not an HOC">
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost, so it is extremely efficient.
