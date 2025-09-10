@@ -1,13 +1,13 @@
+import { Editor } from '@/components/Editor';
 import { observable, type Observable } from '@legendapp/state';
 import { Memo, Show, observer, use$, useMount, useObservable } from '@legendapp/state/react';
 import { $React } from '@legendapp/state/react-web';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef } from 'react';
 import { Button } from './Button';
-import { EditorHome } from './Editor';
-import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
 import CurvedArrowCallout from './CurvedArrowCallout';
+import { FlashingDiv } from './FlashingDiv';
 
 const CodeDemoTop = `
 const speed$ = observable(2)
@@ -43,7 +43,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
 
     return (
         <div className="relative w-full max-w-lg">
-            <EditorHome
+            <Editor
                 code={CodeDemoTop}
                 noInline
                 renderCode={`;render(<div><Box blur><Component /></Box></div>)`}

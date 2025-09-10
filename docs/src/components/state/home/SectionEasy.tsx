@@ -1,10 +1,10 @@
+import { Editor } from '@/components/Editor';
 import { observable } from '@legendapp/state';
 import { Memo, observer, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from './Button';
-import { EditorHome } from './Editor';
-import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
+import { FlashingDiv } from './FlashingDiv';
 import { Header } from './Header';
 import { Text } from './Text';
 
@@ -40,7 +40,7 @@ const Component = () => {
 
 const DemoEasy = () => {
     return (
-        <EditorHome
+        <Editor
             code={CodeDemoTop}
             noInline
             renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}

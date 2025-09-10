@@ -2,12 +2,12 @@ import { observable } from '@legendapp/state';
 import { Memo, observer, useObservable } from '@legendapp/state/react';
 import { useRef, useState } from 'react';
 import { Button } from './Button';
-import { EditorHome } from './Editor';
 import { useInterval } from 'usehooks-ts';
 import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
 import { Header } from './Header';
 import { Text } from './Text';
+import { Editor } from '@/components/Editor';
 
 const CodeDemoPerf1 = `
 // This example uses Memo to isolate renders
@@ -104,7 +104,7 @@ function Tree() {
 
 const DemoPerf1 = () => {
     return (
-        <EditorHome
+        <Editor
             code={CodeDemoPerf1}
             noInline
             renderCode={`;render(<div><Tree /></div>)`}
@@ -129,7 +129,7 @@ const DemoPerf1 = () => {
 };
 const DemoPerf2 = () => {
     return (
-        <EditorHome
+        <Editor
             code={CodeDemoPerf2}
             noInline
             renderCode={`;render(<div><Tree /></div>)`}

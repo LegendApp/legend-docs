@@ -1,10 +1,10 @@
+import { Editor } from '@/components/Editor';
 import { observable } from '@legendapp/state';
 import { Memo, observer, useObservable } from '@legendapp/state/react';
-import { EditorHome } from './Editor';
 import { useMemo } from 'react';
 import { Header } from './Header';
-import { Text } from './Text';
 import { TabsRounded } from './TabsRounded';
+import { Text } from './Text';
 
 const Backends = {
     keel: {
@@ -123,7 +123,7 @@ const DemoSync = ({ backend, persistence }: { backend: Backend; persistence: Per
     const code = `${Backends[backend].code.replace('persist:', CodeDemoPersist(Persistences[persistence]).trim())}}))`;
 
     return (
-        <EditorHome
+        <Editor
             code={code}
             noInline
             renderCode={`;render(null)`}
