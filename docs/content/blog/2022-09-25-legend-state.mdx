@@ -223,8 +223,9 @@ But that second step is what causes all the madness 😱, so we just skip it. Wi
 When actions aren't dependant on re-rendering, we don't need `useEffect` or dependency arrays anymore. Instead we have `useObserve`, which automatically runs whenever the state it observes changes. All you need to do is access state within it, and it tracks dependencies automatically.
 
 <Editor
+title="Title"
   code={`
-const profile = observable({ name: '' })
+const profile$ = observable({ name: '' })
 
 // Normal React - This component re-renders on every keystroke
 function HooksName() {
@@ -232,7 +233,7 @@ function HooksName() {
 
   // Trigger on render if name has changed
   useEffect(() => {
-    document.title = \`Hello \${name}\`
+
   }, [name])
 
   // Handle change and update state
@@ -250,12 +251,12 @@ function HooksName() {
 function LegendStateName() {
   // Trigger when name changes
   useObserve(() => {
-    document.title = \`Hello \${profile.name.get()}\`
+    document.title = \`Hello \${profile$.name.get()}\`
   })
 
   // Two-way bind input to observable
   return (
-    <$React.input $value={profile.name} />
+    <$React.input $value={profile$.name} />
   )
 }
 `}

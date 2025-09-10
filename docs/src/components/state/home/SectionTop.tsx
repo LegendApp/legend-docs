@@ -4,7 +4,7 @@ import { $React } from '@legendapp/state/react-web';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef } from 'react';
 import { Button } from './Button';
-import { Editor } from './Editor';
+import { EditorHome } from './Editor';
 import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
 import CurvedArrowCallout from './CurvedArrowCallout';
@@ -43,7 +43,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
 
     return (
         <div className="relative w-full max-w-lg">
-            <Editor
+            <EditorHome
                 code={CodeDemoTop}
                 noInline
                 renderCode={`;render(<div><Box blur><Component /></Box></div>)`}

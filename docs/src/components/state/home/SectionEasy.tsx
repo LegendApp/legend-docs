@@ -2,7 +2,7 @@ import { observable } from '@legendapp/state';
 import { Memo, observer, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from './Button';
-import { Editor } from './Editor';
+import { EditorHome } from './Editor';
 import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
 import { Header } from './Header';
@@ -40,7 +40,7 @@ const Component = () => {
 
 const DemoEasy = () => {
     return (
-        <Editor
+        <EditorHome
             code={CodeDemoTop}
             noInline
             renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}

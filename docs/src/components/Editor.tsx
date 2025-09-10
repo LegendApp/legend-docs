@@ -346,16 +346,35 @@ export function Editor({
     previewCallout,
 }: Props) {
     const trimmedCode = code.trim();
-    const mergedScope = { ...defaultScope, ...scope };
     const [liveCode, setLiveCode] = useState(trimmedCode);
+    const documentTitle$ = useObservable('');
+    const setDocumentTitle = (value: string) => documentTitle$.set(value);
+
+    // Detect if code contains document.title assignment
+    const hasDocumentTitle = /document\.title\s*=/.test(liveCode);
+
+    // Add setDocumentTitle to scope when document.title is used
+    const mergedScope = hasDocumentTitle
+        ? { ...defaultScope, ...scope, setDocumentTitle }
+        : { ...defaultScope, ...scope };
 
     // Get transform function by string key
     const transformFn = transformCode ? transformFunctions[transformCode] : undefined;
 
+    // Transform function to replace document.title with setDocumentTitle
+    const documentTitleTransform = (code: string) => {
+        return code.replace(/document\.title\s*=\s*([^;\n]+)/g, 'requestAnimationFrame(() => setDocumentTitle($1))');
+    };
+
     return (
         <LiveProvider
             code={liveCode}
-            transformCode={(output) => removeImports((transformFn ? transformFn(output) : output) + (renderCode || ''))}
+            transformCode={(output) => {
+                let transformedOutput = removeImports(output);
+                if (transformFn) transformedOutput = transformFn(transformedOutput);
+                if (hasDocumentTitle) transformedOutput = documentTitleTransform(transformedOutput);
+                return transformedOutput + (renderCode || '');
+            }}
             scope={mergedScope}
             enableTypeScript={true}
             theme={emptyTheme}
@@ -412,6 +431,15 @@ export function Editor({
                         )}
                         style={{ width: previewWidth }}
                     >
+                        <Memo>
+                            {() =>
+                                hasDocumentTitle && (
+                                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        {documentTitle$.get() ? documentTitle$.get() : ''}
+                                    </div>
+                                )
+                            }
+                        </Memo>
                         <LivePreview />
                         {previewCallout}
                     </div>

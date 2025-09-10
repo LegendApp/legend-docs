@@ -2,7 +2,7 @@ import { observable } from '@legendapp/state';
 import { Memo, observer, use$, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from './Button';
-import { Editor } from './Editor';
+import { EditorHome } from './Editor';
 import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
 import { Header } from './Header';
@@ -34,7 +34,7 @@ const Component = () => {
 
 const DemoSync = () => {
     return (
-        <Editor
+        <EditorHome
             code={CodeDemoTop}
             noInline
             renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}
@@ -66,8 +66,8 @@ export const SectionSync = () => {
                 </Header>
                 <Text className="pt-2">
                     Just get and set observables and they <span className="text-white">sync themselves</span> with a
-                    powerful sync engine. Your UI code doesn&apos;t need any querying, creating mutations, or synchronizing
-                    with local state.
+                    powerful sync engine. Your UI code doesn&apos;t need any querying, creating mutations, or
+                    synchronizing with local state.
                 </Text>
                 <Text className="pt-2">You can even bind UI components directly to synced observables.</Text>
                 <Text className="pt-2">
