@@ -48,7 +48,7 @@ interface Props {
     showEditing?: boolean;
     noError?: boolean;
     disabled?: boolean;
-    transformCode?: string; // Now a string identifier instead of function
+    transformCode?: (code: string) => string;
     previewCallout?: React.ReactNode;
 }
 
@@ -58,67 +58,6 @@ function removeImports(code: string) {
     return code.replace(/import .*?\n/g, '');
 }
 
-// Predefined transform functions based on original examples
-const transformFunctions: Record<string, (code: string) => string> = {
-    persistence: (code) =>
-        code
-            .replace(/className="footer"/g, 'className="bg-gray-600 text-center text-white text-sm overflow-hidden"')
-            .replace(
-                /className="input"/g,
-                'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
-            ),
-    autoSaving: (code) =>
-        code.replace(
-            /className="input"/g,
-            'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"',
-        ),
-    formValidation: (code) =>
-        code
-            .replace(
-                /className="input"/g,
-                'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"',
-            )
-            .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 pt-1"'),
-    messageList: (code) =>
-        code
-            .replace(
-                /className="input"/g,
-                'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1"',
-            )
-            .replace(
-                /className="messages"/g,
-                'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"',
-            ),
-    animatedSwitch: (code) =>
-        code
-            .replace(
-                /className="toggle"/g,
-                'className="border border-[#717173] rounded-full select-none cursor-pointer"',
-            )
-            .replace(/className="thumb"/g, 'className="bg-white rounded-full shadow"'),
-    modal: (code) =>
-        code
-            .replace(/className="pageText"/g, 'className="flex-1 flex justify-center items-center"')
-            .replace(
-                /className="pageButton"/g,
-                'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500 !mt-0"',
-            )
-            .replace(/className="modal"/g, 'className="relative bg-gray-700 rounded-xl flex flex-col p-4"')
-            .replace(/className="modalButtons"/g, 'className="flex justify-center gap-4"'),
-    primitives: (code) =>
-        code.replace(
-            `<div>Count: <Memo>{count$}</Memo></div>`,
-            `<div>Count:{" "}
-                <Memo>
-                    {() => (
-                        <FlashingDiv span>
-                            {count$.get()}
-                        </FlashingDiv>
-                    )}
-                </Memo>
-            </div>`,
-        ),
-};
 
 // UI Components for the live examples styled to match shared components
 const Box = ({
@@ -358,8 +297,8 @@ export function Editor({
         ? { ...defaultScope, ...scope, setDocumentTitle }
         : { ...defaultScope, ...scope };
 
-    // Get transform function by string key
-    const transformFn = transformCode ? transformFunctions[transformCode] : undefined;
+    // Use transform function directly
+    const transformFn = transformCode;
 
     // Transform function to replace document.title with setDocumentTitle
     const documentTitleTransform = (code: string) => {

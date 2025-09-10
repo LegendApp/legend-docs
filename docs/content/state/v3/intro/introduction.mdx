@@ -170,7 +170,20 @@ function FineGrained() {
   noInline={true}
   renderCode=";render(<div><NormalComponent /><div className='!mt-4' /><FineGrained /></div>)"
   previewWidth={150}
-  transformCode="primitives"
+  transformCode={(code) =>
+    code.replace(
+      `<div>Count: <Memo>{count$}</Memo></div>`,
+      `<div>Count:{" "}
+          <Memo>
+              {() => (
+                  <FlashingDiv span>
+                      {count$.get()}
+                  </FlashingDiv>
+              )}
+          </Memo>
+      </div>`
+    )
+  }
 />
 
 ### 4. 💾 Powerful sync and persistence
