@@ -18,7 +18,8 @@
       "Bash(npx tsc:*)",
       "Bash(grep:*)",
       "Bash(bun validate-links:*)",
-      "Bash(bun scripts/validate-links.ts:*)"
+      "Bash(bun scripts/validate-links.ts:*)",
+      "Bash(bun:*)"
     ],
     "deny": [],
     "ask": []

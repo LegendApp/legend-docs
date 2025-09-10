@@ -6,11 +6,37 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
 import { getMDXComponents } from '@/mdx-components';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
+
+function addFilenameDatePrefix(slug: string): string {
+    // Try to find the original page with date prefix
+    const pages = source.getPages();
+    const pageWithPrefix = pages.find((p) => p.slugs[0].endsWith(`-${slug}`) || p.slugs[0] === slug);
+    if (pageWithPrefix) {
+        return pageWithPrefix.slugs[0];
+    }
+    // If not found, assume it might already have the prefix
+    return slug;
+}
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const resolvedParams = await params;
-    const page = source.getPage([resolvedParams.slug]);
+    // Try to find page with the original filename (with date prefix)
+    const originalSlug = addFilenameDatePrefix(resolvedParams.slug);
+    let page = source.getPage([originalSlug]);
+
+    // If not found with prefix, try without
+    if (!page) {
+        page = source.getPage([resolvedParams.slug]);
+    }
+
     if (!page) notFound();
+
+    // Extract date from filename if not in frontmatter
+    const pageData = {
+        ...page.data,
+        date: extractDateFromSlug(originalSlug),
+    };
 
     const MDX = page.data.body;
 
@@ -28,7 +54,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                 />
                             </svg>
-                            {new Date(page.data.date).toLocaleDateString('en-US', {
+                            {new Date(pageData.date).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
@@ -109,13 +135,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 export async function generateStaticParams() {
     const params = source.generateParams();
     return params.map((param) => ({
-        slug: param.slug[0],
+        // Remove date prefix from slug for cleaner URLs
+        slug: param.slug[0].replace(/^\d{4}-\d{2}-\d{2}-/, ''),
     }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const resolvedParams = await params;
-    const page = source.getPage([resolvedParams.slug]);
+    // Try to find page with the original filename (with date prefix)
+    const originalSlug = addFilenameDatePrefix(resolvedParams.slug);
+    let page = source.getPage([originalSlug]);
+
+    // If not found with prefix, try without
+    if (!page) {
+        page = source.getPage([resolvedParams.slug]);
+    }
+
     if (!page) notFound();
 
     return {

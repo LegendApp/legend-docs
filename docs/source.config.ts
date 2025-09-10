@@ -48,11 +48,6 @@ export const blogPosts = defineCollections({
     dir: 'content/blog',
     schema: frontmatterSchema.extend({
         author: z.string(),
-        date: z
-            .string()
-            .date()
-            .or(z.date())
-            .transform((date) => new Date(date)),
     }),
 });
 
