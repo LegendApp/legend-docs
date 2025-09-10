@@ -49,6 +49,7 @@ interface Props {
     noError?: boolean;
     disabled?: boolean;
     transformCode?: (code: string) => string;
+    transformCodePreset?: string;
     previewCallout?: React.ReactNode;
 }
 
@@ -57,6 +58,23 @@ const emptyTheme = { plain: {}, styles: [] };
 function removeImports(code: string) {
     return code.replace(/import .*?\n/g, '');
 }
+
+// Transform code presets
+const transformCodePresets: Record<string, (code: string) => string> = {
+    'flashing-count': (code: string) =>
+        code.replace(
+            `<div>Count: <Memo>{count$}</Memo></div>`,
+            `<div>Count:{" "}
+          <Memo>
+              {() => (
+                  <FlashingDiv span>
+                      {count$.get()}
+                  </FlashingDiv>
+              )}
+          </Memo>
+      </div>`
+        )
+};
 
 
 // UI Components for the live examples styled to match shared components
@@ -276,6 +294,7 @@ export function Editor({
     classNameEditor,
     classNamePreview,
     transformCode,
+    transformCodePreset,
     hideCode = false,
     hideDemo = false,
     showEditing = true,
@@ -297,8 +316,8 @@ export function Editor({
         ? { ...defaultScope, ...scope, setDocumentTitle }
         : { ...defaultScope, ...scope };
 
-    // Use transform function directly
-    const transformFn = transformCode;
+    // Use transform function directly or from preset
+    const transformFn = transformCode || (transformCodePreset ? transformCodePresets[transformCodePreset] : undefined);
 
     // Transform function to replace document.title with setDocumentTitle
     const documentTitleTransform = (code: string) => {
