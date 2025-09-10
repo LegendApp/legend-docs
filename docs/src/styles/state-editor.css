@@ -8,27 +8,10 @@
     --color-green: #7ee787;
     --color-blue: #79c0ff;
     --color-light-blue: #a5d6ff;
-    --color-indigo: #a5d6ff;
+    --color-indigo: #79b8ff;
     --color-purple: #d2a8ff;
     --color-brown: #ffa657;
     --code-border-radius: 0.5em;
-}
-
-h1 {
-    font-size: 3.5rem;
-}
-
-h2 {
-    font-size: 2.625rem;
-}
-
-h3 {
-    font-size: 1.8125rem;
-}
-
-h6 {
-    font-size: 1rem;
-    font-weight: 600;
 }
 
 .mt-section {
@@ -130,6 +113,18 @@ pre[class*='language-'] {
     }
 }
 
+.token.property,
+.token.symbol,
+.token.tag,
+.token.deleted,
+.token.important {
+    color: var(--color-green);
+}
+
+.token.tag.script {
+    color: unset;
+}
+
 .token.comment,
 .token.prolog,
 .token.cdata {
@@ -142,7 +137,6 @@ pre[class*='language-'] {
     color: var(--color-fg-default);
 }
 
-.token.attr-name,
 .token.class-name,
 .token.boolean,
 .token.constant,
@@ -155,23 +149,18 @@ pre[class*='language-'] {
     color: var(--color-indigo);
 }
 
-.token.property,
-.token.tag,
-.token.symbol,
-.token.deleted,
-.token.important {
-    color: var(--color-green);
-}
-
 .token.selector,
 .token.string,
 .token.char,
 .token.builtin,
 .token.inserted,
 .token.regex,
-.token.attr-value,
-.token.attr-value > .token.punctuation {
-    color: var(--color-light-blue);
+.token.attr-value {
+    color: var(--color-light-blue) !important;
+}
+
+.token.attr-name {
+    color: var(--color-purple);
 }
 
 .token.variable,
@@ -231,12 +220,8 @@ pre[class*='language-'] {
     color: var(--color-purple);
 }
 
-.language-js .token.attr-name,
 .language-js .token.class-name,
-.language-js .token.function-variable,
-.language-javascript .token.attr-name,
-.language-javascript .token.class-name,
-.language-javascript .token.function-variable {
+.language-javascript .token.class-name {
     color: var(--color-brown);
 }
 
@@ -252,24 +237,9 @@ pre[class*='language-'] {
     color: var(--color-purple);
 }
 
-.language-jsx .token.function-variable,
-.language-tsx .token.function-variable {
-    color: var(--color-brown);
-}
-
-.language-jsx .token.punctuation,
-.language-tsx .token.punctuation {
-    color: var(--color-blue);
-}
-
 .language-jsx .token.class-name,
 .language-tsx .token.class-name {
-    color: var(--color-green);
-}
-
-.language-jsx .token.attr-name,
-.language-tsx .token.attr-name {
-    color: var(--color-blue);
+    color: var(--color-indigo);
 }
 
 .language-jsx .token.string,
@@ -285,105 +255,6 @@ pre[class*='language-'] {
 
 .language-json .token.null.keyword {
     color: var(--color-blue);
-}
-
-/* Java overrides */
-
-.language-java .token.keyword {
-    color: var(--color-red);
-}
-
-.language-java .token.operator,
-.language-java .token.constant,
-.language-java .token.boolean,
-.language-java .token.number,
-.language-java .token.atrule {
-    color: var(--color-blue);
-}
-
-.language-java .token.function {
-    color: var(--color-purple);
-}
-
-.language-java .token.attr-name,
-.language-java .token.function-variable {
-    color: var(--color-green);
-}
-
-/* Kotlin overrides */
-
-.language-kotlin .token.keyword {
-    color: var(--color-red);
-}
-
-.language-kotlin .token.operator,
-.language-kotlin .token.constant,
-.language-kotlin .token.boolean,
-.language-kotlin .token.number,
-.language-kotlin .token.atrule {
-    color: var(--color-blue);
-}
-
-.language-kotlin .token.function {
-    color: var(--color-purple);
-}
-
-.language-kotlin .token.attr-name,
-.language-kotlin .token.function-variable {
-    color: var(--color-green);
-}
-
-/* Go overrides */
-
-.language-go .token.keyword {
-    color: var(--color-red);
-}
-
-.language-go .token.operator,
-.language-go .token.constant,
-.language-go .token.boolean,
-.language-go .token.number,
-.language-go .token.atrule {
-    color: var(--color-blue);
-}
-
-.language-go .token.function {
-    color: var(--color-purple);
-}
-
-.language-go .token.attr-name,
-.language-go .token.function-variable {
-    color: var(--color-green);
-}
-
-/* YAML overrides */
-
-.language-yml .token.atrule,
-.language-yaml .token.atrule {
-    color: var(--color-green);
-}
-
-/* Dockerfile overrides */
-
-.language-dockerfile .token.keyword {
-    color: var(--color-red);
-}
-
-.language-dockerfile .token.function {
-    color: var(--color-purple);
-}
-
-.language-dockerfile .token.punctuation {
-    color: var(--color-blue);
-}
-
-.language-dockerfile .token.attr-name,
-.language-dockerfile .token.class-name {
-    color: var(--color-green);
-}
-
-.language-dockerfile .token.string {
-    color: var(--color-indigo);
 }
 
 /* General */

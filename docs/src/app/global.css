@@ -22,7 +22,7 @@
 .liveEditor pre {
     padding: 5px 3px !important;
     font-size: 13px !important;
-    line-height: var(--tw-leading, var(--text-sm--line-height));
+    line-height: var(--tw-leading, var(--text-sm--line-height)) !important;
 }
 
 .prose p a {

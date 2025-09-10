@@ -89,23 +89,23 @@ const settings$ = observable({ theme: 'dark' })
 
 // This is the code for the example on your right ----->
 function Component() {
-  // theme is automatically tracked for changes
-  const theme = use$(settings$.theme)
+    // theme is automatically tracked for changes
+    const theme = use$(settings$.theme)
 
-  const toggle = () => {
-    settings$.theme.set(theme =>
-      theme === 'dark' ? 'light' : 'dark'
+    const toggle = () => {
+      settings$.theme.set(theme =>
+        theme === 'dark' ? 'light' : 'dark'
+      )
+    }
+
+    return (
+      <Box theme={theme}>
+        <div>Theme: {theme}</div>
+        <Button theme={theme} onClick={toggle}>
+          Toggle theme
+        </Button>
+      </Box>
     )
-  }
-
-  return (
-    <Box theme={theme}>
-      <div>Theme: {theme}</div>
-      <Button theme={theme} onClick={toggle}>
-        Toggle theme
-      </Button>
-    </Box>
-  )
 }`}
   noInline={true}
   renderCode=";render(<Component />)"

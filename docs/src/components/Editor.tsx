@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { BiPencil } from 'react-icons/bi';
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
+import '@/styles/state-editor.css';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { observable } from '@legendapp/state';
 import {
@@ -59,24 +60,6 @@ function removeImports(code: string) {
     return code.replace(/import .*?\n/g, '');
 }
 
-// Transform code presets
-const transformCodePresets: Record<string, (code: string) => string> = {
-    'flashing-count': (code: string) =>
-        code.replace(
-            `<div>Count: <Memo>{count$}</Memo></div>`,
-            `<div>Count:{" "}
-          <Memo>
-              {() => (
-                  <FlashingDiv span>
-                      {count$.get()}
-                  </FlashingDiv>
-              )}
-          </Memo>
-      </div>`
-        )
-};
-
-
 // UI Components for the live examples styled to match shared components
 const Box = ({
     theme,
@@ -90,7 +73,7 @@ const Box = ({
     <div
         className={classNames(
             'rounded-lg p-4 relative max-w-sm',
-            theme === 'light' ? 'bg-gray-50 text-gray-900' : 'bg-gray-800 text-gray-100',
+            theme === 'light' ? 'bg-fd-card text-gray-900' : 'bg-fd-card text-gray-100',
             className,
         )}
     >
@@ -182,7 +165,7 @@ const FlashingDiv = ({ pad, span, children }: { pad?: boolean; span?: boolean; c
             />
             <span
                 className={classNames(
-                    'relative z-10 bg-gray-800 text-white rounded-lg',
+                    'relative z-10 bg-fd-secondary border border-fd-border text-white rounded-lg',
                     pad && 'p-4',
                     span ? 'px-2' : 'block',
                 )}
@@ -294,7 +277,6 @@ export function Editor({
     classNameEditor,
     classNamePreview,
     transformCode,
-    transformCodePreset,
     hideCode = false,
     hideDemo = false,
     showEditing = true,
@@ -316,8 +298,8 @@ export function Editor({
         ? { ...defaultScope, ...scope, setDocumentTitle }
         : { ...defaultScope, ...scope };
 
-    // Use transform function directly or from preset
-    const transformFn = transformCode || (transformCodePreset ? transformCodePresets[transformCodePreset] : undefined);
+    // Use transform function directly
+    const transformFn = transformCode;
 
     // Transform function to replace document.title with setDocumentTitle
     const documentTitleTransform = (code: string) => {
@@ -343,30 +325,16 @@ export function Editor({
             <div className="flex gap-4 text-sm items-center">
                 {!hideCode && (
                     <div className={classNames('relative flex-1', classNameEditor)}>
-                        <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm overflow-auto">
-                            <div className="absolute inset-0 [&_pre]:pointer-events-none">
-                                <DynamicCodeBlock lang="tsx" code={liveCode} />
-                            </div>
+                        <div className="p-4 rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
                             <LiveEditor
-                                style={{
-                                    backgroundColor: 'transparent',
-                                    fontFamily: 'inherit',
-                                    fontSize: 'inherit',
-                                    lineHeight: '1.45',
-                                    outline: 'none',
-                                    border: 'none',
-                                    padding: 0,
-                                    margin: 0,
-                                    width: '100%',
-                                    // minHeight: '200px',
-                                    resize: 'vertical',
-                                }}
                                 onChange={(e) => {
-                                    console.log(e);
                                     setLiveCode(e);
                                 }}
-                                className="liveEditor z-10 relative text-transparent caret-white mr-5! w-auto!"
+                                className="liveEditor z-10 relative mr-5! w-auto!"
                             />
+                            <div className="absolute inset-0 [&_code]:opacity-0">
+                                <DynamicCodeBlock lang="tsx" code={liveCode} />
+                            </div>
                         </div>
                         {showEditing && (
                             <div
@@ -383,7 +351,7 @@ export function Editor({
                 {!hideDemo && (
                     <div
                         className={classNames(
-                            'border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700',
+                            'border rounded-lg bg-white dark:bg-fd-card dark:border-fd-border',
                             name ? `preview-${name}` : 'col-span-1',
                             classNamePreview,
                         )}
@@ -392,7 +360,7 @@ export function Editor({
                         <Memo>
                             {() =>
                                 hasDocumentTitle && (
-                                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <div className="px-4 py-2 border-b border-gray-200 dark:border-fd-border bg-gray-50 dark:bg-fd-card text-sm font-medium text-gray-700 dark:text-gray-300">
                                         {documentTitle$.get() ? documentTitle$.get() : ''}
                                     </div>
                                 )
