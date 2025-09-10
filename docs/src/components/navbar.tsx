@@ -1,13 +1,13 @@
 import { getFirstDocsPath } from '@/lib/getDocsPath';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export function CustomNavbar() {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/80 backdrop-blur-sm flex items-center justify-between px-4 py-3 border-b bg-background">
             <div className="flex items-center gap-2">
-                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" aria-label="Logo">
-                    <circle cx={12} cy={12} r={12} fill="currentColor" />
-                </svg>
+                <Image src="/assets/Logo.png" alt="Legend" width={24} height={24} />
+
                 <span className="font-semibold">Legend Docs</span>
             </div>
 
