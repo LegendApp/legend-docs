@@ -1,10 +1,12 @@
-export function getFirstDocsPath(docType: 'list' | 'state' | 'motion'): string {
+export function getFirstDocsPath(docType: 'list' | 'state' | 'motion' | 'state2'): string {
     if (docType === 'list') {
-        return '/list/docs/v2/getting-started';
+        return '/list/v2/getting-started';
     } else if (docType === 'state') {
-        return '/state/docs/v3';
+        return '/state/v3/intro/introduction';
+    } else if (docType === 'state2') {
+        return '/state/v2/intro/introduction';
     } else if (docType === 'motion') {
-        return '/motion/docs/v1';
+        return '/motion/v1';
     }
     return '/';
 }

@@ -27,7 +27,11 @@ This is the documentation repository for Legend's open-source projects, containi
 cd docs
 bun dev
 
-# Build FumaDocs for production  
+# Validate all MDX links (runs automatically before build)
+cd docs
+bun validate-links
+
+# Build FumaDocs for production (includes prebuild link validation)
 cd docs
 bun build
 
@@ -110,3 +114,13 @@ Uses **bun** as the primary package manager across both systems. The FumaDocs sy
 ## Version Management
 
 FumaDocs implements version tabs using `meta.json` files with `"root": true` property to create sidebar tab navigation between documentation versions. Each package maintains separate V1 and V2 documentation branches.
+
+## Link Validation System
+
+The repository includes a comprehensive link validation system:
+
+- **Script Location**: `scripts/validate-links.ts` - TypeScript-based validator for MDX links
+- **Automatic Validation**: Runs automatically during `bun build` via `prebuild` hook
+- **Coverage**: Validates all relative links in MDX files under `docs/content/`
+- **Features**: Supports `.mdx`/`.md` extensions, index file resolution, and anchor link parsing
+- **Build Integration**: Build process fails if broken links are detected, ensuring documentation quality
