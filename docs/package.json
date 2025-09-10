@@ -6,7 +6,9 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "fumadocs-mdx",
+    "prebuild": "bun ../scripts/validate-links.ts",
+    "validate-links": "bun ../scripts/validate-links.ts"
   },
   "dependencies": {
     "@legendapp/motion": "^2.4.0",
@@ -39,6 +41,7 @@
     "@types/react-dom": "^19.1.7",
     "eslint": "^8",
     "eslint-config-next": "15.4.6",
+    "glob": "^11.0.3",
     "ignore-loader": "^0.1.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.12",

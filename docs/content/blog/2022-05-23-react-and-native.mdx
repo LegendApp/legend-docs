@@ -20,11 +20,11 @@ This is a **big problem for small teams** - vastly different platforms means dev
   code={`
 function BasicExample() {
   const [value, setValue] = useState(0)
-  
+
   useInterval(() => {
     setValue(v => v === 0 ? 1 : 0)
   }, 1000)
-  
+
   return (
     <div>
       <motion.div
@@ -33,7 +33,7 @@ function BasicExample() {
       >
         React component
       </motion.div>
-      
+
       <Motion.View
         className="p-4 bg-gray-800 rounded-lg mt-4"
         animate={{ x: value * 100 }}
@@ -50,7 +50,7 @@ function BasicExample() {
   renderCode=";render(<BasicExample />)"
 />
 
-Using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](/dev/motion) we can now write React and React Native code using the same styling and animation patterns, and even mix them together in React Native Web.
+Using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](../motion) we can now write React and React Native code using the same styling and animation patterns, and even mix them together in React Native Web.
 
 In this example you can see an HTML element in React right next to a React Native element in React Native Web, styled and animated in the same way 🤯.
 
@@ -110,11 +110,11 @@ Try hovering over and clicking the box to see it spring around.
   code={`
 function IntroExample() {
   const [value, setValue] = useState(0)
-  
+
   useInterval(() => {
     setValue(v => v === 0 ? 1 : 0)
   }, 1000)
-  
+
   return (
     <Motion.View
         className="w-20 h-20 bg-blue-500 rounded-lg flex items-center justify-center"
@@ -180,11 +180,11 @@ Using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](/dev/motion) 
   code={`
 function AllTogetherExample() {
   const [value, setValue] = useState(0)
-  
+
   useInterval(() => {
     setValue(v => v === 0 ? 1 : 0)
   }, 1000)
-  
+
   return (
     <div>
       <Motion.View
@@ -225,11 +225,11 @@ Then using it is easy:
   code={`
 function SimpleExample() {
   const [value, setValue] = useState(0)
-  
+
   useInterval(() => {
     setValue(v => v === 0 ? 1 : 0)
   }, 1000)
-  
+
   return (
     <Motion.View
         className="p-4 bg-green-500 rounded-lg"

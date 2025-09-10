@@ -251,6 +251,8 @@ function HooksName() {
 function LegendStateName() {
   // Trigger when name changes
   useObserve(() => {
+    debugger;
+    console.log('it changed', profile$.name.get())
     document.title = \`Hello \${profile$.name.get()}\`
   })
 

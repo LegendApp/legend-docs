@@ -8,7 +8,7 @@ Legend-State is already quite optimized by default, but there are some things to
 
 Making multiple changes in a row can cause React components and observers to re-run multiple times when they should wait until changes are complete. So if you're setting a lot of observables at once, it's good to batch them together into one operation.
 
-See [Batching](../usage/reactivity/#batching) for more.
+See [Batching](../usage/reactivity#batching) for more.
 
 ```js
 const state$ = observable({ items: [] });
