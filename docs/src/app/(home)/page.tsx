@@ -128,7 +128,7 @@ export default function HomePage() {
                 'Works with React, React Native, and vanilla JS',
             ],
             href: '/state',
-            docsHref: '/state/docs/v3/intro/introduction',
+            docsHref: '/state/v3/intro/introduction',
             codeExample: `import { observable } from '@legendapp/state'
 import { observer } from '@legendapp/state/react'
 
@@ -159,7 +159,7 @@ const Profile = observer(() => {
                 'Perfect for chat interfaces and feeds',
             ],
             href: '/list',
-            docsHref: '/list/docs/v2/intro',
+            docsHref: '/list/v2/intro',
             reverse: true,
             codeExample: `import { LegendList } from '@legendapp/list'
 
@@ -192,8 +192,8 @@ function ChatInterface() {
                 'Works with any CSS property',
                 'Timeline-based sequencing',
             ],
-            href: '/motion/docs/v1',
-            docsHref: '/motion/docs/v1',
+            href: '/motion/v1',
+            docsHref: '/motion/v1',
             codeExample: `import { Motion } from '@legendapp/motion'
 
 function AnimatedCard() {

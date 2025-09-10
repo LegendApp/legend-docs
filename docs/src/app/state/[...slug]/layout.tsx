@@ -17,13 +17,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                     {
                         title: 'Version 2',
                         description: 'Current stable version',
-                        url: '/state/docs/v2',
+                        url: '/state/v2',
                         icon: <TbHexagonNumber2Filled size={20} />,
                     },
                     {
                         title: 'Version 3',
                         description: 'Beta version',
-                        url: '/state/docs/v3',
+                        url: '/state/v3',
                         icon: <TbHexagonNumber3Filled size={20} />,
                     },
                 ],

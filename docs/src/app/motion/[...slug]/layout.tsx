@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     {
                         title: 'Version 1',
                         description: 'Current stable version',
-                        url: '/motion/docs/v1',
+                        url: '/motion/v1',
                         icon: <TbHexagonNumber1Filled size={20} />,
                     },
                 ],

@@ -29,7 +29,7 @@ export function HeroSection() {
                     </Text>
 
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-                        <Link href="/list/docs/v2/getting-started" className="no-underline">
+                        <Link href="/list/v2/getting-started" className="no-underline">
                             <Button
                                 color="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25"
                                 size="large"

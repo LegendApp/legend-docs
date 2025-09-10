@@ -86,7 +86,7 @@ export const SectionPerfChart = () => {
                 <Header size="h2">🚀 The fastest React state library</Header>
                 <Text className="pt-4 max-w-md">
                     Legend-State is so fast that it even outperforms vanilla JS in{' '}
-                    <Link href="/state/docs/v3/intro/fast/">some benchmarks</Link>. It&apos;s extremely optimized with
+                    <Link href="/state/v3/intro/fast/">some benchmarks</Link>. It&apos;s extremely optimized with
                     fine-grained reactivity and massively reduces re-rendering.
                 </Text>
             </div>
