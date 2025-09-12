@@ -8,6 +8,7 @@ import { DemoBox } from './Components';
 import { Header } from './Header';
 import { Text } from './Text';
 import { Editor } from '@/components/Editor';
+import { EditorStateHome } from '@/components/EditorStateHome';
 
 const CodeDemoPerf1 = `
 // This example uses Memo to isolate renders
@@ -104,7 +105,7 @@ function Tree() {
 
 const DemoPerf1 = () => {
     return (
-        <Editor
+        <EditorStateHome
             code={CodeDemoPerf1}
             noInline
             renderCode={`;render(<div><Tree /></div>)`}
@@ -129,7 +130,7 @@ const DemoPerf1 = () => {
 };
 const DemoPerf2 = () => {
     return (
-        <Editor
+        <EditorStateHome
             code={CodeDemoPerf2}
             noInline
             renderCode={`;render(<div><Tree /></div>)`}

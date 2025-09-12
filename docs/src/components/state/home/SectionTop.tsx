@@ -1,4 +1,4 @@
-import { Editor } from '@/components/Editor';
+import { EditorStateHome } from '@/components/EditorStateHome';
 import { observable, type Observable } from '@legendapp/state';
 import { Memo, Show, observer, use$, useMount, useObservable } from '@legendapp/state/react';
 import { $React } from '@legendapp/state/react-web';
@@ -43,7 +43,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
 
     return (
         <div className="relative w-full max-w-lg">
-            <Editor
+            <EditorStateHome
                 code={CodeDemoTop}
                 noInline
                 renderCode={`;render(<div><Box blur><Component /></Box></div>)`}

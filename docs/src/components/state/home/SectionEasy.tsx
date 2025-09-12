@@ -7,6 +7,7 @@ import { DemoBox } from './Components';
 import { FlashingDiv } from './FlashingDiv';
 import { Header } from './Header';
 import { Text } from './Text';
+import { EditorStateHome } from '@/components/EditorStateHome';
 
 const CodeDemoTop = `
 const settings$ = observable({ ui: { theme: 'dark' }})
@@ -40,7 +41,7 @@ const Component = () => {
 
 const DemoEasy = () => {
     return (
-        <Editor
+        <EditorStateHome
             code={CodeDemoTop}
             noInline
             renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}

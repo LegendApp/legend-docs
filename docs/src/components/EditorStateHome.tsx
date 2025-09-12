@@ -26,7 +26,7 @@ function removeImports(code: string) {
     return code.replace(/import .*?\n/g, '');
 }
 
-export const Editor = observer(function Editor({
+export const EditorStateHome = observer(function EditorStateHome({
     code,
     scope,
     name,

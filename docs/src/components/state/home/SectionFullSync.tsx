@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { Header } from './Header';
 import { TabsRounded } from './TabsRounded';
 import { Text } from './Text';
+import { EditorStateHome } from '@/components/EditorStateHome';
 
 const Backends = {
     keel: {
@@ -123,7 +124,7 @@ const DemoSync = ({ backend, persistence }: { backend: Backend; persistence: Per
     const code = `${Backends[backend].code.replace('persist:', CodeDemoPersist(Persistences[persistence]).trim())}}))`;
 
     return (
-        <Editor
+        <EditorStateHome
             code={code}
             noInline
             renderCode={`;render(null)`}

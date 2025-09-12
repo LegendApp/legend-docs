@@ -7,6 +7,7 @@ import { DemoBox } from './Components';
 import { FlashingDiv } from './FlashingDiv';
 import { Header } from './Header';
 import { Text } from './Text';
+import { EditorStateHome } from '@/components/EditorStateHome';
 
 const CodeDemoTop = `
 const profile$ = observable(syncedFetch({
@@ -34,7 +35,7 @@ const Component = () => {
 
 const DemoSync = () => {
     return (
-        <Editor
+        <EditorStateHome
             code={CodeDemoTop}
             noInline
             renderCode={`;render(<div><Box><EasyComponent /></Box></div>)`}
