@@ -66,15 +66,15 @@ export function MyList() {
 
 ### Switch from FlashList
 
-If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`. See [Performance Guide](./performance#recycling-list-items) for more details of recycling behavior.
+If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`. See [Recycling Items](./performance#recycling-list-items) for more details of recycling behavior.
 
 ```diff
 return (
 -  <FlashList
 +  <LegendList
-     data={items}
-     renderItem={({ item }) => <Text>{item.title}</Text>}
-+    recycleItems
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
++     recycleItems
   />
 )
 ```
@@ -87,11 +87,35 @@ If you're coming from FlatList, Legend List should immediately be much faster. B
 return (
 -  <FlatList
 +  <LegendList
-     data={items}
-     renderItem={({ item }) => <Text>{item.title}</Text>}
-+    recycleItems
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
++     recycleItems
   />
 )
 ```
 
 See [Props](./props) for all properties of LegendList.
+
+## Supported Platforms
+
+- Android
+- iOS
+- React Native Web
+- React Native MacOS
+- React Native Windows (likely but untested)
+- TV platforms
+- Any React Native platform should work since there's no native code, but if not please let us know!
+
+## Community
+
+Join us on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-list) to get involved with the Legend community.
+
+Talk to Jay on [Bluesky](https://bsky.app/profile/jayz.us) or [Twitter](https://twitter.com/jmeistrich).
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-list) on Github. And we welcome documentation PRs in our [documentation repo](https://github.com/LegendApp/legend-docs).
+
+## Legend Kit
+
+Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.

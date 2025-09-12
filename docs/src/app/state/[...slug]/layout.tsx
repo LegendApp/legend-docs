@@ -4,6 +4,7 @@ import { baseOptions } from '@/app/layout.config';
 import { source } from '@/lib/sources/state';
 import { CustomNavbar } from '@/components/navbar';
 import { TbHexagonNumber2Filled, TbHexagonNumber3Filled } from 'react-icons/tb';
+import { getFirstDocsPath } from '@/lib/getDocsPath';
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
@@ -17,13 +18,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                     {
                         title: 'Version 2',
                         description: 'Current stable version',
-                        url: '/state/v2',
+                        url: getFirstDocsPath('state2'),
                         icon: <TbHexagonNumber2Filled size={20} />,
                     },
                     {
                         title: 'Version 3',
                         description: 'Beta version',
-                        url: '/state/v3',
+                        url: getFirstDocsPath('state'),
                         icon: <TbHexagonNumber3Filled size={20} />,
                     },
                 ],
