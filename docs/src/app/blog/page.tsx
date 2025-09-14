@@ -28,8 +28,14 @@ export default async function BlogPage() {
             return dateB.getTime() - dateA.getTime();
         });
 
+    const pageTreeChildren = [...source.pageTree.children].reverse();
+
     return (
-        <DocsLayout tree={source.pageTree} nav={{ component: <CustomNavbar /> }}>
+        <DocsLayout
+            tree={{ ...source.pageTree, children: pageTreeChildren }}
+            sidebar={{}}
+            nav={{ component: <CustomNavbar /> }}
+        >
             <div className="flex flex-1 flex-col divide-y divide-dashed divide-border/70 border-border/70 border-dashed sm:border-b dark:divide-border dark:border-border">
                 <div className="container mx-auto px-6 py-12">
                     <div className="mx-auto max-w-4xl">
