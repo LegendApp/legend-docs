@@ -7,6 +7,7 @@ import { CustomNavbar } from '@/components/navbar';
 import { getMDXComponents } from '@/mdx-components';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
+import '@/styles/blog-post.css';
 
 function addFilenameDatePrefix(slug: string): string {
     // Try to find the original page with date prefix
@@ -112,7 +113,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     }}
                     article={{
                         className:
-                            'col-span-4 xl:col-span-3 order-last !m-[unset] max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12 border-l border-r border-white/10',
+                            'blog-post col-span-4 xl:col-span-3 order-last !m-[unset] max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12 border-l border-r border-white/10 ',
                     }}
                 >
                     <DocsBody>

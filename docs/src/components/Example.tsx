@@ -2,9 +2,7 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import { BiPencil } from 'react-icons/bi';
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
-import '@/styles/state-editor.css';
+import { LiveError, LivePreview, LiveProvider } from 'react-live';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { observable } from '@legendapp/state';
 import {
@@ -34,24 +32,24 @@ import { View, Text, Pressable } from 'react-native-web';
 import { ExampleAnim } from './motion/ExampleAnim';
 import { IntroComponent } from './motion/IntroComponent';
 import { IntroUsageComponent } from './motion/IntroUsageComponent';
+import { FlashingDiv } from '@/components/state/home/FlashingDiv';
 
 interface Props {
     code: string;
+    codePreview: string;
     scope?: Record<string, unknown>;
     name?: string;
     noInline?: boolean;
     renderCode?: string;
     previewWidth?: number;
-    classNameEditor?: string;
+    classNameCode?: string;
     classNamePreview?: string;
     inBox?: boolean;
     hideCode?: boolean;
     hideDemo?: boolean;
-    showEditing?: boolean;
     noError?: boolean;
     disabled?: boolean;
     transformCode?: (code: string) => string;
-    transformCodePreset?: string;
     removeClassNames?: boolean;
     previewCallout?: React.ReactNode;
 }
@@ -151,37 +149,6 @@ const Checkbox = ({ $value }: { $value: Observable<boolean> }) => {
     );
 };
 
-// FlashingDiv component for showing re-renders
-const FlashingDiv = ({ pad, span, children }: { pad?: boolean; span?: boolean; children: React.ReactNode }) => {
-    const [flash, setFlash] = useState(false);
-
-    React.useEffect(() => {
-        setFlash(true);
-        const timer = setTimeout(() => setFlash(false), 100);
-        return () => clearTimeout(timer);
-    }, []);
-
-    return (
-        <span className={classNames('relative', span ? 'inline-block p-1' : 'block p-1')}>
-            <div
-                className={classNames(
-                    'absolute inset-0 bg-blue-500 rounded-lg transition-opacity duration-200',
-                    flash ? 'opacity-20' : 'opacity-0',
-                )}
-            />
-            <span
-                className={classNames(
-                    'relative z-10 bg-fd-secondary border border-fd-border text-white rounded-lg',
-                    pad && 'p-4',
-                    span ? 'px-2' : 'block',
-                )}
-            >
-                {children}
-            </span>
-        </span>
-    );
-};
-
 // useInterval hook for examples
 const useInterval = (callback: () => void, delay: number | null) => {
     React.useEffect(() => {
@@ -274,18 +241,18 @@ const defaultScope = {
     Motion,
 };
 
-export function Editor({
+export function Example({
     code,
+    codePreview,
     scope = {},
     name,
     previewWidth,
     renderCode,
-    classNameEditor,
+    classNameCode,
     classNamePreview,
     transformCode,
     hideCode = false,
     hideDemo = false,
-    showEditing = true,
     noInline = false,
     noError = false,
     disabled = false,
@@ -293,13 +260,11 @@ export function Editor({
     previewCallout,
     inBox = false,
 }: Props) {
-    const trimmedCode = code.trim();
-    const [liveCode, setLiveCode] = useState(trimmedCode);
     const documentTitle$ = useObservable('');
     const setDocumentTitle = (value: string) => documentTitle$.set(value);
 
     // Detect if code contains document.title assignment
-    const hasDocumentTitle = /document\.title\s*=/.test(liveCode);
+    const hasDocumentTitle = /document\.title\s*=/.test(codePreview);
 
     // Add setDocumentTitle to scope when document.title is used
     const mergedScope = hasDocumentTitle
@@ -316,7 +281,7 @@ export function Editor({
 
     return (
         <LiveProvider
-            code={liveCode}
+            code={codePreview}
             transformCode={(output) => {
                 let transformedOutput = removeImports(output);
                 if (removeClassNames) transformedOutput = removeClassNamesFromCode(transformedOutput);
@@ -333,28 +298,10 @@ export function Editor({
         >
             <div className="flex gap-4 text-sm items-center">
                 {!hideCode && (
-                    <div className={classNames('relative flex-1', classNameEditor)}>
+                    <div className={classNames('relative flex-1', classNameCode)}>
                         <div className="p-4 rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
-                            <LiveEditor
-                                onChange={(e) => {
-                                    setLiveCode(e);
-                                }}
-                                className="liveEditor z-10 relative mr-5! w-auto!"
-                            />
-                            <div className="absolute inset-0 [&_code]:opacity-0">
-                                <DynamicCodeBlock lang="tsx" code={liveCode} />
-                            </div>
+                            <DynamicCodeBlock lang="tsx" code={code} />
                         </div>
-                        {showEditing && (
-                            <div
-                                className={classNames(
-                                    'absolute top-3 right-12 !mt-0 flex items-center bg-blue-600 text-white px-2 py-1 rounded-md text-xs cursor-default shadow-md',
-                                )}
-                            >
-                                <BiPencil className="mr-1 w-3 h-3" />
-                                Live Editing
-                            </div>
-                        )}
                     </div>
                 )}
                 {!hideDemo && (

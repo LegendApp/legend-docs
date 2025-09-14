@@ -26,16 +26,16 @@ These performance issues and confusing/frustrating experience all boil down to o
 
 By default, React always re-renders everything, all the way down. So React apps have a huge performance problem by default, because any little change re-renders everything.
 
-<Editor
+<Example
   code={`
 function TreeLeaf({ count }) {
-  return <div>Count: {count}</div>
+  return <div class="mt-4">Count: {count}</div>
 }
 function TreeLeft({ count }) {
   return <TreeLeaf count={count} />
 }
 function TreeRight() {
-  return <div>Unrelated element</div>
+  return <div class="mt-4">Unrelated element</div>
 }
 function Tree() {
   const [count, setCount] = useState(1)
@@ -50,6 +50,73 @@ function Tree() {
     <TreeRight />
   </>)
 }
+`}
+codePreview={`
+function TreeLeaf({ count, observable }: any) {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv className="p-4 bg-gray-700 border border-gray-500 rounded">
+            <div className="font-bold">Counter</div>
+            <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="leading-loose whitespace-nowrap">
+                Count:{' '}
+                <b>
+                    {observable ? (
+                        <Memo>{() => (
+                            <FlashingDiv span className="inline-block leading-normal text-center bg-gray-700">
+                                {count.get()}
+                            </FlashingDiv>
+                        )}</Memo>
+                    ) : (
+                        count
+                    )}
+                </b>
+            </div>
+        </FlashingDiv>
+    );
+}
+
+function TreeLeft({ count, observable }: any) {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv className="w-48 p-4 bg-gray-800 border border-gray-600 rounded">
+            <div className="font-bold">Intermediate</div>
+            <div className="pt-2 pb-4">Renders: {Math.max(renderCount, 1)}</div>
+            <TreeLeaf count={count} observable={observable} />
+        </FlashingDiv>
+    );
+}
+
+function TreeRight() {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv className="p-4 bg-gray-800 border border-gray-600 rounded">
+            <div className="font-bold">Unrelated element</div>
+            <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
+        </FlashingDiv>
+    );
+}
+function Tree() {
+        const renderCount = ++useRef(-1).current;
+        const [count, setCount] = useState(1);
+
+        useInterval(() => {
+            setCount((v) => v + 1);
+        }, 600);
+
+        return (
+            <FlashingDiv className="p-4 bg-gray-900 border border-gray-700 rounded">
+                <div className="font-bold">Passing count through props</div>
+                <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
+                <div className="">Count: {count}</div>
+                <div className="flex items-start pt-4">
+                    <TreeLeft count={count} observable={false} />
+                    <div className="w-2" />
+                    <TreeRight />
+                </div>
+            </FlashingDiv>
+        );
+    }
 `}
   noInline={true}
   renderCode=";render(<Tree />)"

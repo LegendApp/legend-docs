@@ -7,7 +7,6 @@ import { FlashingDiv } from './FlashingDiv';
 import { DemoBox } from './Components';
 import { Header } from './Header';
 import { Text } from './Text';
-import { Editor } from '@/components/Editor';
 import { EditorStateHome } from '@/components/EditorStateHome';
 
 const CodeDemoPerf1 = `

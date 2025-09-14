@@ -40,7 +40,7 @@ export function FlashingDiv({
 
     return (
         <span className={classNames('relative', span ? 'p-1' : 'block p-1', classNameOuter)}>
-            <motion.div animate={controls} className="absolute inset-0 rounded-lg opacity-0 bg-blue-500" />
+            <motion.div animate={controls} className="absolute inset-0 rounded-lg opacity-0 bg-sky-500" />
             <span
                 className={classNames(
                     'relative z-10 rounded-lg',
