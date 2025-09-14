@@ -216,7 +216,9 @@ function AllTogetherExample() {
 ### 1. Legend-Motion
 [Legend-Motion](../motion) has no dependencies so it's easy to install.
 
-<Install name="@legendapp/motion" />
+```npm
+npm install @legendapp/motion
+```
 
 Then using it is easy:
 
@@ -259,7 +261,9 @@ See [the docs](https://www.legendapp.com/dev/motion) for more details and advanc
 
 React Native Web support for this is right on the bleeding edge. The pre-release version of [React Native Web 0.18](https://github.com/necolas/react-native-web/pull/2248) adds the style extraction features that [NativeWind](https://www.nativewind.dev) depends on. But there's an [issue](https://github.com/necolas/react-native-web/pull/2248#issuecomment-1120237228) in its implementation of Animated that breaks all other styles when using using extracted styles. I have [a fork of the pre-release 0.18](https://github.com/jmeistrich/react-native-web/tree/0.18-animated) version that fixes this, so if you want to try it now, install `react-native-web` from my fork:
 
-<Install name="https://gitpkg.now.sh/jmeistrich/react-native-web/packages/react-native-web?0.18-animated" />
+```npm
+https://gitpkg.now.sh/jmeistrich/react-native-web/packages/react-native-web?0.18-animated
+```
 
 It's a pre-release version so of course be careful when using it in production, but we're using it for the examples on this site and another app in development and haven't found any issues. Hopefully RNW 0.18 will release soon with Animated working well, and we can stop using my fork 🤞.
 
