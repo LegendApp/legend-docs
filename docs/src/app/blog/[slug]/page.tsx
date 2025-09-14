@@ -107,6 +107,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     tableOfContent={{
                         style: 'clerk',
                         single: false,
+                        header: (
+                            <a
+                                href="/blog"
+                                className="inline-flex items-center gap-2 text-sm text-fd-muted-foreground hover:text-white transition-colors mb-6 -mt-6"
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M15 19l-7-7 7-7"
+                                    />
+                                </svg>
+                                All posts
+                            </a>
+                        ),
                     }}
                     container={{
                         className: 'border-t border-white/10',
