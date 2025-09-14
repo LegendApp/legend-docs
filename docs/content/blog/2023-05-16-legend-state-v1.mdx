@@ -22,7 +22,7 @@ Because we can listen for changes anywhere within an object, a React component c
 
 Legend-State beats other React state libraries in both speed and memory usage. An **optimized** mode for arrays can re-render only changed elements instead of the whole array, making it significantly faster than is usually possible with React - see it on the left side of this table from the [krausest benchmark](https://github.com/krausest/js-framework-benchmark).
 
-<img src="/img/dev/state/times.png" style={{ borderRadius: '1rem', maxWidth: 720 }} />
+<img src="../../assets/state/times.png" style={{ borderRadius: '1rem', maxWidth: 720 }} />
 
 
 ## 🦄 As easy as possible to use
@@ -79,30 +79,30 @@ And they all do that without needing to re-render the component itself. Check ou
   code={`
 function Component({ children }) {
   // This component only renders once
-  const state = useObservable({ show: false, numToggles: 0, text: 'Change me' })
+  const state$ = useObservable({ show: false, numToggles: 0, text: 'Change me' })
 
   useInterval(() => {
-    state.show.set(v => !v)
-    state.numToggles.set(v => v + 1)
+    state$.show.set(v => !v)
+    state$.numToggles.set(v => v + 1)
   }, 1000)
 
   // Props ending in $ bind the prop to the observable
   // for tiny targeted re-renders on changes
   return (
     <div>
-      <$React.input $value={state.text} />
+      <$React.input $value={state$.text} />
       <$React.div
         $className={() => (
-          state.text.get().includes('Legend') && 'font-bold text-blue-500'
+          state$.text.get().includes('Legend') ?
+            'font-bold text-blue-500' :
+            ''
         )}
       >
-        {state.text}
+        {state$.text}
       </$React.div>
-      <div>
-        Modal toggles: <Memo>{state.numToggles}</Memo>
-      </div>
+
       <Show
-        if={state.show}
+        if={state$.show}
         else={<div>Not showing modal</div>}
       >
         <div>Modal</div>

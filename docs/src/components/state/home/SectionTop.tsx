@@ -69,7 +69,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                             .replace(`const speed$ = observable(2)`, '')
                             .replace(
                                 '<$React.input',
-                                '<div className="font-bold pb-4 text-center">Particle Speed</div><$React.input className="w-20 rounded bg-gray-700 px-2 py-2" min="1" max="10"',
+                                '<div className="font-bold pb-4 text-center">Particle Speed</div><$React.input className="w-20 rounded bg-zinc-700 px-2 py-2" min="1" max="10"',
                             )
                             .replace('<div>Speed', '<div className="mt-8">Speed')
                             .replace('<Button ', '<Button className="bg-blue-800 hover:bg-blue-700"')
@@ -114,7 +114,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
 
 export const SectionTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
     return (
-        <div className="lg:grid grid-cols-3 !mt-48 xs:!mt-36 sm:!mt-24 md:!mt-16 lg:!-mt-4 mx-auto">
+        <div className="lg:grid grid-cols-3 mt-48 xs:mt-36 sm:mt-24 lg:mt-2 mx-auto">
             <div className="hidden lg:block pointer-events-none" />
             <div className="lg:col-span-2 relative flex justify-center">
                 <DemoTop state$={state$} />

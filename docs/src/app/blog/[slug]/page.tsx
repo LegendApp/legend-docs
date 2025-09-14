@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     return (
         <div className="pt-12 blog-page">
             <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left mx-auto max-w-(--fd-page-width)">
-                <div className="mb-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
+                <div className="mb-4 text-zinc-600 dark:text-zinc-400 text-sm font-medium">
                     <div className="flex flex-wrap gap-3">
                         <span className="inline-flex items-center gap-1.5">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,7 +82,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <h1 className="text-left dark:text-white text-4xl font-bold mb-4">{page.data.title}</h1>
 
                 {page.data.description && (
-                    <p className="text-left mt-3 dark:text-gray-300 text-lg">{page.data.description}</p>
+                    <p className="text-left mt-3 dark:text-zinc-300 text-lg">{page.data.description}</p>
                 )}
             </div>
 

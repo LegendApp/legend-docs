@@ -5,13 +5,10 @@ import { Text } from './Text';
 export function SectionKitHeader() {
     return (
         <div className="mt-section text-center px-4">
-            <Header
-                size="h1"
-                className="!text-3xl sm:!text-h1 !font-bold !leading-tight max-w-4xl text-center mx-auto !mt-4"
-            >
+            <Header size="h1" className="!font-bold !leading-tight max-w-4xl text-center mx-auto !mt-4">
                 Legend Kit
             </Header>
-            <Text className="text-xl max-w-3xl mx-auto text-left">
+            <Text className="text-lg pt-4 max-w-3xl mx-auto text-left">
                 Both an expertly crafted collection of tools and an intelligent coding assistant, it&apos;s the perfect
                 starting point to build great apps even faster.
             </Text>

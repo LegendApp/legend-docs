@@ -73,7 +73,7 @@ const Box = ({
     <div
         className={classNames(
             'rounded-lg p-4 relative max-w-sm',
-            theme === 'light' ? 'bg-fd-card text-gray-900' : 'bg-fd-card text-gray-100',
+            theme === 'light' ? 'bg-fd-card text-zinc-900' : 'bg-fd-card text-zinc-100',
             className,
         )}
     >
@@ -92,7 +92,7 @@ const Button = ({
 }) => (
     <button
         className={classNames(
-            'block px-4 h-10 my-4 font-bold rounded-lg shadow text-2xs cursor-pointer transition-colors bg-gray-600 hover:bg-gray-500',
+            'block px-4 h-10 my-4 font-bold rounded-lg shadow text-2xs cursor-pointer transition-colors bg-zinc-600 hover:bg-zinc-500',
             className,
         )}
         onClick={onClick}
@@ -120,7 +120,7 @@ const Checkbox = ({ $value }: { $value: Observable<boolean> }) => {
             <label className="relative flex items-center p-1 -m-1 rounded-full cursor-pointer">
                 <input
                     type="checkbox"
-                    className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-gray-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-gray-500 before:opacity-0 before:transition-opacity checked:border-blue-600 checked:bg-blue-600 checked:before:bg-blue-600 hover:before:opacity-10"
+                    className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-zinc-500 before:opacity-0 before:transition-opacity checked:border-blue-600 checked:bg-blue-600 checked:before:bg-blue-600 hover:before:opacity-10"
                     checked={checked || false}
                     onChange={(e) => $value.set(e.target.checked)}
                 />
@@ -360,7 +360,7 @@ export function Editor({
                         <Memo>
                             {() =>
                                 hasDocumentTitle && (
-                                    <div className="px-4 py-2 border-b border-gray-200 dark:border-fd-border bg-gray-50 dark:bg-fd-card text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <div className="px-4 py-2 border-b border-zinc-200 dark:border-fd-border bg-zinc-50 dark:bg-fd-card text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                         {documentTitle$.get() ? documentTitle$.get() : ''}
                                     </div>
                                 )

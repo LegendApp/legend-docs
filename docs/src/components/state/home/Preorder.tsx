@@ -12,8 +12,10 @@ export const Preorder = observer(function Preorder() {
         <div className="sm:flex items-center gap-8 mt-section px-4">
             <div className="flex-1">
                 <div className="max-w-lg">
-                    <Header size="h1">Buy once, yours forever</Header>
-                    <Text>
+                    <Header size="h1" leading="leading-tight">
+                        Buy once, yours forever
+                    </Header>
+                    <Text className="pt-4">
                         Lifetime access to an ever-growing library of helpers, components, hooks, example projects, and
                         reactive components.
                     </Text>

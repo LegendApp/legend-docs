@@ -104,7 +104,7 @@ export default function HomePage() {
                             <Link
                                 href="/blog"
                                 className={classNames(
-                                    'inline-flex items-center gap-3 px-6 py-3 rounded-full text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-300',
+                                    'inline-flex items-center gap-3 px-6 py-3 rounded-full text-zinc-300 hover:text-white hover:bg-fd-accent transition-all duration-300',
                                     BGClassName,
                                 )}
                             >

@@ -42,7 +42,7 @@ export function HeroSection() {
 
                 {/* Performance Video */}
                 <div className="max-w-4xl mx-auto">
-                    <div className="bg-gray-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                    <div className="bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
                         <video autoPlay loop muted playsInline className="w-full h-auto">
                             <source src="/assets/legendlist1.mp4" type="video/mp4" />
                             Your browser does not support the video tag.

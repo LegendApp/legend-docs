@@ -79,8 +79,8 @@ export function TalksSection() {
                                         <div className="px-2 py-0.5 bg-blue-600/20 border border-blue-500/30 rounded-full">
                                             <Text className="text-xs text-blue-400">{talk.type}</Text>
                                         </div>
-                                        <div className="px-2 py-0.5 bg-gray-600/20 border border-gray-500/30 rounded-full">
-                                            <Text className="text-xs text-gray-400">{talk.platform}</Text>
+                                        <div className="px-2 py-0.5 bg-zinc-600/20 border border-zinc-500/30 rounded-full">
+                                            <Text className="text-xs text-zinc-400">{talk.platform}</Text>
                                         </div>
                                     </div>
 

@@ -34,14 +34,13 @@ interface PropsBadges {
 const Badges = ({ badges, titleSize, titleWeight, className }: PropsBadges) => {
     return (
         <div className={classNames('flex justify-center max-w-5xl', className)}>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:flex justify-center border bg-tBg border-tBorder rounded-lg divide-x divide-tBorder shadow-tShadowDark backdrop-blur-sm bg-opacity-0">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:flex justify-center border bg-tBg border-tBorder rounded-lg shadow-tShadowDark backdrop-blur-sm bg-opacity-0">
                 {badges.map(({ title, subtitle }, i) => (
                     <div
                         key={title}
                         className={classNames(
-                            '!mt-0 px-3 sm:px-8 py-3 lg:py-4 text-center whitespace-pre',
+                            '!mt-0 px-3 sm:px-8 py-4 lg:py-4 text-center whitespace-pre',
                             i === 5 && 'xl:hidden',
-                            i > 1 && 'border-t border-tBorder lg:border-0',
                         )}
                     >
                         <div className={classNames('text-white', titleSize || 'text-lg', titleWeight || 'font-bold')}>

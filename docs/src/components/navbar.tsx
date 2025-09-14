@@ -4,11 +4,11 @@ import Link from 'next/link';
 
 export function CustomNavbar() {
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/80 backdrop-blur-sm flex items-center justify-between px-4 py-3 border-b bg-background">
+        <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/20 backdrop-blur-sm flex items-center justify-between px-4 py-3 border-b bg-background">
             <div className="flex items-center gap-2">
                 <Image src="/assets/Logo.png" alt="Legend" width={24} height={24} />
 
-                <span className="font-semibold">Legend Docs</span>
+                <span className="font-semibold">Legend Open Source</span>
             </div>
 
             <div className="flex items-center gap-6">

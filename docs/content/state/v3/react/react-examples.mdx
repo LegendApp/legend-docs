@@ -71,8 +71,8 @@ function App() {
   previewWidth={210}
   transformCode={(code) =>
     code
-      .replace(/className="footer"/g, 'className="bg-gray-600 text-center text-white text-sm overflow-hidden"')
-      .replace(/className="input"/g, 'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"')
+      .replace(/className="footer"/g, 'className="bg-zinc-600 text-center text-white text-sm overflow-hidden"')
+      .replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"')
   }
 />
 
@@ -155,7 +155,7 @@ function Example() {
   noInline={true}
   renderCode=";render(<App />)"
   transformCode={(code) =>
-    code.replace(/className="input"/g, 'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2 mb-6"')
+    code.replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2 mb-6"')
   }
 />
 
@@ -245,7 +245,7 @@ function App() {
   previewWidth={200}
   transformCode={(code) =>
     code
-      .replace(/className="input"/g, 'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1 mt-2"')
+      .replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"')
       .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 pt-1"')
   }
 />
@@ -325,8 +325,8 @@ function App() {
   renderCode=";render(<App />)"
   transformCode={(code) =>
     code
-      .replace(/className="input"/g, 'className="bg-gray-900 text-white border rounded border-gray-600 px-2 py-1"')
-      .replace(/className="messages"/g, 'className="h-64 p-2 my-3 overflow-auto border border-gray-600 rounded [&>*]:!mt-2"')
+      .replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"')
+      .replace(/className="messages"/g, 'className="h-64 p-2 my-3 overflow-auto border border-zinc-600 rounded [&>*]:!mt-2"')
   }
 />
 
@@ -496,8 +496,8 @@ function App() {
   transformCode={(code) =>
     code
       .replace(/className="pageText"/g, 'className="flex-1 flex justify-center items-center"')
-      .replace(/className="pageButton"/g, 'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-gray-600 hover:bg-gray-500 !mt-0"')
-      .replace(/className="modal"/g, 'className="relative bg-gray-700 rounded-xl flex flex-col p-4"')
+      .replace(/className="pageButton"/g, 'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-zinc-600 hover:bg-zinc-500 !mt-0"')
+      .replace(/className="modal"/g, 'className="relative bg-zinc-700 rounded-xl flex flex-col p-4"')
       .replace(/className="modalButtons"/g, 'className="flex justify-center gap-4"')
   }
 />
@@ -532,7 +532,7 @@ function RouterExample() {
         </Button>
       </div>
         <div>Hash: <Memo>{pageHash}</Memo></div>
-        <div className="p-4 bg-gray-600 rounded-xl">
+        <div className="p-4 bg-zinc-600 rounded-xl">
           <Switch value={pageHashParams.page}>
             {{
               undefined: () => <div>Root</div>,

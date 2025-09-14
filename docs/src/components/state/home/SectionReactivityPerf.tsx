@@ -17,7 +17,7 @@ const CodeDemoPerf1 = `
 function TreeRight() {
   const renderCount = useRef(1).current++
   return (
-    <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded !mt-0">
+    <FlashingDiv bg="bg-zinc-800" className="p-3 sm:p-4 border border-zinc-600 rounded !mt-0">
         <div className="font-bold">Right</div>
         <div>Renders: {renderCount}</div>
     </FlashingDiv>
@@ -25,7 +25,7 @@ function TreeRight() {
 }
 function TreeLeft({ count }) {
   const renderCount = useRef(1).current++
-    return <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded flex-1">
+    return <FlashingDiv bg="bg-zinc-800" className="p-3 sm:p-4 border border-zinc-600 rounded flex-1">
                 <div className="font-bold">Left</div>
                 <div className="mb-4">Renders: {renderCount}</div>
                 <TreeLeaf count={count} />
@@ -33,7 +33,7 @@ function TreeLeft({ count }) {
 }
 function TreeLeaf({ count }) {
   const renderCount = useRef(1).current++
-  return <FlashingDiv bg="bg-gray-700" className="p-3 sm:p-4 border border-gray-500 rounded w-36">
+  return <FlashingDiv bg="bg-zinc-700" className="p-3 sm:p-4 border border-zinc-500 rounded w-36">
                 <div className="font-bold">Leaf</div>
                 <div>Renders: {renderCount}</div>
                 <div>Count: {count}</div>
@@ -48,7 +48,7 @@ function Tree() {
   }, 600)
 
   return (
-    <FlashingDiv className="p-3 sm:p-4 bg-gray-900 border border-gray-700 rounded">
+    <FlashingDiv className="p-3 sm:p-4 bg-zinc-900 border border-zinc-700 rounded">
         <div className="font-bold">Tree</div>
         <div>Renders: {renderCount}</div>
         <div>Count: {count}</div>
@@ -64,20 +64,20 @@ const CodeDemoPerf2 = `
 // to a single div so no components ever re-render
 
 function TreeRight() {
-  return <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded !mt-0">
+  return <FlashingDiv bg="bg-zinc-800" className="p-3 sm:p-4 border border-zinc-600 rounded !mt-0">
                 <div className="font-bold">Right</div>
                 <div>Renders: 1</div>
               </FlashingDiv>
 }
 function TreeLeft({ $count }) {
-    return <FlashingDiv bg="bg-gray-800" className="p-3 sm:p-4 border border-gray-600 rounded flex-1">
+    return <FlashingDiv bg="bg-zinc-800" className="p-3 sm:p-4 border border-zinc-600 rounded flex-1">
                 <div className="font-bold">Left</div>
                 <div className="mb-4">Renders: 1</div>
                 <TreeLeaf $count={$count} />
                </FlashingDiv>
 }
 function TreeLeaf({ $count }) {
-  return <FlashingDiv bg="bg-gray-700" className="p-3 sm:p-4 border border-gray-500 rounded w-36">
+  return <FlashingDiv bg="bg-zinc-700" className="p-3 sm:p-4 border border-zinc-500 rounded w-36">
                 <div className="font-bold">Leaf</div>
                 <div>Renders: 1</div>
                 <div>Count: <Memo>{$count}</Memo></div>
@@ -91,7 +91,7 @@ function Tree() {
   }, 600)
 
   return (
-    <FlashingDiv className="p-3 sm:p-4 bg-gray-900 border border-gray-700 rounded">
+    <FlashingDiv className="p-3 sm:p-4 bg-zinc-900 border border-zinc-700 rounded">
         <div className="font-bold">Tree</div>
         <div>Renders: 1</div>
         <div>Count: <Memo>{count}</Memo></div>
@@ -148,7 +148,7 @@ const DemoPerf2 = () => {
             }}
             transformCode={(code) =>
                 code.replace(/<Memo>{(.*)}<\/Memo>/g, (a, b, c) => {
-                    const bg = c > 1000 ? 'bg-gray-900' : 'bg-gray-700';
+                    const bg = c > 1000 ? 'bg-zinc-900' : 'bg-zinc-700';
                     return `<Memo>
                         {() => (
                             <FlashingDiv span bg="${bg}">

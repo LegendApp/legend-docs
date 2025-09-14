@@ -52,7 +52,7 @@ const LandingPage = () => {
                             </div>
                             <div className="flex flex-col xs:flex-row xs:gap-8 items-center">
                                 <Link href="/state/v3/intro/introduction/" className="no-underline">
-                                    <Button color="bg-blue-700/80 hover:bg-blue-600">Get started</Button>
+                                    <Button color="bg-sky-700/80 hover:bg-sky-600">Get started</Button>
                                 </Link>
                                 <div
                                     className="text-white/80 hover:text-white cursor-pointer font-medium bg-black/30 border border-white/10 shadow-tShadowDark xs:bg-none xs:shadow-none hover:bg-black/30 hover:shadow-tShadowDark px-4 h-10 rounded-lg transition-colors gap-3 flex items-center"

@@ -1,3 +1,4 @@
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { CodeLine } from './CodeLine';
 import { Header } from './Header';
 import { Text } from './Text';
@@ -37,21 +38,20 @@ export function SectionKitCLI() {
                 </div>
             </div>
 
-            <Header size="h4">Install it now</Header>
+            <Header size="h4" className="pt-8">
+                Install it now
+            </Header>
             <Text>
-                This will bootstrap and configure itself into your project, adding a &quot;legend&quot; script for easy access.
+                This will bootstrap and configure itself into your project, adding a &quot;legend&quot; script for easy
+                access.
             </Text>
 
-            <CodeLine>npx @legendapp/kit</CodeLine>
+            <div className="mt-4 max-w-sm">
+                <DynamicCodeBlock lang="bash" code="npx @legendapp/kit" />
+            </div>
 
-            <div className="!mt-8 bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-auto"
-                >
+            <div className="mt-8 bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden">
+                <video autoPlay loop muted playsInline className="w-full h-auto">
                     <source src="/assets/legend-kit-cli.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
