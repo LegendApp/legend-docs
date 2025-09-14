@@ -29,33 +29,33 @@ By default, React always re-renders everything, all the way down. So React apps 
 <Example
   code={`
 function TreeLeaf({ count }) {
-  return <div class="mt-4">Count: {count}</div>
+    return <div class="mt-4">Count: {count}</div>
 }
 function TreeLeft({ count }) {
-  return <TreeLeaf count={count} />
+    return <TreeLeaf count={count} />
 }
 function TreeRight() {
-  return <div class="mt-4">Unrelated element</div>
+    return <div class="mt-4">Unrelated element</div>
 }
 function Tree() {
-  const [count, setCount] = useState(1)
+    const [count, setCount] = useState(1)
 
-  useInterval(() => {
-    setCount(v => v + 1)
-  }, 600)
+    useInterval(() => {
+        setCount(v => v + 1)
+    }, 600)
 
-  return (<>
-    <div>Count: {count}</div>
-    <TreeLeft count={count} />
-    <TreeRight />
-  </>)
+    return (<>
+        <div>Count: {count}</div>
+        <TreeLeft count={count} />
+        <TreeRight />
+    </>)
 }
 `}
 codePreview={`
 function TreeLeaf({ count, observable }: any) {
     const renderCount = ++useRef(-1).current;
     return (
-        <FlashingDiv className="p-4 bg-gray-700 border border-gray-500 rounded">
+        <FlashingDiv className="p-4 bg-zinc-700 border border-zinc-500 rounded">
             <div className="font-bold">Counter</div>
             <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
             <div className="leading-loose whitespace-nowrap">
@@ -63,7 +63,7 @@ function TreeLeaf({ count, observable }: any) {
                 <b>
                     {observable ? (
                         <Memo>{() => (
-                            <FlashingDiv span className="inline-block leading-normal text-center bg-gray-700">
+                            <FlashingDiv span className="inline-block leading-normal text-center bg-zinc-700">
                                 {count.get()}
                             </FlashingDiv>
                         )}</Memo>
@@ -79,7 +79,7 @@ function TreeLeaf({ count, observable }: any) {
 function TreeLeft({ count, observable }: any) {
     const renderCount = ++useRef(-1).current;
     return (
-        <FlashingDiv className="w-48 p-4 bg-gray-800 border border-gray-600 rounded">
+        <FlashingDiv className="w-48 p-4 bg-zinc-800 border border-zinc-600 rounded">
             <div className="font-bold">Intermediate</div>
             <div className="pt-2 pb-4">Renders: {Math.max(renderCount, 1)}</div>
             <TreeLeaf count={count} observable={observable} />
@@ -90,7 +90,7 @@ function TreeLeft({ count, observable }: any) {
 function TreeRight() {
     const renderCount = ++useRef(-1).current;
     return (
-        <FlashingDiv className="p-4 bg-gray-800 border border-gray-600 rounded">
+        <FlashingDiv className="p-4 bg-zinc-800 border border-zinc-600 rounded">
             <div className="font-bold">Unrelated element</div>
             <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
         </FlashingDiv>
@@ -105,7 +105,7 @@ function Tree() {
         }, 600);
 
         return (
-            <FlashingDiv className="p-4 bg-gray-900 border border-gray-700 rounded">
+            <FlashingDiv className="p-4 bg-zinc-900 border border-zinc-700 rounded">
                 <div className="font-bold">Passing count through props</div>
                 <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
                 <div className="">Count: {count}</div>
@@ -152,37 +152,83 @@ We found that we could improve this without even changing React itself, but with
 
 So we built Legend-State to rethink the way we write React code. Rather than constantly re-rendering everything and working around it, components own the state they care about and re-render themselves when needed. Taking that even farther, the individual DOM nodes (or React Native Views) at the smallest and lowest level manage their own updating, so components never re-render.
 
-<Editor
-  code={`
-// Normal React - This component renders every time
+<TwoExamples
+  code1={`
+// Normal React - renders every time
 function HooksCount() {
-  const [count, setCount] = useState(1)
+    const [count, setCount] = useState(1)
 
-  useInterval(() => {
-    setCount(v => v + 1)
-  }, 600)
+    useInterval(() => {
+        setCount(v => v + 1)
+    }, 600)
 
-  // Count changes every render
-  return <div>Count: {count}</div>
-}
-
-// Legend-State - This component renders once
-function LegendStateCount() {
-  const count$ = useObservable(1)
-
-  useInterval(() => {
-    count$.set(v => v + 1)
-  }, 600)
-
-  // Memo element re-renders itself
-  return <div>Count: <Memo>{count$}</Memo></div>
+    // Count changes every render
+    return <div>Count: {count}</div>
 }
 `}
-  noInline={true}
-  renderCode=";render(<div><HooksCount /><div style={{marginTop: '20px'}} /><LegendStateCount /></div>)"
-/>
+  code2={`
+// Legend-State - renders once
+function LegendStateCount() {
+    const count$ = useObservable(1)
 
-<div className="text-center pb-4" style={{ marginTop: -16 }}><a href="https://codesandbox.io/s/legend-state-primitives-140tmg" target="_blank">Try in a CodeSandbox</a></div>
+    useInterval(() => {
+        count$.set(v => v + 1)
+    }, 600)
+
+    // Memo element re-renders itself
+    return <div>Count: <Memo>{count$}</Memo></div>
+}
+`}
+codePreview1={`
+function BasicPrimitive() {
+        const renderCount = ++useRef(-1).current;
+        const [count, setCount] = useState(1);
+
+        useInterval(() => {
+            setCount((v) => v + 1);
+        }, 600);
+
+        return (
+            <div className="text-sm" style={{ width: 240 }}>
+                <FlashingDiv>
+                    <div className="p-4 bg-zinc-900 border rounded-lg border-fd-border">
+                        <div className="pb-4 font-bold text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+                        <div>Count: {count}</div>
+                    </div>
+                </FlashingDiv>
+            </div>
+        );
+    }
+`}
+codePreview2={`
+function BasicPrimitive() {
+        const renderCount = ++useRef(-1).current;
+        const count = useObservable(1);
+
+        useInterval(() => {
+            count.set((v) => v + 1);
+        }, 600);
+
+        return (
+            <div className="text-sm" style={{ width: 240 }}>
+                <div className="p-4 bg-zinc-900 border rounded-lg border-fd-border">
+                    <div className="pb-4 font-bold text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+                    <div>
+                        Count:{' '}
+                        <Memo>{() => (
+                            <FlashingDiv span className="bg-zinc-900">
+                                {count.get()}
+                            </FlashingDiv>
+                        )}</Memo>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+`}
+  noInline={true}
+  renderCode=";render(<div><BasicPrimitive /></div>)"
+/>
 
 We can pass an `observable` straight into the JSX, and it automatically gets extracted to a tiny memoized component that tracks its own state. So it updates itself when it changes, and no other component needs to care about it.
 

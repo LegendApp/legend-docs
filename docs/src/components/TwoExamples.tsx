@@ -35,8 +35,10 @@ import { IntroUsageComponent } from './motion/IntroUsageComponent';
 import { FlashingDiv } from '@/components/state/home/FlashingDiv';
 
 interface Props {
-    code: string;
-    codePreview: string;
+    code1: string;
+    code2: string;
+    codePreview1: string;
+    codePreview2: string;
     scope?: Record<string, unknown>;
     name?: string;
     noInline?: boolean;
@@ -51,7 +53,6 @@ interface Props {
     disabled?: boolean;
     transformCode?: (code: string) => string;
     removeClassNames?: boolean;
-    previewCallout?: React.ReactNode;
 }
 
 const emptyTheme = { plain: {}, styles: [] };
@@ -241,9 +242,11 @@ const defaultScope = {
     Motion,
 };
 
-export function Example({
-    code,
-    codePreview,
+export function TwoExamples({
+    code1,
+    code2,
+    codePreview1,
+    codePreview2,
     scope = {},
     name,
     previewWidth,
@@ -257,92 +260,110 @@ export function Example({
     noError = false,
     disabled = false,
     removeClassNames = false,
-    previewCallout,
     inBox = false,
 }: Props) {
-    const documentTitle$ = useObservable('');
-    const setDocumentTitle = (value: string) => documentTitle$.set(value);
-
-    // Detect if code contains document.title assignment
-    const hasDocumentTitle = /document\.title\s*=/.test(codePreview);
-
     // Add setDocumentTitle to scope when document.title is used
-    const mergedScope = hasDocumentTitle
-        ? { ...defaultScope, ...scope, setDocumentTitle }
-        : { ...defaultScope, ...scope };
-
-    // Use transform function directly
-    const transformFn = transformCode;
+    const mergedScope = { ...defaultScope, ...scope };
 
     // Transform function to replace document.title with setDocumentTitle
-    const documentTitleTransform = (code: string) => {
-        return code.replace(/document\.title\s*=\s*([^;\n]+)/g, 'requestAnimationFrame(() => setDocumentTitle($1))');
+    const createDocumentTitleTransform = (setDocumentTitleFn: string) => (code: string) => {
+        return code.replace(
+            /document\.title\s*=\s*([^;\n]+)/g,
+            `requestAnimationFrame(() => ${setDocumentTitleFn}($1))`,
+        );
+    };
+
+    const processCode = (code: string) => {
+        let transformedOutput = removeImports(code);
+        if (removeClassNames) transformedOutput = removeClassNamesFromCode(transformedOutput);
+        if (transformCode) transformedOutput = transformCode(transformedOutput);
+        return transformedOutput + (renderCode || '');
     };
 
     return (
-        <LiveProvider
-            code={codePreview}
-            transformCode={(output) => {
-                let transformedOutput = removeImports(output);
-                if (removeClassNames) transformedOutput = removeClassNamesFromCode(transformedOutput);
-                if (transformFn) transformedOutput = transformFn(transformedOutput);
-                if (hasDocumentTitle) transformedOutput = documentTitleTransform(transformedOutput);
-                return transformedOutput + (renderCode || '');
-            }}
-            scope={mergedScope}
-            enableTypeScript={true}
-            theme={emptyTheme}
-            disabled={disabled}
-            noInline={noInline}
-            language="tsx"
-        >
-            <div className="flex gap-4 text-sm items-center">
-                {!hideCode && (
+        <div className="space-y-4">
+            {/* Code blocks side by side */}
+            {!hideCode && (
+                <div className="flex gap-4 text-sm">
                     <div className={classNames('relative flex-1', classNameCode)}>
                         <div className="rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
-                            <DynamicCodeBlock lang="tsx" code={code} />
+                            <DynamicCodeBlock lang="tsx" code={code1} />
                         </div>
                     </div>
-                )}
-                {!hideDemo && (
-                    <div
-                        className={classNames(
-                            'border rounded-lg bg-white dark:bg-fd-card dark:border-fd-border',
-                            inBox && 'p-4',
-                            name ? `preview-${name}` : 'col-span-1',
-                            classNamePreview,
-                        )}
-                        style={{ width: previewWidth }}
-                    >
-                        <Memo>
-                            {() =>
-                                hasDocumentTitle && (
-                                    <div className="px-4 py-2 border-b border-zinc-200 dark:border-fd-border bg-zinc-50 dark:bg-fd-card text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                        {documentTitle$.get() ? documentTitle$.get() : ''}
-                                    </div>
-                                )
-                            }
-                        </Memo>
-                        <LivePreview />
-                        {previewCallout}
+                    <div className={classNames('relative flex-1', classNameCode)}>
+                        <div className="rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
+                            <DynamicCodeBlock lang="tsx" code={code2} />
+                        </div>
                     </div>
-                )}
-            </div>
-            {!noError && (
-                <LiveError
-                    style={{
-                        backgroundColor: '#fef2f2',
-                        border: '1px solid #fecaca',
-                        borderRadius: '0.5rem',
-                        padding: '1rem',
-                        marginTop: '1rem',
-                        color: '#dc2626',
-                        fontFamily: 'monospace',
-                        fontSize: '0.875rem',
-                        whiteSpace: 'pre-wrap',
-                    }}
-                />
+                </div>
             )}
-        </LiveProvider>
+
+            {/* Live previews side by side */}
+            {!hideDemo && (
+                <div className="flex gap-4">
+                    {/* First preview */}
+                    <div className="flex-1 flex justify-center">
+                        <LiveProvider
+                            code={codePreview1}
+                            transformCode={() => processCode(codePreview1)}
+                            scope={mergedScope}
+                            enableTypeScript={true}
+                            theme={emptyTheme}
+                            disabled={disabled}
+                            noInline={noInline}
+                            language="tsx"
+                        >
+                            <LivePreview />
+                            {!noError && (
+                                <LiveError
+                                    style={{
+                                        backgroundColor: '#fef2f2',
+                                        border: '1px solid #fecaca',
+                                        borderRadius: '0.5rem',
+                                        padding: '1rem',
+                                        marginTop: '1rem',
+                                        color: '#dc2626',
+                                        fontFamily: 'monospace',
+                                        fontSize: '0.875rem',
+                                        whiteSpace: 'pre-wrap',
+                                    }}
+                                />
+                            )}
+                        </LiveProvider>
+                    </div>
+
+                    {/* Second preview */}
+                    <div className="flex-1 flex justify-center">
+                        <LiveProvider
+                            code={codePreview2}
+                            transformCode={() => processCode(codePreview2)}
+                            scope={mergedScope}
+                            enableTypeScript={true}
+                            theme={emptyTheme}
+                            disabled={disabled}
+                            noInline={noInline}
+                            language="tsx"
+                        >
+                            <LivePreview />
+                            {!noError && (
+                                <LiveError
+                                    style={{
+                                        backgroundColor: '#fef2f2',
+                                        border: '1px solid #fecaca',
+                                        borderRadius: '0.5rem',
+                                        padding: '1rem',
+                                        marginTop: '1rem',
+                                        color: '#dc2626',
+                                        fontFamily: 'monospace',
+                                        fontSize: '0.875rem',
+                                        whiteSpace: 'pre-wrap',
+                                    }}
+                                />
+                            )}
+                        </LiveProvider>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }

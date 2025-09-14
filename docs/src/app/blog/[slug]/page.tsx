@@ -1,3 +1,5 @@
+import { Example } from '@/components/Example';
+import { TwoExamples } from '@/components/TwoExamples';
 import { source } from '@/lib/sources/blog';
 import type { Metadata } from 'next';
 import { DocsPage, DocsBody } from 'fumadocs-ui/page';
@@ -140,6 +142,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                         <Pre>{props.children}</Pre>
                                     </CodeBlock>
                                 ),
+                                Example,
+                                TwoExamples,
                             })}
                         />
                     </DocsBody>

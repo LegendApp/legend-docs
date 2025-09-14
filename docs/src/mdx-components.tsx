@@ -1,5 +1,4 @@
 import { Editor } from '@/components/Editor';
-import { Example } from '@/components/Example';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
@@ -8,7 +7,6 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     return {
         ...defaultMdxComponents,
         Editor,
-        Example,
         ...components,
     };
 }
