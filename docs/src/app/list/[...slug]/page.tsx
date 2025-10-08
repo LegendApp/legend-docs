@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { getFirstDocsPath } from '@/lib/getDocsPath';
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
-    console.log('params', props);
     const params = await props.params;
     if (params.slug?.length === 1 && params.slug[0] === 'v2') {
         redirect(getFirstDocsPath('list'));
