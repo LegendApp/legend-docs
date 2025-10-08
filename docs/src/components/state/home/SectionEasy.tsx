@@ -31,9 +31,9 @@ observe(() => {
   console.log(theme$.get())
 })
 
-// use$ re-renders when observables change
+// useValue re-renders when observables change
 const Component = () => {
-  const theme = use$(settings$.ui.theme)
+  const theme = useValue(settings$.ui.theme)
 
   return <div>{theme}</div>
 })

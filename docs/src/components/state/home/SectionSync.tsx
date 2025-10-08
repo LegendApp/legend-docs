@@ -1,6 +1,6 @@
 import { Editor } from '@/components/Editor';
 import { observable } from '@legendapp/state';
-import { Memo, observer, use$, useObservable } from '@legendapp/state/react';
+import { Memo, observer, useValue, useObservable } from '@legendapp/state/react';
 import { useRef } from 'react';
 import { Button } from './Button';
 import { DemoBox } from './Components';
@@ -21,7 +21,7 @@ const profile$ = observable(syncedFetch({
 
 const Component = () => {
   // get triggers fetch and updates on change
-  const name = use$(profile$.name)
+  const name = useValue(profile$.name)
 
   const onClick = () => {
     // set sets the local state and syncs
@@ -49,7 +49,7 @@ const DemoSync = () => {
                 Box: DemoBox,
                 FlashingDiv,
                 observer,
-                use$,
+                useValue,
             }}
             classNameEditor="home-editor"
             hideDemo

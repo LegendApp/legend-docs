@@ -242,12 +242,12 @@ Props:
 
 ```jsx
 import { observable } from "@legendapp/state"
-import { For, use$ } from "@legendapp/state/react"
+import { For, useValue } from "@legendapp/state/react"
 
 const state$ = observable({ arr: [{ id: 1, text: 'hi' }]})
 
 const Row = function Row({ item$ }) {
-    const text = use$(item$.text)
+    const text = useValue(item$.text)
     return <div>{text}</div>
 }
 function List() {
@@ -352,13 +352,13 @@ This is a single HOC with the functionality of both `observer` and `reactive`. T
 
 ```js
 import { observable } from "@legendapp/state";
-import { reactiveObserver, use$ } from "@legendapp/state/react";
+import { reactiveObserver, useValue } from "@legendapp/state/react";
 
 const name$ = observable("Annyong");
 const isSignedIn$ = observable(false);
 
 const Component = reactiveObserver(function Component({ message }) {
-  const name = use$(name$);
+  const name = useValue(name$);
 
   return (
     <div>

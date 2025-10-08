@@ -147,7 +147,7 @@ const state$ = observable({
 })
 ```
 
-Note that [observing contexts](./reactivity#observing-contexts) track all observable `get()` calls, including within any called functions. So if a function called from within a `use$` hook calls `get()` that will be tracked too.
+Note that [observing contexts](./reactivity#observing-contexts) track all observable `get()` calls, including within any called functions. So if a function called from within a `useValue` hook calls `get()` that will be tracked too.
 
 ```jsx
 const state$ = observable({
@@ -158,7 +158,7 @@ const state$ = observable({
 
 function Name() {
     // Tracks [state$.fname, state$.lname]
-    const name = use$(() => state$.fullName())
+    const name = useValue(() => state$.fullName())
     return <div>{name}</div>
 }
 ```
@@ -191,10 +191,10 @@ A computed function can be used like an observable or as a function.
 ```jsx
 function Name() {
     // Use it as a function
-    const name1 = use$(() => state$.fullName())
+    const name1 = useValue(() => state$.fullName())
 
     // Use it as an observable
-    const name2 = use$(state$.fullName)
+    const name2 = useValue(state$.fullName)
 
     return <div>{name2}</div>
 }

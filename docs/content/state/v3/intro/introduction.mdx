@@ -16,7 +16,7 @@ Legend-State handles local, global, and remote state all in one. Just `get()` an
 
 ### 2. Great DX and less code
 
-Just `use$` an observable to automatically re-render whenever it changes, and `set()` to update it. With the reduced boilerplate and everything that Legend-State does for you, you'll build better apps with less code.
+Just `useValue` an observable to automatically re-render whenever it changes, and `set()` to update it. With the reduced boilerplate and everything that Legend-State does for you, you'll build better apps with less code.
 
 ```jsx
 const state$ = observable({
@@ -26,7 +26,7 @@ const state$ = observable({
 state$.settings.theme.set('light')
 
 const Component = () => {
-    const theme = use$(state$.settings.theme)
+    const theme = useValue(state$.settings.theme)
 
     return <div>Theme: {theme}</div>
 }
@@ -45,7 +45,7 @@ There is no boilerplate and there are no contexts, actions, reducers, dispatcher
 
 ```jsx
 import { observable, observe } from "@legendapp/state"
-import { observer } from "@legendapp/state/react"
+import { useValue } from "@legendapp/state/react"
 
 // Observables can be primitives or deep objects
 const settings$ = observable({
@@ -65,9 +65,9 @@ observe(() => {
 })
 
 function Component() {
-    const theme = use$(state$.settings.theme)
-    // use$ tracks get() calls to automatically re-render on changes
-    const isDark = use$(() => state$.settings.theme.get() === 'dark')
+    const theme = useValue(state$.settings.theme)
+    // useValue tracks get() calls to automatically re-render on changes
+    const isDark = useValue(() => state$.settings.theme.get() === 'dark')
 
     return <div>Theme: {theme}</div>
 }
@@ -82,7 +82,7 @@ Many examples in these docs are editable so you can play around with the code an
 <Editor
   code={`
 import { observable } from "@legendapp/state"
-import { use$ } from "@legendapp/state/react"
+import { useValue } from "@legendapp/state/react"
 
 // Create an observable object
 const settings$ = observable({ theme: 'dark' })
@@ -90,7 +90,7 @@ const settings$ = observable({ theme: 'dark' })
 // This is the code for the example on your right ----->
 function Component() {
     // theme is automatically tracked for changes
-    const theme = use$(settings$.theme)
+    const theme = useValue(settings$.theme)
 
     const toggle = () => {
       settings$.theme.set(theme =>

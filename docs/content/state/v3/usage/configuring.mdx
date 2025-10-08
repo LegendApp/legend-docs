@@ -65,11 +65,11 @@ state$._ = { test: "hello" }
 
 ## enableReactTracking
 
-`enableReactTracking` is useful to warn if a `get()` is called within a React component without being wrapped in `use$`, which would break the reactivity.
+`enableReactTracking` is useful to warn if a `get()` is called within a React component without being wrapped in `useValue`, which would break the reactivity.
 
 ### warnMissingUse
 
-This will log a warning whenever `get()` is called within a React component. This can help you find places where you meant to use `use$` to track the observable in React, or you may want to change it to `peek()` to be clearer that it should not trigger updates.
+This will log a warning whenever `get()` is called within a React component. This can help you find places where you meant to use `useValue` to track the observable in React, or you may want to change it to `peek()` to be clearer that it should not trigger updates.
 
 ```js
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"

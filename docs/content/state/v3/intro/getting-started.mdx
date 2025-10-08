@@ -66,21 +66,21 @@ Now that we have an observable for our Todos, let's hook it up to React.
 
 ### Observables in React
 
-To consume an observable in React, just `use$` it. This will track it automatically so that the component re-renders whenever it changes.
+To consume an observable in React, just `useValue` it. This will track it automatically so that the component re-renders whenever it changes.
 
 Legend-State also includes reactive components for both React and React Native. See [Reactive components](../react/fine-grained-reactivity#reactive-components) for more about that.
 
 ```tsx
-import { observer, use$, useObservable } from "@legendapp/state/react"
+import { observer, useValue, useObservable } from "@legendapp/state/react"
 import { $TextInput } from "@legendapp/state/react-native"
 
 export function App() {
     // Consume the computed observables from the global store$
-    const total = use$(store$.total)
-    const completed = use$(store$.numCompleted)
+    const total = useValue(store$.total)
+    const completed = useValue(store$.numCompleted)
     // Create a local observable
     const theme$ = useObservable<'light' | 'dark'>('dark')
-    const theme = use$(theme$)
+    const theme = useValue(theme$)
 
     const onClickClear = () => store$.todos.set([])
 
@@ -155,7 +155,7 @@ Now let's put it all together into a live editable example. Feel free to play ar
 
 <Editor
   code={`import { observable } from "@legendapp/state"
-import { observer, use$, useObservable } from "@legendapp/state/react"
+import { observer, useValue, useObservable } from "@legendapp/state/react"
 
 interface Todo {
     id: number;
@@ -201,7 +201,7 @@ function TodoItem({ item$ }) {
         <div className="flex items-center">
             <Checkbox $value={item$.completed} />
             <input
-                value={use$(item$.text)}
+                value={useValue(item$.text)}
                 onChange={(e) => item$.text.set(e.target.value)}
                 onKeyDown={onKeyDown}
                 style={{
@@ -220,9 +220,9 @@ function TodoItem({ item$ }) {
 
 function App() {
     const theme$ = useObservable('dark')
-    const theme = use$(theme$)
-    const total = use$(store$.total)
-    const completed = use$(store$.numCompleted)
+    const theme = useValue(theme$)
+    const total = useValue(store$.total)
+    const completed = useValue(store$.numCompleted)
 
     const onClickClear = () => store$.todos.set([])
 

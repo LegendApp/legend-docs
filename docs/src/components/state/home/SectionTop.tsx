@@ -1,6 +1,6 @@
 import { EditorStateHome } from '@/components/EditorStateHome';
 import { observable, type Observable } from '@legendapp/state';
-import { Memo, Show, observer, use$, useMount, useObservable } from '@legendapp/state/react';
+import { Memo, Show, observer, useValue, useMount, useObservable } from '@legendapp/state/react';
 import { $React } from '@legendapp/state/react-web';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef } from 'react';
@@ -14,7 +14,7 @@ const speed$ = observable(2)
 
 const Component = () => {
   // Get and observe it
-  const speed = use$(speed$)
+  const speed = useValue(speed$)
 
   // Set it
   const up = () => speed$.set(v => v % 10 + 1)
@@ -61,7 +61,7 @@ const DemoTop = ({ state$ }: { state$: Observable<{ speed: number }> }) => {
                     FlashingDiv,
                     $React,
                     observer,
-                    use$,
+                    useValue,
                 }}
                 transformCode={
                     (code) =>

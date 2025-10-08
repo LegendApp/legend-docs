@@ -6,7 +6,7 @@ import { LiveError, LivePreview, LiveProvider } from 'react-live';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { observable } from '@legendapp/state';
 import {
-    use$,
+    useValue,
     useObservable,
     For,
     Memo,
@@ -106,7 +106,7 @@ const Button = ({
 );
 
 const ThemeButton = ({ $value }: { $value: Observable<string> }) => {
-    const theme = use$($value);
+    const theme = useValue($value);
     return (
         <div
             className="absolute right-0 top-0 size-8 flex justify-center items-center cursor-pointer hover:text-blue-500"
@@ -118,7 +118,7 @@ const ThemeButton = ({ $value }: { $value: Observable<string> }) => {
 };
 
 const Checkbox = ({ $value }: { $value: Observable<boolean> }) => {
-    const checked = use$($value);
+    const checked = useValue($value);
     return (
         <div className="inline-flex items-center">
             <label className="relative flex items-center p-1 -m-1 rounded-full cursor-pointer">
@@ -193,7 +193,7 @@ const defaultScope = {
     Fragment: React.Fragment,
     // Legend-State functions
     observable,
-    use$,
+    useValue,
     useObservable,
     For,
     Computed,

@@ -15,7 +15,7 @@ const Component = observer(function Component(props) {
   // Call useTraceListeners anywhere inside the component
   useTraceListeners();
 
-  const count = use$(state.count)
+  const count = useValue(state.count)
 
   return <div>{count}</div>;
 
@@ -39,7 +39,7 @@ const Component = observer(function Component(props) {
   // Call useTraceUpdates anywhere inside the component
   useTraceUpdates();
 
-  const count = use$(state$.count)
+  const count = useValue(state$.count)
 
   return <div>{count}</div>;
 
@@ -64,7 +64,7 @@ const Component = observer(function Component(props) {
   // Call useVerifyNotTracking anywhere inside the component
   useVerifyNotTracking();
 
-  const count = use$(state$.count)
+  const count = useValue(state$.count)
 
   // This will log an error because get() makes it track
   return <div>{count}</div>;
@@ -90,7 +90,7 @@ const Component = observer(function Component(props) {
   // Call useVerifyOneRender anywhere inside the component
   useVerifyOneRender();
 
-  const count = use$(state$.count)
+  const count = useValue(state$.count)
 
   // This will log an error after one render when count is updated
   return <div>{count}</div>;
