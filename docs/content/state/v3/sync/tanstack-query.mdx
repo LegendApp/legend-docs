@@ -13,6 +13,7 @@ There are two ways to use this plugin:
 The `useObservableSyncedQuery` hook takes the normal Query parameters for the query and mutation, and gets the queryClient from Context.
 
 ```tsx
+import { $React } from "@legendapp/state/react-web";
 import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useValue } from '@legendapp/state/react';
@@ -52,6 +53,7 @@ function Component() {
 `syncedQuery` takes the normal Query parameters for the query and mutation, and additionally just needs a queryClient. It uses `@tanstack/query-core` and does not need to be used within React components.
 
 ```tsx
+import { observable } from "@legendapp/state";
 import { syncedQuery } from '@legendapp/state/sync-plugins/tanstack-query';
 import { QueryClient } from '@tanstack/react-query';
 

@@ -17,6 +17,7 @@ The behavior when using `get` is:
 - **delete**: Setting the value to null or undefined, or calling `delete()`, will delete
 
 ```ts
+import { observable } from "@legendapp/state";
 import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
 
 const profile$ = observable(syncedCrud({
@@ -35,6 +36,9 @@ The behavior when using `list` is:
 - **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
 
 ```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
 const profiles$ = observable(syncedCrud({
     list: listProfiles,
     create: createProfile,
@@ -60,6 +64,9 @@ The `create` function is called whenever a new object is added to the observable
 The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
 
 ```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
 const profile$ = observable(syncedCrud({
     // ...
     create: (value, options) => {
@@ -81,6 +88,9 @@ If an element in the observable is updated it will call the `update` function wi
 The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
 
 ```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
 const profile$ = observable(syncedCrud({
     // ...
     update: (value, options) => {
@@ -101,6 +111,9 @@ const profile$ = observable(syncedCrud({
 When an element is deleted from the observable, it will call the `delete` function with the `id` of the deleted element.
 
 ```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
 const profile$ = observable(syncedCrud({
     // ...
     delete: ({ id }, options) => {
@@ -117,6 +130,9 @@ const profile$ = observable(syncedCrud({
 Alternatively if you do soft deletes, you can provide a `fieldDeleted` option instead of `delete`, and then it will call the `update` function with that field set to true.
 
 ```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
 const profile$ = observable(syncedCrud({
     // ...
     update: () => {/* ... */},

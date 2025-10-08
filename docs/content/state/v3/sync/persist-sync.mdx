@@ -219,6 +219,7 @@ const profile$ = observable(syncedCrud({
 Sync plugins have a lot of options so you'll likely want to set some defaults. You can do that with the `configureSynced` function to create a customized version of a plugin with your defaults, to reduce duplication and enforce consistency. You will most likely want to at least set a default persistence plugin.
 
 ```ts
+import { observable } from "@legendapp/state"
 import { configureSynced, syncedCrud } from "@legendapp/state/sync"
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 
@@ -436,6 +437,8 @@ This can be used in many ways. Some examples:
 1. **Migrate between versions**: If the local data has legacy values in it, you can can transform it to the latest format. This can be done by either keeping a version number or just checking for specific fields. This example migrates old persisted data by checking the version and old field name.
 
 ```ts
+import { observable } from "@legendapp/state";
+
 const state$ = observable(synced({
     get: () => {/* ... */},
     persist: {
@@ -458,7 +461,8 @@ const state$ = observable(synced({
 2. **Transform to backend format**: If you want to interact with data in a different format than your backend stores it, it can be automatically transformed between the observable and the sync functions. This could be used for stringifying or parsing dates for example. In this example we combine the `transformStringifyDates` and `transformStringifyKeys` helpers with a custom transformer.
 
 ```ts
-import { combineTransforms, transformStringifyDates } from '@legendapp/state/sync'
+import { observable } from "@legendapp/state";
+import { combineTransforms, transformStringifyDates, transformStringifyKeys } from '@legendapp/state/sync'
 const state$ = observable(synced({
     get: () => {/* ... */},
     transform: combineTransforms(
@@ -483,7 +487,7 @@ const state$ = observable(synced({
 3. **Encrypt**: For end-to-end encryption you can encrypt/decrypt in the transformer so that you interact with unencrypted data locally and it's encrypted before going into your update functions
 
 ```ts
-import { combineTransforms, transformStringifyDates } from '@legendapp/state/sync'
+import { observable } from "@legendapp/state";
 const state$ = observable(synced({
     get: () => {/* ... */},
     transform: {
@@ -504,6 +508,7 @@ First choose and configure the storage plugin for your platform.
 ### Local Storage (React)
 
 ```js
+import { syncObservable } from "@legendapp/state/sync";
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 syncObservable(state$, {
@@ -526,6 +531,7 @@ It requires some extra configuration for the database name, the table names, and
 IndexedDB requires changing the version whenever the tables change, so you can start with version 1 and increment the version whenever you add/change tables.
 
 ```js
+import { observable } from "@legendapp/state";
 import { configureSynced, syncObservable } from "@legendapp/state/sync"
 import { observablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
 

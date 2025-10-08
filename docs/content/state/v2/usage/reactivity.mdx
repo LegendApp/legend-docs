@@ -157,7 +157,7 @@ observe(
 The predicate can either be an observable or a function.
 
 ```js
-import { when } from "@legendapp/state";
+import { observable, when } from "@legendapp/state";
 
 const state$ = observable({ ok: false });
 
@@ -179,7 +179,7 @@ dispose();
 `whenReady` is the same as `when` except it waits for objects and arrays to not be empty.
 
 ```js
-import { whenReady } from "@legendapp/state";
+import { observable, whenReady } from "@legendapp/state";
 
 const state$ = observable({ arr: [] });
 
@@ -196,6 +196,8 @@ state$.arr.push("hello");
 `onChange` listens to an observable for any changes anywhere within it. Use this as specifically as possible because it will fire notifications for every change recursively up the tree.
 
 ```js
+import { observable } from "@legendapp/state";
+
 const state$ = observable({ text: "hi" });
 
 state$.text.onChange(({ value }) => console.log("text changed to", value));

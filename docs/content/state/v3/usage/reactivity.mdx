@@ -62,7 +62,7 @@ dispose();
 `when` runs the given callback **only once** when the Selector returns a truthy value, and automatically tracks the observables accessed while running the Selector so it will update whenever one of them changes.
 
 ```js
-import { when } from "@legendapp/state";
+import { observable, when } from "@legendapp/state";
 
 const state$ = observable({ ok: false });
 
@@ -81,6 +81,8 @@ when(
 `onChange` listens to an observable for any changes anywhere within it. Use this as specifically as possible because it will fire notifications for every change recursively up the tree.
 
 ```js
+import { observable } from "@legendapp/state";
+
 const state$ = observable({ text: "hi" });
 
 state$.text.onChange(({ value }) => console.log("text changed to", value));

@@ -155,7 +155,7 @@ Its observables will not be automatically tracked for re-rendering, so you can t
 As with normal observables you can create a [computed observable](../usage/observable#computed-observables) by just using a function.
 
 ```jsx
-import { observer, useObservable } from "@legendapp/state/react"
+import { Memo, observer, useObservable } from "@legendapp/state/react"
 
 const Component = function Component() {
     const state$ = useObservable({
@@ -210,7 +210,7 @@ Simply set an observable as a Context value and consume it from a child componen
 
 ```tsx
 import { createContext, useContext } from "react"
-import { observer, useObservable } from "@legendapp/state/react"
+import { Memo, observer, useObservable } from "@legendapp/state/react"
 
 interface UserState {
     profile: {

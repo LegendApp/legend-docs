@@ -9,13 +9,19 @@ If you notice your components feeling too slow or seeming to render too often, t
 Call `useTraceListeners()` anywhere within `observer` or any React component to console.log a list of every observable being track for changes. This can help you find and reduce the number of listeners.
 
 ```jsx
+import { observable } from "@legendapp/state";
+import { observer, useValue } from "@legendapp/state/react";
 import { useTraceListeners } from "@legendapp/state/trace";
+
+const state$ = observable({ count: 0 });
 
 const Component = observer(function Component(props) {
   // Call useTraceListeners anywhere inside the component
   useTraceListeners();
 
-  return <div>{state.count.get()}</div>;
+  const count = useValue(state$.count);
+
+  return <div>{count}</div>;
 
   /* This logs:
 
@@ -31,13 +37,19 @@ const Component = observer(function Component(props) {
 Call `useTraceUpdates()` anywhere within `observer` or any React component to console.log information about the observable change that causes each render. This can help you track down why components are rendering too often.
 
 ```jsx
+import { observable } from "@legendapp/state";
+import { observer, useValue } from "@legendapp/state/react";
 import { useTraceUpdates } from "@legendapp/state/trace";
+
+const state$ = observable({ count: 0 });
 
 const Component = observer(function Component(props) {
   // Call useTraceUpdates anywhere inside the component
   useTraceUpdates();
 
-  return <div>{state.count.get()}</div>;
+  const count = useValue(state$.count);
+
+  return <div>{count}</div>;
 
   /* This logs:
 
@@ -54,14 +66,20 @@ const Component = observer(function Component(props) {
 Call `useVerifyNotTracking()` anywhere within any React component to console.error if it is tracking anything. This is useful if you are going for fine-grained reactivity and want to make sure parent components are not tracking any observables.
 
 ```jsx
+import { observable } from "@legendapp/state";
+import { Memo, observer, useValue } from "@legendapp/state/react";
 import { useVerifyNotTracking } from "@legendapp/state/trace";
+
+const state$ = observable({ count: 0 });
 
 const Component = observer(function Component(props) {
   // Call useVerifyNotTracking anywhere inside the component
   useVerifyNotTracking();
 
+  const count = useValue(state$.count);
+
   // This will log an error because get() makes it track
-  return <div>{state.count.get()}</div>;
+  return <div>{count}</div>;
 });
 const FineComponent = observer(function FineComponent(props) {
   // Call useVerifyNotTracking anywhere inside the component
@@ -69,7 +87,7 @@ const FineComponent = observer(function FineComponent(props) {
 
   // This will not log because rendering the observable directly
   // does not re-render this component
-  return <div>{state.count}</div>;
+  return <Memo>{state$.count}</Memo>;
 });
 ```
 
@@ -78,14 +96,20 @@ const FineComponent = observer(function FineComponent(props) {
 Call `useVerifyOneRender()` anywhere within any React component to console.error if it renders more than once. This is useful if you and want to make sure components are not rendered more than once.
 
 ```jsx
+import { observable } from "@legendapp/state";
+import { observer, useValue } from "@legendapp/state/react";
 import { useVerifyOneRender } from "@legendapp/state/trace";
+
+const state$ = observable({ count: 0 });
 
 const Component = observer(function Component(props) {
   // Call useVerifyOneRender anywhere inside the component
   useVerifyOneRender();
 
+  const count = useValue(state$.count);
+
   // This will log an error after one render when count is updated
-  return <div>{state.count.get()}</div>;
+  return <div>{count}</div>;
 });
 const Component = observer(function Component(props) {
   // Call useVerifyOneRender anywhere inside the component
@@ -93,7 +117,7 @@ const Component = observer(function Component(props) {
 
   // This will not log because `get(false)` does not track observable
   // does not re-render this component
-  return <div>{state.count.get(false)}</div>;
+  return <div>{state$.count.peek()}</div>;
 });
 ```
 

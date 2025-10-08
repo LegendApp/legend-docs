@@ -92,6 +92,7 @@ configureObservablePersistence({
 Then call `persistObservable` for each observable you want to persist.
 
 ```js
+import { observable } from "@legendapp/state";
 import { persistObservable } from '@legendapp/state/persist'
 
 const store$ = observable({ store: { bigObject: { ... } } })
@@ -114,7 +115,8 @@ It requires some extra configuration for the database name, the table names, and
 IndexedDB requires changing the version whenever the tables change, so you can start with version 1 and increment the version whenever you add/change tables.
 
 ```js
-import { persistObservable } from "@legendapp/state/persist"
+import { observable } from "@legendapp/state";
+import { configureObservablePersistence, persistObservable } from "@legendapp/state/persist"
 import { ObservablePersistIndexedDB } from "@legendapp/state/persist-plugins/indexeddb"
 
 configureObservablePersistence({
@@ -213,6 +215,7 @@ All you need to make a remote persistence plugin is a `get` and a `set` function
 - `set({ value, changes })`: Save the value somewhere, return a Promise.
 
 ```js
+import { observable } from "@legendapp/state";
 import { persistObservable } from "@legendapp/state/persist"
 
 const obs$ = persistObservable(
@@ -248,6 +251,7 @@ const obs$ = persistObservable(
 Try it in a [sandbox](https://codesandbox.io/s/legend-state-persist-fetch-jl723s?file=/src/App.tsx).
 
 ```js
+import { observable } from "@legendapp/state";
 import { persistObservable } from "@legendapp/state/persist"
 import { persistPluginQuery } from "@legendapp/state/persist-plugins/query"
 

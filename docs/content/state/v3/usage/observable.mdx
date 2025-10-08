@@ -269,6 +269,8 @@ selectedAll$.set(true)
 Or it could be used to automatically deserialize/serialize a string value.
 
 ```js
+import { observable } from "@legendapp/state";
+
 const str$ = observable('[1,2,3]')
 const arr$ = observable(linked({
   get: () => JSON.parse(str$.get())
@@ -281,6 +283,7 @@ const arr$ = observable(linked({
 When creating an asynchronous observable with a Promise you may want it to have an initial default value until the promise resolves. You can use the `initial` property of `linked` to do that.
 
 ```js
+import { observable } from "@legendapp/state";
 import { linked } from "@legendapp/state"
 
 const state$ = observable(linked({

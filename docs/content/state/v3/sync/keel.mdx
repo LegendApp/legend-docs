@@ -278,6 +278,7 @@ model Message {
 In the previous examples we provided the Keel function directly, but you can also provide your own function which calls the Keel action. That can be useful for adding extra query or creation options, such as with a [lookup table](../usage/observable#lookup-table).
 
 ```ts
+import { observable } from "@legendapp/state";
 import { mutations, queries, CreateProfileInput } from './keelClient'
 
 const profiles$ = observable({

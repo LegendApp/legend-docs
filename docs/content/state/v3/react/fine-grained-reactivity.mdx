@@ -13,6 +13,7 @@ Some teams may prefer to use Legend-State in a way that's more canonically React
 Use the `Memo` component to create a mini element that re-renders itself when it changes, without needing the parent component to re-render. This is the most basic and recomended way for using Legend-State with React. The children inside of `Memo` re-render themselves when the value changes, but the parent component does not re-render.
 
 ```jsx
+import { observable } from "@legendapp/state";
 import { Memo } from "@legendapp/state/react";
 
 const count$ = observable(0);
@@ -50,6 +51,7 @@ Legend State includes reactive versions of all of the DOM elements on the `$Reac
 
 ```jsx
 import { $React } from "@legendapp/state/react-web"
+import { useObservable } from "@legendapp/state/react";
 
 function Component() {
     // This component renders only once
@@ -89,6 +91,7 @@ Legend State includes reactive versions of all of the built-in React Native comp
 
 ```jsx
 import { View } from "react-native";
+import { useObservable } from "@legendapp/state/react";
 import { $View, $Text, $TextInput } from "@legendapp/state/react-native"
 
 function Component() {
@@ -325,7 +328,7 @@ function App() {
 In addition to wrapping your own functions, you can wrap external library components to make them reactive. In this example we make a [Framer Motion](https://www.framer.com/motion/) component reactive so that we can update its animations based on observables without needing to re-render the parent component or its children.
 
 ```js
-import { reactive } from "@legendapp/state/react";
+import { reactive, useObservable } from "@legendapp/state/react";
 import { motion } from "framer-motion";
 
 const $MotionDiv = reactive(motion.div);
@@ -379,7 +382,7 @@ function App() {
 `reactiveComponents` makes multiple reactive components at once. You can use this to create your own internal library of reactive components, or to wrap UI libraries that have multiple components in a namespace like `Modal.Header` and `Modal.Footer`.
 
 ```js
-import { reactiveComponents } from "@legendapp/state/react";
+import { reactiveComponents, useObservable } from "@legendapp/state/react";
 import { motion } from "framer-motion";
 
 const $Motion = reactiveComponents(motion);
