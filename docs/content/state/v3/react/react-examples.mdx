@@ -69,11 +69,16 @@ function App() {
   noInline={true}
   renderCode=";render(<App />)"
   previewWidth={210}
-  transformCode={(code) =>
-    code
-      .replace(/className="footer"/g, 'className="bg-zinc-600 text-center text-white text-sm overflow-hidden"')
-      .replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"')
-  }
+  transformExamples={[
+    {
+      pattern: 'className="footer"',
+      replacement: 'className="bg-zinc-600 text-center text-white text-sm overflow-hidden"',
+    },
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"',
+    },
+  ]}
 />
 
 ## Auto-saving Form
@@ -154,9 +159,12 @@ function Example() {
 }`}
   noInline={true}
   renderCode=";render(<App />)"
-  transformCode={(code) =>
-    code.replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2 mb-6"')
-  }
+  transformExamples={[
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2 mb-6"',
+    },
+  ]}
 />
 
 ## Form validating
@@ -243,11 +251,16 @@ function App() {
   noInline={true}
   renderCode=";render(<App />)"
   previewWidth={200}
-  transformCode={(code) =>
-    code
-      .replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"')
-      .replace(/className="error"/g, 'className="text-sm text-red-500 mb-2 pt-1"')
-  }
+  transformExamples={[
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"',
+    },
+    {
+      pattern: 'className="error"',
+      replacement: 'className="text-sm text-red-500 mb-2 pt-1"',
+    },
+  ]}
 />
 
 ## List of messages
@@ -323,11 +336,16 @@ function App() {
 }`}
   noInline={true}
   renderCode=";render(<App />)"
-  transformCode={(code) =>
-    code
-      .replace(/className="input"/g, 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"')
-      .replace(/className="messages"/g, 'className="h-64 p-2 my-3 overflow-auto border border-zinc-600 rounded [&>*]:!mt-2"')
-  }
+  transformExamples={[
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"',
+    },
+    {
+      pattern: 'className="messages"',
+      replacement: 'className="h-64 p-2 my-3 overflow-auto border border-zinc-600 rounded [&>*]:!mt-2"',
+    },
+  ]}
 />
 
 ## Animations with reactive props
@@ -390,11 +408,16 @@ function App() {
   noInline={true}
   renderCode=";render(<App />)"
   previewWidth={128}
-  transformCode={(code) =>
-    code
-      .replace(/className="toggle"/g, 'className="border border-[#717173] rounded-full select-none cursor-pointer"')
-      .replace(/className="thumb"/g, 'className="bg-white rounded-full shadow"')
-  }
+  transformExamples={[
+    {
+      pattern: 'className="toggle"',
+      replacement: 'className="border border-[#717173] rounded-full select-none cursor-pointer"',
+    },
+    {
+      pattern: 'className="thumb"',
+      replacement: 'className="bg-white rounded-full shadow"',
+    },
+  ]}
 />
 
 ## Show a modal with multiple pages
@@ -493,13 +516,24 @@ function App() {
   noInline={true}
   renderCode=";render(<App />)"
   previewWidth={220}
-  transformCode={(code) =>
-    code
-      .replace(/className="pageText"/g, 'className="flex-1 flex justify-center items-center"')
-      .replace(/className="pageButton"/g, 'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-zinc-600 hover:bg-zinc-500 !mt-0"')
-      .replace(/className="modal"/g, 'className="relative bg-zinc-700 rounded-xl flex flex-col p-4"')
-      .replace(/className="modalButtons"/g, 'className="flex justify-center gap-4"')
-  }
+  transformExamples={[
+    {
+      pattern: 'className="pageText"',
+      replacement: 'className="flex-1 flex justify-center items-center"',
+    },
+    {
+      pattern: 'className="pageButton"',
+      replacement: 'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-zinc-600 hover:bg-zinc-500 !mt-0"',
+    },
+    {
+      pattern: 'className="modal"',
+      replacement: 'className="relative bg-zinc-700 rounded-xl flex flex-col p-4"',
+    },
+    {
+      pattern: 'className="modalButtons"',
+      replacement: 'className="flex justify-center gap-4"',
+    },
+  ]}
 />
 
 ## Router

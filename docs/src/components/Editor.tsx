@@ -35,6 +35,13 @@ import { ExampleAnim } from './motion/ExampleAnim';
 import { IntroComponent } from './motion/IntroComponent';
 import { IntroUsageComponent } from './motion/IntroUsageComponent';
 
+type TransformExample = {
+    pattern: string;
+    replacement: string;
+    flags?: string;
+    mode?: 'literal' | 'regex';
+};
+
 interface Props {
     code: string;
     scope?: Record<string, unknown>;
@@ -51,6 +58,7 @@ interface Props {
     noError?: boolean;
     disabled?: boolean;
     transformCode?: (code: string) => string;
+    transformExamples?: TransformExample[];
     transformCodePreset?: string;
     removeClassNames?: boolean;
     previewCallout?: React.ReactNode;
@@ -283,6 +291,7 @@ export function Editor({
     classNameEditor,
     classNamePreview,
     transformCode,
+    transformExamples,
     hideCode = false,
     hideDemo = false,
     showEditing = true,
@@ -309,6 +318,29 @@ export function Editor({
     // Use transform function directly
     const transformFn = transformCode;
 
+    // Apply a set of literal or regex replacements to the code
+    const applyTransformExamples = (codeToTransform: string) => {
+        if (!transformExamples?.length) return codeToTransform;
+
+        return transformExamples.reduce((acc, { pattern, replacement, flags, mode }) => {
+            if (!pattern) return acc;
+
+            // Default to literal replacement to avoid accidental regex injection
+            if (mode === 'regex') {
+                try {
+                    const regex = new RegExp(pattern, flags ?? 'g');
+                    return acc.replace(regex, replacement);
+                } catch (error) {
+                    // Fall back to original value if regex fails to compile
+                    return acc;
+                }
+            }
+
+            // Literal replacement across entire string
+            return acc.split(pattern).join(replacement);
+        }, codeToTransform);
+    };
+
     // Transform function to replace document.title with setDocumentTitle
     const documentTitleTransform = (code: string) => {
         return code.replace(/document\.title\s*=\s*([^;\n]+)/g, 'requestAnimationFrame(() => setDocumentTitle($1))');
@@ -320,6 +352,7 @@ export function Editor({
             transformCode={(output) => {
                 let transformedOutput = removeImports(output);
                 if (removeClassNames) transformedOutput = removeClassNamesFromCode(transformedOutput);
+                transformedOutput = applyTransformExamples(transformedOutput);
                 if (transformFn) transformedOutput = transformFn(transformedOutput);
                 if (hasDocumentTitle) transformedOutput = documentTitleTransform(transformedOutput);
                 return transformedOutput + (renderCode || '');
