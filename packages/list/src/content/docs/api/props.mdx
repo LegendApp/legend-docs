@@ -520,8 +520,9 @@ scrollIndexIntoView(params: {
 ```
 
 ```jsx
-import { LegendList } from "@legendapp/list";
 import { useRef } from "react";
+import { Button } from "react-native";
+import { LegendList } from "@legendapp/list";
 
 export function ScrollExample() {
   const listRef = useRef(null);
@@ -556,8 +557,9 @@ scrollItemIntoView(params: {
 ```
 
 ```jsx
-import { LegendList } from "@legendapp/list";
 import { useRef } from "react";
+import { Button } from "react-native";
+import { LegendList } from "@legendapp/list";
 
 export function ScrollToItemExample() {
   const listRef = useRef(null);
@@ -622,9 +624,13 @@ useRecyclingEffect: <T>(effect: (info: LegendListRecyclingState<T>) => void | ((
 `useRecyclingEffect` can be used to reset any side effects when an item gets recycled.
 
 ```tsx
+import { useRef } from "react";
 import { useRecyclingEffect } from "@legendapp/list"
 
-export function ItemComponent({ item, useRecyclingEffect }) {
+export function ItemComponent({ item }) {
+    const refSwipeable = useRef(null);
+    const refVideo = useRef(null);
+
     // A callback when the item is recycled into a new item
     useRecyclingEffect(({ item, prevItem, index, prevIndex }) => {
         // Reset any side effects from the previous item
@@ -652,6 +658,8 @@ useViewability: (configId: string, callback: (viewToken: ViewToken) => void) => 
 A hook that provides callbacks when an item's viewability changes. This hook registers a callback that will be invoked whenever the item's visibility status changes, providing detailed information about the item through the ViewToken interface. It is similar to [onViewableItemsChanged](#onviewableitemschanged) but runs for only the rendering item. If you defined multiple viewability configs using [viewabilityConfigCallbackPairs](#viewabilityconfigcallbackpairs) then provide the id of the one you're interested in with `configId`.
 
 ```tsx
+import { useState } from "react";
+import { View, Text } from "react-native";
 import { useViewability } from "@legendapp/list"
 
 export function ItemComponent({ item }) {
@@ -697,6 +705,8 @@ useViewabilityAmount: (callback: (viewAmountToken: ViewAmountToken) => void) => 
 A hook that provides detailed metrics about how much of an item is visible in the viewport. The callback receives a ViewAmountToken with information like the pixel measurements (sizeVisible, size), percentage visible, and more.
 
 ```tsx
+import { useState } from "react";
+import { Animated, Text } from "react-native";
 import { useViewabilityAmount } from "@legendapp/list"
 
 export function ItemComponent({ item }) {
@@ -730,6 +740,7 @@ useSyncLayout: (callback: () => void) => void;
 A hook for synchronizing layout operations. This is useful for advanced use cases where you need to coordinate layout updates with other components or operations.
 
 ```tsx
+import { View, Text } from "react-native";
 import { useSyncLayout } from "@legendapp/list"
 
 export function ItemComponent({ item }) {

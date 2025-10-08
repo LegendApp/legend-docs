@@ -61,7 +61,7 @@ settings$.theme.set('light')
 
 // observing contexts re-run when tracked observables change
 observe(() => {
-  console.log(settings$.theme.get())
+    console.log(settings$.theme.get())
 })
 
 function Component() {

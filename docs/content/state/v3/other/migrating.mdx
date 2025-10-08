@@ -117,7 +117,10 @@ In React on web there is now a `$React` namespace that includes all of the DOM c
 #### Web
 
 ```tsx
+import { observable } from "@legendapp/state";
 import { $React } from "@legendapp/state/react-web"
+
+const state$ = observable({ age: 8 });
 
 function Component() {
     return (
@@ -131,7 +134,10 @@ function Component() {
 #### React Native
 
 ```tsx
+import { observable } from "@legendapp/state";
 import { $TextInput } from "@legendapp/state/react-native"
+
+const state$ = observable({ name: "Taylor" });
 
 function Component() {
     return (
@@ -215,6 +221,8 @@ Global configuration was confusing and restricting, so instead of a global `conf
 
 ```ts
 import { syncState } from "@legendapp/state"
+import { configureObservablePersistence, persistObservable } from "@legendapp/state/persist"
+import { ObservablePersistLocalStorage } from "@legendapp/state/local-storage"
 import { configureSynced, syncObservable } from "@legendapp/state/sync"
 // Change
 configureObservablePersistence({
@@ -358,6 +366,8 @@ In an earlier version reactive props ended with $ and were changed in version 1.
 A recommended way to find and replace all of instances of the old method is to find `$=` in all files.
 
 ```jsx
+import { Reactive, useObservable } from "@legendapp/state/react";
+
 function Component() {
   const text$ = useObservable("test");
   return (
@@ -381,7 +391,7 @@ In version 2 we locked down and cleaned up the interfaces for the remote persist
 
 To support taking an initial state or an observable, `persistObservable` needs to return both an observable and the syncState, so it now the observable with a `state` property on it, matching the Promise behavior.
 
-See [persistObservable](../../guides/persistence#persistobservable) for details.
+See [persistObservable](../guides/persistence#persistobservable) for details.
 
 ```js
 const { state } = persistObservable(initialStateOrObservable, { ... })
@@ -402,21 +412,19 @@ persistObservable(initialStateOrObservable, {
 
 #### Remote options renamed
 
-Since there were not any remote persistence plugins before, these changes would likely not affect you unless you made your own. See [Remote Persistence](../../guides/persistence#remote-persistence) for details.
+Since there were not any remote persistence plugins before, these changes would likely not affect you unless you made your own. See [Remote Persistence](../guides/persistence#remote-persistence) for details.
 
 ### observer, reactive, reactiveObserver not exported from react-components
 
 The `/react-components` export was mistakenly exporting `observer`, `reactive`, and `reactiveObserver` which are already exported from `/react`. Your editor may have automatically imported from `/react-components` so may need to be changed.
 
-```jsx
-// Change this:
-import {
-  observer,
-  reactive,
-  reactiveObserver,
-} from "@legendapp/state/react-components";
-// To this:
-import { observer, reactive, reactiveObserver } from "@legendapp/state/react";
+```diff
+-import {
+-  observer,
+-  reactive,
+-  reactiveObserver,
+-} from "@legendapp/state/react-components";
++import { observer, reactive, reactiveObserver } from "@legendapp/state/react";
 ```
 
 ### types.d.ts moved to types/babel.d.ts
@@ -486,7 +494,7 @@ They were previously checking if the value is "ready", meaning it doesn't count 
 
 ### IndexedDB preloader removed
 
-It was actually slower in our testing so we simplified things and just removed it. See [IndexedDB](../../guides/persistence#IndexedDB) for up-to-date docs.
+It was actually slower in our testing so we simplified things and just removed it. See [IndexedDB](../guides/persistence#IndexedDB) for up-to-date docs.
 
 ## 0.22 to 0.23
 
@@ -536,7 +544,7 @@ configureObservablePersistence({
 
 Update your import paths:
 
-```js
+```text
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 ```
@@ -601,25 +609,36 @@ We are deprecating the automatic observing that depended on hooking into React's
 So tracking observables in React can look like this now:
 
 ```jsx
+import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
 
+const state$ = observable({ value: 0 });
+
 const Component = observer(function Component() {
-  const value = observable.get();
+  const value = state$.value.get();
   // This tracks because it's inside an observer
+  console.log(value);
+  return null;
 });
 ```
 
 or
 
 ```jsx
+import { observable } from "@legendapp/state";
 import { useSelector } from "@legendapp/state/react";
+
+const todo$ = observable({ done: false });
 
 function Component() {
   // Track the value of an observable
-  const value = useSelector(observable);
+  const todo = useSelector(todo$);
 
   // Track the return value of a function
-  const isSelected = useSelector(() => id === state.selected.get());
+  const isDone = useSelector(() => todo$.done.get());
+
+  console.log(todo, isDone);
+  return null;
 }
 ```
 
@@ -641,15 +660,18 @@ You can still enable the previous behavior for now with `enableLegendStateReact(
 We now have a more general purpose way of making reactive props that can also be used for two-way binding for inputs. So change:
 
 ```jsx
-<Bindable.input bind={observable} />
+<Bindable.input bind={state$} />
 ```
 
 to
 
 ```jsx
+import { observable } from "@legendapp/state";
 import { Legend } from "@legendapp/state/react-components";
 
-<legend.input value$={observable} />;
+const state$ = observable("");
+
+<Legend.input value$={state$} />;
 ```
 
 See [reactive props](../react/fine-grained-reactivity) for more detauls.
@@ -688,7 +710,7 @@ Observables previously tried to be clever by returning primitives directly, whic
 - Pro: More consistent
 - Pro: Easier to deal with undefined
 - Pro: Can dot through undefined paths easily
-- Pro: Doesn't need `obs()` or set by key
+- Pro: Doesn’t need `obs()` or set by key
 - Pro: Easier to use fine-grained features without `obs()` everywhere
 - Pro: Easier to pass as props without needing `obs()`
 - Con: Requires `get()` for primitives
@@ -772,15 +794,18 @@ const textObs2 = obs.text.obs();
 The array optimizations are now opt-in, because they are only useful in React and can potentially have some unexpected behavior in React if modifying the DOM externally. You can enable them by using the `For` component with the `optimized` prop. See [Arrays](../arrays) for more.
 
 ```jsx
-const obs = observable({ items: [] });
+import { observable } from "@legendapp/state";
+import { For, observer } from "@legendapp/state/react";
 
-const Row = observer(function Row({ item }) {
-  return <div>{item.text}</div>;
+const list$ = observable({ items: [{ text: "First" }] });
+
+const Row = observer(function Row({ item$ }) {
+  return <div>{item$.text.get()}</div>;
 });
 
-const List = observer(function () {
+const List = observer(function List() {
   // The optimized prop enables the optimizations which were previously default
-  return <For each={list} item={Row} optimized />;
+  return <For each={list$.items} item={Row} optimized />;
 });
 ```
 
@@ -789,7 +814,7 @@ const List = observer(function () {
 Since there's now a additionally the `optimized` tracking for arrays, the shallow option on `get()` and `obs()` now has another option. So instead of passing `shallow` to an observable, use the `Tracking` namespace now.
 
 ```js
-import { Tracking } from "@legendapp/state";
+import { observable, Tracking } from "@legendapp/state";
 
 const obs = observable([]);
 
@@ -805,19 +830,22 @@ obs.get(Tracking.shallow);
 The `observableBatcher` namespace is removed and the batching functions are now exported on their own.
 
 ```js
-import { batch, beginBatch, endBatch } from '@legendapp/state'
+import { batch, beginBatch, endBatch, observable } from '@legendapp/state'
+
+const obs1 = observable(0);
+const obs2 = observable(0);
 
 // begin/end
 beginBatch()
-obs1.set(...)
-obs2.set(...)
+obs1.set((value) => value + 1)
+obs2.set((value) => value + 1)
 endBatch()
 
 // batch()
 batch(() => {
-    obs1.set(...)
-    obs2.set(...)
-}
+    obs1.set((value) => value + 1)
+    obs2.set((value) => value + 1)
+})
 ```
 
 ### Change functions => observe/when
@@ -825,9 +853,10 @@ batch(() => {
 The new `observe` and `when` functions can automatically track all observables accessed while running them. This made the old extra change utilities unnecessary, so `onTrue`, `onHasValue`, `onEquals`, and `onChangeShallow` have been removed, saving 200 bytes (7%) from the bundle size. These are the new equivalents:
 
 ```js
-import { observe, when } from "@legendapp/state";
+import { observe, when, observable } from "@legendapp/state";
 
 const obs = observable({ value: undefined });
+const handler = () => {};
 
 // onTrue
 obs.value.onTrue(handler);
@@ -848,6 +877,11 @@ when(() => obs.value === "text", handler);
 obs.value.onChangeShallow(handler);
 // onChangeShallow equivalent
 obs.value.onChange(handler, { shallow: true });
+
+// Generic observe example
+observe(() => {
+  obs.value.get();
+});
 ```
 
 ### Primitive current => value
@@ -855,6 +889,8 @@ obs.value.onChange(handler, { shallow: true });
 Primitive observables are now wrapped in `{ value }` instead of `{ current }`. You can also now modify the `value` directly.
 
 ```js
+import { observable } from "@legendapp/state";
+
 const obs = observable(10);
 // Before
 obs.current === 10;
@@ -869,24 +905,24 @@ obs.value = 20; // ✅ Works
 `observableComputed` is now just `computed` and `observableEvent` is now just `event`.
 
 ```js
-import { computed, event } from '@legendapp/state'
+import { computed, event, observableComputed, observableEvent } from "@legendapp/state";
 
 // Before
-const value = observableComputed(() => ...)
+const legacyValue = observableComputed(() => 0);
 // Now
-const value = computed(() => ...)
+const value = computed(() => legacyValue.get());
 
 // Before
-const evt = observableEvent(() => ...)
+const legacyEvent = observableEvent(() => {});
 // Now
-const evt = event(() => ...)
+const evt = event(() => legacyEvent());
 ```
 
 ### Renamed LS to Bindable
 
 The automatically bound exports are now named better and in their own exports, so change your exports from `LS` to:
 
-```js
+```text
 // Web
 import { Bindable } from "@legendapp/state/react-components";
 
@@ -903,6 +939,8 @@ The control flow component `Isolate` is renamed to `Computed` for naming consist
 We found these confusing in practice as it wasn't super clear when a component was getting memoized, and it's not much extra work to use the Memo and Computed components directly. If you were using those, switch to the Computed and Memo components instead
 
 ```jsx
+import { Computed, Memo } from "@legendapp/state/react";
+
 // Before
 <div memo>...</div>
 <div computed>...</div>

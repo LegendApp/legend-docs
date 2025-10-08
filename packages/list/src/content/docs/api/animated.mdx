@@ -10,6 +10,8 @@ sidebar:
 AnimatedLegendList supports animated props with React Native's Animated.
 
 ```jsx
+import { useEffect, useRef } from "react";
+import { Animated } from "react-native";
 import { AnimatedLegendList } from "@legendapp/list/animated";
 
 export function AnimatedExample() {
@@ -44,6 +46,7 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 The Reanimated version of AnimatedLegendList supports animated props with Renimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
 
 ```jsx
+import { useEffect } from "react";
 import { AnimatedLegendList } from "@legendapp/list/reanimated";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
 
