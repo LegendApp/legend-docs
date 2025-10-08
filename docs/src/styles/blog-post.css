@@ -5,3 +5,8 @@
 .blog-post h3 {
     font-size: 1.5em;
 }
+
+.blog-post code .line {
+    font-size: 12px;
+    --padding-right: 16px;
+}

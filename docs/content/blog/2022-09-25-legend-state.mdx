@@ -79,7 +79,7 @@ function TreeLeaf({ count, observable }: any) {
 function TreeLeft({ count, observable }: any) {
     const renderCount = ++useRef(-1).current;
     return (
-        <FlashingDiv className="w-48 p-4 bg-zinc-800 border border-zinc-600 rounded">
+        <FlashingDiv className="w-48 p-4 bg-fd-secondary border border-zinc-600 rounded">
             <div className="font-bold">Intermediate</div>
             <div className="pt-2 pb-4">Renders: {Math.max(renderCount, 1)}</div>
             <TreeLeaf count={count} observable={observable} />
@@ -90,7 +90,7 @@ function TreeLeft({ count, observable }: any) {
 function TreeRight() {
     const renderCount = ++useRef(-1).current;
     return (
-        <FlashingDiv className="p-4 bg-zinc-800 border border-zinc-600 rounded">
+        <FlashingDiv className="p-4 bg-fd-secondary border border-zinc-600 rounded">
             <div className="font-bold">Unrelated element</div>
             <div className="pt-2">Renders: {Math.max(renderCount, 1)}</div>
         </FlashingDiv>
@@ -153,6 +153,8 @@ We found that we could improve this without even changing React itself, but with
 So we built Legend-State to rethink the way we write React code. Rather than constantly re-rendering everything and working around it, components own the state they care about and re-render themselves when needed. Taking that even farther, the individual DOM nodes (or React Native Views) at the smallest and lowest level manage their own updating, so components never re-render.
 
 <TwoExamples
+title1="Normal React"
+title2="Legend State"
   code1={`
 // Normal React - renders every time
 function HooksCount() {
@@ -191,7 +193,7 @@ function BasicPrimitive() {
         return (
             <div className="text-sm" style={{ width: 240 }}>
                 <FlashingDiv>
-                    <div className="p-4 bg-zinc-900 border rounded-lg border-fd-border">
+                    <div className="p-4 border rounded-lg border-fd-border">
                         <div className="pb-4 font-bold text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
                         <div>Count: {count}</div>
                     </div>
@@ -211,12 +213,12 @@ function BasicPrimitive() {
 
         return (
             <div className="text-sm" style={{ width: 240 }}>
-                <div className="p-4 bg-zinc-900 border rounded-lg border-fd-border">
+                <div className="p-4 bg-fd-card border rounded-lg border-fd-border">
                     <div className="pb-4 font-bold text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
                     <div>
                         Count:{' '}
                         <Memo>{() => (
-                            <FlashingDiv span className="bg-zinc-900">
+                            <FlashingDiv span className="bg-fd-card">
                                 {count.get()}
                             </FlashingDiv>
                         )}</Memo>
@@ -242,73 +244,137 @@ The conventional approach to optimizing React is to extract subtrees of JSX into
 
 But still, it's just so cumbersome and time-consuming to do that everywhere, and it often isn't even possible.
 
-Legend-State solves this with a `Computed` component, which isolates usage tracking away from the parent. Anything inside a `Computed` runs in its own state context, so the parent component never has to update.
+Legend-State solves this with a `Memo` component, which isolates usage tracking away from the parent. Anything inside a `Memo` runs in its own state context, so the parent component never has to update.
 
-Computed is a broad brush so we also have some more purposeful components like `Show`, `Switch`, `For`, and two-way binding with reactive props. These can be combined to optimize renders to only the tiniest elements that truly need updating.
+Memo is a broad brush so we also have some more purposeful components like `Show`, `Switch`, `For`, and two-way binding with reactive props. These can be combined to optimize renders to only the tiniest elements that truly need updating.
 
-<Editor
-  code={`
+<TwoExamples
+title1="Normal React"
+title2="Legend State"
+  code1={`
 // Normal React - This component renders every time
 function HooksModal() {
-  const [showChild, setShowChild] = useState(false)
+    const [showChild, setShowChild] = useState(false)
 
-  useInterval(() => {
-    setShowChild(value => !value)
-  }, 1000)
+    useInterval(() => {
+        setShowChild(value => !value)
+    }, 1000)
 
-  return (
-    <div>
-      <span>Showing child: </span>
+    return (
+      <div>
+        <span>Showing child: </span>
 
-      {/* Conditional className and text */}
-      <span
-        className={showChild ? 'text-blue' : ''}
-      >
-        {showChild ? 'true' : 'false'}
-      </span>
+        {/* Conditional className and text */}
+        <span
+          className={showChild ? 'text-blue' : ''}
+        >
+          {showChild ? 'true' : 'false'}
+        </span>
 
-      {/* Conditional render */}
-      {showChild && (
-        <div>Child element</div>
-      )}
-    </div>
-  )
+        {/* Conditional render */}
+        {showChild && (
+          <div>Child element</div>
+        )}
+        </div>
+    )
 }
-
+`}
+  code2={`
 // Legend-State - This component renders once
 function LegendStateModal() {
-  const showChild = useObservable(false)
+    const showChild = useObservable(false)
 
-  useInterval(() => {
-    showChild.toggle()
-  }, 1000)
+    useInterval(() => {
+        showChild.toggle()
+    }, 1000)
 
-  return (
-    <div>
-      <span>Showing child: </span>
+    return (
+      <div>
+        <span>Showing child: </span>
 
-      {/* Runs in a separate tracking context */}
-      <Computed>
-        <span
-          className={showChild.get() ? 'text-blue' : ''}
-        >
-          {showChild.get() ? 'true' : 'false'}
-        </span>
-      </Computed>
+        {/* Runs in separate tracking context */}
+        <Memo>
+          <span
+            className={() =>
+              showChild.get() ? 'text-blue' : ''}
+          >
+            {showChild.get() ? 'true' : 'false'}
+          </span>
+        </Memo>
 
-      {/* Conditional runs in separate context */}
-      <Show if={showChild}>
-        <div>Child element</div>
-      </Show>
-    </div>
-  )
+        {/* Runs in separate tracking context */}
+        <Show if={showChild}>
+          <div>Child element</div>
+        </Show>
+      </div>
+    )
+}
+`}
+codePreview1={`
+function Preview() {
+    const renderCount = ++useRef(-1).current;
+    const [showChild, setShowChild] = useState(false);
+
+    useInterval(() => {
+        setShowChild((value) => !value);
+    }, 1000);
+
+    return (
+        <FlashingDiv className="w-56 p-4 border rounded-lg border-fd-border">
+            <div className="pb-4 font-bold text-fd-muted-foreground text-xs">Renders: {Math.max(renderCount, 1)}</div>
+            <div>
+                <span>Showing child: </span>
+                <span className={showChild ? 'text-blue-accent' : ''}>{showChild ? 'true' : 'false'}</span>
+                <div className="h-20 pt-4">
+                    {showChild && (
+                        <FlashingDiv className="px-4 py-2 text-center bg-fd-secondary border border-fd-border rounded-lg">
+                            Child element
+                        </FlashingDiv>
+                    )}
+                </div>
+            </div>
+        </FlashingDiv>
+    );
+}
+`}
+codePreview2={`
+function Preview() {
+    const renderCount = ++useRef(-1).current;
+    const showChild = useObservable(false);
+
+    useInterval(() => {
+        showChild.set((value) => !value);
+    }, 1000);
+
+    return (
+        <FlashingDiv className="w-56 p-4 border rounded-lg border-fd-border">
+            <div className="pb-4 font-bold text-fd-muted-foreground text-xs">Renders: {Math.max(renderCount, 1)}</div>
+            <div>
+                <span>Showing child: </span>
+                <Memo>
+                    {() => (
+                        <FlashingDiv span>
+                        <span className={showChild.get() ? 'text-blue-accent' : ''}>
+                            {showChild.get() ? 'true' : 'false'}
+                        </span>
+                    </FlashingDiv>
+                    )}
+                </Memo>
+                <div className="h-20 pt-4">
+                    <Show if={showChild}>
+                        <FlashingDiv className="px-4 py-2 text-center bg-fd-secondary border border-fd-border rounded-lg">
+                            Child element
+                        </FlashingDiv>
+                    </Show>
+                </div>
+            </div>
+        </FlashingDiv>
+    );
 }
 `}
   noInline={true}
-  renderCode=";render(<div><HooksModal /><div style={{marginTop: '20px'}} /><LegendStateModal /></div>)"
+  renderCode=";render(<div><Preview /></div>)"
 />
-
-<div className="text-center pb-4" style={{ marginTop: -16 }}><a href="https://codesandbox.io/s/legend-state-modal-0ygrrf" target="_blank">Try in a CodeSandbox</a></div>
 
 Components using this fine-grained rendering get a massive performance improvement by rendering less, less often. No matter how fast a Virtual DOM is, it's always faster to do less work.
 
@@ -378,8 +444,6 @@ function LegendStateName() {
   renderCode=";render(<div><HooksName /><div style={{marginTop: '20px'}} /><LegendStateName /></div>)"
 />
 
-<div className="text-center pb-4" style={{ marginTop: -16 }}><a href="https://codesandbox.io/s/legend-state-observe-title-ph1hbb" target="_blank">Try in a CodeSandbox</a></div>
-
 We find this much easier to reason about. There are no dependency arrays or extra hooks to keep things stable between renders. All that matters is when state changes, you do something. Cause => Effect.
 
 ## Optimized by default
@@ -441,8 +505,6 @@ function LegendTree() {
   noInline={true}
   renderCode=";render(<div><HooksTree /><div style={{marginTop: '20px'}} /><LegendTree /></div>)"
 />
-
-<div className="text-center pb-4" style={{ marginTop: -16 }}><a href="https://codesandbox.io/s/legend-state-tree-03bggb" target="_blank">Try in a CodeSandbox</a></div>
 
 This is of course much faster, but perhaps more importantly it lets us focus on making our apps and spend less time optimizing and figuring out dependency arrays and dealing with stale variables and making sure props don't change.
 
@@ -582,8 +644,6 @@ function LegendStateChat() {
   noInline={true}
   renderCode=";render(<div><HooksChat /><div style={{marginTop: '20px'}} /><LegendStateChat /></div>)"
 />
-
-<div className="text-center pb-4" style={{ marginTop: -16 }}><a href="https://codesandbox.io/s/legend-state-chat-8jebe4" target="_blank">Try in a CodeSandbox</a></div>
 
 As you type into the input in the normal version it re-renders the whole component and every child element on every keystroke, including every single item in the list.
 

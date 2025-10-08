@@ -33,12 +33,22 @@ import { ExampleAnim } from './motion/ExampleAnim';
 import { IntroComponent } from './motion/IntroComponent';
 import { IntroUsageComponent } from './motion/IntroUsageComponent';
 import { FlashingDiv } from '@/components/state/home/FlashingDiv';
+import {
+    CodeBlock,
+    CodeBlockTab,
+    CodeBlockTabs,
+    CodeBlockTabsList,
+    CodeBlockTabsTrigger,
+    Pre,
+} from 'fumadocs-ui/components/codeblock';
 
 interface Props {
     code1: string;
     code2: string;
     codePreview1: string;
     codePreview2: string;
+    title1?: string;
+    title2?: string;
     scope?: Record<string, unknown>;
     name?: string;
     noInline?: boolean;
@@ -46,7 +56,6 @@ interface Props {
     previewWidth?: number;
     classNameCode?: string;
     classNamePreview?: string;
-    inBox?: boolean;
     hideCode?: boolean;
     hideDemo?: boolean;
     noError?: boolean;
@@ -247,6 +256,8 @@ export function TwoExamples({
     code2,
     codePreview1,
     codePreview2,
+    title1,
+    title2,
     scope = {},
     name,
     previewWidth,
@@ -260,18 +271,9 @@ export function TwoExamples({
     noError = false,
     disabled = false,
     removeClassNames = false,
-    inBox = false,
 }: Props) {
     // Add setDocumentTitle to scope when document.title is used
     const mergedScope = { ...defaultScope, ...scope };
-
-    // Transform function to replace document.title with setDocumentTitle
-    const createDocumentTitleTransform = (setDocumentTitleFn: string) => (code: string) => {
-        return code.replace(
-            /document\.title\s*=\s*([^;\n]+)/g,
-            `requestAnimationFrame(() => ${setDocumentTitleFn}($1))`,
-        );
-    };
 
     const processCode = (code: string) => {
         let transformedOutput = removeImports(code);
@@ -281,18 +283,32 @@ export function TwoExamples({
     };
 
     return (
-        <div className="space-y-4">
+        <div>
             {/* Code blocks side by side */}
             {!hideCode && (
-                <div className="flex gap-4 text-sm">
+                <div className="flex gap-4 text-xs">
                     <div className={classNames('relative flex-1', classNameCode)}>
                         <div className="rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
-                            <DynamicCodeBlock lang="tsx" code={code1} />
+                            <CodeBlockTabs defaultValue="value">
+                                <CodeBlockTabsList>
+                                    <div className="p-2 font-bold text-fd-muted-foreground">{title1}</div>
+                                </CodeBlockTabsList>
+                                <CodeBlockTab value="value" asChild>
+                                    <DynamicCodeBlock lang="tsx" code={code1.trim()} />
+                                </CodeBlockTab>
+                            </CodeBlockTabs>
                         </div>
                     </div>
                     <div className={classNames('relative flex-1', classNameCode)}>
                         <div className="rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
-                            <DynamicCodeBlock lang="tsx" code={code2} />
+                            <CodeBlockTabs defaultValue="value">
+                                <CodeBlockTabsList>
+                                    <div className="p-2 font-bold text-fd-muted-foreground">{title2}</div>
+                                </CodeBlockTabsList>
+                                <CodeBlockTab value="value" asChild>
+                                    <DynamicCodeBlock lang="tsx" code={code2.trim()} />
+                                </CodeBlockTab>
+                            </CodeBlockTabs>
                         </div>
                     </div>
                 </div>

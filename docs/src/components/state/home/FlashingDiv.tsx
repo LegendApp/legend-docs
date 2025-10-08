@@ -44,7 +44,7 @@ export function FlashingDiv({
             <span
                 className={classNames(
                     'relative z-10 rounded-lg',
-                    bg || 'bg-zinc-800',
+                    bg || 'bg-fd-card',
                     pad && 'p-4',
                     span ? 'px-2' : 'block',
                     className,
