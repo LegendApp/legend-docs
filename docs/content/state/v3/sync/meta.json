@@ -1,0 +1,4 @@
+{
+    "title": "Sync",
+    "pages": ["persist-sync", "crud", "fetch", "supabase", "tanstack-query", "keel"]
+}

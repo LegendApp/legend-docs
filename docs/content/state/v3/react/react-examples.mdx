@@ -44,7 +44,7 @@ function App() {
   )
 
   return (
-    <Box>
+    <Box className="flex flex-col gap-y-3">
       <div>Renders: {renderCount}</div>
       <div>Username:</div>
       <$React.input
@@ -137,7 +137,7 @@ function Example() {
   })
 
   return (
-    <Box>
+    <Box className="flex flex-col gap-y-3">
       <div>
         Renders: {renderCount}
       </div>
@@ -162,7 +162,7 @@ function Example() {
   transformExamples={[
     {
       pattern: 'className="input"',
-      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2 mb-6"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"',
     },
   ]}
 />
@@ -216,7 +216,7 @@ function App() {
   }
 
   return (
-    <Box>
+    <Box className="flex flex-col gap-y-3">
       <div>Renders: {renderCount}</div>
       <div>Username:</div>
       <$React.input
@@ -254,7 +254,7 @@ function App() {
   transformExamples={[
     {
       pattern: 'className="input"',
-      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"',
     },
     {
       pattern: 'className="error"',
@@ -310,7 +310,7 @@ function App() {
   }
 
   return (
-    <Box>
+    <Box className="flex flex-col gap-y-3">
       <div>Renders: {renderCount}</div>
       <Show if={userName} else={<div>Loading...</div>}>
         <div>Chatting with <Memo>{userName}</Memo></div>
@@ -396,7 +396,7 @@ function App() {
 ))
 
   return (
-    <Box>
+    <Box className="flex flex-col gap-y-3">
       <div>Renders: {renderCount}</div>
       <div>
         Enabled: <Memo>{text$}</Memo>

@@ -1,7 +1,4 @@
 {
-  "title": "Other",
-  "pages": [
-    "other-frameworks",
-    "migrating"
-  ]
+    "title": "Other",
+    "pages": ["migrating", "other-frameworks"]
 }

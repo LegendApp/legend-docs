@@ -35,7 +35,7 @@ First you most likely want to set a global configuration for which plugins to us
 
 First choose and configure the storage plugin for your platform.
 
-##### Local Storage (React)
+### Local Storage (React)
 
 ```js
 import { configureObservablePersistence } from '@legendapp/state/persist'
@@ -47,7 +47,7 @@ configureObservablePersistence({
 })
 ```
 
-##### IndexedDB (React)
+### IndexedDB (React)
 
 ```js
 import { configureObservablePersistence } from '@legendapp/state/persist'
@@ -59,7 +59,7 @@ configureObservablePersistence({
 })
 ```
 
-##### MMKV (React Native)
+### MMKV (React Native)
 ```js
 import { configureObservablePersistence } from '@legendapp/state/persist'
 import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv'
@@ -71,7 +71,7 @@ configureObservablePersistence({
 })
 ```
 
-##### AsyncStorage (React Native)
+### AsyncStorage (React Native)
 ```js
 import { configureObservablePersistence } from '@legendapp/state/persist'
 import { ObservablePersistAsyncStorage } from '@legendapp/state/persist-plugins/async-storage'

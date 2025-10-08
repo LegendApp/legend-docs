@@ -235,11 +235,11 @@ const messages$ = observable({
 
 Using Legend-State with Keel puts some requirements on your model structure:
 
-##### 1. id parameter in create actions
+### 1. id parameter in create actions
 
 Because Legend-State generate ids locally, `id` needs to be include in create functions in your Keel models. You can make it optional if you may sometimes not create with an id.
 
-##### 2. Include all possibly changeable fields as optional in create/update actions
+### 2. Include all possibly changeable fields as optional in create/update actions
 
 This plugin sends updates with only the changed fields, so having some fields as required in update could cause the update action to fail. And if it changes any field that's not included in the action, that will also fail.
 
@@ -249,11 +249,11 @@ So we suggest:
 - **create** actions should have required fields required and include all other fields as optional
 - **update** actions should include all changeable fields as optional
 
-##### 3. Include updatedAt? in list actions
+### 3. Include updatedAt? in list actions
 
 This is only needed if you're using `changesSince: 'last-sync'`. See [sync only diffs](#sync-only-diffs).
 
-##### Example model structure
+### Example model structure
 
 ```
 model Message {
