@@ -10,6 +10,7 @@
 .blog-post .prism-code .token-line {
     font-size: 12px;
     --padding-right: 16px;
+    line-height: 1.6 !important;
 }
 
 .blog-post .prism-code {
