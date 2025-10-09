@@ -6,16 +6,16 @@ author: Legend Team
 
 We love React and we've been very happily using it since 2015, but the dev experience and performance has always been held back by one fundamental flaw. We think we've found a way to solve it, to make React both:
 
-<div className="text-md font-bold text-zinc-100">
-1. <span className="text-lg mr-2">⚡️</span> Much faster
-2. <span className="text-lg mr-2">🦄</span> Much easier to use
+<div className="text-xl font-bold text-zinc-100">
+1. <span className="mr-2">⚡️</span> Much faster
+2. <span className="text-xl mr-2">🦄</span> Much easier to use
 </div>
 
 For all of its benefits and wonderful ecosystem, developing with React can feel needlessly complex, and React apps can be slow if you don't optimize correctly. We've found two main issues that can be much improved:
 
-<div className="text-md font-bold text-zinc-100">
-1. <span className="text-lg mr-2">🐢</span> It's slow by default
-2. <span className="text-lg mr-2">🤯</span> Hooks are too complex
+<div className="text-xl font-bold text-zinc-100">
+1. <span className="text-xl mr-2">🐢</span> It's slow by default
+2. <span className="text-xl mr-2">🤯</span> Hooks are too complex
 </div>
 
 Of course React can be very fast, but achieving good performance requires wrapping components in `memo`, carefully ensuring props to children don't change with `useCallback` or `useMemo`, and managing dependency arrays. Hooks were a big step up from classes but they still create a lot of complexity. Making sure you're not using stale data, that variables are persistent across renders, and that dependency arrays do what you expect are a big nuisance that cause terrible bugs if you get it wrong.
@@ -140,7 +140,7 @@ The responsibility is on us developers to make it performant, to use `memo` to p
 
 The built-in hooks like `useCallback`, `useMemo`, `useRef`, `useState`, etc... exist for the sole purpose of keeping data consistent between renders. Dependency arrays make it your responsibility to tell React on which renders effects should run. Prop-drilling can obviate the benefit of `memo` so there's another workaround, Context, which adds another layer (or many nested layers) of complexity.
 
-An enormous amount of the React experience is in compensating for the fact that components are constantly re-rendering, and those complex workarounds are the source of much of the mental overhead 🤯.
+An enormous amount of the React experience is compensating for the fact that components are constantly re-rendering, and those complex workarounds are the source of much of the mental overhead 🤯.
 
 We've seen a lot of really cool new frameworks with different approaches to the rendering model solving some of these problems, like [Solid](https://www.solidjs.com/) and [Svelte](https://svelte.dev/). But we really love the React ecosystem and React Native, so we tried to solve it within React.
 
@@ -429,7 +429,6 @@ function HooksName() {
 function LegendStateName() {
   // Trigger when name changes
   useObserve(() => {
-    debugger;
     console.log('it changed', profile$.name.get())
     document.title = \`Hello \${profile$.name.get()}\`
   })
@@ -441,7 +440,17 @@ function LegendStateName() {
 }
 `}
   noInline={true}
-  renderCode=";render(<div><HooksName /><div style={{marginTop: '20px'}} /><LegendStateName /></div>)"
+  renderCode=";render(<Box className='flex flex-col gap-y-3'><HooksName /><LegendStateName /></Box>)"
+  transformExamples={[
+    {
+      pattern: '<input value={name} onChange={onInputChange} />',
+      replacement: '<input className="border border-zinc-400 rounded-lg px-3 py-2" value={name} onChange={onInputChange} />'
+    },
+    {
+      pattern: '<$React.input $value={profile$.name} />',
+      replacement: '<$React.input className="border border-zinc-400 rounded-lg px-3 py-2" $value={profile$.name} />'
+    }
+  ]}
 />
 
 We find this much easier to reason about. There are no dependency arrays or extra hooks to keep things stable between renders. All that matters is when state changes, you do something. Cause => Effect.
@@ -452,17 +461,19 @@ Combining all of the techniques we've discussed so far, React development become
 
 Revisiting the example from the beginning, the Legend-State version renders each component only once, because only the text of the count needs to change. You'll notice they're exactly the same except for `useObservable` instead of `useState`. We don't have to do anything crazy here. We don't even have to `memo` every component to optimize because they only render one time. It's just optimized by default without thinking about it.
 
-<Editor
-  code={`
+<TwoExamples
+title1="Normal React"
+title2="Legend State"
+  code1={`
 // Normal React components
 function HooksTreeLeaf({ count }) {
-  return <div>Count: {count}</div>
+  return <Box>Count: {count}</Box>
 }
 function HooksTreeLeft({ count }) {
   return <HooksTreeLeaf count={count} />
 }
 function HooksTreeRight() {
-  return <div>Unrelated element</div>
+  return <Box>Unrelated element</Box>
 }
 function HooksTree() {
   const [count, setCount] = useState(1)
@@ -472,21 +483,22 @@ function HooksTree() {
   }, 600)
 
   return (<>
-    <div>Count: {count}</div>
+    <Box>Count: {count}</Box>
     <HooksTreeLeft count={count} />
     <HooksTreeRight />
   </>)
 }
-
+`}
+  code2={`
 // Legend-State components
 function LegendTreeLeaf({ $count }) {
-  return <div>Count: <Memo>{$count}</Memo></div>
+  return <Box>Count: <Memo>{$count}</Memo></Box>
 }
 function LegendTreeLeft({ $count }) {
   return <LegendTreeLeaf $count={$count} />
 }
 function LegendTreeRight() {
-  return <div>Unrelated element</div>
+  return <Box>Unrelated element</Box>
 }
 function LegendTree() {
   const count = useObservable(1)
@@ -496,14 +508,160 @@ function LegendTree() {
   }, 600)
 
   return (<>
-    <div>Count: <Memo>{count}</Memo></div>
+    <Box>Count: <Memo>{count}</Memo></Box>
     <LegendTreeLeft $count={count} />
     <LegendTreeRight />
   </>)
 }
 `}
+  codePreview1={`
+function HooksTreeLeaf({ count }) {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv pad className="border border-zinc-700 text-sm w-full">
+            <div className="font-bold text-xs">Leaf</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="pt-2">Count: {count}</div>
+        </FlashingDiv>
+    );
+}
+
+function HooksTreeLeft({ count }) {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv pad bg="bg-fd-card" className="border border-fd-border text-sm w-full">
+            <div className="font-bold text-xs">Intermediate</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="pt-3">
+                <HooksTreeLeaf count={count} />
+            </div>
+        </FlashingDiv>
+    );
+}
+
+function HooksTreeRight() {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv pad bg="bg-fd-card" className="border border-fd-border text-sm w-full">
+            <div className="font-bold text-xs">Unrelated element</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+        </FlashingDiv>
+    );
+}
+
+function HooksTree() {
+    const renderCount = ++useRef(-1).current;
+    const [count, setCount] = useState(1);
+
+    useInterval(() => {
+        setCount((v) => v + 1);
+    }, 600);
+
+    return (
+        <FlashingDiv pad className="border border-zinc-700 rounded-lg w-80 text-sm">
+            <div className="font-bold">Normal React tree</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="pt-2">Count: {count}</div>
+            <div className="flex gap-3 pt-4 items-start">
+                <HooksTreeLeft count={count} />
+                <HooksTreeRight />
+            </div>
+        </FlashingDiv>
+    );
+}
+
+function Preview() {
+    return (
+        <div className="flex justify-center">
+            <HooksTree />
+        </div>
+    );
+}
+`}
+  codePreview2={`
+function LegendTreeLeaf({ $count }) {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv pad bg="bg-fd-card" className="border border-fd-border text-sm w-full">
+            <div className="font-bold text-xs">Leaf</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="pt-2 leading-loose">
+                Count:{' '}
+                <Memo>
+                    {() => (
+                        <FlashingDiv span className="inline-flex rounded bg-fd-secondary px-2 py-1">
+                            {$count.get()}
+                        </FlashingDiv>
+                    )}
+                </Memo>
+            </div>
+        </FlashingDiv>
+    );
+}
+
+function LegendTreeLeft({ $count }) {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv pad bg="bg-fd-card" className="border border-fd-border text-sm w-full">
+            <div className="font-bold text-xs">Intermediate</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="pt-3">
+                <LegendTreeLeaf $count={$count} />
+            </div>
+        </FlashingDiv>
+    );
+}
+
+function LegendTreeRight() {
+    const renderCount = ++useRef(-1).current;
+    return (
+        <FlashingDiv pad bg="bg-fd-card" className="border border-fd-border text-sm w-full">
+            <div className="font-bold text-xs">Unrelated element</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+        </FlashingDiv>
+    );
+}
+
+function LegendTree() {
+    const renderCount = ++useRef(-1).current;
+    const count$ = useObservable(1);
+
+    useInterval(() => {
+        count$.set((v) => v + 1);
+    }, 600);
+
+    return (
+        <FlashingDiv pad bg="bg-fd-card" className="border border-fd-border rounded-lg w-80 text-sm">
+            <div className="font-bold">Legend-State tree</div>
+            <div className="pt-1 text-[11px] text-fd-muted-foreground">Renders: {Math.max(renderCount, 1)}</div>
+            <div className="pt-2 leading-loose">
+                Count:{' '}
+                <Memo>
+                    {() => (
+                        <FlashingDiv span className="inline-flex rounded bg-fd-secondary px-2 py-1">
+                            {count$.get()}
+                        </FlashingDiv>
+                    )}
+                </Memo>
+            </div>
+            <div className="flex gap-3 pt-4">
+                <LegendTreeLeft $count={count$} />
+                <LegendTreeRight />
+            </div>
+        </FlashingDiv>
+    );
+}
+
+function Preview() {
+    return (
+        <div className="flex justify-center">
+            <LegendTree />
+        </div>
+    );
+}
+`}
   noInline={true}
-  renderCode=";render(<div><HooksTree /><div style={{marginTop: '20px'}} /><LegendTree /></div>)"
+  renderCode=";render(<Preview />)"
 />
 
 This is of course much faster, but perhaps more importantly it lets us focus on making our apps and spend less time optimizing and figuring out dependency arrays and dealing with stale variables and making sure props don't change.
@@ -676,11 +834,11 @@ function Counter() {
   }
 
   return (
-    <div>
+    <Box className="flex flex-col gap-y-3">
         <div>Renders: {renderCount}</div>
         <div>Count: <Memo>{count$}</Memo></div>
-        <button onClick={increment}>Increment</button>
-    </div>
+        <Button onClick={increment}>Increment</Button>
+    </Box>
   )
 }
 `}

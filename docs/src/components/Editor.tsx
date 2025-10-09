@@ -246,7 +246,9 @@ const MotionLinearGradientDemo = ({
         end: baseEnd,
         ...(animateProps ?? {}),
     };
-    const combinedStyle: StyleProp<ViewStyle> = style ? [defaultLinearGradientStyle, style] : defaultLinearGradientStyle;
+    const combinedStyle: StyleProp<ViewStyle> = style
+        ? [defaultLinearGradientStyle, style]
+        : defaultLinearGradientStyle;
 
     return (
         <MotionLinearGradient

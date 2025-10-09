@@ -5,3 +5,4 @@ Fix all internal links
 Links starting with / need to be relative
     getFirstDocsPath
 Update LL video with v2
+Some motion examples don't support hover/tap

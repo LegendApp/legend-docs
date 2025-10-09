@@ -6,7 +6,12 @@
     font-size: 1.5em;
 }
 
-.blog-post code .line {
+.blog-post code .line,
+.blog-post .prism-code .token-line {
     font-size: 12px;
     --padding-right: 16px;
+}
+
+.blog-post .prism-code {
+    padding-bottom: 16px;
 }

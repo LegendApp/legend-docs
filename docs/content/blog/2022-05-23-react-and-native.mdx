@@ -47,6 +47,20 @@ function BasicExample() {
 `}
   noInline={true}
   renderCode=";render(<BasicExample />)"
+  transformExamples={[
+    {
+      pattern: 'className="p-4 bg-zinc-800 rounded-lg text-white"',
+      replacement: 'style={{ padding: 16, backgroundColor: "#27272a", borderRadius: 12, color: "white" }}'
+    },
+    {
+      pattern: 'className="p-4 bg-zinc-800 rounded-lg mt-4"',
+      replacement: 'style={{ padding: 16, backgroundColor: "#27272a", borderRadius: 12, marginTop: 16 }}'
+    },
+    {
+      pattern: 'className="text-white"',
+      replacement: 'style={{ color: "white" }}'
+    }
+  ]}
 />
 
 Using [NativeWind](https://www.nativewind.dev) and [Legend-Motion](../motion) we can now write React and React Native code using the same styling and animation patterns, and even mix them together in React Native Web.
@@ -97,6 +111,16 @@ function MyFancyButton(props) {
 `}
   noInline={true}
   renderCode=";render(<MyFancyButton />)"
+  transformExamples={[
+    {
+      pattern: 'className="p-4 rounded-xl component bg-violet-500 hover:bg-violet-600 active:bg-violet-700"',
+      replacement: 'style={{ padding: 16, borderRadius: 12, backgroundColor: "#7c3aed" }}'
+    },
+    {
+      pattern: 'className="font-bold component-active:font-extrabold text-white"',
+      replacement: 'style={{ fontWeight: "700", color: "white" }}'
+    }
+  ]}
 />
 
 ### 2. Animations with Legend-Motion
@@ -132,6 +156,16 @@ function IntroExample() {
 `}
   noInline={true}
   renderCode=";render(<IntroExample />)"
+  transformExamples={[
+    {
+      pattern: 'className="w-20 h-20 bg-blue-500 rounded-lg flex items-center justify-center"',
+      replacement: 'style={{ width: 80, height: 80, backgroundColor: "#3b82f6", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center" }}'
+    },
+    {
+      pattern: 'className="text-white font-bold"',
+      replacement: 'style={{ color: "white", fontWeight: "700" }}'
+    }
+  ]}
 />
 
 ### 3. Mix React and React Native Web
@@ -169,6 +203,24 @@ function MixedExample() {
 `}
   noInline={true}
   renderCode=";render(<MixedExample />)"
+  transformExamples={[
+    {
+      pattern: 'className="p-5 text-xs text-black bg-blue-200 rounded-lg"',
+      replacement: 'style={{ padding: 20, fontSize: 12, color: "#000000", backgroundColor: "#bfdbfe", borderRadius: 12 }}'
+    },
+    {
+      pattern: 'className="p-5 mt-6 bg-blue-400 rounded-lg"',
+      replacement: 'style={{ padding: 20, marginTop: 24, backgroundColor: "#60a5fa", borderRadius: 12 }}'
+    },
+    {
+      pattern: 'className="text-black"',
+      replacement: 'style={{ color: "#000000" }}'
+    },
+    {
+      pattern: 'className="p-5 mt-6 bg-blue-600 rounded-lg"',
+      replacement: 'style={{ padding: 20, marginTop: 24, backgroundColor: "#2563eb", borderRadius: 12 }}'
+    }
+  ]}
 />
 
 ## Putting it all together
@@ -209,6 +261,20 @@ function AllTogetherExample() {
 `}
   noInline={true}
   renderCode=";render(<AllTogetherExample />)"
+  transformExamples={[
+    {
+      pattern: 'className="p-4 font-bold bg-zinc-800 rounded-lg mb-4"',
+      replacement: 'style={{ padding: 16, fontWeight: "700", backgroundColor: "#27272a", borderRadius: 12, marginBottom: 16 }}'
+    },
+    {
+      pattern: 'className="text-white"',
+      replacement: 'style={{ color: "white" }}'
+    },
+    {
+      pattern: 'className="p-4 font-bold bg-zinc-800 rounded-lg"',
+      replacement: 'style={{ padding: 16, fontWeight: "700", backgroundColor: "#27272a", borderRadius: 12 }}'
+    }
+  ]}
 />
 
 ## Try it now
@@ -249,6 +315,16 @@ function SimpleExample() {
 `}
   noInline={true}
   renderCode=";render(<SimpleExample />)"
+  transformExamples={[
+    {
+      pattern: 'className="p-4 bg-green-500 rounded-lg"',
+      replacement: 'style={{ padding: 16, backgroundColor: "#22c55e", borderRadius: 12 }}'
+    },
+    {
+      pattern: 'className="text-white font-bold"',
+      replacement: 'style={{ color: "white", fontWeight: "700" }}'
+    }
+  ]}
 />
 
 See [the docs](https://www.legendapp.com/dev/motion) for more details and advanced usage.

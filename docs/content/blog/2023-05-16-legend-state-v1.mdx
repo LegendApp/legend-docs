@@ -89,7 +89,7 @@ function Component({ children }) {
   // Props ending in $ bind the prop to the observable
   // for tiny targeted re-renders on changes
   return (
-    <div>
+    <Box className="flex flex-col gap-y-2">
       <$React.input $value={state$.text} />
       <$React.div
         $className={() => (
@@ -107,7 +107,7 @@ function Component({ children }) {
       >
         <div>Modal</div>
       </Show>
-    </div>
+    </Box>
   )
 }
 `}
@@ -165,10 +165,10 @@ function Counter() {
   }, 600)
 
   return (
-    <div>
+    <Box className="flex flex-col gap-y-2">
         <div>Renders: {renderCount}</div>
         <div>Count: <Memo>{count}</Memo></div>
-    </div>
+    </Box>
   )
 }
 `}
