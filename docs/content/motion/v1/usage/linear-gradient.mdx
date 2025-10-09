@@ -60,14 +60,9 @@ import { MotionLinearGradient } from "@legendapp/motion/linear-gradient";
 
 <Editor
   code={`
-<ExampleAnim width={260} noValue>
+<ExampleAnim width={220} noValue>
   {(value) => (
     <MotionLinearGradient
-      style={{
-        width: 200,
-        height: 120,
-        borderRadius: 16,
-      }}
       animateProps={{
         colors: [value ? '#F81FEC' : 'blue', value ? '#59B0F8' : 'yellow'],
         start: { x: 0, y: 0 },
@@ -78,7 +73,7 @@ import { MotionLinearGradient } from "@legendapp/motion/linear-gradient";
 </ExampleAnim>
   `}
   hideCode
-  previewWidth={300}
+  previewWidth={260}
 />
 
 ```jsx

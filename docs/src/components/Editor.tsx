@@ -36,6 +36,8 @@ import { IntroComponent } from './motion/IntroComponent';
 import { IntroUsageComponent } from './motion/IntroUsageComponent';
 import { Motion } from '@legendapp/motion';
 import { MotionSvg } from '@legendapp/motion/svg';
+import { MotionLinearGradient } from '@legendapp/motion/linear-gradient';
+import { StyleProp, ViewStyle } from 'react-native';
 
 type TransformExample = {
     pattern: string;
@@ -216,39 +218,47 @@ const docEasing = {
     easeInOut: (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
 };
 
+const defaultLinearGradientStyle: ViewStyle = {
+    width: 200,
+    height: 120,
+    borderRadius: 16,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+};
+
 const MotionLinearGradientDemo = ({
     animateProps,
     style,
+    children,
+    start,
+    end,
+    colors,
+    className,
     ...rest
-}: {
-    animateProps?: {
-        colors?: string[];
-        start?: { x: number; y: number };
-        end?: { x: number; y: number };
+}: React.ComponentProps<typeof MotionLinearGradient> & { className?: string }) => {
+    const baseColors = colors ?? animateProps?.colors ?? ['#59B0F8', '#F5E960'];
+    const baseStart = start ?? animateProps?.start ?? { x: 0, y: 0 };
+    const baseEnd = end ?? animateProps?.end ?? { x: 1, y: 1 };
+    const mergedAnimateProps = {
+        colors: baseColors,
+        start: baseStart,
+        end: baseEnd,
+        ...(animateProps ?? {}),
     };
-    style?: unknown;
-}) => {
-    const colors = animateProps?.colors ?? ['#59B0F8', '#F5E960'];
-    const start = animateProps?.start ?? { x: 0, y: 0 };
-    const end = animateProps?.end ?? { x: 1, y: 1 };
-    const angle = Math.atan2(end.y - start.y, end.x - start.x) + Math.PI / 2;
-    const gradient = `linear-gradient(${angle}rad, ${colors.join(', ')})`;
-    const mergedStyle =
-        style && Array.isArray(style)
-            ? Object.assign({}, ...style)
-            : (style as Record<string, unknown> | undefined) ?? {};
+    const combinedStyle: StyleProp<ViewStyle> = style ? [defaultLinearGradientStyle, style] : defaultLinearGradientStyle;
 
     return (
-        <Motion.View
+        <MotionLinearGradient
             {...rest}
-            style={{
-                borderRadius: 16,
-                ...(mergedStyle as Record<string, unknown>),
-                backgroundImage: gradient,
-                backgroundSize: '160% 160%',
-                transition: 'background-image 0.6s ease',
-            }}
-        />
+            style={combinedStyle}
+            colors={baseColors}
+            start={baseStart}
+            end={baseEnd}
+            animateProps={mergedAnimateProps}
+        >
+            {children}
+        </MotionLinearGradient>
     );
 };
 
