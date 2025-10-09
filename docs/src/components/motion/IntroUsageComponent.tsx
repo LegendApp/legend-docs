@@ -2,6 +2,7 @@ import { View } from 'react-native-web';
 import { ExampleAnim } from './ExampleAnim';
 import { Motion } from '@legendapp/motion/';
 import { MotionSvg } from '@legendapp/motion/svg';
+import { MotionLinearGradient } from '@legendapp/motion/linear-gradient';
 import * as React from 'react';
 
 const styleBox = {
@@ -13,7 +14,7 @@ const styleBox = {
 
 const IntroUsageExample = () => {
     return (
-        <ExampleAnim width={200}>
+        <ExampleAnim width={240}>
             {(value) => (
                 <View>
                     <Motion.View
@@ -27,7 +28,7 @@ const IntroUsageExample = () => {
                             type: 'spring',
                         }}
                     />
-                    <Motion.Svg height="200" width="200" style={{ marginTop: 48 }}>
+                    <MotionSvg.Svg height="200" width="200" style={{ marginTop: 48 }}>
                         <MotionSvg.Polygon
                             strokeWidth={1}
                             fill="#59B0F8"
@@ -40,7 +41,7 @@ const IntroUsageExample = () => {
                                 stiffness: 300,
                             }}
                         />
-                    </Motion.Svg>
+                    </MotionSvg.Svg>
                     <MotionLinearGradient
                         style={[styleBox, { width: 100, height: 100, marginLeft: 50, marginTop: 48 }]}
                         start={{ x: 0, y: 0 }}

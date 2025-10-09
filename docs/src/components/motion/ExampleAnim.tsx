@@ -5,11 +5,13 @@ export const ExampleAnim = ({
     width,
     noValue,
     time,
+    className,
     children,
 }: {
     width: number;
     noValue?: boolean;
     time?: number;
+    className?: string;
     children: (value: number) => React.ReactElement;
 }) => {
     const [value, setValue] = useState(0);
@@ -23,7 +25,10 @@ export const ExampleAnim = ({
     }, [time]);
 
     return (
-        <div className={`flex flex-col px-6 justify-center ${!noValue ? 'mt-10' : ''}`} style={{ width }}>
+        <div
+            className={`flex flex-col px-6 justify-center ${!noValue ? 'mt-10' : ''} ${className || ''}`}
+            style={{ width }}
+        >
             {children(value)}
             {!noValue && (
                 <div className="flex justify-center pt-6 font-medium">

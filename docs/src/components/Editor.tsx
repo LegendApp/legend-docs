@@ -208,6 +208,13 @@ function debounce(fn: () => void, time: number) {
     timeout = setTimeout(fn, time);
 }
 
+const docEasing = {
+    linear: (t: number) => t,
+    easeIn: (t: number) => t * t,
+    easeOut: (t: number) => 1 - (1 - t) * (1 - t),
+    easeInOut: (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
+};
+
 // Default scope with commonly used React elements and Legend-State functions
 const defaultScope = {
     React,
@@ -264,6 +271,7 @@ const defaultScope = {
     IntroComponent,
     IntroUsageComponent,
     Motion,
+    Easing: docEasing,
 };
 
 export function Editor({
