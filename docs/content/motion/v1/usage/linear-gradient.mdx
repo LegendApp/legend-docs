@@ -58,14 +58,35 @@ import { MotionLinearGradient } from "@legendapp/motion/linear-gradient";
 
 `MotionLinearGradient` has `colors`, `start`, and `end` props that you can animate.
 
+<Editor
+  code={`
+<ExampleAnim width={260} noValue>
+  {(value) => (
+    <MotionLinearGradient
+      style={{
+        width: 200,
+        height: 120,
+        borderRadius: 16,
+      }}
+      animateProps={{
+        colors: [value ? '#F81FEC' : 'blue', value ? '#59B0F8' : 'yellow'],
+        start: { x: 0, y: 0 },
+        end: { x: value ? 1 : 0, y: 1 },
+      }}
+    />
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+  previewWidth={300}
+/>
 
-  ```jsx
-  <MotionLinearGradient
-    animateProps={{
-      colors: [value ? "#F81FEC" : "blue", value ? "#59B0F8" : "yellow"],
-      start: { x: 0, y: 0 },
-      end: { x: value ? 1 : 0, y: 1 },
-    }}
-  />
-  ```
-
+```jsx
+<MotionLinearGradient
+  animateProps={{
+    colors: [value ? "#F81FEC" : "blue", value ? "#59B0F8" : "yellow"],
+    start: { x: 0, y: 0 },
+    end: { x: value ? 1 : 0, y: 1 },
+  }}
+/>
+```

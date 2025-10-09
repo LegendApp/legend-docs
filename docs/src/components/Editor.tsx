@@ -35,6 +35,7 @@ import { ExampleAnim } from './motion/ExampleAnim';
 import { IntroComponent } from './motion/IntroComponent';
 import { IntroUsageComponent } from './motion/IntroUsageComponent';
 import { Motion } from '@legendapp/motion';
+import { MotionSvg } from '@legendapp/motion/svg';
 
 type TransformExample = {
     pattern: string;
@@ -215,6 +216,42 @@ const docEasing = {
     easeInOut: (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
 };
 
+const MotionLinearGradientDemo = ({
+    animateProps,
+    style,
+    ...rest
+}: {
+    animateProps?: {
+        colors?: string[];
+        start?: { x: number; y: number };
+        end?: { x: number; y: number };
+    };
+    style?: unknown;
+}) => {
+    const colors = animateProps?.colors ?? ['#59B0F8', '#F5E960'];
+    const start = animateProps?.start ?? { x: 0, y: 0 };
+    const end = animateProps?.end ?? { x: 1, y: 1 };
+    const angle = Math.atan2(end.y - start.y, end.x - start.x) + Math.PI / 2;
+    const gradient = `linear-gradient(${angle}rad, ${colors.join(', ')})`;
+    const mergedStyle =
+        style && Array.isArray(style)
+            ? Object.assign({}, ...style)
+            : (style as Record<string, unknown> | undefined) ?? {};
+
+    return (
+        <Motion.View
+            {...rest}
+            style={{
+                borderRadius: 16,
+                ...(mergedStyle as Record<string, unknown>),
+                backgroundImage: gradient,
+                backgroundSize: '160% 160%',
+                transition: 'background-image 0.6s ease',
+            }}
+        />
+    );
+};
+
 // Default scope with commonly used React elements and Legend-State functions
 const defaultScope = {
     React,
@@ -271,6 +308,9 @@ const defaultScope = {
     IntroComponent,
     IntroUsageComponent,
     Motion,
+    MotionSvg,
+    MotionLinearGradient: MotionLinearGradientDemo,
+    MotionStyled: Motion,
     Easing: docEasing,
 };
 
