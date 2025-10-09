@@ -1,10 +1,4 @@
 {
-  "title": "React",
-  "pages": [
-    "react-api",
-    "fine-grained-reactivity", 
-    "helpers-and-hooks",
-    "tracing",
-    "react-examples"
-  ]
+    "title": "React",
+    "pages": ["react-api", "fine-grained-reactivity", "helpers-and-hooks", "tracing"]
 }

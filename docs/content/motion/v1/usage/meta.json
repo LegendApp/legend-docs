@@ -1,3 +1,14 @@
 {
-  "title": "Usage"
+    "title": "Usage",
+    "pages": [
+        "overview",
+        "svg",
+        "linear-gradient",
+        "custom-components",
+        "transform-origin",
+        "animate-props",
+        "configuration",
+        "tailwind-css",
+        "animate-presence"
+    ]
 }

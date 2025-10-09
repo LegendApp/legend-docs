@@ -34,6 +34,7 @@ import { View, Text, Pressable } from 'react-native-web';
 import { ExampleAnim } from './motion/ExampleAnim';
 import { IntroComponent } from './motion/IntroComponent';
 import { IntroUsageComponent } from './motion/IntroUsageComponent';
+import { Motion } from '@legendapp/motion';
 
 type TransformExample = {
     pattern: string;
@@ -206,23 +207,6 @@ function debounce(fn: () => void, time: number) {
     clearTimeout(timeout);
     timeout = setTimeout(fn, time);
 }
-
-// Mock Motion components for Legend Motion examples
-const Motion = {
-    View: ({ children, style, ...props }: { children?: React.ReactNode; style?: object; [key: string]: unknown }) => (
-        <View style={style} {...props}>
-            {children}
-        </View>
-    ),
-    Text: ({ children, style, ...props }: { children?: React.ReactNode; style?: object; [key: string]: unknown }) => (
-        <Text style={style} {...props}>
-            {children}
-        </Text>
-    ),
-    Pressable: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-        <Pressable {...props}>{children}</Pressable>
-    ),
-};
 
 // Default scope with commonly used React elements and Legend-State functions
 const defaultScope = {
