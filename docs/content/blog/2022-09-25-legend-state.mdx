@@ -407,36 +407,36 @@ const profile$ = observable({ name: '' })
 
 // Normal React - This component re-renders on every keystroke
 function HooksName() {
-  const [name, setName] = useState('')
+    const [name, setName] = useState('')
 
-  // Trigger on render if name has changed
-  useEffect(() => {
+    // Trigger on render if name has changed
+    useEffect(() => {
 
-  }, [name])
+    }, [name])
 
-  // Handle change and update state
-  const onInputChange = (e) => {
-    setName(e.target.value)
-  }
+    // Handle change and update state
+    const onInputChange = (e) => {
+      setName(e.target.value)
+    }
 
-  // Controlled input needs both value and change handler
-  return (
-    <input value={name} onChange={onInputChange} />
-  )
+    // Controlled input needs both value and change handler
+    return (
+      <input value={name} onChange={onInputChange} />
+    )
 }
 
 // Legend-State - This component renders once
 function LegendStateName() {
-  // Trigger when name changes
-  useObserve(() => {
-    console.log('it changed', profile$.name.get())
-    document.title = \`Hello \${profile$.name.get()}\`
-  })
+    // Trigger when name changes
+    useObserve(() => {
+      console.log('it changed', profile$.name.get())
+      document.title = \`Hello \${profile$.name.get()}\`
+    })
 
-  // Two-way bind input to observable
-  return (
-    <$React.input $value={profile$.name} />
-  )
+    // Two-way bind input to observable
+    return (
+      <$React.input $value={profile$.name} />
+    )
 }
 `}
   noInline={true}
@@ -467,51 +467,51 @@ title2="Legend State"
   code1={`
 // Normal React components
 function HooksTreeLeaf({ count }) {
-  return <Box>Count: {count}</Box>
+    return <Box>Count: {count}</Box>
 }
 function HooksTreeLeft({ count }) {
-  return <HooksTreeLeaf count={count} />
+    return <HooksTreeLeaf count={count} />
 }
 function HooksTreeRight() {
-  return <Box>Unrelated element</Box>
+    return <Box>Unrelated element</Box>
 }
 function HooksTree() {
-  const [count, setCount] = useState(1)
+    const [count, setCount] = useState(1)
 
-  useInterval(() => {
-    setCount(v => v + 1)
-  }, 600)
+    useInterval(() => {
+      setCount(v => v + 1)
+    }, 600)
 
-  return (<>
-    <Box>Count: {count}</Box>
-    <HooksTreeLeft count={count} />
-    <HooksTreeRight />
-  </>)
+    return (<>
+      <Box>Count: {count}</Box>
+      <HooksTreeLeft count={count} />
+      <HooksTreeRight />
+    </>)
 }
 `}
   code2={`
 // Legend-State components
 function LegendTreeLeaf({ $count }) {
-  return <Box>Count: <Memo>{$count}</Memo></Box>
+    return <Box>Count: <Memo>{$count}</Memo></Box>
 }
 function LegendTreeLeft({ $count }) {
-  return <LegendTreeLeaf $count={$count} />
+    return <LegendTreeLeaf $count={$count} />
 }
 function LegendTreeRight() {
-  return <Box>Unrelated element</Box>
+    return <Box>Unrelated element</Box>
 }
 function LegendTree() {
-  const count = useObservable(1)
+    const count = useObservable(1)
 
-  useInterval(() => {
-    count.set(v => v + 1)
-  }, 600)
+    useInterval(() => {
+      count.set(v => v + 1)
+    }, 600)
 
-  return (<>
-    <Box>Count: <Memo>{count}</Memo></Box>
-    <LegendTreeLeft $count={count} />
-    <LegendTreeRight />
-  </>)
+    return (<>
+      <Box>Count: <Memo>{count}</Memo></Box>
+      <LegendTreeLeft $count={count} />
+      <LegendTreeRight />
+    </>)
 }
 `}
   codePreview1={`
@@ -690,117 +690,117 @@ const url = 'https://jsonplaceholder.typicode.com/users/1'
 
 // Normal React - This component renders every keystroke
 function HooksChat() {
-  // Profile
-  const [profile, setProfile] = useState()
+    // Profile
+    const [profile, setProfile] = useState()
 
-  // Fetch and set profile
-  useEffect(() => {
-    fetch(url).then(response => response.json())
-              .then(data => setProfile(data))
-  }, [])
+    // Fetch and set profile
+    useEffect(() => {
+      fetch(url).then(response => response.json())
+                .then(data => setProfile(data))
+    }, [])
 
-  // Username
-  const userName = profile ?
-    \`\${profile.first || profile.name} \${profile.last || ''}\` :
-    ''
+    // Username
+    const userName = profile ?
+      \`\${profile.first || profile.name} \${profile.last || ''}\` :
+      ''
 
-  // Chat state
-  const [messages, setMessages] = useState([])
-  const [currentMessage, setCurrentMessage] = useState('')
+    // Chat state
+    const [messages, setMessages] = useState([])
+    const [currentMessage, setCurrentMessage] = useState('')
 
-  // Update title
-  useEffect(() => {
-    // document.title = \`\${userName} - \${messages.length}\`
-  }, [userName, messages.length])
+    // Update title
+    useEffect(() => {
+      // document.title = \`\${userName} - \${messages.length}\`
+    }, [userName, messages.length])
 
-  // Button click
-  const onClickAdd = () => {
-    setMessages([...messages, {
-      id: Math.random().toString(),
-      text: currentMessage,
-    }])
-    setCurrentMessage('')
-  }
+    // Button click
+    const onClickAdd = () => {
+      setMessages([...messages, {
+        id: Math.random().toString(),
+        text: currentMessage,
+      }])
+      setCurrentMessage('')
+    }
 
-  // Text change
-  const onChangeText = (e) => {
-    setCurrentMessage(e.target.value)
-  }
+    // Text change
+    const onChangeText = (e) => {
+      setCurrentMessage(e.target.value)
+    }
 
-  return (
-    <div>
-      {userName ? (
-        <div>Chatting with {userName}</div>
-      ) : (
-        <div>Loading...</div>
-      )}
+    return (
       <div>
-        {messages.map(message => (
-          <div key={message.id}>{message.text}</div>
-        ))}
+        {userName ? (
+          <div>Chatting with {userName}</div>
+        ) : (
+          <div>Loading...</div>
+        )}
+        <div>
+          {messages.map(message => (
+            <div key={message.id}>{message.text}</div>
+          ))}
+        </div>
+        <div>
+          <input
+              value={currentMessage}
+              onChange={onChangeText}
+          />
+          <button onClick={onClickAdd}>Send</button>
+        </div>
       </div>
-      <div>
-        <input
-            value={currentMessage}
-            onChange={onChangeText}
-        />
-        <button onClick={onClickAdd}>Send</button>
-      </div>
-    </div>
-  )
+    )
 }
 
 // Legend-State - This component renders once
 function LegendStateChat() {
-  // Create profile from fetch promise
-  const profile = useObservable(() =>
-    fetch(url).then(response => response.json())
-  )
+    // Create profile from fetch promise
+    const profile = useObservable(() =>
+      fetch(url).then(response => response.json())
+    )
 
-  // Username
-  const userName = useComputed(() => {
-    const p = profile.get()
-    return p ? \`\${p.first || p.name} \${p.last || ''}\` : ''
-  })
-
-  // Chat state
-  const { messages, currentMessage } =
-    useObservable({ messages: [], currentMessage: '' })
-
-  // Update title
-  useObserve(() =>
-     document.title = \`\${userName.get()} - \${messages.length}\`
-  )
-
-  // Button click
-  const onClickAdd = () => {
-    messages.push({
-      id: Math.random().toString(),
-      text: currentMessage.get()
+    // Username
+    const userName = useComputed(() => {
+      const p = profile.get()
+      return p ? \`\${p.first || p.name} \${p.last || ''}\` : ''
     })
-    currentMessage.set('')
-  }
 
-  return (
-    <div>
-      <Show if={userName} else={<div>Loading...</div>}>
-        <div>Chatting with {userName.get()}</div>
-      </Show>
-      <For each={messages}>
-        {message => (
-          <div>{message.text.get()}</div>
-        )}
-      </For>
+    // Chat state
+    const { messages, currentMessage } =
+      useObservable({ messages: [], currentMessage: '' })
+
+    // Update title
+    useObserve(() =>
+       document.title = \`\${userName.get()} - \${messages.length}\`
+    )
+
+    // Button click
+    const onClickAdd = () => {
+      messages.push({
+        id: Math.random().toString(),
+        text: currentMessage.get()
+      })
+      currentMessage.set('')
+    }
+
+    return (
       <div>
-        <$React.input $value={currentMessage} />
-        <button onClick={onClickAdd}>Send</button>
+        <Show if={userName} else={<div>Loading...</div>}>
+          <div>Chatting with {userName.get()}</div>
+        </Show>
+        <For each={messages}>
+          {message => (
+            <div>{message.text.get()}</div>
+          )}
+        </For>
+        <div>
+          <$React.input $value={currentMessage} />
+          <button onClick={onClickAdd}>Send</button>
+        </div>
       </div>
-    </div>
-  )
+    )
 }
 `}
   noInline={true}
-  renderCode=";render(<div><HooksChat /><div style={{marginTop: '20px'}} /><LegendStateChat /></div>)"
+  renderCode=";render(<Box className='flex flex-col gap-y-3'><HooksChat /><div className='mt-4' /><LegendStateChat /></Box>)"
 />
 
 As you type into the input in the normal version it re-renders the whole component and every child element on every keystroke, including every single item in the list.
@@ -826,20 +826,20 @@ To get these benefits you don't need to immediately restructure your whole app o
 <Editor
   code={`
 function Counter() {
-  const renderCount = ++useRef(0).current;
-  const count$ = useObservable(1)
+    const renderCount = ++useRef(0).current;
+    const count$ = useObservable(1)
 
-  const increment = () => {
-    count$.set(v => v + 1)
-  }
+    const increment = () => {
+      count$.set(v => v + 1)
+    }
 
-  return (
-    <Box className="flex flex-col gap-y-3">
-        <div>Renders: {renderCount}</div>
-        <div>Count: <Memo>{count$}</Memo></div>
-        <Button onClick={increment}>Increment</Button>
-    </Box>
-  )
+    return (
+      <Box className="flex flex-col gap-y-3">
+          <div>Renders: {renderCount}</div>
+          <div>Count: <Memo>{count$}</Memo></div>
+          <Button onClick={increment}>Increment</Button>
+      </Box>
+    )
 }
 `}
   noInline={true}
