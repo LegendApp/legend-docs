@@ -36,7 +36,7 @@ export function CustomNavbar() {
 
     const navItems = [
         {
-            label: 'Home',
+            label: 'Legend',
             href: '/',
             matches: ['/'],
         },
