@@ -10,12 +10,14 @@ Legend-Motion includes a special set of Motion components that support TailwindC
   {(value) => (
     <View style={{ alignItems: 'center' }}>
       <MotionStyled.View
-        className="items-center justify-center p-4"
         style={{
           width: 220,
           borderRadius: 16,
           backgroundColor: '#59B0F8',
           marginBottom: 24,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 16
         }}
         animate={{ x: value ? 50 : 0 }}
       >
@@ -27,11 +29,13 @@ Legend-Motion includes a special set of Motion components that support TailwindC
         </MotionStyled.Text>
       </MotionStyled.View>
       <MotionStyled.View
-        className="items-center justify-center p-4"
         style={{
           width: 220,
           borderRadius: 16,
           backgroundColor: '#F81FEC',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 16
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ x: 30 }}
