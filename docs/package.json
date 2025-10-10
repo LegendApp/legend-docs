@@ -13,7 +13,7 @@
     },
     "dependencies": {
         "@legendapp/motion": "^2.4.0",
-        "@legendapp/state": "^3.0.0-beta.31",
+        "@legendapp/state": "^3.0.0-beta.35",
         "@tanstack/react-query": "^5.85.3",
         "@types/react-native-web": "^0.19.2",
         "axios": "^1.11.0",
@@ -30,8 +30,8 @@
         "react-live": "^4.1.8",
         "react-native": "^0.81.0",
         "react-native-svg": "^12.3.0",
-        "react-native-web-linear-gradient": "^1.1.2",
         "react-native-web": "^0.21.0",
+        "react-native-web-linear-gradient": "^1.1.2",
         "usehooks-ts": "^3.1.1"
     },
     "devDependencies": {
