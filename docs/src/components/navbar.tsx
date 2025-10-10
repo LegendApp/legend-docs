@@ -43,7 +43,7 @@ export function CustomNavbar() {
         },
         {
             label: 'Kit',
-            href: '../kit',
+            href: '/kit',
             matches: ['/kit'],
         },
         {
@@ -70,11 +70,11 @@ export function CustomNavbar() {
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/20 backdrop-blur-sm flex items-center justify-between px-4 py-3 border-b bg-background">
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
                 <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
 
                 <span className="font-semibold">Legend Open Source</span>
-            </div>
+            </Link>
 
             <div className="flex items-center gap-8">
                 {navItems.map(({ label, href, matches }) => {
