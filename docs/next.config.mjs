@@ -8,6 +8,7 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
     reactStrictMode: true,
+    basePath: '/open-source',
     transpilePackages: ['@legendapp/motion', 'react-native-linear-gradient', 'react-native-svg'],
     turbopack: {
         resolveExtensions: ['.web.tsx', '.web.ts', '.web.jsx', '.web.js', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs'],
