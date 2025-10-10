@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { getFirstDocsPath } from '@/lib/getDocsPath';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from 'fumadocs-core/link';
 
 function normalizePath(value?: string | null) {
     if (!value) {
@@ -41,6 +42,11 @@ export function CustomNavbar() {
             matches: ['/'],
         },
         {
+            label: 'Kit',
+            href: '/kit',
+            matches: ['/kit'],
+        },
+        {
             label: 'List',
             href: getFirstDocsPath('list'),
             matches: ['/list'],
@@ -65,7 +71,7 @@ export function CustomNavbar() {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/20 backdrop-blur-sm flex items-center justify-between px-4 py-3 border-b bg-background">
             <div className="flex items-center gap-2">
-                <Image src="/assets/Logo.png" alt="Legend" width={24} height={24} />
+                <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
 
                 <span className="font-semibold">Legend Open Source</span>
             </div>

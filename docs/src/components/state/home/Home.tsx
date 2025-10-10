@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Button } from './Button';
 import { AnimatedBackground } from './AnimatedBackground';
 import { Header } from './Header';
-import { Preorder } from './Preorder';
+import { Preorder } from './SectionKitPreorder';
 import { SectionBadges } from './SectionBadges';
 import { SectionEasy } from './SectionEasy';
 import { SectionFullSync } from './SectionFullSync';

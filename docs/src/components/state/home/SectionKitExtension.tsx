@@ -27,7 +27,7 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
                     transition={TransitionSpringFast}
                 >
                     <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-                        <source src="/assets/LegendKitExtension.mp4" type="video/mp4" />
+                        <source src="/open-source/assets/LegendKitExtension.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </motion.div>
@@ -51,7 +51,7 @@ export const SectionKitExtension = observer(function SectionKitExtension() {
                             }}
                         >
                             <video autoPlay loop muted playsInline className="w-full h-auto">
-                                <source src="/assets/LegendKitExtension.mp4" type="video/mp4" />
+                                <source src="/open-source/assets/LegendKitExtension.mp4" type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
                         </motion.div>

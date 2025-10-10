@@ -3,7 +3,7 @@ import { Header } from './Header';
 import { Text } from './Text';
 import { PreorderButton } from './PreorderButton';
 
-export const Preorder = observer(function Preorder() {
+export const SectionKitPreorder = observer(function SectionKitPreorder() {
     const FullPrice = 399;
     const DiscountedPrice = 199;
     const Discount = FullPrice - DiscountedPrice;

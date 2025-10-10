@@ -6,6 +6,7 @@
         "build": "next build",
         "dev": "next dev --turbo",
         "start": "next start",
+        "serve": "npx serve dist",
         "postinstall": "fumadocs-mdx",
         "prebuild": "bun ../scripts/validate-links.ts",
         "validate-links": "bun ../scripts/validate-links.ts"

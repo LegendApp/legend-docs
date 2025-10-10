@@ -52,7 +52,7 @@ export function SectionKitCLI() {
 
             <div className="mt-8 bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden">
                 <video autoPlay loop muted playsInline className="w-full h-auto">
-                    <source src="/assets/legend-kit-cli.mp4" type="video/mp4" />
+                    <source src="/open-source/assets/legend-kit-cli.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
             </div>
