@@ -28,7 +28,12 @@ interface FileCheckResult {
 }
 
 class LinkValidator {
+    private readonly verbose: boolean;
     private errors: ValidationError[] = [];
+
+    constructor(options: { verbose?: boolean } = {}) {
+        this.verbose = options.verbose ?? false;
+    }
 
     /**
      * Find all MDX files in the project
@@ -150,7 +155,9 @@ class LinkValidator {
         const content = fs.readFileSync(filePath, 'utf8');
         const links = this.extractRelativeLinks(content, filePath);
 
-        console.log(`Checking ${links.length} links in ${path.relative(process.cwd(), filePath)}`);
+        if (this.verbose) {
+            console.log(`Checking ${links.length} links in ${path.relative(process.cwd(), filePath)}`);
+        }
 
         links.forEach((link) => {
             const targetPath = this.resolveLinkPath(link.url, filePath);
@@ -165,7 +172,7 @@ class LinkValidator {
                     link: link.url,
                     resolvedPath: result.resolvedPath,
                 });
-            } else {
+            } else if (this.verbose) {
                 console.log(`  ✓ ${link.url} -> ${path.relative(process.cwd(), result.resolvedPath)}`);
             }
         });
@@ -176,7 +183,9 @@ class LinkValidator {
      */
     validateAll(): boolean {
         const files = this.findMdxFiles();
-        console.log(`Found ${files.length} MDX files to validate\n`);
+        if (this.verbose) {
+            console.log(`Found ${files.length} MDX files to validate\n`);
+        }
 
         files.forEach((file) => {
             this.validateFile(file);
@@ -190,14 +199,14 @@ class LinkValidator {
      * Print validation results
      */
     private printResults(): void {
-        console.log('\n' + '='.repeat(60));
-        console.log('LINK VALIDATION RESULTS');
-        console.log('='.repeat(60));
-
         if (this.errors.length === 0) {
             console.log('✅ All links are valid!');
             return;
         }
+
+        console.log('\n' + '='.repeat(60));
+        console.log('LINK VALIDATION RESULTS');
+        console.log('='.repeat(60));
 
         console.log(`❌ Found ${this.errors.length} broken links:\n`);
 
@@ -219,7 +228,8 @@ class LinkValidator {
 
 // Run the validator if this script is executed directly
 if (require.main === module) {
-    const validator = new LinkValidator();
+    const verbose = process.argv.includes('--verbose');
+    const validator = new LinkValidator({ verbose });
     const isValid = validator.validateAll();
     process.exit(isValid ? 0 : 1);
 }
