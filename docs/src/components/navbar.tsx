@@ -43,7 +43,7 @@ export function CustomNavbar() {
         },
         {
             label: 'Kit',
-            href: '/kit',
+            href: '../kit',
             matches: ['/kit'],
         },
         {
@@ -76,7 +76,7 @@ export function CustomNavbar() {
                 <span className="font-semibold">Legend Open Source</span>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-8">
                 {navItems.map(({ label, href, matches }) => {
                     const isActive = isPathActive(currentPath, matches);
 

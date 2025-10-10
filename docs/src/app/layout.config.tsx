@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import Image from 'next/image';
 
 /**
  * Shared layout configurations
@@ -13,7 +13,7 @@ export const baseOptions: BaseLayoutProps = {
         title: (
             <>
                 <div className="flex items-center gap-2">
-                    <Image src="/assets/Logo.png" alt="Legend" width={24} height={24} />
+                    <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
 
                     <span className="font-semibold">Legend Docs</span>
                 </div>
