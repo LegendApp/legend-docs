@@ -7,7 +7,7 @@ Legend-State is an evolution of the state system we've been using internally in 
 
 ## ⚡️ Tiny and FAST
 
-Legend-State is the [fastest React state library](../fast), designed to be as efficient as possible. It does very little extra work and minimizes renders by only re-rendering components when their observables change. And at only `4kb` it won't hurt your bundle size.
+Legend-State is the [fastest React state library](./fast), designed to be as efficient as possible. It does very little extra work and minimizes renders by only re-rendering components when their observables change. And at only `4kb` it won't hurt your bundle size.
 
 ## 😌 Feels natural
 
@@ -26,11 +26,11 @@ observe(() => {
 
 ## 🔥 Fine-grained reactivity
 
-Using features like [Memo](../../react/fine-grained-reactivity#Memo) it's easy to isolate renders to the smallest possible change.
+Using features like [Memo](../react/fine-grained-reactivity#memo) it's easy to isolate renders to the smallest possible change.
 
 {/* TODO: Add Primitives interactive component */}
 
-For isolating a group of elements or computations, Legend-State has [built-in helpers](../../react/fine-grained-reactivity) to easily extract children so that their changes do not affect the parent. This keeps large parent components from rendering often just because their children change.
+For isolating a group of elements or computations, Legend-State has [built-in helpers](../react/fine-grained-reactivity) to easily extract children so that their changes do not affect the parent. This keeps large parent components from rendering often just because their children change.
 
 {/* TODO: Add MemoArrayExample interactive component */}
 
@@ -38,7 +38,7 @@ For isolating a group of elements or computations, Legend-State has [built-in he
 
 Some libraries hack up React internals to make signals and fine-grained reactivity work, which often doesn't work on all platforms and may break if React internals change.
 
-Legend-State does everything above-board using hooks, with all React functionality built on top of [useSelector](../../react/react-api#useselector), which just uses `useSyncExternalStore`. Check [the source](https://github.com/LegendApp/legend-state/blob/main/src/react/useSelector.ts) to see the lack of hackery.
+Legend-State does everything above-board using hooks, with all React functionality built on top of [useSelector](../react/react-api#useselector), which just uses `useSyncExternalStore`. Check [the source](https://github.com/LegendApp/legend-state/blob/main/src/react/useSelector.ts) to see the lack of hackery.
 
 ## 🤷‍♀️ Unopinionated
 
@@ -48,13 +48,13 @@ Some state libraries are for global state while some want state to reside within
 - **Individual atoms or one store**: Up to you 🤷‍♀️
 - **Modify directly or in actions/reducers**: Up to you 🤷‍♀️
 
-See [Patterns](../../guides/patterns) for more examples of different ways to use Legend-State.
+See [Patterns](../guides/patterns) for more examples of different ways to use Legend-State.
 
 ## 💾 Persistence built in
 
 > There are only two hard things in Computer Science: cache invalidation and naming things. - Phil Karlton
 
-We don't want developers to have to worry about persisting and syncing state, because it's often very complicated and error-prone. So we've built [persistence](../../guides/persistence) plugins using Legend-State's listeners, with extensive tests to make sure it's absolutely correct.
+We don't want developers to have to worry about persisting and syncing state, because it's often very complicated and error-prone. So we've built [persistence](../guides/persistence) plugins using Legend-State's listeners, with extensive tests to make sure it's absolutely correct.
 
 It currently includes plugins for local persistence with Local Storage and IndexedDB on web and [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) in React Native, and remote sync plugins for Firebase Realtime Database, TanStack Query, and `fetch`.
 
@@ -82,4 +82,4 @@ persistObservable(state$, {
 
 ## 🔫 It's safe from footguns
 
-Observables prevent direct assignment, favoring more purposeful `set` and `assign` functions instead. Read more in [safety](../../usage/observable#safety).
+Observables prevent direct assignment, favoring more purposeful `set` and `assign` functions instead. Read more in [safety](../usage/observable#safety).

@@ -3,7 +3,7 @@ title: React Introduction
 ---
 
 
-This is a high level overview for how to work with Legend-State in React. See [React API](../react-api) for more specific details. Legend-State supports both React and React Native, but most of the examples are in React for ease of showing live demos.
+This is a high level overview for how to work with Legend-State in React. See [React API](./react-api) for more specific details. Legend-State supports both React and React Native, but most of the examples are in React for ease of showing live demos.
 
 ## Component reactivity
 
@@ -11,7 +11,7 @@ The first step to working with observables in React is to make your components r
 
 ### enableReactTracking
 
-To get started we recommend [enableReactTracking](../../usage/configuring#enablereacttracking) - it's the easiest way to work with observables in React. You only need to enable this once in your app's entry point.
+To get started we recommend [enableReactTracking](../usage/configuring#enablereacttracking) - it's the easiest way to work with observables in React. You only need to enable this once in your app's entry point.
 
 ```jsx
 import { observable } from "@legendapp/state";
@@ -35,7 +35,7 @@ We recommend using this to get started and for rapid prototyping, but it's alway
 
 ### observer
 
-[observer](../react-api#observer) turns the component into an [observing context](../reactivity#observing-contexts) so that `.get()` will trigger re-render when observable change. This is the best and most efficient way to use observables in React. Just wrap your components in `observer` to make them efficiently track all accessed observables.
+[observer](./react-api#observer) turns the component into an [observing context](../usage/reactivity#observing-contexts) so that `.get()` will trigger re-render when observable change. This is the best and most efficient way to use observables in React. Just wrap your components in `observer` to make them efficiently track all accessed observables.
 
 <Callout title="Not an HOC">
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost, so it is extremely efficient.
@@ -58,7 +58,7 @@ const Component = observer(function Component() {
 
 ### useSelector
 
-`useSelector` returns the value of an observable or a function and updates the component when its value changes. You can use it for more complex cases to compute a value based on observables, and only re-render when its return value changes. See [useSelector](../react-api#useselector) for more in-depth details.
+`useSelector` returns the value of an observable or a function and updates the component when its value changes. You can use it for more complex cases to compute a value based on observables, and only re-render when its return value changes. See [useSelector](./react-api#useselector) for more in-depth details.
 
 ```jsx
 import { observable } from "@legendapp/state";
@@ -161,7 +161,7 @@ function User({ item }) {
 
 These fine-grained reactivity patterns are inspired by Knockout.js as well as more modern frameworks like Solid and Svelte. They are a great way to optimize your apps, but teams who want a more canonical React experience or easy migration may want to ignore or use them sparingly to optimize specific heavy components.
 
-[Read more](../fine-grained-reactivity)
+[Read more](./fine-grained-reactivity)
 
 ## Example
 

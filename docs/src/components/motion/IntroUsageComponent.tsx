@@ -1,6 +1,6 @@
 import { View } from 'react-native-web';
 import { ExampleAnim } from './ExampleAnim';
-import { Motion } from '@legendapp/motion/';
+import { Motion } from '@legendapp/motion';
 import { MotionSvg } from '@legendapp/motion/svg';
 import { MotionLinearGradient } from '@legendapp/motion/linear-gradient';
 import * as React from 'react';

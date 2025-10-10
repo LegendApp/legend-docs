@@ -68,7 +68,7 @@ const { data } = state$.get();
 processData(data);
 ```
 
-Calling `get()` within a tracking context tracks the observable automatically. You can change that behavior with a parameter `true` to track only when keys are added/removed. See [observing contexts](../reactivity/#observing-contexts) for more details.
+Calling `get()` within a tracking context tracks the observable automatically. You can change that behavior with a parameter `true` to track only when keys are added/removed. See [observing contexts](./reactivity#observing-contexts) for more details.
 
 ```js
 state$.get(true); // Create a shallow listener
@@ -97,7 +97,7 @@ state$.otherKey.otherProp.set("hi");
 
 ### assign()
 
-Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](../helper-functions/#mergeintoobservable).
+Assign is a shallow operation matching `Object.assign`. If you want a deep merge, see [mergeIntoObservable](./helper-functions#mergeintoobservable).
 
 ```js
 const state$ = observable({ text: "hi" });
@@ -247,7 +247,7 @@ state$.text.assign({ value: "hello there" });
 
 ### undefined
 
-Because observables track nodes [by path](../../intro/fast/#proxy-to-path) and not the underlying data, an observable points to a path within an object regardless of its actual value. So it is perfectly fine to access observables when they are currently undefined in the object.
+Because observables track nodes [by path](../intro/fast#proxy-to-path) and not the underlying data, an observable points to a path within an object regardless of its actual value. So it is perfectly fine to access observables when they are currently undefined in the object.
 
 You could to do this to set up a listener to a field whenever it becomes available.
 
@@ -278,7 +278,7 @@ state$.user.profile.name.set("Annyong");
 
 Observable arrays have all of the normal array functions as you'd expect, but some are modified for observables.
 
-All looping functions set up [shallow tracking](../reactivity#shallow-modifier) automatically, as well as provide the observable in the callback. This includes:
+All looping functions set up [shallow tracking](./reactivity#shallow-modifier) automatically, as well as provide the observable in the callback. This includes:
 
 - every
 - filter

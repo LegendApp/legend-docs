@@ -36,7 +36,7 @@ function Component() {
 <Callout type="warn" title="Caution: Rules of hooks">
 Under the hood this replaces the `get()` with a `useSelector` hook so it is subject to the rules of hooks. That means it can cause problems if you use `get()` conditionally or within a dynamic loop.
 
-We recommend that you use this while getting started and for rapid prototyping. Then wrap your components with [observer](../../react/react-api#observer) for improved performance and safety.
+We recommend that you use this while getting started and for rapid prototyping. Then wrap your components with [observer](../react/react-api#observer) for improved performance and safety.
 </Callout>
 
 ### enableReactComponents, enableReactNativeComponents
@@ -70,7 +70,7 @@ function Component() {
 }
 ```
 
-See [Reactive components](../../react/fine-grained-reactivity/#reactive-components) for more details.
+See [Reactive components](../react/fine-grained-reactivity#reactive-components) for more details.
 
 ### enableDirectAccess
 
@@ -158,7 +158,7 @@ function Component() {
 ### enableLegendStateReact (deprecated)
 
 <Callout type="warn">
-Note that these are deprecated in favor of using [Memo](../fine-grained-reactivity/#render-an-observableselector-directly). Although it was cool and terse, it was unclear at a glance that the element was reactive. Memo is exactly the same behavior, but more descriptive.
+Note that these are deprecated in favor of using [Memo](../react/fine-grained-reactivity#render-an-observableselector-directly). Although it was cool and terse, it was unclear at a glance that the element was reactive. Memo is exactly the same behavior, but more descriptive.
 </Callout>
 
 This enables rendering observables directly into React, creates an element that's reactive to the observable changing.
@@ -178,7 +178,7 @@ function Component() {
 
 
 <Callout type="warn">
-Note that these are deprecated in favor of using [Memo](../fine-grained-reactivity/#render-an-observableselector-directly). Although it was cool and terse, it was unclear at a glance that the element was reactive. Memo is exactly the same behavior, but more descriptive.
+Note that these are deprecated in favor of using [Memo](../react/fine-grained-reactivity#render-an-observableselector-directly). Although it was cool and terse, it was unclear at a glance that the element was reactive. Memo is exactly the same behavior, but more descriptive.
 </Callout>
 
 This enables rendering observables directly into React, creates an element that's reactive to the observable changing.
