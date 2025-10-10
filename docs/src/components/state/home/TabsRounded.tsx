@@ -44,7 +44,7 @@ const Tab = observer(function Tab({
     const ref = useRef<HTMLDivElement>(null);
     // const size$ = useMeasure(ref);
     const pos$ = useElementPosition(ref, groupName);
-    useMemo(() => tabPosition$.set(pos$), [index]);
+    useMemo(() => tabPosition$.set(pos$), [pos$, tabPosition$]);
 
     const isActive = name === (activeTab || defaultTab);
 
@@ -85,7 +85,7 @@ interface Props<T extends string> {
     tabPadding?: `pb-${number}`;
     onSelect?: (tab: T) => void;
     numVariant?: Record<T, 'default' | 'red'>;
-    listsForNum?: Record<any, any[]>;
+    listsForNum?: Record<string, unknown[]>;
 }
 
 export const TabsRounded = observer(function TabsRounded<T extends string>({
@@ -120,7 +120,7 @@ export const TabsRounded = observer(function TabsRounded<T extends string>({
     const tabPositions$ = useObservable<Record<string, PositionSize>>({});
     const tabPositions = tabPositions$.get();
 
-    const tabIndex = tabs.indexOf(activeTab || (defaultTab as any));
+    const tabIndex = tabs.indexOf(activeTab || (defaultTab as T));
 
     const defaultHeight = 32;
     const underlineAnimate: { x: number; y: number; width: number } =
@@ -156,7 +156,7 @@ export const TabsRounded = observer(function TabsRounded<T extends string>({
                         activeTab={activeTab as string}
                         $activeTab={$activeTab as unknown as Observable<string>}
                         defaultTab={defaultTab as string}
-                        setActiveTab={onSelect as any}
+                        setActiveTab={onSelect as (value: string) => void}
                         numVariant={numVariant?.[tab]}
                         numValue={listsForNum?.[tab]?.length}
                         index={i}

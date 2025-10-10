@@ -8,15 +8,12 @@ const styleBox = {
     borderRadius: 8,
 };
 
-const MotionPressable = Motion.Pressable;
-const MotionView = Motion.View;
-
 const IntroExample = () => {
     return (
         <ExampleAnim width={200}>
             {(value) => (
-                <MotionPressable>
-                    <MotionView
+                <Motion.Pressable>
+                    <Motion.View
                         style={styleBox}
                         initial={{ y: -50 }}
                         animate={{ x: value * 100, y: 0 }}
@@ -24,7 +21,7 @@ const IntroExample = () => {
                         whileTap={{ y: 20 }}
                         transition={{ type: 'spring', stiffness: 200, damping: 14 }}
                     />
-                </MotionPressable>
+                </Motion.Pressable>
             )}
         </ExampleAnim>
     );

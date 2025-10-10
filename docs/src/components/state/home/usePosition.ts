@@ -13,8 +13,8 @@ export interface PositionSize {
 
 const mapGroups = new Map<string, ObservableEvent>();
 
-function getStyle(el: HTMLElement, styleName: any) {
-  return getComputedStyle(el)[styleName] as any;
+function getStyle(el: HTMLElement, styleName: keyof CSSStyleDeclaration) {
+  return getComputedStyle(el)[styleName] as string;
 }
 
 function getOffset(el: HTMLElement) {
@@ -24,14 +24,14 @@ function getOffset(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
   const doc = el.ownerDocument;
   if (!doc) throw new Error("Unexpectedly missing <document>.");
-  const win = doc.defaultView || (doc as any).parentWindow;
+  const win = doc.defaultView || (doc as Document & { parentWindow?: Window }).parentWindow;
 
   const body = (doc.documentElement ||
     doc.body.parentNode ||
     doc.body) as HTMLElement;
   const winX =
-    win.pageXOffset !== undefined ? win.pageXOffset : body.scrollLeft;
-  const winY = win.pageYOffset !== undefined ? win.pageYOffset : body.scrollTop;
+    win?.pageXOffset !== undefined ? win.pageXOffset : body.scrollLeft;
+  const winY = win?.pageYOffset !== undefined ? win.pageYOffset : body.scrollTop;
 
   return {
     left: rect.left + winX,
@@ -95,7 +95,14 @@ function usePositionOrOffset(
   group?: string
 ): Observable<PositionSize> {
   const fn = type === "position" ? getPosition : getOffset;
-  const elementPosition$ = useObservable<PositionSize>();
+  const elementPosition$ = useObservable<PositionSize>({
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 0,
+    height: 0,
+  });
 
   function handleChangePosition() {
     elementPosition$.set(fn(ref.current!));
@@ -133,7 +140,7 @@ function usePositionOrOffset(
     };
   }, [ref]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return elementPosition$ as any;
+  return elementPosition$;
 }
 
 type Fn = (

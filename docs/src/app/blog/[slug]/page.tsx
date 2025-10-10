@@ -10,6 +10,7 @@ import { getMDXComponents } from '@/mdx-components';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import '@/styles/blog-post.css';
+import Link from 'fumadocs-core/link';
 
 function addFilenameDatePrefix(slug: string): string {
     // Try to find the original page with date prefix
@@ -110,7 +111,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         style: 'clerk',
                         single: false,
                         header: (
-                            <a
+                            <Link
                                 href="/blog"
                                 className="inline-flex items-center gap-2 text-sm text-fd-muted-foreground hover:text-white transition-colors mb-6 -mt-6"
                             >
@@ -123,7 +124,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                     />
                                 </svg>
                                 All posts
-                            </a>
+                            </Link>
                         ),
                     }}
                     container={{
