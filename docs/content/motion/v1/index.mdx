@@ -40,26 +40,21 @@ Legend-Motion can be installed in React Native or React Native Web.
 
 ### Installation
 
-```bash
+```npm
 npm install @legendapp/motion
-```
-
-### Importing
-
-```js
-import { Motion } from "@legendapp/motion"
 ```
 
 ### Usage
 
 Then set values on the `animate` prop to animate as the value changes.
 
-<Editor
-  code={`<IntroUsageComponent />`}
-  hideCode
-/>
+<div className="md:flex gap-x-3 items-center">
+
+<div className="flex-1">
 
 ```jsx
+import { Motion } from "@legendapp/motion"
+
 <Motion.View
     animate={{
         x: value * 100,
@@ -68,6 +63,15 @@ Then set values on the `animate` prop to animate as the value changes.
     }}
 />
 ```
+
+</div>
+
+<Editor
+  code={`<IntroUsageComponent />`}
+  hideCode
+/>
+
+</div>
 
 See the [Overview page](./usage/overview) for a more detailed usage guide.
 

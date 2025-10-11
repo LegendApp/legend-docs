@@ -54,7 +54,7 @@ Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estima
 ### Set DrawDistance Prop
 
 ```ts
-drawDistance?: number
+drawDistance?: number // default: 250
 ```
 
 The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. So for example if your screen is `2000px` tall and your draw distance is `1000`, then it will render double your screen size, from `-1000px` above the viewport to `1000px` below the viewport.
@@ -62,11 +62,11 @@ The `drawDistance` (defaults to `250`) is the buffer size in pixels above and be
 This can help reduce the amount of blank space while scrolling quickly. But if your items are computationally expensive, it may reduce performance because more items are rendering at once. So you should experiment with it to find the most optimal behavior for your app.
 
 
-### Use `waitForInitialLayout` Prop
+### Set `waitForInitialLayout` Prop
 
 ```ts
-waitForInitialLayout?: boolean
+waitForInitialLayout?: boolean // default: true
 ```
 
-If the size of your list items differs significantly from the estimate, you may see a layout jump after the first render. If so, the `waitForInitialLayout` prop solves that by delaying displaying list items by one frame so they start at the correct position.
+If the size of your list items differs significantly from the estimate, you may see a layout jump after the first render. If so, the `waitForInitialLayout` prop solves that by delaying displaying list items by one frame so they start at the correct position. But, if you have fixed sized items then you may not want to disable it to avoid waiting a frame.
 

@@ -147,7 +147,7 @@ Ratio of initial container pool size to data length. The container pool is extra
 initialScrollIndex?: number;
 ```
 
-Start scrolled with this item at the top. By default, to have accurate scrolling position you will need to provide accurate element positions to the [getEstimatedItemSize](#getestimateditemsize) function(similar FlatList). When accurate positions are not known (e.g., for dynamically sized list items), please enable [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop. This will allow LegendList to automatically adjust its top boundary when elements below initialScrollIndex will be measured.
+Start scrolled with this item at the top. By default, to have accurate scrolling position you will need to provide accurate element positions to the [getEstimatedItemSize](#getestimateditemsize) function. When accurate positions are not known (e.g., for dynamically sized list items), please enable [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop. This will allow LegendList to automatically adjust its top boundary when elements below initialScrollIndex will be measured.
 
 ### initialScrollOffset
 
@@ -421,7 +421,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#viewabilityconfigc
 ### waitForInitialLayout
 
 ```ts
-waitForInitialLayout?: boolean; // default false
+waitForInitialLayout?: boolean; // default true
 ```
 
 If true, delays rendering until initial layout is complete

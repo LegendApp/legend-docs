@@ -58,8 +58,7 @@ export function InfiniteScrollExample() {
       onStartReached={loadMoreAtStart}
       onEndReachedThreshold={0.5}
       onStartReachedThreshold={0.5}
-      maintainVisibleContentPosition
-      estimatedItemSize={80}
+      recycleItems
     />
   );
 }
