@@ -1,11 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { Sidebar as SidebarIcon } from 'fumadocs-ui/internal/icons';
+import { cn } from 'fumadocs-ui/utils/cn';
+import { DocsLayout, Navbar, SidebarTrigger } from 'fumadocs-ui/layouts/docs';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getFirstDocsPath } from '@/lib/getDocsPath';
 import Link from 'fumadocs-core/link';
+import { baseOptions } from '@/app/layout.config';
+import { SearchToggle } from 'fumadocs-ui/components/layout/search-toggle';
+import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 
 function normalizePath(value?: string | null) {
     if (!value) {
@@ -35,6 +41,9 @@ export function CustomNavbar() {
     const pathname = usePathname();
     const currentPath = normalizePath(pathname);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const searchToggleConfig = baseOptions.searchToggle;
+
+    const searchToggleNode = searchToggleConfig?.components?.sm ?? <SearchToggle className="p-2" hideIfDisabled />;
 
     const navItems = [
         {
@@ -98,17 +107,18 @@ export function CustomNavbar() {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/20 backdrop-blur-sm flex items-center justify-between px-4 py-3 border-b">
+            <nav className="fixed top-0 left-0 right-0 z-50 h-[50px] bg-fd-background/20 backdrop-blur-sm flex items-center justify-between pl-4 pr-3 py-3 border-b">
                 <Link href="/" className="flex items-center gap-2">
                     <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
 
-                    <span className="font-semibold">Legend Open Source</span>
+                    <span className="font-semibold hidden md:block">Legend Open Source</span>
+                    <span className="font-semibold md:hidden">Legend Docs</span>
                 </Link>
 
-                <div className="flex items-center gap-4 md:gap-8">
+                <div className="flex items-center md:hidden">
                     <button
                         type="button"
-                        className="inline-flex items-center justify-center rounded-md border border-transparent p-2 text-foreground/70 hover:text-foreground/90 focus:outline-none focus:ring-2 focus:ring-blue-400 md:hidden"
+                        className="inline-flex items-center justify-center rounded-md border border-transparent p-2 text-foreground/70 hover:text-foreground/90 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         aria-expanded={isMenuOpen}
                         aria-label="Toggle navigation menu"
                         onClick={() => setIsMenuOpen((value) => !value)}
@@ -146,10 +156,22 @@ export function CustomNavbar() {
                             </svg>
                         )}
                     </button>
+                    {searchToggleConfig?.enabled !== false ? searchToggleNode : null}
 
-                    <div className="hidden md:flex items-center gap-8 text-sm">
-                        {navItems.map(({ label, href, matches }) => renderNavLink(label, href, matches))}
-                    </div>
+                    <SidebarTrigger
+                        className={cn(
+                            buttonVariants({
+                                color: 'ghost',
+                                size: 'icon-sm',
+                                className: 'p-2',
+                            }),
+                        )}
+                    >
+                        <SidebarIcon className="size-4.5" />
+                    </SidebarTrigger>
+                </div>
+                <div className="hidden md:flex items-center gap-8 text-sm pr-1">
+                    {navItems.map(({ label, href, matches }) => renderNavLink(label, href, matches))}
                 </div>
             </nav>
             {isMenuOpen ? (

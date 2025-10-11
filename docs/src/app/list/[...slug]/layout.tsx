@@ -1,18 +1,25 @@
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import type { ReactNode } from 'react';
 import { baseOptions } from '@/app/layout.config';
-import { source } from '@/lib/sources/list';
 import { CustomNavbar } from '@/components/navbar';
-import { TbHexagonNumber1Filled, TbHexagonNumber2Filled } from 'react-icons/tb';
 import { getFirstDocsPath } from '@/lib/getDocsPath';
+import { source } from '@/lib/sources/list';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { cn } from 'fumadocs-ui/utils/cn';
+import type { ReactNode } from 'react';
+import { TbHexagonNumber1Filled, TbHexagonNumber2Filled } from 'react-icons/tb';
 
 export default function Layout({ children }: { children: ReactNode }) {
+    const sidebarEnabled = true;
+
     return (
         <DocsLayout
             tree={source.pageTree}
             {...baseOptions}
-            nav={{ component: <CustomNavbar /> }}
+            nav={{
+                component: <CustomNavbar />,
+                title: 'Legend List',
+            }}
             sidebar={{
+                enabled: sidebarEnabled,
                 defaultOpenLevel: 1,
                 tabs: [
                     {
@@ -28,6 +35,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                         icon: <TbHexagonNumber2Filled size={20} />,
                     },
                 ],
+            }}
+            containerProps={{
+                className: cn('[--fd-nav-height:106px]', 'md:[--fd-nav-height:50px]'),
             }}
         >
             {children}

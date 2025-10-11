@@ -15,6 +15,12 @@
     top: calc(var(--fd-nav-height) + 8px) !important;
 }
 
+@media (max-width: 768px) {
+    #nd-docs-layout {
+        padding-top: 16px !important;
+    }
+}
+
 .bg-fd-primary {
     background-color: #0099dd;
 }

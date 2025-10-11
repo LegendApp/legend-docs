@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <DocsLayout
             tree={source.pageTree}
             {...baseOptions}
-            nav={{ component: <CustomNavbar /> }}
+            nav={{ component: <CustomNavbar />, title: 'Legend State' }}
             sidebar={{
                 defaultOpenLevel: 1,
                 tabs: [
