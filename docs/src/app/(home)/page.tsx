@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { HomePageLayout } from '@/components/HomePageLayout';
 import classNames from 'classnames';
+import { getFirstDocsPath } from '@/lib/getDocsPath';
 
 interface LibraryCardProps {
     title: string;
@@ -69,21 +70,21 @@ export default function HomePage() {
             title: 'Legend State',
             description: 'Ultra-fast state management with fine-grained reactivity and powerful sync capabilities.',
             href: '/state',
-            docsHref: '/state/',
+            docsHref: getFirstDocsPath('state'),
             githubHref: 'https://github.com/LegendApp/legend-state',
         },
         {
             title: 'Legend List',
             description: 'A very fast virtualized list for React and React Native with smooth scrolling.',
             href: '/list',
-            docsHref: '/list/v2/intro',
+            docsHref: getFirstDocsPath('list'),
             githubHref: 'https://github.com/LegendApp/legend-list',
         },
         {
             title: 'Legend Motion',
             description: 'Smooth, performant animations with a declarative API for stunning motion experiences.',
             href: '/motion/v1',
-            docsHref: '/motion/v1',
+            docsHref: getFirstDocsPath('motion'),
             githubHref: 'https://github.com/LegendApp/legend-motion',
         },
     ];
