@@ -48,12 +48,12 @@ export function CustomNavbar() {
     const navItems = [
         {
             label: 'Legend',
-            href: '/',
+            href: '~/',
             matches: ['/'],
         },
         {
             label: 'Kit',
-            href: '/kit',
+            href: '~/kit',
             matches: ['/kit'],
         },
         {
@@ -85,10 +85,12 @@ export function CustomNavbar() {
     const renderNavLink = (label: string, href: string, matches: string[], isCompact = false) => {
         const isActive = isPathActive(currentPath, matches);
 
+        const Component = href.startsWith('~') ? 'a' : Link;
+
         return (
-            <Link
+            <Component
                 key={label}
-                href={href}
+                href={href.replace('~', '')}
                 className={classNames(
                     'font-medium transition-colors',
                     isCompact && 'rounded px-3 py-2',
@@ -101,7 +103,7 @@ export function CustomNavbar() {
                 }}
             >
                 {label}
-            </Link>
+            </Component>
         );
     };
 

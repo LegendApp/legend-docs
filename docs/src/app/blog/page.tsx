@@ -3,10 +3,72 @@ import Link from 'next/link';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
+import type { PageTree } from 'fumadocs-core/server';
 
 function removeFilenameDatePrefix(slug: string): string {
     // Remove YYYY-MM-DD- prefix from slug
     return slug.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+}
+
+function removeDatePrefixFromUrl(url: string): string {
+    if (!url.startsWith('/blog/')) {
+        return url;
+    }
+
+    const parsedUrl = new URL(url, 'http://localhost');
+    const segments = parsedUrl.pathname.split('/').filter(Boolean);
+
+    if (segments.length === 0) {
+        return url;
+    }
+
+    const lastIndex = segments.length - 1;
+    const lastSegment = segments[lastIndex];
+    const sanitizedSegment = removeFilenameDatePrefix(lastSegment);
+
+    if (sanitizedSegment === lastSegment) {
+        return url;
+    }
+
+    segments[lastIndex] = sanitizedSegment;
+    parsedUrl.pathname = `/${segments.join('/')}`;
+
+    return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
+}
+
+function sanitizeSidebarItem(item: PageTree.Item): PageTree.Item {
+    const sanitizedUrl = removeDatePrefixFromUrl(item.url);
+
+    if (sanitizedUrl === item.url) {
+        return item;
+    }
+
+    return {
+        ...item,
+        url: sanitizedUrl,
+    };
+}
+
+function sanitizeSidebarNode(node: PageTree.Node): PageTree.Node {
+    if (node.type === 'page') {
+        return sanitizeSidebarItem(node);
+    }
+
+    if (node.type === 'folder') {
+        const sanitizedIndex = node.index ? sanitizeSidebarItem(node.index) : undefined;
+
+        return {
+            ...node,
+            ...(node.index ? { index: sanitizedIndex } : {}),
+            children: node.children.map(sanitizeSidebarNode),
+        };
+    }
+
+    return node;
+}
+
+function sanitizeSidebarNodes(nodes: PageTree.Node[]): PageTree.Node[] {
+    return nodes.map(sanitizeSidebarNode);
 }
 
 export default async function BlogPage() {
@@ -28,7 +90,7 @@ export default async function BlogPage() {
             return dateB.getTime() - dateA.getTime();
         });
 
-    const pageTreeChildren = [...source.pageTree.children].reverse();
+    const pageTreeChildren = sanitizeSidebarNodes([...source.pageTree.children].reverse());
 
     return (
         <DocsLayout
