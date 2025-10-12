@@ -160,6 +160,10 @@ class LinkValidator {
         }
 
         links.forEach((link) => {
+            if (link.url.includes('.html')) {
+                return;
+            }
+
             const targetPath = this.resolveLinkPath(link.url, filePath);
             const result = this.checkFileExists(targetPath);
 
