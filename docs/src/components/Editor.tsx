@@ -91,7 +91,7 @@ const Box = ({
     <div
         className={classNames(
             'rounded-lg p-4 relative max-w-sm',
-            theme === 'light' ? 'bg-fd-card text-zinc-900' : 'bg-fd-card text-zinc-100',
+            theme === 'light' ? 'bg-white text-zinc-900' : 'bg-fd-card text-zinc-100',
             className,
         )}
     >
@@ -100,17 +100,22 @@ const Box = ({
 );
 
 const Button = ({
+    theme,
     onClick,
     children,
     className,
 }: {
+    theme?: 'light' | 'dark';
     onClick: () => void;
     children: React.ReactNode;
     className?: string;
 }) => (
     <button
         className={classNames(
-            'block px-4 h-10 my-4 font-bold rounded-lg shadow text-2xs cursor-pointer transition-colors bg-zinc-600 hover:bg-zinc-500',
+            'block px-4 h-10 my-4 font-bold rounded-lg shadow text-2xs cursor-pointer transition-colors',
+            theme === 'light'
+                ? 'bg-zinc-200 hover:bg-zinc-300 text-zinc-900'
+                : 'bg-zinc-600 hover:bg-zinc-500 text-white',
             className,
         )}
         onClick={onClick}
