@@ -12,21 +12,36 @@ Legend List is a high performance virtualized ScrollView library for React Nativ
 - ✨ Maintain content view position
 - ✨ Recycling hooks
 
-For more information, listen to Jay's conversation on React Native Radio [here](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich).
+For more information, check out:
+- [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
+- [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
+- [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
 
-<div style={{width: 600, maxWidth: '100%', margin: '32px auto 0 auto', borderRadius: 4, overflow: 'hidden'}}>
+
+## It's fast!
+
+This video was recorded as a performance test scrolling ludicrously fast with heavy items. LegendList handles expensive components with a quick recovery.
+
+<div className="w-[800px] max-w-full mx-auto rounded-lg overflow-hidden">
     <video
-        src="/open-source/assets/legendlist1.mp4"
+        src="/open-source/assets/legendlist2.mp4"
         controls
         width="100%"
         height="100%"
         autoPlay
         loop
         muted
+        className="rounded-lg"
     />
 </div>
 
 <br />
+
+## It uses less resources
+
+A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
+
+<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-lg overflow-hidden" />
 
 ## Install
 

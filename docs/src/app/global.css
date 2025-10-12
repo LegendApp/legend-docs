@@ -31,7 +31,8 @@
     line-height: var(--tw-leading, var(--text-sm--line-height)) !important;
 }
 
-.prose p a {
+.prose p a,
+.prose li a {
     color: #0099dd !important;
 }
 
