@@ -1,7 +1,8 @@
+import { getFirstDocsPath } from '@/lib/getDocsPath';
 import { redirect } from 'next/navigation';
 
 export default function ListPage() {
-    redirect('/list/v2');
+    redirect(getFirstDocsPath('list'));
 
     // return (
     //     <HomePageLayout>

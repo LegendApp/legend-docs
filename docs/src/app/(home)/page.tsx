@@ -70,7 +70,7 @@ export default function HomePage() {
             title: 'Legend State',
             description: 'Ultra-fast state management with fine-grained reactivity and powerful sync capabilities.',
             href: '/state',
-            docsHref: getFirstDocsPath('state'),
+            docsHref: '/state',
             githubHref: 'https://github.com/LegendApp/legend-state',
         },
         {
