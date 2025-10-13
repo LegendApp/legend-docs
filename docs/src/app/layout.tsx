@@ -1,7 +1,7 @@
 import '@/app/global.css';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
-import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { Provider } from './provider';
 
@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     return (
         <html lang="en" className={inter.className} suppressHydrationWarning>
             <body className="flex flex-col min-h-screen">
-                {gtmId && <GoogleTagManager gtmId={gtmId} />}
+                {gtmId && <GoogleAnalytics gaId={gtmId} />}
                 <Provider>{children}</Provider>
             </body>
         </html>
