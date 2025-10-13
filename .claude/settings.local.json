@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:fumadocs.dev)",
+      "WebFetch(domain:fumadocs.dev)",
+      "Bash(mkdir:*)",
+      "Bash(npm create:*)",
+      "Bash(bun create:*)",
+      "Bash(rm:*)",
+      "Bash(bun run:*)",
+      "WebFetch(domain:fumadocs.vercel.app)",
+      "Bash(cat:*)",
+      "Bash(bun add:*)",
+      "Bash(cp:*)",
+      "Bash(touch:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(npx tsc:*)",
+      "Bash(grep:*)",
+      "Bash(bun validate-links:*)",
+      "Bash(bun scripts/validate-links.ts:*)",
+      "Bash(bun:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

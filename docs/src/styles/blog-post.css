@@ -1,0 +1,18 @@
+.blog-post h2 {
+    font-size: 2.2em;
+}
+
+.blog-post h3 {
+    font-size: 1.5em;
+}
+
+.blog-post code .line,
+.blog-post .prism-code .token-line {
+    font-size: 12px;
+    --padding-right: 16px;
+    line-height: 1.6 !important;
+}
+
+.blog-post .prism-code {
+    padding-bottom: 16px;
+}

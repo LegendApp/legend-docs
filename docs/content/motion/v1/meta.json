@@ -1,0 +1,5 @@
+{
+    "title": "Motion v1",
+    "root": true,
+    "pages": ["getting-started", "usage", "resources"]
+}

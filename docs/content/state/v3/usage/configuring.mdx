@@ -1,0 +1,79 @@
+---
+title: Configuring
+---
+
+Legend-State is designed to have a lean core that allows you and your team to add additional features, so it has configuration functions to add features as you like.
+
+These functions add features and augment the TypeScript interface to add the new functions, so just importing the file adds the interface.
+
+These configuration functions only need to be called once, before their effects are used, and then they will work anywhere. It should generally be at the top of the file that's the entry point of your app or is imported everywhere, or it could be at the top of a global state file.
+
+## enable$GetSet
+
+This enables accessing and setting the raw value of an observable directly. It's a shorthand for `get()` and `set(...)`.
+
+```js
+import { enable$GetSet } from "@legendapp/state/config/enable$GetSet";
+enable$GetSet();
+```
+
+Now you can access/modify observables directly.
+
+```js
+import { observable } from "@legendapp/state"
+
+const state$ = observable({ test: "hi", num: 0 })
+
+// $ is a shorthand for get()
+const testValue = state$.test.$
+
+// Assign to $ as a shorthand for set()
+state$.test.$ = "hello"
+
+// Assign objects too just like you can with set()
+state$.$ = { test: "hello" }
+
+// Incrementing works as you'd expect
+state$.num.$++
+```
+
+## enable_PeekAssign
+
+This enables accessing and setting the raw value of an observable directly without tracking or notifying listeners. Getting with `._` is a shorthand for `peek()` and assigning to `._` modifies the underlying data without notifying.
+
+```js
+import { enable_PeekAssign } from "@legendapp/state/config/enable_PeekAssign";
+enable_PeekAssign();
+```
+
+Now you can access/modify observables directly without notifying.
+
+```js
+import { observable } from "@legendapp/state"
+
+const state$ = observable({ test: "hi", num: 0 })
+
+// _ is a shorthand for peek()
+const testValue = state$.test._
+
+// Assign to _ to modify the underlying object without notifying listeners
+state$.test._ = "hello"
+
+// Assign objects too
+state$._ = { test: "hello" }
+```
+
+## enableReactTracking
+
+`enableReactTracking` is useful to warn if a `get()` is called within a React component without being wrapped in `useValue`, which would break the reactivity.
+
+### warnMissingUse
+
+This will log a warning whenever `get()` is called within a React component. This can help you find places where you meant to use `useValue` to track the observable in React, or you may want to change it to `peek()` to be clearer that it should not trigger updates.
+
+```js
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking"
+enableReactTracking({
+    warnMissingUse: true,
+})
+```

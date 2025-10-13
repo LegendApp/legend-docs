@@ -1,0 +1,47 @@
+---
+title: Next.js
+---
+
+There are a few extra steps to get Legend-Motion working on Next.js.
+
+First, Legend-Motion and its dependencies need to be added to the transpile list.
+
+
+```npm
+npm install next-transpile-modules
+```
+
+Then wrap your export in `next.config.js` with `withTM`. This is the full config needed to setup Legend-Motion including Linear Gradient and SVG features. You can remove those lines if you don't need them.
+
+```js
+const withTM = require("next-transpile-modules")([
+  "@legendapp/motion",
+  // Only required for MotionLinearGradient:
+  "react-native-linear-gradient",
+  // Only required for MotionSvg:
+  "react-native-svg",
+]);
+
+module.exports = withTM({
+  webpack(cfg) {
+    cfg.resolve.alias = {
+      ...(cfg.resolve.alias || {}),
+      "react-native$": "react-native-web",
+      // Only required for MotionLinearGradient:
+      "react-native-linear-gradient": "react-native-web-linear-gradient",
+    };
+    // Only required for MotionSvg:
+    cfg.resolve.extensions = [
+      ".web.js",
+      ".web.jsx",
+      ".web.ts",
+      ".web.tsx",
+      ...cfg.resolve.extensions,
+    ];
+
+    return cfg;
+  },
+});
+```
+
+**_Note_**: The reason for these changes is that `react-native-svg` needs `.web.js` to be added to the resolve extensions, and Linear Gradient requires aliasing `react-native-linear-gradient` to `react-native-web-linear-gradient`.

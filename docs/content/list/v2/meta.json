@@ -1,0 +1,6 @@
+{
+    "title": "Version 2",
+    "description": "Current stable version",
+    "root": true,
+    "pages": ["getting-started", "props", "performance", "animated", "examples"]
+}

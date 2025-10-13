@@ -1,0 +1,93 @@
+---
+title: Tailwind CSS
+---
+
+Legend-Motion includes a special set of Motion components that support TailwindCSS `className` by using [NativeWind](https://www.nativewind.dev).
+
+<Editor
+  code={`
+<ExampleAnim width={320} noValue time={1600}>
+  {(value) => (
+    <View style={{ alignItems: 'center' }}>
+      <MotionStyled.View
+        style={{
+          width: 220,
+          borderRadius: 16,
+          backgroundColor: '#59B0F8',
+          marginBottom: 24,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 16
+        }}
+        animate={{ x: value ? 50 : 0 }}
+      >
+        <MotionStyled.Text
+          className="font-bold text-white"
+          style={{ color: '#fff', fontWeight: '600' }}
+        >
+          RN View
+        </MotionStyled.Text>
+      </MotionStyled.View>
+      <MotionStyled.View
+        style={{
+          width: 220,
+          borderRadius: 16,
+          backgroundColor: '#F81FEC',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 16
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ x: 30 }}
+      >
+        <MotionStyled.Text
+          className="font-bold text-white"
+          style={{ color: '#fff', fontWeight: '600' }}
+        >
+          Press me
+        </MotionStyled.Text>
+      </MotionStyled.View>
+    </View>
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+  previewWidth={360}
+/>
+
+```jsx
+<Motion.View
+  className="items-center justify-center p-4"
+  animate={{ x: value * 50 }}
+>
+  <Motion.Text className="font-bold text-white">RN View</Motion.Text>
+</Motion.View>
+<Motion.View
+  className="items-center justify-center p-4 mt-8"
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ x: 30 }}
+>
+  <Motion.Text className="font-bold text-white">Press me</Motion.Text>
+</Motion.View>
+```
+
+
+## Installation
+
+1. This depends on [NativeWind](https://www.nativewind.dev) so first follow its [installation steps](https://www.nativewind.dev).
+
+2. Then pass `styled` into `configureMotion`
+
+```js
+import { styled } from "nativewind";
+import { configureMotion } from "@legendapp/motion";
+
+configureMotion({ styled });
+```
+
+<br />
+3. Then just change the Motion import to `/styled`
+
+```js
+import { Motion } from "@legendapp/motion/styled";
+```

@@ -1,0 +1,102 @@
+---
+title: Legend Motion
+---
+
+Legend-Motion is a declarative animations library for React Native, to make it easy to transition between styles without needing to manage animations.
+
+<div className="flex gap-x-4 items-center">
+    <div className="flex-1">
+```jsx
+<Motion.View
+    initial={{ y: -50 }}
+    animate={{ x: value * 100, y: 0 }}
+    whileHover={{ scale: 1.2 }}
+    whileTap={{ y: 20 }}
+    transition={{ type: "spring" }}
+/>
+```
+    </div>
+    <Editor
+        code={`<IntroComponent />`}
+        hideCode
+    />
+</div>
+
+## Highlights
+
+- ✨ Supports react-native and react-native-web
+- ✨ API similar to Framer Motion for easy mixing of React Native with React
+- ✨ Supports animating SVG and linear gradient
+- ✨ Supports transformOrigin
+- ✨ whileHover and whileTap for easy animations on touch
+- ✨ AnimatePresence for exit animations
+- ✨ 0 dependencies using the built-in Animated
+- ✨ Built for maximum performance
+- ✨ Strongly typed with TypeScript
+
+## Quick Start
+
+Legend-Motion can be installed in React Native or React Native Web.
+
+### Installation
+
+```npm
+npm install @legendapp/motion
+```
+
+### Usage
+
+Then set values on the `animate` prop to animate as the value changes.
+
+<div className="md:flex gap-x-3 items-center">
+
+<div className="flex-1">
+
+```jsx
+import { Motion } from "@legendapp/motion"
+
+<Motion.View
+    animate={{
+        x: value * 100,
+        opacity: value ? 1 : 0.2,
+        scale: value ? 1 : 0.5
+    }}
+/>
+```
+
+</div>
+
+<Editor
+  code={`<IntroUsageComponent />`}
+  hideCode
+/>
+
+</div>
+
+See the [Overview page](./usage/overview) for a more detailed usage guide.
+
+## Motivation
+
+**Easy to use**: We love the API of Framer-Motion in our web apps and wanted to build our React Native animations with the same ease.
+
+**Interoperable with React**: At [Legend](https://legendapp.com) and [Bravely](https://bravely.io) our web apps mix React.js with components from our React Native apps using react-native-web, and we wanted them to work the same way.
+
+**High performance**: Performance is extremely important to us so we designed for maximum performance with as little overhead as possible, using 0 dependences and minimal code. This library is tree shakeable and comes in at a total of 3kb gzipped if you use every feature.
+
+**Svg and Gradients**: The [Bravely](https://bravely.io) app makes heavy use of gradient and svg animations, so we wanted to make that easy for our developers and yours.
+
+## How it works
+
+To keep the code small and and performance high, we tried to design this as simply as possible.
+
+When a prop passed into `animate` changes, the `Motion` component starts an `Animated.spring` or `Animated.timing` animation with the new prop. If the prop is a string or array, it needs to be interpolated, so it bounces the value of an `AnimatedInterpolation` between 0 and 1, interpolating between the previous prop and the new prop.
+
+For SVG animations, `legend-animations` provides Motion wrappers around all of the `react-native-svg` components, which itself supports passing Animated values into its props.
+
+Linear Gradient animations were inspired by [react-native-animated-linear-gradient](https://github.com/heineiuo/react-native-animated-linear-gradient) (see it for a great description of how it works) and Legend-Motion additionally includes support for multiple color stops and animating `start` and `end`.
+
+## Alternatives
+
+### Moti
+
+[Moti](https://moti.fyi) may be better for you, depending on your needs. It has a similar goal and has some other advanced features like variants, delays, and sequences. But it is larger, depends on Reanimated 2, has a different API, and does not include svg or gradient animations.

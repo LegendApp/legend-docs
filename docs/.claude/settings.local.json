@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:fumadocs.vercel.app)",
+      "WebFetch(domain:fumadocs.dev)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

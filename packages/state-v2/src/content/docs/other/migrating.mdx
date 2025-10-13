@@ -30,6 +30,8 @@ To migrate you can remove usage of `enableLegendStateReact()` or `enableReactDir
 If you were using `enableLegendStateReact` to render direct observables heavily, [enableReactDirectRender](../../usage/configuring#enablereactdirectrender-deprecated) is still usable to ease migration, though it will throw TypeScript errors to help you migrate away. It will be fully removed in version 3.0.
 
 ```jsx
+import { Memo, useObservable } from "@legendapp/state/react";
+
 // Remove these:
 enableLegendStateReact();
 enableLegendStateReact();
@@ -69,6 +71,7 @@ To:
 ```js
 // React
 import { enableReactComponents } from "@legendapp/state/config/enableReactComponents";
+import { Reactive } from "@legendapp/state/react";
 enableReactComponents();
 
 // React Native
@@ -76,8 +79,6 @@ import { enableReactNativeComponents } from "@legendapp/state/config/enableReact
 enableReactNativeComponents();
 
 // Now you can use them anywhere
-import { Reactive } from "@legendapp/state/react";
-
 function Component() {
   // React
   return <Reactive.div>...</Reactive.div>;
@@ -98,6 +99,8 @@ In an earlier version reactive props ended with $ and were changed in version 1.
 A recommended way to find and replace all of instances of the old method is to find `$=` in all files.
 
 ```jsx
+import { Reactive, useObservable } from "@legendapp/state/react";
+
 function Component() {
   const text$ = useObservable("test");
   return (
@@ -148,15 +151,13 @@ Since there were not any remote persistence plugins before, these changes would 
 
 The `/react-components` export was mistakenly exporting `observer`, `reactive`, and `reactiveObserver` which are already exported from `/react`. Your editor may have automatically imported from `/react-components` so may need to be changed.
 
-```jsx
-// Change this:
-import {
-  observer,
-  reactive,
-  reactiveObserver,
-} from "@legendapp/state/react-components";
-// To this:
-import { observer, reactive, reactiveObserver } from "@legendapp/state/react";
+```diff
+-import {
+-  observer,
+-  reactive,
+-  reactiveObserver,
+-} from "@legendapp/state/react-components";
++import { observer, reactive, reactiveObserver } from "@legendapp/state/react";
 ```
 
 ### types.d.ts moved to types/babel.d.ts

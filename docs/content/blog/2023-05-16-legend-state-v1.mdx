@@ -1,0 +1,187 @@
+---
+title: "Introducing Legend-State 1.0: Build faster apps faster"
+description: Introducing the official Legend blog, where we'll share updates, tutorials, and insights about Legend-State, Legend-Motion, and Legend-List.
+author: Jay Meistrich
+---
+
+After almost a year of development and iterating, we're very excited to announce that Legend-State has reached **version 1.0**! What started as a simple upgrade of [Legend's](https://legendapp.com) state/sync system turned into a collaboration with [Bravely](https://bravely.io), then into a quest for the best possible performance, and finally into a fundamental rethinking of React's developer experience (DX).
+
+So in its 1.0 version, Legend-State has four main benefits:
+1. <span className="text-lg mr-2">⚡️</span> The fastest React state library
+2. <span className="text-lg mr-2">🦄</span> Very easy to use
+3. <span className="text-lg mr-2">🔥</span> Natural fine-grained reactivity
+3. <span className="text-lg mr-2">💾</span> Built-in persistence
+
+Building three large apps on Legend-State ([Legend's](https://legendapp.com) React app and [Bravely's](https://bravely.io) React and React Native apps) gave us a lot of room to iterate towards an optimal DX, and to optimize performance in all sorts of scenarios. Now that they're released and running in production, we're confident that Legend-State is ready for you to build your apps.
+
+## 👋 Introducing Legend-State
+
+Legend-State is a super fast and powerful React state library based on Observables. You may have heard a lot about [Signals](https://preactjs.com/blog/introducing-signals/) recently - Observables are conceptually similar but more powerful: deep reactive objects that notify listeners whenever anything in them changes.
+
+Because we can listen for changes anywhere within an object, a React component can update only when a specific value changes while a persistence plugin can update whenever anything in the whole tree changes. Legend-State's Observables use Proxy in a unique way, tracking by path in an object, which makes it extremely fast and doesn't modify the underlying data at all.
+
+Legend-State beats other React state libraries in both speed and memory usage. An **optimized** mode for arrays can re-render only changed elements instead of the whole array, making it significantly faster than is usually possible with React - see it on the left side of this table from the [krausest benchmark](https://github.com/krausest/js-framework-benchmark).
+
+<img src="../../assets/state/times.png" style={{ borderRadius: '1rem', maxWidth: 720 }} />
+
+
+## 🦄 As easy as possible to use
+
+There is no boilerplate and there are no contexts, actions, reducers, dispatchers, sagas, thunks, or epics. Just call `get()` to get the raw data and `set()` to change it.
+
+In React there is an `observer` HOC or a `useSelector` hook to get your data. Just access observables and your components update themselves automatically.
+
+```jsx
+// Create an observable object
+const state = observable({ settings: { theme: 'dark' } })
+
+// Just get and set
+state.settings.theme.get() === 'dark'
+state.settings.theme.set('light')
+
+// observe re-runs when accessed observables change
+observe(() => {
+    console.log(state.settings.theme.get())
+})
+
+// 1. Observer components automatically track observables and re-render when they change
+const Component = observer(function Component() {
+    const theme = state.settings.theme.get()
+
+    return <div>Theme: {theme}</div>
+})
+
+// 2. Or the useSelector hook gets and tracks the observable, and returns the raw value
+function Component2() {
+    const count = useSelector(state.count);
+
+    // Re-renders whenever count changes
+    return <div>{count}</div>
+}
+```
+
+While our primary goal is to achieve the fastest performance with the best possible DX, we're most excited about the easier way of working with React that it enables: to **observe state changing** rather than managing hooks re-running because of re-renders. You can now just skip that entire layer of React development entirely (if you want).
+
+We're building apps much faster because the mental model is so much easier, and our apps have better performance without even thinking about it.
+
+## 🔥 Fine-grained reactivity for minimal renders
+
+We want our apps to be extremely fast and we also want them to be easy to build. So Legend-State makes fine-grained reactivity natural, resulting in fewer and smaller re-renders while actually removing complexity.
+
+- Text elements re-render themselves when they change
+- Reactive props update themselves when state changes them
+- Control-flow components re-render themselves when needed
+- Two-way binding for input elements
+
+And they all do that without needing to re-render the component itself. Check out our previous post [Making React fast by default and truly reactive](./2022-09-25-legend-state) for more on the motivation and benefits of this approach. But for now here's an example:
+
+<Editor
+  code={`
+function Component({ children }) {
+  // This component only renders once
+  const state$ = useObservable({ show: false, numToggles: 0, text: 'Change me' })
+
+  useInterval(() => {
+    state$.show.set(v => !v)
+    state$.numToggles.set(v => v + 1)
+  }, 1000)
+
+  // Props ending in $ bind the prop to the observable
+  // for tiny targeted re-renders on changes
+  return (
+    <Box className="flex flex-col gap-y-2">
+      <$React.input $value={state$.text} />
+      <$React.div
+        $className={() => (
+          state$.text.get().includes('Legend') ?
+            'font-bold text-blue-500' :
+            ''
+        )}
+      >
+        {state$.text}
+      </$React.div>
+
+      <Show
+        if={state$.show}
+        else={<div>Not showing modal</div>}
+      >
+        <div>Modal</div>
+      </Show>
+    </Box>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<Component />)"
+/>
+
+Of course you can just use `observer` or `useSelector` if you prefer, but this micro-updating is a great way to improve performance and feels very natural once you get used to it.
+
+## 💾 Built-in Persistence
+
+Application state almost always needs to be saved and synced, so Legend-State builds that in. You can persist an entire observable object or subtree with a single command.
+
+```js
+// The state is automatically loaded at startup and saved on any change. Easy 😌.
+persistObservable(state, {
+    local: 'State',
+    persistLocal: ObservablePersistIndexedDB,
+})
+```
+
+Version 1 ships with plugins for Local Storage and IndexedDB for web and [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) for React Native.
+
+We also have a Firebase Realtime Database plugin which is the backbone of the sync systems for [Legend](https://legendapp.com) and [Bravely](https://bravely.io) that we'll release soon, with hopefully more sync services to come. With that, your entire sync system could look like this:
+
+```js
+persistObservable(userData, {
+    persistLocal: ObservablePersistLocalStorage,
+    persistRemote: ObservablePersistFirebaseDatabase,
+    local: 'User',
+    remote: {
+        firebase: {
+            syncPath: (uid) => `/users/${uid}/`
+        }
+    }
+})
+```
+
+Remote sync is very fully featured - it works offline and resolves conflicts when coming online, can sync only the changes since the last update, supports encryption and field transforming, and more... But we'll get to that in a future update.
+
+## 🤟 Getting started
+
+Check out the [documentation](https://www.legendapp.com/dev/state) or the [GitHub repo](https://github.com/LegendApp/legend-state) to get started with Legend-State. We would love to hear from you on [GitHub](https://github.com/LegendApp/legend-state), or talk to [LegendApp](https://twitter.com/LegendAppHQ) or [me directly](https://twitter.com/jmeistrich) on Twitter.
+
+Or if you just want to try it out right now, here's an example you can play with:
+
+<Editor
+  code={`
+function Counter() {
+  const renderCount = ++useRef(0).current;
+  const count = useObservable(1)
+
+  useInterval(() => {
+    count.set(v => v + 1)
+  }, 600)
+
+  return (
+    <Box className="flex flex-col gap-y-2">
+        <div>Renders: {renderCount}</div>
+        <div>Count: <Memo>{count}</Memo></div>
+    </Box>
+  )
+}
+`}
+  noInline={true}
+  renderCode=";render(<Counter />)"
+/>
+
+## 👉 What's next
+
+We'll add our Firebase Realtime Database persistence plugin to the repo soon. Then we would like to add more persistence plugins for other services.
+
+The fine-grained reactivity features are still a new paradigm even for us, so there's a lot more to explore there!
+
+We have about a dozen helper observables like `currentTime` which updates every minute and hooks like `useObservableNextRouter` which enables easy hash-based routing in Next.js. This is just a start! We would love to have a massive library of helper observables and hooks, to reduce the amount of boilerplate required to build your apps.
+
+If you'd like to help us with any of that please let us know on [GitHub](https://github.com/LegendApp/legend-state).

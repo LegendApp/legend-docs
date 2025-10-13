@@ -1,0 +1,392 @@
+---
+title: Overview
+---
+
+Legend-Motion provides a set of components wrapping React Native Views.
+
+```js
+import { Motion } from "@legendapp/motion"
+```
+
+This page includes live examples running through React Native Web.
+
+## Simple animations
+
+We can simply set values on the `animate` prop.
+
+<Editor
+  code={`
+<ExampleAnim width={200}>
+  {(value) => (
+    <Motion.View
+      style={{
+        width: 50,
+        height: 50,
+        backgroundColor: '#59B0F8',
+        borderRadius: 8,
+      }}
+      animate={{
+        x: value * 100,
+      }}
+    />
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+/>
+
+```jsx
+<Motion.View
+  animate={{
+    x: value * 100,
+  }}
+/>
+```
+
+When any value in `animate` changes, it will automatically animate to the new values.
+
+## Transitions
+
+Animations use a tween of `300ms` by default, which you can change with the `transition` prop. The easiest way to do that is to set a `Transition` on all animations.
+
+<Editor
+  code={`
+<ExampleAnim width={220}>
+  {(value) => (
+    <Motion.View
+      style={{
+        width: 50,
+        height: 50,
+        backgroundColor: '#59B0F8',
+        borderRadius: 8,
+      }}
+      animate={{
+        x: value * 100,
+      }}
+      transition={{
+        type: 'spring',
+        damping: 20,
+        stiffness: 400,
+      }}
+    />
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+/>
+
+```jsx
+<Motion.View
+  animate={{
+    x: value * 100,
+  }}
+  transition={{
+    type: "spring",
+    damping: 20,
+    stiffness: 400,
+  }}
+/>
+```
+
+You can customize the animations even further by settings a `Transition` for each animated property. The `default` Transition will apply to all animated properties unless they have a specified transition.
+
+<Editor
+  code={`
+<ExampleAnim width={220}>
+  {(value) => (
+    <Motion.View
+      style={{
+        width: 50,
+        height: 50,
+        backgroundColor: '#59B0F8',
+        borderRadius: 8,
+      }}
+      animate={{
+        x: value * 100,
+        opacity: value ? 1 : 0.2,
+        scale: value ? 1 : 0.5,
+      }}
+      transition={{
+        default: {
+          type: 'spring',
+          damping: 20,
+          stiffness: 300,
+        },
+        x: {
+          type: 'spring',
+          damping: 20,
+          stiffness: 1000,
+        },
+        opacity: {
+          type: 'tween',
+          duration: 1000,
+        },
+      }}
+    />
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+/>
+
+```jsx
+<Motion.View
+  animate={{
+    x: value * 100,
+    opacity: value ? 1 : 0.2,
+    scale: value ? 1 : 0.5,
+  }}
+  transition={{
+    default: {
+      type: "spring",
+      damping: 20,
+      stiffness: 300,
+    },
+    x: {
+      type: "spring",
+      damping: 20,
+      stiffness: 1000,
+    },
+    opacity: {
+      type: "tween",
+      duration: 1000,
+    },
+  }}
+/>
+```
+
+Legend-Motion supports two kinds of transitions, `spring` or `timing`. They pass straight through to Animated, so see the React Native docs on [Timing](https://reactnative.dev/docs/animated#timing) and [Spring](https://reactnative.dev/docs/animated#spring) for usage.
+
+Transitions with durations are called `timing` in React Native's Animated and `tween` in Framer Motion, so Legend-Motion has transition types of both names that do the same thing, to make it easy to match props with the rest of your codebase.
+
+## Animate on mount
+
+When a component mounts, it will automatically be set to the `animate` value. But you want to animate it into position on mount, set `initial` as a starting point.
+
+<Editor
+  code={`
+<ExampleAnim width={220} noValue time={1800}>
+  {(value) => (
+    <Motion.View
+      key={value}
+      style={{
+        width: 50,
+        height: 50,
+        backgroundColor: '#59B0F8',
+        borderRadius: 8,
+      }}
+      initial={{ x: 0 }}
+      animate={{ x: 100 }}
+    />
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+/>
+
+```jsx
+<Motion.View initial={{ x: 0 }} animate={{ x: 100 }} />
+```
+
+This example can be hard to see because it's a mount transition, so try refreshing the page to see it animate into place.
+
+## Automatic interpolating
+
+For values that are strings or arrays, Legend-Motion automatically interpolates between the values so you don't have to worry about it.
+
+<Editor
+  code={`
+<ExampleAnim width={220}>
+  {(value) => (
+    <Motion.View
+      style={{
+        width: 50,
+        height: 50,
+        borderRadius: 8,
+      }}
+      animate={{
+        backgroundColor: value ? '#F81FEC' : '#59B0F8',
+      }}
+    />
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+/>
+
+```jsx
+<Motion.View
+  animate={{
+    backgroundColor: value ? "#F81FEC" : "#59B0F8",
+  }}
+/>
+```
+
+## Text
+
+With the automatic interpolating, it's easy to animate text colors as well as simple numbers like fontSize.
+
+<Editor
+  code={`
+<ExampleAnim width={220} noValue className="h-20">
+  {(value) => (
+    <Motion.Text
+      style={{
+        textAlign: 'center',
+        fontSize: 24,
+        fontWeight: '600',
+      }}
+      animate={{
+        color: value ? '#F81FEC' : '#59B0F8',
+        fontSize: value ? 48 : 24,
+      }}
+    >
+      Text
+    </Motion.Text>
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+/>
+
+```jsx
+<Motion.Text
+  animate={{
+    color: value ? "#F81FEC" : "#59B0F8",
+    fontSize: value ? 48 : 24,
+  }}
+>
+  Text
+</Motion.Text>
+```
+
+## Easing
+
+React Native and Framer Motion use different naming, so Legend-Motion supports either `ease` or `easing` props, which do the same thing.
+
+It accepts the same easing functions as React Native's `Animated` along with some named functions to match usage of Framer Motion.
+
+The supported values match most of Framer Motion's options:
+
+`linear`, `easeIn`, `easeOut`, `easeInOut`, `circIn`, `circOut`, `circInOut`, `backIn`, `backOut`, `backInOut`
+
+See the [React Native docs](https://reactnative.dev/docs/easing) for more details.
+
+<Editor
+  code={`
+<ExampleAnim width={260} time={1600}>
+  {(value) => (
+    <View
+      style={{
+        height: 140,
+        justifyContent: 'space-between',
+        paddingVertical: 8,
+      }}
+    >
+      <Motion.View
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 8,
+          backgroundColor: '#59B0F8',
+        }}
+        animate={{ x: value * 120 }}
+        transition={{
+          type: 'timing',
+          duration: 600,
+          easing: 'linear',
+        }}
+      />
+      <Motion.View
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 8,
+          backgroundColor: '#F81FEC',
+        }}
+        animate={{ x: value * 120 }}
+        transition={{
+          type: 'timing',
+          duration: 600,
+          easing: Easing.easing,
+        }}
+      />
+    </View>
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+  previewWidth={300}
+/>
+
+```jsx
+<Motion.View
+  animate={{ x: value * 100 }}
+  transition={{
+    type: "timing",
+    duration: 300,
+    easing: "linear",
+  }}
+/>
+<Motion.View
+  animate={{ x: value * 100 }}
+  transition={{
+    type: "timing",
+    duration: 300,
+    easing: Easing.linear,
+  }}
+/>
+```
+
+## Gestures
+
+The `whileTap` prop animates to the target while the component is pressed, and the `whileHover` prop animates to the target while the component is hovered. Try pressing the box on the right to see it in action. `whileHover` is only supported in `react-native-web`.
+
+These props require a `Motion.Pressable` ancestor, which is uses for tracking whether it is hovered or pressed. So you could have multiple inner elements that use the same hovered/pressed state.
+
+<Editor
+  code={`
+<Motion.Pressable
+  style={{
+    width: 220,
+    height: 140,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F4F4F5',
+  }}
+>
+  <Motion.View
+    style={{
+      width: 60,
+      height: 60,
+      borderRadius: 14,
+      backgroundColor: '#59B0F8',
+    }}
+    whileHover={{ scale: 1.2 }}
+    whileTap={{ y: 20 }}
+    transition={{
+      type: 'spring',
+      damping: 20,
+      stiffness: 300,
+    }}
+  />
+</Motion.Pressable>
+  `}
+  hideCode
+  previewWidth={260}
+/>
+
+```jsx
+<Motion.Pressable>
+  <Motion.View
+    whileHover={{ scale: 1.2 }}
+    whileTap={{ y: 20 }}
+    transition={{
+      type: "spring",
+      damping: 20,
+      stiffness: 300,
+    }}
+  />
+</Motion.Pressable>
+```

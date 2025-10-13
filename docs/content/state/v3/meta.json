@@ -1,0 +1,5 @@
+{
+    "title": "Legend-State v3",
+    "root": true,
+    "pages": ["intro", "usage", "react", "sync", "guides", "other"]
+}

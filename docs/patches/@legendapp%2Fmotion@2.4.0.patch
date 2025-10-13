@@ -1,0 +1,52 @@
+diff --git a/lib/commonjs/AnimatedComponents.js b/lib/commonjs/AnimatedComponents.js
+index 240d06768c31f46a9ef6c01a8ccdd38e81e6f24f..efcbacc1818912cfa84832da04ebc4bcf340ca12 100644
+--- a/lib/commonjs/AnimatedComponents.js
++++ b/lib/commonjs/AnimatedComponents.js
+@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
+   value: true
+ });
+ exports.Motion = void 0;
+-var _reactNative = require("react-native");
++var _reactNative = require("react-native-web");
+ var _createMotionComponent = require("./createMotionComponent");
+ var _MotionPressable = require("./MotionPressable");
+ let Motion;
+diff --git a/lib/commonjs/MotionPressable.js b/lib/commonjs/MotionPressable.js
+index 490dfc2d49549db918c5d1b84bfd54adf596ba48..2728db5557314d18fc0cc55c6d7a7b44625669f7 100644
+--- a/lib/commonjs/MotionPressable.js
++++ b/lib/commonjs/MotionPressable.js
+@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
+ exports.ContextPressable = void 0;
+ exports.MotionPressable = MotionPressable;
+ var _react = _interopRequireWildcard(require("react"));
+-var _reactNative = require("react-native");
++var _reactNative = require("react-native-web");
+ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+ function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+diff --git a/lib/commonjs/createMotionComponent.js b/lib/commonjs/createMotionComponent.js
+index 50136271913548bacf6f2eae9de4fc0e2afb5f87..ba98db1b5af75b386c0fe24543b4001e2815f0db 100644
+--- a/lib/commonjs/createMotionComponent.js
++++ b/lib/commonjs/createMotionComponent.js
+@@ -7,7 +7,7 @@ exports.createMotionAnimatedComponent = createMotionAnimatedComponent;
+ exports.createMotionComponent = createMotionComponent;
+ var _tools = require("@legendapp/tools");
+ var _react = _interopRequireWildcard(require("react"));
+-var _reactNative = require("react-native");
++var _reactNative = require("react-native-web");
+ var _configureMotion = require("./configureMotion");
+ var _Constants = require("./Constants");
+ var _MotionPressable = require("./MotionPressable");
+diff --git a/lib/commonjs/styled.js b/lib/commonjs/styled.js
+index 5c9562819772af21745b287fa3317761b9013fad..60b613db8c7f3fda3aa7d3eede409b5d3d12aa04 100644
+--- a/lib/commonjs/styled.js
++++ b/lib/commonjs/styled.js
+@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
+   value: true
+ });
+ exports.Motion = void 0;
+-var _reactNative = require("react-native");
++var _reactNative = require("react-native-web");
+ var _MotionPressable = require("./MotionPressable");
+ var _nativewind = require("nativewind");
+ var _createMotionComponent = require("./createMotionComponent");

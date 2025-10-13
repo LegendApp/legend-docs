@@ -1,0 +1,233 @@
+---
+title: Crud plugin
+---
+
+Legend-State includes a `syncedCrud` plugin that runs on top of `synced` and encapsulates a lot of the behavior you'd use to sync with a CRUD backend.
+
+You can use `syncedCrud` directly or you can build a plugin for your backend on top of it. See the source of the [Keel](./keel) and [Supabase](./supabase) plugins for examples of plugins built on top of `syncedCrud`.
+
+## get and list
+
+The crud plugin has two slightly different patterns depending on whether you're using a `get` or a `list` action.
+
+The behavior when using `get` is:
+- **get**: Observable value is the value returned from get
+- **create**: If get returned null, then setting any value on the observable will create
+- **update**: If get returned a value, then updating any value on the observable will update
+- **delete**: Setting the value to null or undefined, or calling `delete()`, will delete
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
+
+const profile$ = observable(syncedCrud({
+    get: getProfile,
+    create: createProfile,
+    update: updateProfile,
+    delete: deleteProfile,
+}))
+// profile$.get() is a Profile
+```
+
+The behavior when using `list` is:
+- **list**: Observable value is an object containing the listed values keyed by id
+- **create**: Adding a new value to the object will create
+- **update**: Updating a child value will update it with the changed fields
+- **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
+const profiles$ = observable(syncedCrud({
+    list: listProfiles,
+    create: createProfile,
+    update: updateProfile,
+    delete: deleteProfile,
+}))
+// profile$.get() is a Record<string, Profile>
+```
+
+The `list` function expects an array of rows to be returned from your API.
+
+The shape of the observable object returned from a `list` can be changed with the `as` parameter, which supports three options:
+
+1. `object`: The default, an object keyed by the row's `id` field.
+2. `array`: Treat the result of a query as an array
+3. `Map`: A Map, which can be more efficient for accessing rows by key
+4. `value`: Treat the result of a query as a single value like a `get`
+
+## create
+
+The `create` function is called whenever a new object is added to the observable. If you provide a `fieldCreatedAt` then this is determined by whether the object has a value at that field. Otherwise it's determined by whether the new value was previously undefined.
+
+The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
+const profile$ = observable(syncedCrud({
+    // ...
+    create: (value, options) => {
+        const { data, error } = await serverCreateProfile(value);
+        if (error) {
+            // Handle error, throw an Error to trigger a retry
+        } else if (data) {
+            return data;
+        }
+    },
+    fieldCreatedAt: 'created_at'
+}))
+```
+
+## update
+
+If an element in the observable is updated it will call the `update` function with the changed value. If you've enabled the `updatePartial` option then the value will include only the changed fields and the `id`. Otherwise it will be the full changed object.
+
+The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
+const profile$ = observable(syncedCrud({
+    // ...
+    update: (value, options) => {
+        const { data, error } = await serverUpdateProfile(value);
+        if (error) {
+            // Handle error, throw an Error to trigger a retry
+        } else if (data) {
+            return data;
+        }
+    },
+    fieldUpdatedAt: 'updated_at',
+    updatePartial: true // Update with only changed fields
+}))
+```
+
+## delete
+
+When an element is deleted from the observable, it will call the `delete` function with the `id` of the deleted element.
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
+const profile$ = observable(syncedCrud({
+    // ...
+    delete: ({ id }, options) => {
+        const { data, error } = await serverDeleteProfile(id);
+        if (error) {
+            // Handle error, throw an Error to trigger a retry
+        } else if (data) {
+            return data;
+        }
+    }
+}))
+```
+
+Alternatively if you do soft deletes, you can provide a `fieldDeleted` option instead of `delete`, and then it will call the `update` function with that field set to true.
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
+const profile$ = observable(syncedCrud({
+    // ...
+    update: () => {/* ... */},
+    fieldDeleted: 'deleted'
+}))
+```
+
+## onSaved
+
+When a value is saved to the server you may want it to apply changes back into the local observable. There are two ways to do that.
+
+1. **onSavedUpdate: 'createdUpdatedAt'**: This will save any fields ending in `["createdAt", "updatedAt", "created_at", "updated_at"]` back to the observable. This can be useful if your backend updates these values on the server. It also works if you have updated times for specific fields like "noteUpdatedAt".
+
+```ts
+const profile$ = observable(syncedCrud({
+    // ...
+    create: () => {/* ... */},
+    update: () => {/* ... */},
+    onSavedUpdate: 'createdUpdatedAt';
+}))
+```
+
+2. **onSaved**: If you want more control over what fields are updated in your object you can do it manually with `onSaved`. Just return an object with the fields you want merged into the observable. Note that you can also just use this for side effects and not return anything.
+
+```ts
+const profile$ = observable(syncedCrud({
+    // ...
+    create: () => {/* ... */},
+    update: () => {/* ... */},
+    onSaved: ({ saved, input, currentValue, isCreate }) => {
+        return {
+            serverValue: saved.serverValue
+        }
+    }
+}))
+```
+
+## subscribe
+
+If your backend has a realtime feature, or if you want to poll periodically for changes, use `subscribe` to set that up. This will be called only once after the first `get`.
+
+This can be used in two ways depending on how your backend works, updating with incoming data or simply triggering a refresh.
+
+When the observable is no longer being observed it will call the returned unsubscribe function.
+
+```ts
+const profile$ = observable(syncedCrud({
+    // ...
+    list: () => {/* ... */},
+    subscribe: ({ refresh, update }) => {
+        const unsubscribe = pusher.subscribe({ /*...*/ }, (data) => {
+            // Either update with the received data
+            update(data)
+            // Or trigger a refresh of the get function
+            refresh()
+        })
+        // return unsubscribe function
+        return unsubscribe
+    }
+}))
+```
+
+## Sync only diffs
+
+An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce bandwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
+
+1. Save the maximum updatedAt to the local persistence
+2. In subsequent syncs or after refresh it will list by `updatedAt: lastSync + 1` to get only recent changes
+3. The new changes will be merged into the observable
+
+This has a few requirements to work correctly:
+
+1. Set the `fieldUpdatedAt` with a field that is automatically updated by your backend on save. It should not be set on the frontend because inaccurate user clocks might cause data to be missed.
+2. Use soft deletes instead of deleting rows or include deleted rows in your list function. If the list function does not include rows deleted since the last update, the frontend will not know to delete them. You can enable this by adding a `deleted` field in your backend and setting the `fieldDeleted` option.
+
+## All options
+
+- `get`: Get a single value from the backend
+- `list`: List an array of values from the backend
+- `create`: Create a single value on the backend
+- `update`: Update a single value on the backend
+- `delete`: Delete a single value on the backend
+- `onSaved`: Update local value with remote data
+- `onSavedUpdate`: Automatically update local value with created and updated times
+- `fieldCreatedAt`: Set the field your backend uses for created times
+- `fieldUpdatedAt`: Set the field your backend uses for updated times
+- `fieldDeleted`: Set the field your backend uses for soft deletes
+- `updatePartial`: Send only changed fields into update function
+- `changesSince`: 'all' | 'last-sync'. Defaults to 'all'. 'last-sync' syncs only diffs
+- `generateId`: Provide a function for creating row ids.
+- `subscribe`: Set up a realtime connection or polling
+- `retry`: Options for retrying in case of error. Applies to both get and set.
+- `persist`: Options for persisting locally. See [Persist and sync](./persist-sync).
+- `debounceSet`: Debounce saved changes to reduce the number of updates
+- `mode`: 'set' | 'assign' | 'merge' | 'append' | 'prepend'. How to apply incoming changes.
+- `transform`: Transform data as it loads in from the remote source or out as it saves to the remote source. You could use this to encrypt the data or transform it into some other format.
+- `waitFor`: A Promise or Observable to wait for before getting from remote
+- `waitForSet`: A Promise or Observable to wait for before setting to remote
