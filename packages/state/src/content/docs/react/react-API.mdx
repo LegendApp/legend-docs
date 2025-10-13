@@ -72,7 +72,7 @@ export default function App() {
 
 ### observer
 
-`observer` is a good optimization if you have want to consume observables/selectors conditionally or if you consume many of them in one component. It inserts a single hook into the component and tracks all observables in the one hook. Because `use$` normally runs three hooks, this can drastically reduce the number of hooks in your components if you use `use$` many times.
+`observer` is a good optimization if you want to consume observables/selectors conditionally or if you consume many of them in one component. It inserts a single hook into the component and tracks all observables in the one hook. Because `use$` normally runs three hooks, this can drastically reduce the number of hooks in your components if you use `use$` many times.
 
 :::note
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. It tracks all overable access with a single hook so it is much more efficient than using multiple hooks.
