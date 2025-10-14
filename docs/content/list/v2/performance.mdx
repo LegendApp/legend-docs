@@ -22,7 +22,7 @@ The `keyExtractor` prop lets Legend List save item layouts by key, so that if th
 recycleItems?: boolean // default: false
 ```
 
-Legend List has an optional `recycleItems` prop which enables view recycling. This will reuse the component rendered by your `renderItem` function. This can be a big performance optimization because it does not need to destroy/create views while scrolling. But it also reuses any local state, which can cause some weird behavior that may not be desirable depending on your app. But see the [recycling hooks](./props#userecyclingstate) to make that easier.
+Legend List has an optional `recycleItems` prop which enables view recycling. This will reuse the component rendered by your `renderItem` function. This can be a big performance optimization because it does not need to destroy/create views while scrolling. But it also reuses any local state, which can cause some weird behavior that may not be desirable depending on your app. But see the [recycling hooks](../props#userecyclingstate) to make that easier.
 
 So there are some tradeoffs with recycling:
 
@@ -69,4 +69,3 @@ waitForInitialLayout?: boolean // default: true
 ```
 
 If the size of your list items differs significantly from the estimate, you may see a layout jump after the first render. If so, the `waitForInitialLayout` prop solves that by delaying displaying list items by one frame so they start at the correct position. But, if you have fixed sized items then you may not want to disable it to avoid waiting a frame.
-

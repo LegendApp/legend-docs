@@ -78,9 +78,9 @@ export default function App() {
 Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. It tracks all overable access with a single hook so it is much more efficient than using multiple hooks.
 </Callout>
 
-> In previous versions this allowed calling `get()` directly within components, but that is discouraged as of 3.0.0-beta.20. See [migrating](../other/migrating) for more info.
+> In previous versions this allowed calling `get()` directly within components, but that is discouraged as of 3.0.0-beta.20. See [migrating](../../other/migrating) for more info.
 
-See [Observing Contexts](../usage/reactivity#observing-contexts) for more about when it tracks.
+See [Observing Contexts](../../usage/reactivity#observing-contexts) for more about when it tracks.
 
 ```jsx
 import { observable } from "@legendapp/state"
@@ -99,7 +99,7 @@ const Component = observer(function Component() {
 
 ### useObserve
 
-`useObserve` creates an [observe](../usage/reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
+`useObserve` creates an [observe](../../usage/reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
 
 Like `observe`, `useObserve` has an optional second callback parameter which will run after the selector, and does not track changes. This can be useful for observing an `event` or a single `observable`.
 
@@ -146,7 +146,7 @@ function ProfilePage() {
 
 ### useWhen, useWhenReady
 
-These are hook versions of [when](../usage/reactivity#when).
+These are hook versions of [when](../../usage/reactivity#when).
 
 ## Hooks for creating local state
 
@@ -156,7 +156,7 @@ The `useObservable` hook creates an observable within a React component. This ca
 
 Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](#reading-state).
 
-As with normal observables you can create a [computed observable](../usage/observable#computed-observables) by just using a function.
+As with normal observables you can create a [computed observable](../../usage/observable#computed-observables) by just using a function.
 
 ```jsx
 import { Memo, observer, useObservable } from "@legendapp/state/react"

@@ -4,7 +4,7 @@ title: Crud plugin
 
 Legend-State includes a `syncedCrud` plugin that runs on top of `synced` and encapsulates a lot of the behavior you'd use to sync with a CRUD backend.
 
-You can use `syncedCrud` directly or you can build a plugin for your backend on top of it. See the source of the [Keel](./keel) and [Supabase](./supabase) plugins for examples of plugins built on top of `syncedCrud`.
+You can use `syncedCrud` directly or you can build a plugin for your backend on top of it. See the source of the [Keel](../keel) and [Supabase](../supabase) plugins for examples of plugins built on top of `syncedCrud`.
 
 ## get and list
 
@@ -225,7 +225,7 @@ This has a few requirements to work correctly:
 - `generateId`: Provide a function for creating row ids.
 - `subscribe`: Set up a realtime connection or polling
 - `retry`: Options for retrying in case of error. Applies to both get and set.
-- `persist`: Options for persisting locally. See [Persist and sync](./persist-sync).
+- `persist`: Options for persisting locally. See [Persist and sync](../persist-sync).
 - `debounceSet`: Debounce saved changes to reduce the number of updates
 - `mode`: 'set' | 'assign' | 'merge' | 'append' | 'prepend'. How to apply incoming changes.
 - `transform`: Transform data as it loads in from the remote source or out as it saves to the remote source. You could use this to encrypt the data or transform it into some other format.

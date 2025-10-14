@@ -29,7 +29,7 @@ state$.text.set("hi");
 state$.text.set((text) => text + " there");
 ```
 
-[Read more](../usage/observable)
+[Read more](../../usage/observable)
 
 ### Observing observables
 
@@ -60,7 +60,7 @@ await when(() => state$.settings.theme.get() === "dark");
 const isDark$ = observable(() => state$.settings.theme.get() === "dark");
 ```
 
-[Read more](../usage/reactivity)
+[Read more](../../usage/reactivity)
 
 ### Selectors
 
@@ -91,7 +91,7 @@ import { enableReactTracking } from "@legendapp/state/config/enableReactTracking
 enableReactTracking({ auto: true });
 ```
 
-There are also more options such as enabling getting/setting values directly with a `$` property. See [configuring](../usage/configuring) for more details.
+There are also more options such as enabling getting/setting values directly with a `$` property. See [configuring](../../usage/configuring) for more details.
 
 ### 2. Create global state
 
@@ -131,7 +131,7 @@ export const uiState$ = observable({
 
 ### 3. Use in React
 
-Head over to [React Introduction](../react/react-introduction) for a detailed guide to getting started in React.
+Head over to [React Introduction](../../react/react-introduction) for a detailed guide to getting started in React.
 
 ### 4. Persistence plugins
 
@@ -156,4 +156,4 @@ persistObservable(state$, {
 })
 ```
 
-[Read more](../guides/persistence)
+[Read more](../../guides/persistence)

@@ -99,8 +99,13 @@ class LinkValidator {
      * Resolve a relative link to an absolute file path
      */
     private resolveLinkPath(linkUrl: string, fromFile: string): string {
-        const fromDir = path.dirname(fromFile);
-        let targetPath = path.resolve(fromDir, linkUrl);
+        const parsedPath = path.parse(fromFile);
+        const isIndexFile = parsedPath.name === 'index';
+
+        // Non-index files become directories in the generated site, so links resolve from that virtual directory.
+        const routeBaseDir = isIndexFile ? parsedPath.dir : path.join(parsedPath.dir, parsedPath.name);
+
+        let targetPath = path.resolve(routeBaseDir, linkUrl);
 
         // Handle anchor links (remove fragment)
         if (targetPath.includes('#')) {

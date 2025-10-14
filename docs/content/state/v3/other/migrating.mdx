@@ -163,7 +163,7 @@ The types were fully rewritten from scratch, fixing many bugs especially around 
 
 computed/proxy are no longer separate concepts, they're just a function in an observable. If you were using `computed` you can just use `observable` now, and if you were using `computed` as a child of an observable, you can remove `computed` and use just a function. The old behavior will still work for now, but the new way is more efficient and `computed` will be deprecated in a later version.
 
-See [Computed Observables](../usage/observable#computed-observables) for more details.
+See [Computed Observables](../../usage/observable#computed-observables) for more details.
 
 ```ts
 // Change
@@ -185,7 +185,7 @@ const state$ = observable(() => ({
 
 `proxy` is now just a function with a string parameter.
 
-See [Computed Observables](../usage/observable#lookup-table) for more details.
+See [Computed Observables](../../usage/observable#lookup-table) for more details.
 
 ```ts
 // Change
@@ -251,7 +251,7 @@ const state = syncState(state$);
 
 ### 4. Sync
 
-It's now much easier to sync individual observables with a new plugin engine. See the [Persist and Sync docs](../sync/persist-sync/) for the latest documentation.
+It's now much easier to sync individual observables with a new plugin engine. See the [Persist and Sync docs](../../sync/persist-sync/) for the latest documentation.
 
 If you had made a custom sync plugin on the old system, please post an issue on [Github](https://github.com/LegendApp/legend-state) or talk to us on [Discord](https://discord.gg/5CBaNtADNX), and we will help you with the migration.
 
@@ -259,8 +259,8 @@ If you had made a custom sync plugin on the old system, please post an issue on 
 
 Version 2 had inconsistent and varied ways to sync with fetch or Query, and they are now aligned into the Sync engine.
 
-- Fetch: [syncedFetch](../sync/fetch)
-- TanStack Query: [syncedQuery](../sync/tanstack-query)
+- Fetch: [syncedFetch](../../sync/fetch)
+- TanStack Query: [syncedQuery](../../sync/tanstack-query)
 
 ### Other changes
 
@@ -293,11 +293,11 @@ So if you had logic to check whether a Promise errored by checking the `error` p
 
 ### enableLegendStateReact, enableReactDirectRender => Memo
 
-The direct rendering enabled by `enableLegendStateReact` and `enableReactDirectRender` was fragile, hard to find in files, and the React team advised against it. So instead we are using the `Memo` component. See [Render an observable directly](../react/fine-grained-reactivity#render-an-observableselector-directly) for more details.
+The direct rendering enabled by `enableLegendStateReact` and `enableReactDirectRender` was fragile, hard to find in files, and the React team advised against it. So instead we are using the `Memo` component. See [Render an observable directly](../../react/fine-grained-reactivity#render-an-observableselector-directly) for more details.
 
 To migrate you can remove usage of `enableLegendStateReact()` or `enableReactDirectRender()` as well as any usage of direct rendering, and replace it with `Memo`. When you remove those imports it will stop overriding the types so rendering observables directly will result in TypeScript errors.
 
-If you were using `enableLegendStateReact` to render direct observables heavily, [enableReactDirectRender](../usage/configuring#enablereactdirectrender-deprecated) is still usable to ease migration, though it will throw TypeScript errors to help you migrate away. It will be fully removed in version 3.0.
+If you were using `enableLegendStateReact` to render direct observables heavily, [enableReactDirectRender](../../usage/configuring#enablereactdirectrender-deprecated) is still usable to ease migration, though it will throw TypeScript errors to help you migrate away. It will be fully removed in version 3.0.
 
 ```jsx
 // Remove these:
@@ -317,7 +317,7 @@ function Component() {
 
 ### Legend components changed to Reactive components
 
-The reactive components are now better named and more easily customizable with configuration functions, exported from the normal `/react` path. See [Reactive components](../react/fine-grained-reactivity#reactive-components) for more details.
+The reactive components are now better named and more easily customizable with configuration functions, exported from the normal `/react` path. See [Reactive components](../../react/fine-grained-reactivity#reactive-components) for more details.
 
 Change:
 
@@ -393,7 +393,7 @@ In version 2 we locked down and cleaned up the interfaces for the remote persist
 
 To support taking an initial state or an observable, `persistObservable` needs to return both an observable and the syncState, so it now the observable with a `state` property on it, matching the Promise behavior.
 
-See the [Persist & Sync guide](../sync/persist-sync#persist-data-locally) for details.
+See the [Persist & Sync guide](../../sync/persist-sync#persist-data-locally) for details.
 
 ```js
 const { state } = persistObservable(initialStateOrObservable, { ... })
@@ -414,7 +414,7 @@ persistObservable(initialStateOrObservable, {
 
 #### Remote options renamed
 
-Since there were not any remote persistence plugins before, these changes would likely not affect you unless you made your own. See [Sync with a server](../sync/persist-sync#sync-with-a-server) for details.
+Since there were not any remote persistence plugins before, these changes would likely not affect you unless you made your own. See [Sync with a server](../../sync/persist-sync#sync-with-a-server) for details.
 
 ### observer, reactive, reactiveObserver not exported from react-components
 
@@ -496,7 +496,7 @@ They were previously checking if the value is "ready", meaning it doesn't count 
 
 ### IndexedDB preloader removed
 
-It was actually slower in our testing so we simplified things and just removed it. See [IndexedDB](../sync/persist-sync#indexeddb-react) for up-to-date docs.
+It was actually slower in our testing so we simplified things and just removed it. See [IndexedDB](../../sync/persist-sync#indexeddb-react) for up-to-date docs.
 
 ## 0.22 to 0.23
 
@@ -644,7 +644,7 @@ function Component() {
 }
 ```
 
-See the [React API guide](../react/react-api) for how we suggest setting up your components now.
+See the [React API guide](../../react/react-api) for how we suggest setting up your components now.
 
 Rendering observables directly still works though, and `enableLegendStateReact()` still enables that.
 
@@ -654,7 +654,7 @@ You can still enable the previous behavior for now with `enableLegendStateReact(
 
 - It doesn't actually work. We thought this method would be safe to use because it was inspired by Preact Signals, but as we've integrated Legend-State into more environments we found significant edge cases that seem to be unfixable and suggest that the whole concept is just unworkable.
 - The React team has asked us not to do it and made it clear that it is likely to break in a future version of React.
-- As Legend-State has evolved, the ideal way of using it has shifted towards fine-grained reactivity where components render minimally or only once, and we were actually specifically opting out of auto-tracking more often than not. So in the interest of pursuing the render-once ideal, we think it's actually generally better to use the [reactivity components](../react/fine-grained-reactivity) or opt-in to tracking.
+- As Legend-State has evolved, the ideal way of using it has shifted towards fine-grained reactivity where components render minimally or only once, and we were actually specifically opting out of auto-tracking more often than not. So in the interest of pursuing the render-once ideal, we think it's actually generally better to use the [reactivity components](../../react/fine-grained-reactivity) or opt-in to tracking.
 - We don't want to distract from the core mission of Legend-State with an unreliable and unstable core.
 
 ### Bindable components deprecated
@@ -676,7 +676,7 @@ const state$ = observable("");
 <Legend.input value$={state$} />;
 ```
 
-See [reactive props](../react/fine-grained-reactivity) for more detauls.
+See [reactive props](../../react/fine-grained-reactivity) for more detauls.
 
 ### `value` is no longer exposed
 
@@ -777,7 +777,7 @@ obs.text = 'hi'
 
 ### Renamed ref to obs
 
-`ref` was a bit unclear and conflicted with React - the new feature to [directly render observables](../react/fine-grained-reactivity#render-an-observableselector-directly) requires a `ref` property. So it is now renamed to `obs`, which feels more intuitive as it is used to get an observable.
+`ref` was a bit unclear and conflicted with React - the new feature to [directly render observables](../../react/fine-grained-reactivity#render-an-observableselector-directly) requires a `ref` property. So it is now renamed to `obs`, which feels more intuitive as it is used to get an observable.
 
 ```js
 const state$ = observable({ text: "" });
@@ -793,7 +793,7 @@ const textObs2 = obs.text.obs();
 
 ### Array optimizations
 
-The array optimizations are now opt-in, because they are only useful in React and can potentially have some unexpected behavior in React if modifying the DOM externally. You can enable them by using the `For` component with the `optimized` prop. See [Arrays](../usage/observable#arrays) for more.
+The array optimizations are now opt-in, because they are only useful in React and can potentially have some unexpected behavior in React if modifying the DOM externally. You can enable them by using the `For` component with the `optimized` prop. See [Arrays](../../usage/observable#arrays) for more.
 
 ```jsx
 import { observable } from "@legendapp/state";

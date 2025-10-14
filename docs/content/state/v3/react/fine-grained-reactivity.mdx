@@ -233,7 +233,7 @@ Props:
 
 The `For` component is optimized for rendering arrays of observable objects so that they are extracted into a separate tracking context and don't re-render the parent.
 
-An `optimized` prop adds additional optimizations, but in an unusual way by re-using React nodes. See [Optimized rendering](../guides/performance#optimized-rendering) for more details.
+An `optimized` prop adds additional optimizations, but in an unusual way by re-using React nodes. See [Optimized rendering](../../guides/performance#optimized-rendering) for more details.
 
 Props:
 
@@ -306,7 +306,7 @@ If you're using typescript you can add a `.d.ts` file to your project with this 
 
 You can wrap external components in `reactive` to create reactive versions of all of their props, prefixed with `$`. This makes it so that the reactive component can accept reactive props but the target receives regular props as usual. `reactive` creates a Proxy (not an HOC) that extracts all reactive props and observes them for changes, passing the regular prop down to the component.
 
-In this example, `reactive` adds a `$message` prop which takes a [Selector](../usage/reactivity#selectors), while the target component receives a normal `message` prop and is only re-rendered when `message` changes.
+In this example, `reactive` adds a `$message` prop which takes a [Selector](../../usage/reactivity#selectors), while the target component receives a normal `message` prop and is only re-rendered when `message` changes.
 
 ```js
 import { observable } from "@legendapp/state";

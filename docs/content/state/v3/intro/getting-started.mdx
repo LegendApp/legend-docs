@@ -68,7 +68,7 @@ Now that we have an observable for our Todos, let's hook it up to React.
 
 To consume an observable in React, just `useValue` it. This will track it automatically so that the component re-renders whenever it changes.
 
-Legend-State also includes reactive components for both React and React Native. See [Reactive components](../react/fine-grained-reactivity#reactive-components) for more about that.
+Legend-State also includes reactive components for both React and React Native. See [Reactive components](../../react/fine-grained-reactivity#reactive-components) for more about that.
 
 ```tsx
 import { Button, Text, View } from "react-native";
@@ -124,7 +124,7 @@ Now that our Todo app is rendering nicely, let's persist its state to storage.
 
 ### Persistence
 
-Legend-State has a built-in full-featured sync and persistence layer. In this example we'll show basic persistence and you can read [persist and sync](../sync/persist-sync) for details.
+Legend-State has a built-in full-featured sync and persistence layer. In this example we'll show basic persistence and you can read [persist and sync](../../sync/persist-sync) for details.
 
 In this example we first set up a global configuration for sync and persistence. These options can also be set or overriden in each individual observable. Since most apps will use the same persistence for everything it's easiest to set that up once in a global configuration.
 

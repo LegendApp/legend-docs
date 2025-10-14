@@ -12,12 +12,12 @@ title: React API
 It makes the whole component into an observing context - it automatically tracks observables for changes when `get()` is called, even from within hooks or helper functions.
 
 <Callout title="The best option">
-Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. So it is much more efficient than using multiple hooks, and much more efficient and safer than [enableReactTracking](../usage/configuring#enablereacttracking).
+Although observer looks like an HOC, it actually creates a Proxy around the component, with effectively no performance cost. So it is much more efficient than using multiple hooks, and much more efficient and safer than [enableReactTracking](../../usage/configuring#enablereacttracking).
 
 `enableReactTracking` and `observer` can be used together - observer will optimize away the auto tracking behavior in favor of its more efficient tracking.
 </Callout>
 
-See [Tracking](../usage/reactivity#observing-contexts) for more about when it tracks.
+See [Tracking](../../usage/reactivity#observing-contexts) for more about when it tracks.
 
 ```jsx
 import { observable } from "@legendapp/state"
@@ -94,7 +94,7 @@ export default function App() {
 
 ### useObserve
 
-`useObserve` creates an [observe](../usage/reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
+`useObserve` creates an [observe](../../usage/reactivity#observe) which you can use to take actions when observables change. This can be effectively similar to `useEffect` for observables, except that it runs when observables change and not because of a deps array changing.
 
 Like `observe`, `useObserve` has an optional second callback parameter which will run after the selector, and does not track changes. This can be useful for observing an `event` or a single `observable`.
 
@@ -143,7 +143,7 @@ function ProfilePage() {
 
 The `useObservable` hook can be used to create an observable within a React component. This can be useful when state is specific to the lifetime of the component, or to hold multiple values in local state.
 
-Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](./react-introduction#use-observable-state).
+Its observables will not be automatically tracked for re-rendering, so you can track them [the same as any other observable](../react-introduction#use-observable-state).
 
 As with
 
@@ -173,7 +173,7 @@ const Component = function Component() {
 
 ### useComputed
 
-`useComputed` is like `useObservable` and creates a [computed](../usage/reactivity#computed) observable.
+`useComputed` is like `useObservable` and creates a [computed](../../usage/reactivity#computed) observable.
 
 ```jsx
 import { observable } from "@legendapp/state";

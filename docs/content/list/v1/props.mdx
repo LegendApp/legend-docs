@@ -34,7 +34,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#renderItem).
 keyExtractor?: (item: ItemT, index: number) => string;
 ```
 
-Highly recommended. The `keyExtractor` prop lets Legend List save item layouts by key, so that if the `data` array changes it can reuse previous layout information and only update the changed items. The value it returns should be unique to each item - if a value is reused for a different item it will cause big problems. It is okay to return the index, if list items are reordered or prepended, it will also cause big problems. See [Performance Guide](./performance#use-keyextractor).
+Highly recommended. The `keyExtractor` prop lets Legend List save item layouts by key, so that if the `data` array changes it can reuse previous layout information and only update the changed items. The value it returns should be unique to each item - if a value is reused for a different item it will cause big problems. It is okay to return the index, if list items are reordered or prepended, it will also cause big problems. See [Performance Guide](../performance#use-keyextractor).
 
 If LegendList detects duplicate keys, it will log a warning.
 
@@ -44,7 +44,7 @@ If LegendList detects duplicate keys, it will log a warning.
 recycleItems?: boolean; // default: false
 ```
 
-This will reuse the component rendered by your `renderItem` function. This can be a big performance improvement, but if your list items have internal state there's potential for undesirable behavior. For more information, see [Performance Guide](./performance#recycling-list-items) for more information.
+This will reuse the component rendered by your `renderItem` function. This can be a big performance improvement, but if your list items have internal state there's potential for undesirable behavior. For more information, see [Performance Guide](../performance#recycling-list-items) for more information.
 
 ### estimatedItemSize
 
@@ -61,7 +61,7 @@ An estimated size for all items which is used to estimate the list layout before
 alignItemsAtEnd?: boolean; // default: false
 ```
 
-Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat Interfaces](./examples/chat-interfaces) for more.
+Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat Interfaces](../examples/chat-interfaces) for more.
 
 ### columnWrapperStyle
 
@@ -85,7 +85,7 @@ Style applied to the underlying ScrollView's content container.
 drawDistance?: number;
 ```
 
-The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. See [Performance Guide](./performance#set-drawdistance-prop) for more.
+The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. See [Performance Guide](../performance#set-drawdistance-prop) for more.
 
 ### extraData
 
@@ -204,7 +204,7 @@ maintainScrollAtEnd?: boolean;
 
 This will check if you are already scrolled to the bottom when `data` changes, and if so it keeps you scrolled to the bottom.
 
-See [Chat Interfaces](./examples/chat-interfaces) for more.
+See [Chat Interfaces](../examples/chat-interfaces) for more.
 
 ### maintainScrollAtEndThreshold
 
@@ -214,7 +214,7 @@ maintainScrollAtEndThreshold?: number;
 
 This defines what percent of the screen counts as the bottom. Defaults to `0.1`.
 
-See [Chat Interfaces](./examples/chat-interfaces) for more.
+See [Chat Interfaces](../examples/chat-interfaces) for more.
 
 ### maintainVisibleContentPosition
 
