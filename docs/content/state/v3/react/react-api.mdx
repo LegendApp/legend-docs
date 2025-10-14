@@ -6,8 +6,8 @@ title: React API
 
 ### useValue
 
-<Callout title="Migration from useSelector$">
-In previous versions this was called useSelector or use$. If you were using `useSelector` or `use$` it will still work for a while, but we suggest changing them to `useValue` as we'll remove `useSelector` in a later version. Many people were unsure of what a "selector" was so it was unclear what it did. Plus, `useValue` is shorter 😀
+<Callout title="Migration from useValue$">
+In previous versions this was called useValue or use$. If you were using `useValue` or `use$` it will still work for a while, but we suggest changing them to `useValue` as we'll remove `useValue` in a later version. Many people were unsure of what a "selector" was so it was unclear what it did. Plus, `useValue` is shorter 😀
 </Callout>
 
 <Callout type="warn" title="Migration from use$">
@@ -43,11 +43,11 @@ const Component = ({ id }) => {
 Using `{ suspense: true }` as the second parameter makes the component work with Suspense. If the observable is a Promise, Suspense will render the fallback until it resolves to a non-undefined value.
 
 ```jsx
-import { useObservable, useSelector } from "@legendapp/state/react"
+import { useObservable, useValue } from "@legendapp/state/react"
 import { Suspense } from "react"
 
 function Test({ state$ }) {
-  const value = useSelector(state$, { suspense: true })
+  const value = useValue(state$, { suspense: true })
   return <div>{value}</div>
 }
 
@@ -298,6 +298,6 @@ const Component = () => {
 
 ### usePauseProvider
 
-This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useSelector, $React, Memo, etc... But normal renders coming from React or other state is not affected.
+This creates a React Context Provider with a `paused$` observable. Set `paused$` to `true` to pause all rendering from observable changes under the context, and set it `false` to resume. This applies to everything within Legend-State like observer, useValue, $React, Memo, etc... But normal renders coming from React or other state is not affected.
 
 This can be very useful to stop all updating when UI is not even visible, such as when a fullscreen modal is covering app UI or in inactivate tabs in React Native.

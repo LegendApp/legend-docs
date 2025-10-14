@@ -33,7 +33,7 @@ For isolating a group of elements or computations, Legend-State has [built-in he
 
 Some libraries hack up React internals to make signals and fine-grained reactivity work, which often doesn't work on all platforms and may break if React internals change.
 
-Legend-State does everything above-board using hooks, with all React functionality built on top of [useSelector](../react/react-api#use), which just uses `useSyncExternalStore`. Check [the source](https://github.com/LegendApp/legend-state/blob/main/src/react/useSelector.ts) to see the lack of hackery.
+Legend-State does everything above-board using hooks, with all React functionality built on top of [useValue](../react/react-api#use), which just uses `useSyncExternalStore`. Check [the source](https://github.com/LegendApp/legend-state/blob/main/src/react/useValue.ts) to see the lack of hackery.
 
 ## 🤷‍♀️ Unopinionated
 
