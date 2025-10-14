@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-.bold-consistent-width:after {
-    @apply block font-bold h-[1px] opacity-0 overflow-hidden invisible;
-    content: attr(data-text);
-}
