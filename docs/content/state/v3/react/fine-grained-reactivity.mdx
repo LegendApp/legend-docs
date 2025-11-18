@@ -102,14 +102,14 @@ function Component() {
         <View>
             {/* Reactive styling */}
             <$View
-                $style={{
+                $style={() => ({
                     height: 32,
                     backgroundColor: state$.age.get() > 5 ? '#22c55e' : '#ef4444'
-                }}
+                })}
             />
             {/* Reactive children */}
             <$Text>
-                {state$.age.get() > 5 ? 'child' : 'baby'}
+                {() => state$.age.get() > 5 ? 'child' : 'baby'}
             </$Text>
             {/* Two-way bind to inputs */}
             <$TextInput $value={state$.name} />

@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
-import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import { CodeBlock, CodeBlockProps, Pre } from 'fumadocs-ui/components/codeblock';
 
 type DocsSource = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getPage: (slug?: string[]) => any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     generateParams: () => any;
-}
+};
 
 interface DocsPageTemplateProps {
     source: DocsSource;
@@ -37,7 +37,7 @@ export default async function DocsPageTemplate({ source, params }: DocsPageTempl
                 <MDX
                     components={getMDXComponents({
                         pre: (props) => (
-                            <CodeBlock {...props}>
+                            <CodeBlock {...(props as CodeBlockProps)}>
                                 <Pre>{props.children}</Pre>
                             </CodeBlock>
                         ),

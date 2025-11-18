@@ -17,6 +17,8 @@ import {
 import type { HighlightedText } from 'fumadocs-core/search/server';
 import type { SortedResult } from 'fumadocs-core/server';
 import { FileText, Hash } from 'fumadocs-ui/internal/icons';
+import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,6 +62,25 @@ function formatPath(url: string) {
     return cleanPath;
 }
 
+function normalizePath(path: string, basePath: string) {
+    const [withoutHash] = path.split('#');
+    let cleaned = decodeURI(withoutHash);
+
+    if (basePath && cleaned.startsWith(basePath)) {
+        cleaned = cleaned.slice(basePath.length);
+    }
+
+    if (!cleaned.startsWith('/')) {
+        cleaned = `/${cleaned}`;
+    }
+
+    if (cleaned.length > 1 && cleaned.endsWith('/')) {
+        cleaned = cleaned.slice(0, -1);
+    }
+
+    return cleaned;
+}
+
 function SearchResultItem({ item, onClick }: { item: SortedResult; onClick: () => void }) {
     const pathLabel = formatPath(item.url);
 
@@ -83,12 +104,27 @@ function SearchResultItem({ item, onClick }: { item: SortedResult; onClick: () =
 export default function StaticSearchDialog(props: SharedProps) {
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
     const searchEndpoint = `${basePath}/api/search`;
+    const pathname = usePathname();
 
     const { search, setSearch, query } = useDocsSearch({
         type: 'static',
         initOrama,
         from: searchEndpoint,
     });
+
+    const filteredResults = useMemo(() => {
+        if (!Array.isArray(query.data)) {
+            return [];
+        }
+
+        if (!pathname) {
+            return query.data;
+        }
+
+        const currentPath = normalizePath(pathname, basePath);
+
+        return query.data.filter((item) => normalizePath(item.url, basePath) === currentPath);
+    }, [query.data, pathname, basePath]);
 
     return (
         <SearchDialog search={search} onSearchChange={setSearch} isLoading={query.isLoading} {...props}>
@@ -100,7 +136,7 @@ export default function StaticSearchDialog(props: SharedProps) {
                     <SearchDialogClose />
                 </SearchDialogHeader>
                 <SearchDialogList
-                    items={query.data !== 'empty' ? query.data : null}
+                    items={filteredResults.length > 0 ? filteredResults : null}
                     Item={({ item, onClick }) => <SearchResultItem item={item as SortedResult} onClick={onClick} />}
                 />
             </SearchDialogContent>

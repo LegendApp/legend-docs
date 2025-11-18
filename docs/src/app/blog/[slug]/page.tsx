@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
 import { getMDXComponents } from '@/mdx-components';
-import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import { CodeBlock, CodeBlockProps, Pre } from 'fumadocs-ui/components/codeblock';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import '@/styles/blog-post.css';
 import Link from 'fumadocs-core/link';
@@ -139,7 +139,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         <MDX
                             components={getMDXComponents({
                                 pre: (props) => (
-                                    <CodeBlock {...props}>
+                                    <CodeBlock {...(props as CodeBlockProps)}>
                                         <Pre>{props.children}</Pre>
                                     </CodeBlock>
                                 ),
