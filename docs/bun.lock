@@ -1,10 +1,11 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "docs",
       "dependencies": {
-        "@legendapp/motion": "^2.5.1",
+        "@legendapp/motion": "^2.5.3",
         "@legendapp/state": "^3.0.0-beta.35",
         "@next/third-parties": "^15.5.4",
         "@orama/orama": "^3.1.15",
@@ -393,7 +394,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.30", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-GQ7Nw5G2lTu/BtHTKfXhKHok2WGetd4XYcVKGx00SjAk8GMwgJM3zr6zORiPGuOE+/vkc90KtTosSSvaCjKb2Q=="],
 
-    "@legendapp/motion": ["@legendapp/motion@2.5.1", "", { "dependencies": { "@legendapp/tools": "2.0.1" }, "peerDependencies": { "nativewind": ">=4.0.0", "react": ">=16", "react-native": "*" } }, "sha512-sf0b5OcCllPYqVRodzH/CpbfTDwCcu/7z9he9RkFoS5WmK87d7d802RRU7QnMLqzFQgnWDBI+9YgmQzD1K8QKA=="],
+    "@legendapp/motion": ["@legendapp/motion@2.5.3", "", { "dependencies": { "@legendapp/tools": "2.0.1" }, "peerDependencies": { "nativewind": ">=4.0.0", "react": ">=16", "react-native": "*" } }, "sha512-IcNiStiK3qG5LaIPLC8fVV0BHIrkf7EY5HfOv3xbuMH0z4D945yaaEDafP5bboHf/uj9XRjTQHVTtZgwpMNlHw=="],
 
     "@legendapp/state": ["@legendapp/state@3.0.0-beta.35", "", { "dependencies": { "use-sync-external-store": "^1.2.2" }, "peerDependencies": { "expo-sqlite": "^15.0.0" }, "optionalPeers": ["expo-sqlite"] }, "sha512-rlWVCRa1Cp2HM2/t8X3lsRxCR+436HTh+uz7RcyGM0udAa0FCGZpbGBiwfb9YUG6Ip7kFJFFdgOtCBd5kXZTiQ=="],
 

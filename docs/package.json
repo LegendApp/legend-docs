@@ -12,7 +12,7 @@
         "validate-links": "bun ./scripts/validate-links.ts"
     },
     "dependencies": {
-        "@legendapp/motion": "^2.5.1",
+        "@legendapp/motion": "^2.5.3",
         "@legendapp/state": "^3.0.0-beta.35",
         "@next/third-parties": "^15.5.4",
         "@orama/orama": "^3.1.15",
@@ -55,8 +55,5 @@
     "trustedDependencies": [
         "@tailwindcss/oxide",
         "unrs-resolver"
-    ],
-    "patchedDependencies": {
-        "@legendapp/motion@2.4.0": "patches/@legendapp%2Fmotion@2.4.0.patch"
-    }
+    ]
 }
