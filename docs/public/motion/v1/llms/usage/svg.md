@@ -1,0 +1,71 @@
+To use SVG animations, you'll need to additionally install `react-native-svg`. See [its documentation](https://github.com/react-native-svg/react-native-svg#installation) for details.
+
+## Usage
+
+SVG animations work by animating the props that you want to change, with the `animateProps` prop.
+
+<Editor
+  code={`
+<ExampleAnim width={240} noValue>
+  {(value) => (
+    <MotionSvg.Svg height="200" width="200">
+      <MotionSvg.Rect
+        stroke="#555"
+        strokeWidth="1"
+        animateProps={{
+          fill: value ? '#F81FEC' : '#59B0F8',
+          x: value ? '60' : '0',
+          y: value ? '40' : '10',
+          width: value ? '140' : '50',
+          height: value ? '140' : '50',
+        }}
+        transition={{
+          default: {
+            type: 'spring',
+            damping: 20,
+            stiffness: 300,
+          },
+          fill: {
+            type: 'tween',
+            duration: 800,
+          },
+        }}
+      />
+    </MotionSvg.Svg>
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+  previewWidth={280}
+/>
+
+```jsx
+import { MotionSvg } from '@legendapp/motion/svg';
+
+<MotionSvg.Svg height="200" width="200">
+  <MotionSvg.Rect
+    stroke="#555"
+    strokeWidth="1"
+    animateProps={{
+      fill: value ? "#F81FEC" : "#59B0F8",
+      x: value ? "60" : "0",
+      y: value ? "40" : "10",
+      width: value ? "140" : "50",
+      height: value ? "140" : "50",
+    }}
+    transition={{
+      default: {
+        type: "spring",
+        damping: 20,
+        stiffness: 300,
+      },
+      fill: {
+        type: "tween",
+        duration: 800,
+      },
+    }}
+  />
+</MotionSvg.Svg>
+```
+
+You can see in this example that we used a tween transition for the `fill` color and set a default spring transition for the rest of the props, because spring transitions don't look good on colors.

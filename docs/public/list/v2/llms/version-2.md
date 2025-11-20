@@ -1,0 +1,60 @@
+Version 2 is faster, more accurate, and smaller. There are no breaking changes, but it's almost a full rewrite, so we're calling it a major version!
+
+This update is primarily focused on accuracy and performance. The `maintainVisibleContentPosition` algorithm was rewritten in a way that's much more accurate and performant, and also allowed us to remove a ton of hacks, workarounds, and lots of management code.
+
+The new simpler implementation of `maintainVisibleContentPosition` enabled new features like sticky headers.
+
+Many features were added to support advanced customization and behaviors for complex lists like AI chats.
+
+## Install the update
+
+```npm
+@legendapp/list
+```
+
+## 🎉 Major Improvements
+
+### Accuracy
+
+- Perfectly accurate `initialScrollIndex`, `scrollToIndex`, and `scrollToEnd`
+- Bidirectional infinite scroll never has any flashing or jumpiness
+- Uses average sizes after the first render so `estimatedItemSize` is now optional
+
+### Scroll Performance
+- `maintainVisibleContentPosition` is so much better and faster that it's now enabled by default
+- Reduced number/size of renders while updating positions
+- Improved container recycling to reuse containers more efficiently
+
+## ✨ New Features
+
+### Sticky Headers
+- `stickyIndices` prop for creating sticky headers that remain visible while scrolling
+
+### Enhanced Item Type System
+- `getItemType` prop allows categorizing different item types for better performance optimization
+- `getFixedItemSize` prop for items with known fixed sizes, enabling performance optimizations
+- `renderItem`, `getFixedItemSize`, and `getEstimatedItemSize` functions now receive an item type parameter
+
+### Lazy List
+- Built-in lazy list support directly in the `LegendList` component
+
+### Scroll Position Management
+- `snapToIndices` prop for snapping scroll position to specific item indices
+- `maintainVisibleContentPosition` is now enabled by default for better scroll stability
+
+### Advanced Hooks and References
+- `useSyncLayout` hook for synchronizing layout operations
+- Ref function to enable/disable scroll processing for advanced use cases
+- `getState()` now includes `positionAtIndex` and `data` for debugging and advanced integrations
+
+### Code Quality
+- Extracted most functionality into small, testable functions
+- Added extensive test infrastructure
+
+## 🔄 Migration Guide
+
+### From v1 to v2
+
+Most v2 changes are backward compatible, but note this one change:
+
+1. `maintainVisibleContentPosition` now defaults to `true`. It has no significant overhead so it should be fine to leave it enabled. It's required for accurate `initialScrollIndex`, `scrollToIndex`, and infinite scrolling up.

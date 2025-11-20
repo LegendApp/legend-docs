@@ -1,0 +1,70 @@
+`AnimatePresence` lets you use the `exit` prop to animate components when they unmount.
+
+React Native does not have a built-in way to defer unmounting, so `AnimatePresence` holds onto removed components until their exit animation is finished.
+
+Any children of `AnimatePresence` that have an `exit` prop will animate before being removed.
+
+## Usage
+
+<Editor
+  code={`
+<ExampleAnim width={320} noValue time={1800}>
+  {(value) => (
+    <View style={{ width: '100%', height: 120, justifyContent: 'center' }}>
+      <AnimatePresence>
+        {value ? (
+          <MotionStyled.View
+            key="A"
+            style={{
+              width: 160,
+              height: 90,
+              borderRadius: 16,
+              backgroundColor: '#59B0F8',
+            }}
+            initial={{ opacity: 0.1, x: 0 }}
+            animate={{ opacity: 1, x: 100 }}
+            exit={{ opacity: 0.2, x: 0 }}
+            transition={{
+              default: {
+                type: 'spring',
+              },
+              opacity: {
+                type: 'timing',
+              },
+            }}
+          />
+        ) : null}
+      </AnimatePresence>
+    </View>
+  )}
+</ExampleAnim>
+  `}
+  hideCode
+  previewWidth={360}
+/>
+
+```jsx
+<AnimatePresence>
+  {value ? (
+    <MotionStyled.View
+      key="A"
+      initial={{ opacity: 0.1, x: 0 }}
+      animate={{ opacity: 1, x: 100 }}
+      exit={{ opacity: 0.2, x: 0 }}
+      transition={{
+        default: {
+          type: "spring",
+        },
+        opacity: {
+          type: "timing",
+        },
+      }}
+    />
+  ) : null}
+</AnimatePresence>
+```
+
+
+`key` is a required prop on children of `AnimatePresence`. This is needed to make sure it is operating on the same elements.
+
+Note that this example has an exit animation going to opacity 0.2 so you can see when it actually gets removed.

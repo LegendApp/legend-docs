@@ -1,0 +1,28 @@
+## Chat Interfaces Without `inverted`
+
+In other list libraries if you wanted items to start scrolling from the bottom, you'd need to use an `inverted` prop, which would apply a negative scale transform. But that causes a lot of weird issues, so Legend List explicitly does not do that.
+
+```ts
+alignItemsAtEnd?: boolean;
+maintainScrollAtEnd?: boolean;
+maintainScrollAtEndThreshold?: number;
+```
+
+Instead, to align items at the end you can just use the `alignItemsAtEnd` prop, which will apply padding above items to fill the screen and stick them to the bottom.
+
+The `maintainScrollAtEnd` prop will check if you are already scrolled to the bottom when `data` changes, and if so it keeps you scrolled to the bottom.
+
+The `maintainScrollAtEndThreshold` prop (which defaults to 0.1) defines what percent of the screen counts as the bottom.
+
+So using Legend List for a chat interface would look like this:
+
+```tsx
+  <LegendList
+    data={items}
+    renderItem={({ item }) => <Text>{item.title}</Text>}
+    estimatedItemSize={320}
+    alignItemsAtEnd
+    maintainScrollAtEnd
+    maintainScrollAtEndThreshold={0.1}
+  />
+```

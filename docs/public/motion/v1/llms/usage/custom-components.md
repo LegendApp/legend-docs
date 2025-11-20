@@ -1,0 +1,12 @@
+While Legend-Motion providers animated wrappers around built-in components, you may want to create animated versions of custom components.
+
+`createMotionComponent` is the function that adds the `animate` and `transition` properties and creates the animation logic. You can use it to convert your own components to Motion components.
+
+As an example:
+
+```js
+import { createMotionComponent } from "@legendapp/motion";
+import { Animated } from "react-native";
+
+const AnimatedView = createMotionComponent(Animated.View);
+```

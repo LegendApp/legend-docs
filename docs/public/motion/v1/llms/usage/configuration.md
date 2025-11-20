@@ -1,0 +1,9 @@
+## Timing
+
+React Native's Animated does timing in milliseconds while Framer Motion does timing in seconds. Legend-Motion supports both options so you can use the timing configuration that matches the rest of your codebase.
+
+```js
+import { configureMotion } from "@legendapp/motion";
+
+configureMotion({ timing: "s" });
+```

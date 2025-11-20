@@ -8,7 +8,8 @@
         "start": "next start",
         "serve": "npx serve dist",
         "postinstall": "fumadocs-mdx",
-        "prebuild": "bun ./scripts/validate-links.ts",
+        "prebuild": "bun ./scripts/validate-links.ts && bun ./scripts/generate-llms.ts",
+        "generate-llms": "bun ./scripts/generate-llms.ts",
         "validate-links": "bun ./scripts/validate-links.ts"
     },
     "dependencies": {

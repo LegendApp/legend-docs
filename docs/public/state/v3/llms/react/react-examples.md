@@ -1,0 +1,584 @@
+The examples on this page use [Tailwind CSS](https://tailwindcss.com) for styling and [Framer Motion](https://www.framer.com/motion) for animations. These examples all use the [fine grained reactivity](../fine-grained-reactivity) components so that the parent component renders only once and all renders are optimized to be as small as possible.
+
+## Persisted global state
+
+This example creates a global state object and persists it to Local Storage. Try changing the username and toggling the sidebar and refreshing - it will restore it to the previous state.
+
+<Editor
+  code={`
+import { observable } from "@legendapp/state"
+import { syncObservable } from "@legendapp/state/sync"
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
+import { $React } from "@legendapp/state/react-web"
+import { motion } from "framer-motion"
+import { useRef } from "react"
+
+const state$ = observable({
+  settings: { showSidebar: false, theme: 'light' },
+  user: {
+    profile: { name: '', avatar: '' },
+    messages: {}
+  }
+})
+
+// Persist state
+syncObservable(state$, {
+  persist:{
+    name: 'persistenceExample',
+    plugin: ObservablePersistLocalStorage,
+  }
+})
+
+// Create a reactive Framer-Motion div
+const MotionDiv = reactive(motion.div)
+
+function App() {
+  const renderCount = ++useRef(0).current
+
+  const sidebarHeight = () => (
+    state$.settings.showSidebar.get() ? 96 : 0
+  )
+
+  return (
+    <Box className="flex flex-col gap-y-3">
+      <div>Renders: {renderCount}</div>
+      <div>Username:</div>
+      <$React.input
+        className="input"
+        $value={state$.user.profile.name}
+      />
+      <Button onClick={state$.settings.showSidebar.toggle}>
+        Toggle footer
+      </Button>
+      <MotionDiv
+        className="footer"
+        $animate={() => ({
+           height: state$.settings.showSidebar.get() ?
+             96 : 0
+        })}
+      >
+        <div className="p-4">Footer</div>
+      </MotionDiv>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  previewWidth={210}
+  transformExamples={[
+    {
+      pattern: 'className="footer"',
+      replacement: 'className="bg-zinc-600 text-center text-white text-sm overflow-hidden"',
+    },
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1 mt-2"',
+    },
+  ]}
+/>
+
+## Auto-saving Form
+
+This example uses the [useObservableSyncedQuery](../../sync/tanstack-query) hook to create an observable using [TanStack Query](https://tanstack.com/query/) that automatically sends mutations back to the server whenever the observable changes.
+
+It then uses the `Reactive` [two-way binding components](../fine-grained-reactivity#reactive-components) to bind those observable directly to the inputs.
+
+So in effect this binds the inputs directly to your server data.
+
+<Editor
+  code={`
+import axios from "axios"
+import { useRef } from "react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { useObservable, Memo } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
+import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query'
+
+const queryClient = new QueryClient()
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+
+function Example() {
+  const renderCount = ++useRef(0).current
+  const lastSaved$ = useObservable(0)
+  const data$ = useObservableSyncedQuery({
+    queryClient,
+    query: {
+      queryKey: ["data"],
+      queryFn: () =>
+        axios.get("https://reqres.in/api/users/1")
+          .then((res) => res.data.data),
+    },
+    mutation: {
+      mutationFn: (newData) => {
+        // Uncomment to actually save
+        /*
+        debounce(() => {
+          axios
+            .post("https://reqres.in/api/users/1", newData)
+            .then((res) =>
+              lastSaved$.set(Date.now())
+            )
+        }, 1000)
+        */
+        lastSaved$.set(Date.now())
+      }
+    }
+  })
+
+  return (
+    <Box className="flex flex-col gap-y-3">
+      <div>
+        Renders: {renderCount}
+      </div>
+      <div>Name:</div>
+      <$React.input
+        className="input"
+        $value={data$.first_name}
+      />
+      <div>Email:</div>
+      <$React.input
+        className="input"
+        $value={data$.email}
+      />
+      <div>
+        Last saved: <Memo>{lastSaved$}</Memo>
+      </div>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  transformExamples={[
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"',
+    },
+  ]}
+/>
+
+## Form validating
+
+This example uses [useObserve](../react-api#useobserve) to listen to changes in the form state to update the error messages as you type. It waits for the first click of the Save button for a better user experience.
+
+<Editor
+  code={`
+import { useRef } from "react"
+import { useObservable, useObserve, Memo, Show } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
+
+function App() {
+  const renderCount = ++useRef(0).current
+
+  const username$ = useObservable('')
+  const password$ = useObservable('')
+  const usernameError$ = useObservable('')
+  const passwordError$ = useObservable('')
+  const didSave$ = useObservable(false)
+  const successMessage$ = useObservable('')
+
+  useObserve(() => {
+    if (didSave$.get()) {
+      usernameError$.set(username$.get().length < 3 ?
+        'Username must be > 3 characters' :
+        ''
+      )
+      const pass = password$.get()
+      passwordError$.set(
+        pass.length < 10 ?
+          'Password must be > 10 characters' :
+          !pass.match(/\\d/) ?
+            'Password must include a number' :
+            ''
+      )
+    }
+  })
+
+  const onClickSave = () => {
+    // setting triggers useObserve, updating error messages
+    didSave$.set(true)
+
+    if (!usernameError$.get() && !passwordError$.get()) {
+      console.log('Submit form')
+      passwordError$.delete()
+      successMessage$.set('Saved!')
+    }
+  }
+
+  return (
+    <Box className="flex flex-col gap-y-3">
+      <div>Renders: {renderCount}</div>
+      <div>Username:</div>
+      <$React.input
+        className="input"
+        $value={username$}
+      />
+      <div className="error">
+        <Memo>{usernameError$}</Memo>
+      </div>
+      <div>Password:</div>
+      <$React.input
+        type="password"
+        className="input"
+        $value={password$}
+      />
+      <div className="error">
+        <Memo>{passwordError$}</Memo>
+      </div>
+      <Show if={successMessage$}>
+        {() => (
+          <div>
+            {successMessage$.get()}
+          </div>
+        )}
+      </Show>
+      <Button onClick={onClickSave}>
+        Save
+      </Button>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  previewWidth={200}
+  transformExamples={[
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"',
+    },
+    {
+      pattern: 'className="error"',
+      replacement: 'className="text-sm text-red-500 mb-2 pt-1"',
+    },
+  ]}
+/>
+
+## List of messages
+
+This example uses the [syncedFetch](../../sync/fetch) helper to get data from a server as an observable, [useComputed](../react-api#usecomputed) to create a computed observable, and [For](../fine-grained-reactivity#for) to display the array of messages in a high-performance way.
+
+<Editor
+  code={`
+import { For, Show, useObservable, useObservable } from "@legendapp/state/react"
+import { $React } from "@legendapp/state/react-web"
+import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
+
+let nextID = 0
+function generateID() {
+  return nextID ++
+}
+
+function App() {
+  const renderCount = ++useRef(0).current
+
+  // Create profile from fetch promise
+  const profile$ = useObservable(syncedFetch({
+    get: 'https://reqres.in/api/users/1'
+  }))
+
+  // Username
+  const userName = useObservable(() => {
+    const p = profile$.data.get()
+    return p ?
+        p.first_name + ' ' + p.last_name :
+        ''
+  })
+
+  // Chat state
+  const { messages, currentMessage } = useObservable({
+    messages: [],
+    currentMessage: ''
+  })
+
+  // Button click
+  const onClickAdd = () => {
+    messages.push({
+      id: generateID(),
+      text: currentMessage.get(),
+    })
+    currentMessage.set('')
+  }
+
+  return (
+    <Box className="flex flex-col gap-y-3">
+      <div>Renders: {renderCount}</div>
+      <Show if={userName} else={<div>Loading...</div>}>
+        <div>Chatting with <Memo>{userName}</Memo></div>
+      </Show>
+      <div className="messages">
+        <For each={messages}>
+          {(message) => <div>{message.text.get()}</div>}
+        </For>
+      </div>
+      <div className="flex gap-2 items-center">
+        <$React.input
+          className="input"
+          placeholder="Enter message"
+          $value={currentMessage}
+          onKeyDown={e => e.key === 'Enter' && onClickAdd()}
+        />
+        <Button onClick={onClickAdd}>
+          Send
+        </Button>
+      </div>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  transformExamples={[
+    {
+      pattern: 'className="input"',
+      replacement: 'className="bg-zinc-900 text-white border rounded border-zinc-600 px-2 py-1"',
+    },
+    {
+      pattern: 'className="messages"',
+      replacement: 'className="h-64 p-2 my-3 overflow-auto border border-zinc-600 rounded [&>*]:!mt-2"',
+    },
+  ]}
+/>
+
+## Animations with reactive props
+
+This example uses [reactive](../fine-grained-reactivity#reactive) to make a version of `motion.div` with [reactive props](../fine-grained-reactivity#reactive-components) that can animate using observable values. Animating with reactive props is faster than re-rendering the whole component because when the tracked observable changes it triggers a render of only the `motion.div`, so it doesn't need to re-render the parent or children.
+
+This example also creates a [computed observable](../../usage/observable#computed-observables) text value from the boolean and renders it directly in JSX, which (under the hood) creates a reactive text element that re-renders itself when it changes.
+
+<Editor
+  code={`
+import { reactive } from "@legendapp/state/react"
+import { motion } from "framer-motion"
+import { useRef } from "react"
+import { observable } from "@legendapp/state"
+import { useComputed, useObservable, Memo } from "@legendapp/state/react"
+
+const MotionDiv = reactive(motion.div)
+
+function Toggle({ $value }) {
+  return (
+    <MotionDiv
+      className="toggle"
+      $animate={() => ({
+        backgroundColor: $value.get() ? '#6ACB6C' : '#515153'
+      })}
+      style={{ width: 64, height: 32 }}
+      onClick={$value.toggle}
+    >
+      <MotionDiv
+        className="thumb"
+        style={{ width: 24, height: 24, marginTop: 3 }}
+        $animate={() => ({
+          x: $value.get() ? 34 : 4
+        })}
+      />
+    </MotionDiv>
+  )
+}
+
+const settings$ = observable({ enabled: false })
+
+function App() {
+  const renderCount = ++useRef(0).current
+
+  // Computed text value
+  const text$ = useObservable(() => (
+    settings$.enabled.get() ? 'Yes' : 'No'
+))
+
+  return (
+    <Box className="flex flex-col gap-y-3">
+      <div>Renders: {renderCount}</div>
+      <div>
+        Enabled: <Memo>{text$}</Memo>
+      </div>
+      <Toggle $value={settings$.enabled} />
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  previewWidth={128}
+  transformExamples={[
+    {
+      pattern: 'className="toggle"',
+      replacement: 'className="border border-[#717173] rounded-full select-none cursor-pointer"',
+    },
+    {
+      pattern: 'className="thumb"',
+      replacement: 'className="bg-white rounded-full shadow"',
+    },
+  ]}
+/>
+
+## Show a modal with multiple pages
+
+This example uses [Show](../fine-grained-reactivity#show) to show/hide a modal based on an observable value, and [Switch](../fine-grained-reactivity#switch) to render the active page in the modal.
+
+<Editor
+  code={`
+const MotionDiv = reactive(motion.div)
+const MotionButton = reactive(motion.button)
+
+const TransitionBounce = {
+  type: 'spring',
+  duration: 0.4,
+  bounce: 0.3,
+}
+
+function Modal({ show }) {
+  const renderCount = ++useRef(0).current
+  const page$ = useObservable(0)
+
+  return (
+    <motion.div
+      className="flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div
+        className="absolute inset-0 bg-black/60"
+        onClick={() => show.set(false)}
+      />
+      <motion.div
+        className="modal"
+        initial={{ opacity: 0, scale: 0.7, translateY: 40 }}
+        animate={{ opacity: 1, scale: 1, translateY: 0 }}
+        exit={{ scale: 0.7, opacity: 0 }}
+        style={{ width: 240, height: 320 }}
+        transition={TransitionBounce}
+      >
+        <div>
+          Renders: {renderCount}
+        </div>
+        <div className="pageText">
+          <Switch value={page$}>
+            {{
+              0: () => <div>First Page</div>,
+              1: () => <div>Second Page</div>,
+              2: () => <div>Third Page</div>
+            }}
+          </Switch>
+        </div>
+        <div className="modalButtons">
+          <MotionButton
+            className="pageButton"
+            animate={() => ({ opacity: page$.get() === 0 ? 0.5 : 1 })}
+            $disabled={() => page$.get() === 0}
+            onClick={() => page$.set(p => p - 1)}
+            transition={{ duration: 0.15 }}
+          >
+            Prev
+          </MotionButton>
+          <MotionButton
+            className="pageButton"
+            animate={() => ({ opacity: page$.get() === 2 ? 0.5 : 1 })}
+            $disabled={() => page$.get() === 2}
+            onClick={() => page$.set(p => p + 1)}
+            transition={{ duration: 0.15 }}
+          >
+            Next
+          </MotionButton>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+
+function App() {
+  const renderCount = ++useRef(0).current
+
+  const showModal = useObservable(false)
+
+  return (
+    <Box height={512}>
+      <div>Renders: {renderCount}</div>
+      <Button onClick={showModal.toggle}>
+        Show modal
+      </Button>
+      <Show if={showModal} wrap={AnimatePresence}>
+        {() => <Modal show={showModal} />}
+      </Show>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<App />)"
+  previewWidth={220}
+  transformExamples={[
+    {
+      pattern: 'className="pageText"',
+      replacement: 'className="flex-1 flex justify-center items-center"',
+    },
+    {
+      pattern: 'className="pageButton"',
+      replacement: 'className="px-4 py-2 my-4 font-bold rounded shadow text-2xs cursor-pointer bg-zinc-600 hover:bg-zinc-500 !mt-0"',
+    },
+    {
+      pattern: 'className="modal"',
+      replacement: 'className="relative bg-zinc-700 rounded-xl flex flex-col p-4"',
+    },
+    {
+      pattern: 'className="modalButtons"',
+      replacement: 'className="flex justify-center gap-4"',
+    },
+  ]}
+/>
+
+## Router
+
+<Editor
+  code={`
+import { useRef } from "react"
+import { Memo, Switch } from "@legendapp/state/react"
+import { pageHash } from "@legendapp/state/helpers/pageHash"
+import { pageHashParams } from "@legendapp/state/helpers/pageHashParams"
+
+function RouterExample() {
+  const renderCount = ++useRef(0).current
+
+  return (
+    <Box width={240}>
+      <div>Renders: {renderCount}</div>
+      <div>
+        <Button onClick={() => pageHashParams.page.delete()}>
+          Go to root
+        </Button>
+        <Button onClick={() => pageHashParams.page.set('')}>
+          Go to Page
+        </Button>
+        <Button onClick={() => pageHashParams.page.set('Home')}>
+          Go Home
+        </Button>
+        <Button onClick={() => pageHashParams.page.set('asdf')}>
+          Go to unknown
+        </Button>
+      </div>
+        <div>Hash: <Memo>{pageHash}</Memo></div>
+        <div className="p-4 bg-zinc-600 rounded-xl">
+          <Switch value={pageHashParams.page}>
+            {{
+              undefined: () => <div>Root</div>,
+              '': () => <div>Page</div>,
+              Home: () => <div>Home</div>,
+              default: () => <div>Unknown page</div>,
+            }}
+          </Switch>
+        </div>
+    </Box>
+  )
+}`}
+  noInline={true}
+  renderCode=";render(<RouterExample />)"
+/>
+
+<Callout>
+These examples are interactive demonstrations that would typically include live code editors and previews. In the original documentation, they were implemented as Astro components with embedded examples.
+</Callout>
