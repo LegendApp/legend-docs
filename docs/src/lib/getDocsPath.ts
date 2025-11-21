@@ -8,7 +8,7 @@ export function getFirstDocsPath(docType: 'list' | 'list1' | 'state' | 'motion' 
     } else if (docType === 'state2') {
         return '/state/v2/intro/introduction';
     } else if (docType === 'motion') {
-        return '/motion/v1';
+        return '/motion/v2';
     }
     return '/';
 }

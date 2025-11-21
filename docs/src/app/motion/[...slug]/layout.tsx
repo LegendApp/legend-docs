@@ -15,9 +15,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                 defaultOpenLevel: 1,
                 tabs: [
                     {
-                        title: 'Version 1',
+                        title: 'Version 2',
                         description: 'Current stable version',
-                        url: '/motion/v1',
+                        url: '/motion/v2',
                         icon: <TbHexagonNumber1Filled size={20} />,
                     },
                 ],

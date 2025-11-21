@@ -21,7 +21,7 @@ function CardButton({ href, children, className }: { href: string; className?: s
             href={href}
             className={classNames(
                 'flex-1 flex items-center justify-center gap-2 px-6 py-3 hover:bg-fd-accent text-white transition-colors duration-200',
-                className,
+                className
             )}
         >
             {children}
@@ -83,7 +83,7 @@ export default function HomePage() {
         {
             title: 'Legend Motion',
             description: 'Smooth, performant animations with a declarative API for stunning motion experiences.',
-            href: '/motion/v1',
+            href: '/motion/v2',
             docsHref: getFirstDocsPath('motion'),
             githubHref: 'https://github.com/LegendApp/legend-motion',
         },
@@ -106,7 +106,7 @@ export default function HomePage() {
                                 href="/blog"
                                 className={classNames(
                                     'inline-flex items-center gap-3 px-6 py-3 rounded-full text-zinc-300 hover:text-white hover:bg-fd-accent transition-all duration-300',
-                                    BGClassName,
+                                    BGClassName
                                 )}
                             >
                                 <span>Read our blog</span>
