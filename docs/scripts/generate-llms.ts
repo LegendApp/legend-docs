@@ -21,14 +21,16 @@ function stripFrontmatter(content: string): string {
     return frontmatter.test(content) ? content.replace(frontmatter, '') : content;
 }
 
-function stripImportsExports(content: string): string {
-    return content.replace(/^[ \t]*(import|export)[^\n]*\n?/gm, '');
+function stripLlmCallout(content: string): string {
+    // Remove a leading LLM links/downloads callout so the generated files don't include it
+    const llmCallout = /^\s*<Callout[^>]*>[\s\S]*?LLM\s+(links|downloads)[\s\S]*?<\/Callout>\s*/i;
+    return llmCallout.test(content) ? content.replace(llmCallout, '') : content;
 }
 
 function cleanContent(raw: string): string {
     const withoutFrontmatter = stripFrontmatter(raw);
-    const withoutImports = withoutFrontmatter;
-    return `${withoutImports.trim()}\n`;
+    const withoutLlmCallout = stripLlmCallout(withoutFrontmatter);
+    return `${withoutLlmCallout.trim()}\n`;
 }
 
 async function writeFileEnsured(filePath: string, content: string) {

@@ -1,0 +1,14 @@
+https://www.legendapp.com/open-source/motion/v2/llms/getting-started/introduction.md
+https://www.legendapp.com/open-source/motion/v2/llms/index.md
+https://www.legendapp.com/open-source/motion/v2/llms/resources/caveats.md
+https://www.legendapp.com/open-source/motion/v2/llms/resources/next-js.md
+https://www.legendapp.com/open-source/motion/v2/llms/resources/typescript.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/animate-presence.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/animate-props.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/configuration.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/custom-components.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/linear-gradient.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/overview.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/svg.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/tailwind-css.md
+https://www.legendapp.com/open-source/motion/v2/llms/usage/transform-origin.md

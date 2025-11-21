@@ -28,26 +28,31 @@ interface FileCheckResult {
 }
 
 class LinkValidator {
+    private readonly rootDir: string;
+    private readonly publicDir: string;
+    private readonly basePath: string;
     private readonly verbose: boolean;
     private errors: ValidationError[] = [];
 
     constructor(options: { verbose?: boolean } = {}) {
         this.verbose = options.verbose ?? false;
+        const cwd = process.cwd();
+        const docsSuffix = `${path.sep}docs`;
+        this.rootDir = cwd.endsWith(docsSuffix) ? path.dirname(cwd) : cwd;
+        this.publicDir = path.join(this.rootDir, 'docs/public');
+        this.basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? '/open-source').replace(/\/+$/, '') || '/';
     }
 
     /**
      * Find all MDX files in the project
      */
     findMdxFiles(): string[] {
-        // Get the root directory (parent of current working directory if we're in docs/)
-        const rootDir = process.cwd().endsWith('/docs') ? path.dirname(process.cwd()) : process.cwd();
-
         const patterns = ['docs/content/**/*.mdx'];
 
         const files: string[] = [];
         patterns.forEach((pattern) => {
-            const matches = glob.sync(pattern, { cwd: rootDir });
-            files.push(...matches.map((file: string) => path.resolve(rootDir, file)));
+            const matches = glob.sync(pattern, { cwd: this.rootDir });
+            files.push(...matches.map((file: string) => path.resolve(this.rootDir, file)));
         });
 
         return files;
@@ -99,6 +104,12 @@ class LinkValidator {
      * Resolve a relative link to an absolute file path
      */
     private resolveLinkPath(linkUrl: string, fromFile: string): string {
+        // URLs starting with "/" should be treated as site-root paths, not filesystem-absolute
+        if (linkUrl.startsWith('/')) {
+            const withoutFragment = linkUrl.split('#')[0];
+            return withoutFragment;
+        }
+
         const parsedPath = path.parse(fromFile);
         const isIndexFile = parsedPath.name === 'index';
 
@@ -120,10 +131,24 @@ class LinkValidator {
      */
     private checkFileExists(targetPath: string): FileCheckResult {
         const extensions = ['', '.mdx', '.md'];
+        const candidates: string[] = [];
 
-        for (const ext of extensions) {
-            const fullPath = targetPath + ext;
+        const addCandidates = (basePath: string) => {
+            extensions.forEach((ext) => {
+                const candidate = basePath + ext;
+                if (!candidates.includes(candidate)) {
+                    candidates.push(candidate);
+                }
+            });
+        };
 
+        // Original resolved path
+        addCandidates(targetPath);
+
+        // If the path is under the Next.js basePath, check the public directory
+        addCandidates(targetPath.replace('/content/', '/public/'));
+
+        for (const fullPath of candidates) {
             // Check if it's a file
             if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
                 return { exists: true, resolvedPath: fullPath, type: 'file' };
