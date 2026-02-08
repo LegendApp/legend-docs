@@ -11,7 +11,7 @@ In previous versions this was called useValue or use$. If you were using `useVal
 </Callout>
 
 <Callout type="warn" title="Migration from use$">
-`use$` was not compatible with React Compiler, so if you're using Compiler we strongly suggest migrating from `useValue`.
+`use$` was not compatible with React Compiler, so if you're using Compiler we strongly suggest migrating to `useValue`.
 </Callout>
 
 `useValue` computes a value and automatically listens to any observables accessed while running, and only re-renders if the computed value changes. This can take either an observable or a function that consumes observables.
