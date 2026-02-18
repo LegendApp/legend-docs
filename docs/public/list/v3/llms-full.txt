@@ -1707,12 +1707,19 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
 
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
-`onScroll` handlers are supported as plain JS callbacks, Reanimated worklets, or processed handlers.
 
+```npm
+npm install react-native-keyboard-controller
+```
+
+<Callout type="warn" title="Integration guidance">
 Do not wrap `KeyboardAvoidingLegendList` inside another `KeyboardAvoidingView`.
-Let the list manage keyboard-aware behavior, and let adjacent UI (like composers/inputs) handle their own keyboard avoiding (for example with `KeyboardStickyView`).
+Let the list manage keyboard-aware behavior, and adjacent UI (like composers/inputs) should handle their own keyboard avoiding (for example with `KeyboardStickyView`).
+</Callout>
 
-If your app needs more advanced keyboard-avoidance behavior, use `KeyboardAvoidingLegendList` as a starting point and adapt it for your scenario. See the integration source: <a href="https://github.com/LegendApp/legend-list/blob/main/src/integrations/keyboard.tsx">src/integrations/keyboard.tsx</a>.
+<Callout title="Advanced customization">
+If your app needs more advanced keyboard-avoidance behavior, use `KeyboardAvoidingLegendList` as a starting point and adapt it for your scenario. See the source: <a href="https://github.com/LegendApp/legend-list/blob/main/src/integrations/keyboard.tsx">src/integrations/keyboard.tsx</a>.
+</Callout>
 
 ### Chat Example
 
@@ -1835,10 +1842,4 @@ export function WebList() {
 - The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
 - `style` and `contentContainerStyle` accept CSS properties on web.
 - If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
-
-### TypeScript note
-
-Legend List’s types reference `react-native` for shared types. If your TS setup complains about missing `react-native` types, add `react-native` as a dev dependency or provide a minimal module stub.
-
-See [API Reference](../../api) for the shared API and platform-specific callouts.
 

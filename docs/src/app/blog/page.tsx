@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
-import type { PageTree } from 'fumadocs-core/server';
+import type { Item as PageTreeItem, Node as PageTreeNode } from 'fumadocs-core/page-tree';
 
 function removeFilenameDatePrefix(slug: string): string {
     // Remove YYYY-MM-DD- prefix from slug
@@ -36,7 +36,7 @@ function removeDatePrefixFromUrl(url: string): string {
     return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
 }
 
-function sanitizeSidebarItem(item: PageTree.Item): PageTree.Item {
+function sanitizeSidebarItem(item: PageTreeItem): PageTreeItem {
     const sanitizedUrl = removeDatePrefixFromUrl(item.url);
 
     if (sanitizedUrl === item.url) {
@@ -49,7 +49,7 @@ function sanitizeSidebarItem(item: PageTree.Item): PageTree.Item {
     };
 }
 
-function sanitizeSidebarNode(node: PageTree.Node): PageTree.Node {
+function sanitizeSidebarNode(node: PageTreeNode): PageTreeNode {
     if (node.type === 'page') {
         return sanitizeSidebarItem(node);
     }
@@ -67,7 +67,7 @@ function sanitizeSidebarNode(node: PageTree.Node): PageTree.Node {
     return node;
 }
 
-function sanitizeSidebarNodes(nodes: PageTree.Node[]): PageTree.Node[] {
+function sanitizeSidebarNodes(nodes: PageTreeNode[]): PageTreeNode[] {
     return nodes.map(sanitizeSidebarNode);
 }
 

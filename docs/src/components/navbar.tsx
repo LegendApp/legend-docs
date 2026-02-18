@@ -1,17 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { Sidebar as SidebarIcon } from 'fumadocs-ui/internal/icons';
-import { cn } from 'fumadocs-ui/utils/cn';
-import { DocsLayout, Navbar, SidebarTrigger } from 'fumadocs-ui/layouts/docs';
+import { SidebarTrigger, useSidebar } from 'fumadocs-ui/components/sidebar/base';
+import { useSearchContext } from 'fumadocs-ui/contexts/search';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getFirstDocsPath } from '@/lib/getDocsPath';
 import Link from 'fumadocs-core/link';
 import { baseOptions } from '@/app/layout.config';
-import { SearchToggle } from 'fumadocs-ui/components/layout/search-toggle';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
+import { PanelLeft, Search } from 'lucide-react';
 
 function normalizePath(value?: string | null) {
     if (!value) {
@@ -37,13 +36,63 @@ function isPathActive(currentPath: string, matches: string[]) {
     });
 }
 
+function MobileSearchToggle({ className }: { className?: string }) {
+    const { setOpenSearch, enabled } = useSearchContext();
+
+    if (!enabled) return null;
+
+    return (
+        <button
+            type="button"
+            data-search=""
+            aria-label="Open Search"
+            className={classNames(
+                buttonVariants({
+                    color: 'ghost',
+                    size: 'icon-sm',
+                }),
+                className,
+            )}
+            onClick={() => setOpenSearch(true)}
+        >
+            <Search className="size-4.5" />
+        </button>
+    );
+}
+
+function OptionalSidebarTrigger() {
+    let hasSidebarContext = true;
+
+    try {
+        useSidebar();
+    } catch {
+        hasSidebarContext = false;
+    }
+
+    if (!hasSidebarContext) return null;
+
+    return (
+        <SidebarTrigger
+            className={classNames(
+                buttonVariants({
+                    color: 'ghost',
+                    size: 'icon-sm',
+                    className: 'p-2',
+                }),
+            )}
+        >
+            <PanelLeft className="size-4.5" />
+        </SidebarTrigger>
+    );
+}
+
 export function CustomNavbar() {
     const pathname = usePathname();
     const currentPath = normalizePath(pathname);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const searchToggleConfig = baseOptions.searchToggle;
 
-    const searchToggleNode = searchToggleConfig?.components?.sm ?? <SearchToggle className="p-2" hideIfDisabled />;
+    const searchToggleNode = searchToggleConfig?.components?.sm ?? <MobileSearchToggle className="p-2" />;
 
     const navItems = [
         {
@@ -160,17 +209,7 @@ export function CustomNavbar() {
                     </button>
                     {searchToggleConfig?.enabled !== false ? searchToggleNode : null}
 
-                    <SidebarTrigger
-                        className={cn(
-                            buttonVariants({
-                                color: 'ghost',
-                                size: 'icon-sm',
-                                className: 'p-2',
-                            }),
-                        )}
-                    >
-                        <SidebarIcon className="size-4.5" />
-                    </SidebarTrigger>
+                    <OptionalSidebarTrigger />
                 </div>
                 <div className="hidden md:flex items-center gap-8 text-sm pr-1">
                     {navItems.map(({ label, href, matches }) => renderNavLink(label, href, matches))}

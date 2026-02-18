@@ -104,6 +104,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <DocsPage
                     toc={page.data.toc}
                     full={page.data.full}
+                    className="border-t border-white/10"
                     footer={{
                         enabled: false,
                     }}
@@ -127,15 +128,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             </Link>
                         ),
                     }}
-                    container={{
-                        className: 'border-t border-white/10',
-                    }}
-                    article={{
-                        className:
-                            'blog-post col-span-4 xl:col-span-3 order-last !m-[unset] max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12 border-l border-r border-white/10 ',
-                    }}
                 >
-                    <DocsBody>
+                    <DocsBody className="blog-post max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12 border-l border-r border-white/10">
                         <MDX
                             components={getMDXComponents({
                                 pre: (props) => (

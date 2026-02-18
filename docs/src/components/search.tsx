@@ -15,11 +15,11 @@ import {
     type SharedProps,
 } from 'fumadocs-ui/components/dialog/search';
 import type { HighlightedText } from 'fumadocs-core/search/server';
-import type { SortedResult } from 'fumadocs-core/server';
-import { FileText, Hash } from 'fumadocs-ui/internal/icons';
+import type { SortedResult } from 'fumadocs-core/search/server';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
+import { FileText, Hash } from 'lucide-react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function initOrama(): any {

@@ -1,8 +1,8 @@
 import { blogPosts } from '@/.source';
 import { loader } from 'fumadocs-core/source';
-import { createMDXSource } from 'fumadocs-mdx';
+import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 
 export const source = loader({
     baseUrl: '/blog',
-    source: createMDXSource(blogPosts),
+    source: toFumadocsSource(blogPosts, []),
 });

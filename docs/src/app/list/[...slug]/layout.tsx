@@ -4,7 +4,6 @@ import { getFirstDocsPath } from '@/lib/getDocsPath';
 import { getVersionTabUrls } from '@/lib/getVersionTabUrls';
 import { source } from '@/lib/sources/list';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { cn } from 'fumadocs-ui/utils/cn';
 import type { ReactNode } from 'react';
 import { TbHexagonNumber1Filled, TbHexagonNumber2Filled, TbHexagonNumber3Filled } from 'react-icons/tb';
 
@@ -50,7 +49,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                 ],
             }}
             containerProps={{
-                className: cn('[--fd-nav-height:106px]', 'md:[--fd-nav-height:50px]'),
+                className:
+                    '[--fd-nav-height:106px] md:[--fd-nav-height:50px] [--fd-banner-height:106px] md:[--fd-banner-height:50px]',
             }}
         >
             {children}

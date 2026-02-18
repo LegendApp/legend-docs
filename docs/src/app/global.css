@@ -4,6 +4,7 @@
 
 :root {
     --fd-nav-height: 50px !important;
+    --fd-banner-height: 50px !important;
     --fd-toc-nav-height: 50px !important;
     --fd-color-primary: #0099dd !important;
     --color-fd-primary: #0099dd !important;
