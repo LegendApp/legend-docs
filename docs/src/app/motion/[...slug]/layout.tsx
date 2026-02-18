@@ -4,8 +4,11 @@ import { baseOptions } from '@/app/layout.config';
 import { source } from '@/lib/sources/motion';
 import { CustomNavbar } from '@/components/navbar';
 import { TbHexagonNumber1Filled } from 'react-icons/tb';
+import { getVersionTabUrls } from '@/lib/getVersionTabUrls';
 
 export default function Layout({ children }: { children: ReactNode }) {
+    const version2Url = '/motion/v2';
+
     return (
         <DocsLayout
             tree={source.pageTree}
@@ -17,7 +20,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                     {
                         title: 'Version 2',
                         description: 'Current stable version',
-                        url: '/motion/v2',
+                        url: version2Url,
+                        urls: getVersionTabUrls(source.pageTree, version2Url),
                         icon: <TbHexagonNumber1Filled size={20} />,
                     },
                 ],
