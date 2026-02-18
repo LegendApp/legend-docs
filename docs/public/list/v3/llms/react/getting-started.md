@@ -1,11 +1,11 @@
-Legend List runs natively on the web with DOM elements. You do **not** need React Native or react-native-web to use it.
+Legend List runs natively on the web with DOM elements in React.
 
 - ⚡️ Virtualized, fast scrolling lists in React
 - 🧠 Dynamic item sizes
 - 🧩 Same API as the React Native version
 
 <Callout>
-Looking for the React Native version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
+Looking for the React Native or React Native Web version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
 </Callout>
 
 ## Install
@@ -16,7 +16,7 @@ npm install @legendapp/list
 
 ## Usage
 
-On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+`renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
 
 ```jsx
 import { LegendList } from "@legendapp/list/react";

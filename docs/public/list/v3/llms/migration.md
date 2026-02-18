@@ -34,10 +34,17 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 3) **Sticky headers prop rename**
    - `stickyIndices` → `stickyHeaderIndices` (deprecated alias kept for now)
 
+4) **Typed import paths**
+   - Root import `@legendapp/list` remains functional, but is deprecated for strict typing in v3.
+   - Prefer:
+     - React Native: `@legendapp/list/react-native`
+     - React (Web): `@legendapp/list/react`
+
 ## Migration checklist
 
 - Update size callback signatures to `(item, index, type)`
 - Replace `stickyIndices` with `stickyHeaderIndices`
+- Move imports to typed platform entrypoints (`/react-native` or `/react`)
 - If you relied on data‑change anchoring, set `maintainVisibleContentPosition={{ data: true }}`
 - (Optional) Consider `alwaysRender` for pinned items
 

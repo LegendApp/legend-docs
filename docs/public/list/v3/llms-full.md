@@ -11,15 +11,18 @@ Props apply to both React Native and Web unless otherwise noted. Platform-specif
 ```ts
 // Choose one platform-specific LegendList import
 import { LegendList } from "@legendapp/list/react-native";
-import { LegendList as LegendListWeb } from "@legendapp/list/react";
+import { LegendList } from "@legendapp/list/react";
 
 // Optional entrypoints
 import { SectionList } from "@legendapp/list/section-list";
 import { AnimatedLegendList } from "@legendapp/list/animated";
 import { AnimatedLegendList as ReanimatedLegendList } from "@legendapp/list/reanimated";
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
-import { LegendList as KeyboardControllerLegendList } from "@legendapp/list/keyboard-controller";
 ```
+
+<Callout>
+The root import (`@legendapp/list`) is still functional (they all share the same JavaScript code), but deprecated for strict typing. Prefer `@legendapp/list/react-native` and `@legendapp/list/react`.
+</Callout>
 
 ## Required Props
 ___
@@ -34,7 +37,7 @@ An array of the items to render. This can also be an array of keys if you want t
 ### renderItem
 
 ```ts
-renderItem?: (props: { item: ItemT; index: number; extraData: any; type?: string; data: ItemT[] }) => ReactNode;
+renderItem: (props: { item: ItemT; index: number; extraData: any; type?: string; data: readonly ItemT[] }) => ReactNode;
 ```
 
 Takes an item from data and renders it into the list. The `type` parameter is available when using `getItemType`.
@@ -125,6 +128,14 @@ estimatedItemSize?: number;
 
 An estimated size for all items which is used to estimate the list layout before items actually render. This can help to provide a hint for how large items will be in the first frame and can speed up initial layout, but subsequent renders will use the average item size.
 
+### estimatedListSize
+
+```ts
+estimatedListSize?: { height: number; width: number };
+```
+
+Estimated size of the list viewport used as a first-render hint before actual layout is measured.
+
 ### extraData
 
 ```ts
@@ -207,6 +218,14 @@ initialScrollAtEnd?: boolean; // default: false
 
 When true, the list initializes scrolled to the last item. Overrides `initialScrollIndex` and `initialScrollOffset` when data is available.
 
+### itemsAreEqual
+
+```ts
+itemsAreEqual?: (itemPrevious: ItemT, item: ItemT, index: number, data: readonly ItemT[]) => boolean;
+```
+
+Optional equality comparator used during data changes to preserve known item sizes and reduce relayout work when items are logically unchanged.
+
 ### ItemSeparatorComponent
 
 ```ts
@@ -264,6 +283,10 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponen
 
 ### ListHeaderComponentStyle
 
+```ts
+ListHeaderComponentStyle?: StyleProp<ViewStyle> | undefined;
+```
+
 Styling for internal View for `ListHeaderComponent`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponentstyle).
@@ -272,10 +295,17 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponen
 ### maintainScrollAtEnd
 
 ```ts
-maintainScrollAtEnd?: boolean;
+maintainScrollAtEnd?: boolean | {
+  onLayout?: boolean;
+  onItemLayout?: boolean;
+  onDataChange?: boolean;
+};
 ```
 
-This will check if you are already scrolled to the bottom when `data` changes, and if so it keeps you scrolled to the bottom.
+If enabled, LegendList keeps the view pinned to end when you are near the bottom.
+
+- `true`: enables end-maintenance for layout, item-layout, and data updates.
+- object form: choose which update types should keep end-position pinned.
 
 See [Chat interfaces](../guides#chat-interfaces) for more.
 
@@ -355,6 +385,14 @@ onMetricsChange?: (metrics: { headerSize: number; footerSize: number }) => void;
 
 Called when list layout metrics change (header or footer size updates).
 
+### onLoad
+
+```ts
+onLoad?: (info: { elapsedTimeInMs: number }) => void;
+```
+
+Called after the list is ready to render. Useful for measuring first render readiness.
+
 ### onRefresh
 
 ```ts
@@ -362,6 +400,14 @@ onRefresh?: () => void;
 ```
 
 React Native only. Called whenever a user pulls down to refresh. See [React Native Docs](https://reactnative.dev/docs/flatlist#onRefresh).
+
+### onScroll
+
+```ts
+onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+```
+
+Called on scroll events with platform-specific scroll data.
 
 ### onStartReached
 
@@ -378,6 +424,28 @@ onStartReachedThreshold?: number | null | undefined;
 ```
 
 The distance from the start as a percentage that the scroll should be from the end to trigger `onStartReached`. It is multiplied by screen size, so a value of 0.5 will trigger `onStartReached` when scrolling to half a screen from the start.
+
+### onStickyHeaderChange
+
+```ts
+onStickyHeaderChange?: (info: { index: number; item: any }) => void;
+```
+
+Called when the active sticky header changes.
+
+### overrideItemLayout
+
+```ts
+overrideItemLayout?: (
+  layout: { span?: number },
+  item: ItemT,
+  index: number,
+  maxColumns: number,
+  extraData?: any
+) => void;
+```
+
+Customize multi-column item layout (for example, setting `span`) before positions are computed.
 
 ### onViewableItemsChanged
 
@@ -416,13 +484,21 @@ React Native only. Set this true while waiting for new data from a refresh.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#refreshing).
 
+### refScrollView
+
+```ts
+refScrollView?: React.Ref<any>;
+```
+
+Ref to the underlying scroll container instance.
+
 ### renderScrollComponent
 
 ```ts
 renderScrollComponent?: (props: ScrollViewProps) => ReactNode
 ```
 
-React Native only. Render a custom ScrollView component. This allows customization of the underlying ScrollView.
+Render a custom scroll component. On React Native this is typically a `ScrollView`; on web this is the underlying DOM scroll element wrapper.
 
 Note that passing `renderScrollComponent` as an inline function might cause you to lose scroll position if the list is rerendered.
 
@@ -463,6 +539,20 @@ stickyIndices?: number[];
 
 Deprecated alias for `stickyHeaderIndices`.
 
+### stickyHeaderConfig
+
+```ts
+stickyHeaderConfig?: {
+  offset?: number;
+  backdropComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
+};
+```
+
+Configures sticky header behavior:
+
+- `offset`: sticky top offset (for fixed toolbars/navbars)
+- `backdropComponent`: optional backdrop rendered behind sticky header
+
 ### style
 
 ```ts
@@ -470,6 +560,14 @@ style?: StyleProp<ViewStyle>;
 ```
 
 Style applied to the underlying ScrollView. On web this maps to the scroll container’s CSS style.
+
+### suggestEstimatedItemSize
+
+```ts
+suggestEstimatedItemSize?: boolean;
+```
+
+When enabled in development, LegendList logs suggested `estimatedItemSize` values based on measured items.
 
 ### viewabilityConfig
 
@@ -562,33 +660,60 @@ ref.current?.scrollToLocation({
 ## Ref Methods
 ___
 
+<a id="ref-method-getstate"></a>
+
 ### getState
 
 ```ts
-getState: () => {
-    activeStickyIndex: number;
-    contentLength: number;
-    data: ItemT[];
-    elementAtIndex: (index: number) => View | null | undefined;
-    end: number;
-    endBuffered: number;
-    isAtEnd: boolean;
-    isAtStart: boolean;
-    listen: (type: string, callback: (value: any) => void) => () => void;
-    listenToPosition: (key: string, callback: (value: number) => void) => () => void;
-    positionAtIndex: (index: number) => number;
-    positions: Map<string, number>;
-    scroll: number;
-    scrollLength: number;
-    scrollVelocity: number;
-    sizeAtIndex: (index: number) => number;
-    sizes: Map<string, number>;
-    start: number;
-    startBuffered: number;
-}
+getState(): LegendListState;
 ```
 
-Returns the internal scroll state of the list for advanced integrations. Includes element access, listeners, and scroll velocity.
+Returns a live snapshot API for advanced integrations. See [getState()](#getstate-details) for the full type, fields, listener channels, caveats, and examples.
+
+### clearCaches
+
+```ts
+clearCaches(options?: { mode?: "sizes" | "full" }): void;
+```
+
+Clears internal virtualization caches.
+
+- `sizes` (default): clears size/average caches and recalculates item positions.
+- `full`: also clears key/index/position caches.
+
+Useful if you know cached measurements are stale after major data/layout changes.
+
+### flashScrollIndicators
+
+```ts
+flashScrollIndicators(): void;
+```
+
+Asks the underlying scroll component to briefly show its scroll indicators.
+
+### getNativeScrollRef
+
+```ts
+getNativeScrollRef(): any;
+```
+
+Returns the underlying scroll instance (platform-specific type).
+
+### getScrollableNode
+
+```ts
+getScrollableNode(): any;
+```
+
+Returns the underlying native/DOM node used for scrolling.
+
+### getScrollResponder
+
+```ts
+getScrollResponder(): any;
+```
+
+Returns the platform scroll responder object for advanced integrations.
 
 ### scrollToIndex
 
@@ -666,7 +791,7 @@ scrollIndexIntoView(params: {
 ```jsx
 import { useRef } from "react";
 import { Button } from "react-native";
-import { LegendList } from "@legendapp/list";
+import { LegendList } from "@legendapp/list/react-native";
 
 export function ScrollExample() {
   const listRef = useRef(null);
@@ -703,7 +828,7 @@ scrollItemIntoView(params: {
 ```jsx
 import { useRef } from "react";
 import { Button } from "react-native";
-import { LegendList } from "@legendapp/list";
+import { LegendList } from "@legendapp/list/react-native";
 
 export function ScrollToItemExample() {
   const listRef = useRef(null);
@@ -755,6 +880,10 @@ Reports an externally measured content inset (merged with props/native insets). 
 
 ## Hooks
 
+<Callout>
+Hooks are exported from both `@legendapp/list/react-native` and `@legendapp/list/react`.
+</Callout>
+
 ### useRecyclingState
 
 ```ts
@@ -770,7 +899,7 @@ useRecyclingState: <T>(updateState: ((info: LegendListRecyclingState<T>) => T) |
 `useRecyclingState` automatically resets the state when an item is recycled into a new item.
 
 ```tsx
-import { useRecyclingState } from "@legendapp/list"
+import { useRecyclingState } from "@legendapp/list/react-native"
 export function ItemComponent({ item }) {
     // Like useState but it resets when the item is recycled
     const [isExpanded, setIsExpanded] = useRecyclingState(() => false);
@@ -795,7 +924,7 @@ useRecyclingEffect: <T>(effect: (info: LegendListRecyclingState<T>) => void | ((
 
 ```tsx
 import { useRef } from "react";
-import { useRecyclingEffect } from "@legendapp/list"
+import { useRecyclingEffect } from "@legendapp/list/react-native"
 
 export function ItemComponent({ item }) {
     const refSwipeable = useRef(null);
@@ -821,7 +950,7 @@ interface ViewToken<ItemT = any> {
     item: ItemT;
     key: string;
 }
-useViewability: (configId: string, callback: (viewToken: ViewToken) => void) => void;
+useViewability: (callback: (viewToken: ViewToken) => void, configId?: string) => void;
 ```
 
 A hook that provides callbacks when an item's viewability changes. This hook registers a callback that will be invoked whenever the item's visibility status changes, providing detailed information about the item through the ViewToken interface. It is similar to [onViewableItemsChanged](#onviewableitemschanged) but runs for only the rendering item. If you defined multiple viewability configs using [viewabilityConfigCallbackPairs](#viewabilityconfigcallbackpairs) then provide the id of the one you're interested in with `configId`.
@@ -829,7 +958,7 @@ A hook that provides callbacks when an item's viewability changes. This hook reg
 ```tsx
 import { useState } from "react";
 import { View, Text } from "react-native";
-import { useViewability } from "@legendapp/list"
+import { useViewability } from "@legendapp/list/react-native"
 
 export function ItemComponent({ item }) {
     const [isVisible, setIsVisible] = useState(false);
@@ -876,7 +1005,7 @@ A hook that provides detailed metrics about how much of an item is visible in th
 ```tsx
 import { useState } from "react";
 import { Animated, Text } from "react-native";
-import { useViewabilityAmount } from "@legendapp/list"
+import { useViewabilityAmount } from "@legendapp/list/react-native"
 
 export function ItemComponent({ item }) {
     const [opacity, setOpacity] = useState(0);
@@ -903,28 +1032,173 @@ export function ItemComponent({ item }) {
 ### useSyncLayout
 
 ```ts
-useSyncLayout: (callback: () => void) => void;
+useSyncLayout: () => () => void;
 ```
 
 A hook for synchronizing layout operations. This is useful for advanced use cases where you need to coordinate layout updates with other components or operations.
 
 ```tsx
 import { View, Text } from "react-native";
-import { useSyncLayout } from "@legendapp/list"
+import { useSyncLayout } from "@legendapp/list/react-native"
 
 export function ItemComponent({ item }) {
-    useSyncLayout(() => {
-        // This callback will be called when layout operations are synchronized
-        console.log("Layout synchronized for item:", item.id);
-    });
+    const syncLayout = useSyncLayout();
 
     return (
-        <View>
+        <View onLayout={syncLayout}>
             <Text>{item.title}</Text>
         </View>
     );
 }
 ```
+
+<a id="getstate-details"></a>
+
+## getState()
+
+`getState()` is a function on `LegendListRef`, accessed as `ref.current?.getState()`. See its entry in [Ref Methods](#ref-method-getstate).
+
+This is likely not necessary in most apps, but can power advanced functionality and customization. It is used by [KeyboardAvoidingLegendList](../react-native/keyboard-and-animated#keyboardavoidinglegendlist) for example.
+
+### LegendListState type
+
+```ts
+type LegendListState = {
+  activeStickyIndex: number;
+  contentLength: number;
+  data: readonly any[];
+  elementAtIndex: (index: number) => any;
+  end: number;
+  endBuffered: number;
+  isAtEnd: boolean;
+  isAtStart: boolean;
+  listen: <T extends LegendListListenerType>(
+    listenerType: T,
+    callback: (value: ListenerTypeValueMap[T]) => void
+  ) => () => void;
+  listenToPosition: (key: string, callback: (value: number) => void) => () => void;
+  positionAtIndex: (index: number) => number;
+  positions: Map<string, number>;
+  scroll: number;
+  scrollLength: number;
+  scrollVelocity: number;
+  sizeAtIndex: (index: number) => number;
+  sizes: Map<string, number>;
+  start: number;
+  startBuffered: number;
+};
+```
+
+### Fields and Methods
+
+- `activeStickyIndex`: currently active sticky item index (`-1` when none)
+- `contentLength`: content size of the list including header/footer/insets
+- `data`: current data array reference used by the list
+- `elementAtIndex(index)`: rendered native element for an index (if currently mapped to a container)
+- `start` / `end`: visible range bounds without buffer
+- `startBuffered` / `endBuffered`: virtualized range bounds including draw buffer
+- `isAtStart` / `isAtEnd`: threshold-based booleans for edge-of-list state
+- `scroll`: current scroll offset
+- `scrollLength`: viewport length along scroll axis
+- `scrollVelocity`: current estimated scroll velocity
+- `positions`: key-to-position map of known item offsets
+- `sizes`: key-to-size map of known measured item sizes
+- `positionAtIndex(index)`: known position for an index
+- `sizeAtIndex(index)`: known measured size for an index
+- `listen(...)`: subscribe to selected internal state channels
+- `listenToPosition(key, ...)`: subscribe to position updates for one item key
+
+### Listen Channels
+
+`listen` supports these channel names:
+
+- `activeStickyIndex` (`number`)
+- `footerSize` (`number`)
+- `headerSize` (`number`)
+- `lastItemKeys` (`string[]`)
+- `lastPositionUpdate` (`number`)
+- `numContainers` (`number`)
+- `numContainersPooled` (`number`)
+- `otherAxisSize` (`number`)
+- `readyToRender` (`boolean`)
+- `snapToOffsets` (`number[]`)
+- `totalSize` (`number`)
+
+### Caveats
+
+- `positionAtIndex` and `sizeAtIndex` assume the item has been measured; for unmeasured items values may be unavailable.
+- `elementAtIndex` can return `null`/`undefined` when the item is not currently rendered.
+- `positions` and `sizes` are live `Map` references that update as list state changes.
+
+### Examples
+
+```tsx
+import { useEffect, useRef } from "react";
+import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+
+function StateSnapshotExample() {
+  const ref = useRef<LegendListRef>(null);
+
+  useEffect(() => {
+    const state = ref.current?.getState();
+    if (!state) return;
+    console.log("scroll", state.scroll, "velocity", state.scrollVelocity);
+    console.log("visible range", state.start, state.end);
+  }, []);
+
+  return <LegendList ref={ref} data={data} renderItem={renderItem} />;
+}
+```
+
+```tsx
+import { useEffect, useRef } from "react";
+import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+
+function ListenerExample() {
+  const ref = useRef<LegendListRef>(null);
+
+  useEffect(() => {
+    const state = ref.current?.getState();
+    if (!state) return;
+
+    const unsubscribeTotal = state.listen("totalSize", (total) => {
+      console.log("total size changed", total);
+    });
+    const unsubscribeSticky = state.listen("activeStickyIndex", (index) => {
+      console.log("active sticky index", index);
+    });
+
+    return () => {
+      unsubscribeTotal();
+      unsubscribeSticky();
+    };
+  }, []);
+
+  return <LegendList ref={ref} data={data} renderItem={renderItem} />;
+}
+```
+
+```tsx
+import { useEffect, useRef } from "react";
+import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+
+function PositionListenerExample() {
+  const ref = useRef<LegendListRef>(null);
+
+  useEffect(() => {
+    const state = ref.current?.getState();
+    if (!state) return;
+    const unsubscribe = state.listenToPosition("message-42", (position) => {
+      console.log("message-42 position", position);
+    });
+    return unsubscribe;
+  }, []);
+
+  return <LegendList ref={ref} data={data} keyExtractor={(item) => item.id} renderItem={renderItem} />;
+}
+```
+
+<br />
 
 
 ## guides
@@ -1092,10 +1366,17 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 3) **Sticky headers prop rename**
    - `stickyIndices` → `stickyHeaderIndices` (deprecated alias kept for now)
 
+4) **Typed import paths**
+   - Root import `@legendapp/list` remains functional, but is deprecated for strict typing in v3.
+   - Prefer:
+     - React Native: `@legendapp/list/react-native`
+     - React (Web): `@legendapp/list/react`
+
 ## Migration checklist
 
 - Update size callback signatures to `(item, index, type)`
 - Replace `stickyIndices` with `stickyHeaderIndices`
+- Move imports to typed platform entrypoints (`/react-native` or `/react`)
 - If you relied on data‑change anchoring, set `maintainVisibleContentPosition={{ data: true }}`
 - (Optional) Consider `alwaysRender` for pinned items
 
@@ -1357,6 +1638,34 @@ Legend Kit is our early but growing collection of high performance headless comp
 These integrations are React Native only. On web, use standard DOM animation libraries or CSS transitions.
 </Callout>
 
+## Reanimated
+
+The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+
+```jsx
+import { useEffect } from "react";
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+
+export function ReanimatedExample() {
+  const scale = useSharedValue(0.8);
+
+  useEffect(() => {
+    scale.value = withSpring(1);
+  }, []);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      renderItem={renderItem}
+      style={useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }]
+      }))}
+    />
+  );
+}
+```
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -1393,80 +1702,79 @@ Note that this is just a wrapper around the normal `createAnimatedComponent` so 
 const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 ```
 
-## Reanimated
-
-The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
-
-```jsx
-import { useEffect } from "react";
-import { AnimatedLegendList } from "@legendapp/list/reanimated";
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
-
-export function ReanimatedExample() {
-  const scale = useSharedValue(0.8);
-
-  useEffect(() => {
-    scale.value = withSpring(1);
-  }, []);
-
-  return (
-    <AnimatedLegendList
-      data={data}
-      renderItem={renderItem}
-      style={useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }]
-      }))}
-    />
-  );
-}
-```
-
 ## KeyboardAvoidingLegendList
 
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
 
-<Callout>
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
-</Callout>
+`onScroll` handlers are supported as plain JS callbacks, Reanimated worklets, or processed handlers.
 
-```jsx
+Do not wrap `KeyboardAvoidingLegendList` inside another `KeyboardAvoidingView`.
+Let the list manage keyboard-aware behavior, and let adjacent UI (like composers/inputs) handle their own keyboard avoiding (for example with `KeyboardStickyView`).
+
+If your app needs more advanced keyboard-avoidance behavior, use `KeyboardAvoidingLegendList` as a starting point and adapt it for your scenario. See the integration source: <a href="https://github.com/LegendApp/legend-list/blob/main/src/integrations/keyboard.tsx">src/integrations/keyboard.tsx</a>.
+
+### Chat Example
+
+```tsx
+import { useState } from "react";
+import { Button, TextInput, View } from "react-native";
 import { KeyboardGestureArea, KeyboardProvider, KeyboardStickyView } from "react-native-keyboard-controller";
+import { useAnimatedScrollHandler } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
 
 export function KeyboardAvoidingExample() {
+  const [messages, setMessages] = useState(defaultChatMessages);
+  const [inputText, setInputText] = useState("");
+  const insets = useSafeAreaInsets();
+
+  const sendMessage = () => {
+    const text = inputText || "Empty message";
+    if (text.trim()) {
+      setMessages((messagesNew) => [
+        ...messagesNew,
+        { id: String(idCounter++), sender: "user", text: text, timeStamp: Date.now() },
+      ]);
+      setInputText("");
+    }
+  };
+
+  const handleScroll = useAnimatedScrollHandler({
+    onScroll: (_event) => {},
+  });
+
   return (
     <KeyboardProvider>
-      <KeyboardGestureArea interpolator="ios">
-        <KeyboardAvoidingLegendList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          alignItemsAtEnd
-          maintainScrollAtEnd
-        />
-        <KeyboardStickyView>
-          <Composer />
+      <View style={[styles.container, { paddingBottom: insets.bottom, paddingTop: insets.top }]}>
+        <KeyboardGestureArea interpolator="ios" offset={60} style={styles.container}>
+          <KeyboardAvoidingLegendList
+            alignItemsAtEnd
+            contentContainerStyle={styles.contentContainer}
+            data={messages}
+            estimatedItemSize={80}
+            initialScrollAtEnd
+            keyExtractor={(item) => item.id}
+            maintainScrollAtEnd
+            maintainVisibleContentPosition
+            onScroll={handleScroll}
+            renderItem={ChatMessage}
+            safeAreaInsetBottom={insets.bottom}
+            style={styles.list}
+          />
+        </KeyboardGestureArea>
+        <KeyboardStickyView offset={{ closed: 0, opened: insets.bottom }}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              onChangeText={setInputText}
+              placeholder="Type a message"
+              style={styles.input}
+              value={inputText}
+            />
+            <Button onPress={sendMessage} title="Send" />
+          </View>
         </KeyboardStickyView>
-      </KeyboardGestureArea>
-    </KeyboardProvider>
-  );
-}
-```
-
-## Keyboard Controller wrapper
-
-If you prefer wrapping an existing list component with keyboard-controller behavior, use `@legendapp/list/keyboard-controller`.
-
-```jsx
-import { KeyboardAvoidingView, KeyboardProvider } from "react-native-keyboard-controller";
-import { LegendList } from "@legendapp/list/keyboard-controller";
-
-export function KeyboardControllerWrapperExample() {
-  return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView behavior="position">
-        <LegendList data={data} renderItem={renderItem} />
-      </KeyboardAvoidingView>
+      </View>
     </KeyboardProvider>
   );
 }
@@ -1475,14 +1783,14 @@ export function KeyboardControllerWrapperExample() {
 
 ## react/getting-started
 
-Legend List runs natively on the web with DOM elements. You do **not** need React Native or react-native-web to use it.
+Legend List runs natively on the web with DOM elements in React.
 
 - ⚡️ Virtualized, fast scrolling lists in React
 - 🧠 Dynamic item sizes
 - 🧩 Same API as the React Native version
 
 <Callout>
-Looking for the React Native version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
+Looking for the React Native or React Native Web version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
 </Callout>
 
 ## Install
@@ -1493,7 +1801,7 @@ npm install @legendapp/list
 
 ## Usage
 
-On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+`renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
 
 ```jsx
 import { LegendList } from "@legendapp/list/react";

@@ -2,6 +2,34 @@
 These integrations are React Native only. On web, use standard DOM animation libraries or CSS transitions.
 </Callout>
 
+## Reanimated
+
+The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+
+```jsx
+import { useEffect } from "react";
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+
+export function ReanimatedExample() {
+  const scale = useSharedValue(0.8);
+
+  useEffect(() => {
+    scale.value = withSpring(1);
+  }, []);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      renderItem={renderItem}
+      style={useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }]
+      }))}
+    />
+  );
+}
+```
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -38,80 +66,79 @@ Note that this is just a wrapper around the normal `createAnimatedComponent` so 
 const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 ```
 
-## Reanimated
-
-The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
-
-```jsx
-import { useEffect } from "react";
-import { AnimatedLegendList } from "@legendapp/list/reanimated";
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
-
-export function ReanimatedExample() {
-  const scale = useSharedValue(0.8);
-
-  useEffect(() => {
-    scale.value = withSpring(1);
-  }, []);
-
-  return (
-    <AnimatedLegendList
-      data={data}
-      renderItem={renderItem}
-      style={useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }]
-      }))}
-    />
-  );
-}
-```
-
 ## KeyboardAvoidingLegendList
 
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
 
-<Callout>
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
-</Callout>
+`onScroll` handlers are supported as plain JS callbacks, Reanimated worklets, or processed handlers.
 
-```jsx
+Do not wrap `KeyboardAvoidingLegendList` inside another `KeyboardAvoidingView`.
+Let the list manage keyboard-aware behavior, and let adjacent UI (like composers/inputs) handle their own keyboard avoiding (for example with `KeyboardStickyView`).
+
+If your app needs more advanced keyboard-avoidance behavior, use `KeyboardAvoidingLegendList` as a starting point and adapt it for your scenario. See the integration source: <a href="https://github.com/LegendApp/legend-list/blob/main/src/integrations/keyboard.tsx">src/integrations/keyboard.tsx</a>.
+
+### Chat Example
+
+```tsx
+import { useState } from "react";
+import { Button, TextInput, View } from "react-native";
 import { KeyboardGestureArea, KeyboardProvider, KeyboardStickyView } from "react-native-keyboard-controller";
+import { useAnimatedScrollHandler } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
 
 export function KeyboardAvoidingExample() {
+  const [messages, setMessages] = useState(defaultChatMessages);
+  const [inputText, setInputText] = useState("");
+  const insets = useSafeAreaInsets();
+
+  const sendMessage = () => {
+    const text = inputText || "Empty message";
+    if (text.trim()) {
+      setMessages((messagesNew) => [
+        ...messagesNew,
+        { id: String(idCounter++), sender: "user", text: text, timeStamp: Date.now() },
+      ]);
+      setInputText("");
+    }
+  };
+
+  const handleScroll = useAnimatedScrollHandler({
+    onScroll: (_event) => {},
+  });
+
   return (
     <KeyboardProvider>
-      <KeyboardGestureArea interpolator="ios">
-        <KeyboardAvoidingLegendList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          alignItemsAtEnd
-          maintainScrollAtEnd
-        />
-        <KeyboardStickyView>
-          <Composer />
+      <View style={[styles.container, { paddingBottom: insets.bottom, paddingTop: insets.top }]}>
+        <KeyboardGestureArea interpolator="ios" offset={60} style={styles.container}>
+          <KeyboardAvoidingLegendList
+            alignItemsAtEnd
+            contentContainerStyle={styles.contentContainer}
+            data={messages}
+            estimatedItemSize={80}
+            initialScrollAtEnd
+            keyExtractor={(item) => item.id}
+            maintainScrollAtEnd
+            maintainVisibleContentPosition
+            onScroll={handleScroll}
+            renderItem={ChatMessage}
+            safeAreaInsetBottom={insets.bottom}
+            style={styles.list}
+          />
+        </KeyboardGestureArea>
+        <KeyboardStickyView offset={{ closed: 0, opened: insets.bottom }}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              onChangeText={setInputText}
+              placeholder="Type a message"
+              style={styles.input}
+              value={inputText}
+            />
+            <Button onPress={sendMessage} title="Send" />
+          </View>
         </KeyboardStickyView>
-      </KeyboardGestureArea>
-    </KeyboardProvider>
-  );
-}
-```
-
-## Keyboard Controller wrapper
-
-If you prefer wrapping an existing list component with keyboard-controller behavior, use `@legendapp/list/keyboard-controller`.
-
-```jsx
-import { KeyboardAvoidingView, KeyboardProvider } from "react-native-keyboard-controller";
-import { LegendList } from "@legendapp/list/keyboard-controller";
-
-export function KeyboardControllerWrapperExample() {
-  return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView behavior="position">
-        <LegendList data={data} renderItem={renderItem} />
-      </KeyboardAvoidingView>
+      </View>
     </KeyboardProvider>
   );
 }
