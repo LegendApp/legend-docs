@@ -3,8 +3,11 @@
     "description": "Current beta version",
     "root": true,
     "pages": [
+        "overview",
         "getting-started",
+        "getting-started-web",
         "props",
+        "components",
         "performance",
         "animated",
         "examples"

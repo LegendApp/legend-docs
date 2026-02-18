@@ -1,0 +1,30 @@
+---
+title: Always Render
+---
+
+Use `alwaysRender` to keep selected items mounted even when they scroll out of view.
+
+```tsx
+import { LegendList } from "@legendapp/list";
+
+const data = Array.from({ length: 100 }, (_, i) => ({ id: String(i), title: `Item ${i + 1}` }));
+
+export function AlwaysRenderExample() {
+  return (
+    <LegendList
+      data={data}
+      keyExtractor={(item) => item.id}
+      estimatedItemSize={48}
+      alwaysRender={{ top: 2, bottom: 2 }}
+      renderItem={({ item, index }) => (
+        <Row label={item.title} pinned={index < 2 || index >= data.length - 2} />
+      )}
+    />
+  );
+}
+```
+
+`alwaysRender` accepts:
+- `top` / `bottom`: keep the first/last N items mounted
+- `indices`: explicit indices to keep mounted
+- `keys`: keep specific keys mounted (requires `keyExtractor`)

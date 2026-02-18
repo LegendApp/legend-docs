@@ -9,7 +9,7 @@ onEndReachedThreshold?: number;
 
 These callbacks fire when you scroll to the top or bottom of a list. This can be used to load more data in either direction. In a typical list you'll likely just use `onEndReached` to load more data when the users scrolls to the bottom.
 
-If you have a chat-like interface you may want to load more messages as you scroll up, and you can use `onStartReached` for that. If you are doing that, you will very likely want to use [maintainVisibleContentPosition](../../props#maintainvisiblecontentposition) so that the items loading above don't shift the viewport down.
+If you have a chat-like interface you may want to load more messages as you scroll up, and you can use `onStartReached` for that. If you are doing that, you will very likely want to use [maintainVisibleContentPosition](../../props#maintainvisiblecontentposition) with `data: true` so that the items loading above don't shift the viewport down.
 
 ## Example Implementation
 
@@ -54,6 +54,7 @@ export function InfiniteScrollExample() {
       onStartReached={loadMoreAtStart}
       onEndReachedThreshold={0.5}
       onStartReachedThreshold={0.5}
+      maintainVisibleContentPosition={{ data: true }}
       recycleItems
     />
   );

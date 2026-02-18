@@ -1,5 +1,9 @@
 ## animated
 
+<Callout>
+These integrations are React Native only. On web, use standard DOM animation libraries or CSS transitions.
+</Callout>
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -38,7 +42,7 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 
 ## Reanimated
 
-The Reanimated version of AnimatedLegendList supports animated props with Renimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
 
 ```jsx
 import { useEffect } from "react";
@@ -69,7 +73,7 @@ export function ReanimatedExample() {
 LegendList integrates with the `KeyboardAvoidingView` in [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller) for smoother keyboard interactions. Note that it is important to use `behavior="position"` for best compatibility with Legend List.
 
 <Callout>
-This is currently working less than ideally with Legend List v2 and we will try to fix it soon. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
+This integration is still evolving. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
 </Callout>
 
 ```jsx
@@ -93,6 +97,97 @@ export function KeyboardControllerExample() {
   );
 }
 ```
+
+
+## components/section-list
+
+Legend List ships a SectionList‑compatible component built on top of the LegendList virtualization core.
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+```
+
+## Quick example
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+
+const sections = [
+  { title: "A", data: ["Apple", "Avocado"] },
+  { title: "B", data: ["Banana", "Blueberry"] },
+];
+
+export function MySectionList() {
+  return (
+    <SectionList
+      sections={sections}
+      keyExtractor={(item) => item}
+      renderSectionHeader={({ section }) => (
+        <Header title={section.title} />
+      )}
+      renderItem={({ item }) => <Row label={item} />}
+      stickySectionHeadersEnabled
+      estimatedItemSize={48}
+    />
+  );
+}
+```
+
+## Behavior and API
+
+- Mirrors React Native’s SectionList props: `sections`, `renderSectionHeader`, `renderSectionFooter`, separators, `stickySectionHeadersEnabled`, and `scrollToLocation`.
+- Accepts LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, `drawDistance`, etc.
+- Uses `stickyHeaderIndices` internally; you don’t pass it directly.
+
+## scrollToLocation
+
+```ts
+ref.current?.scrollToLocation({
+  sectionIndex: 2,
+  itemIndex: 10,
+  viewPosition: 0,
+  viewOffset: 12,
+  animated: true,
+});
+```
+
+## Limitations
+
+- `horizontal` disables sticky section headers.
+- `numColumns` and `columnWrapperStyle` are not supported (SectionList is always one column).
+- `stickyHeaderIndices` is managed internally.
+
+See [Props](../../props) for shared LegendList props.
+
+
+## examples/always-render
+
+Use `alwaysRender` to keep selected items mounted even when they scroll out of view.
+
+```tsx
+import { LegendList } from "@legendapp/list";
+
+const data = Array.from({ length: 100 }, (_, i) => ({ id: String(i), title: `Item ${i + 1}` }));
+
+export function AlwaysRenderExample() {
+  return (
+    <LegendList
+      data={data}
+      keyExtractor={(item) => item.id}
+      estimatedItemSize={48}
+      alwaysRender={{ top: 2, bottom: 2 }}
+      renderItem={({ item, index }) => (
+        <Row label={item.title} pinned={index < 2 || index >= data.length - 2} />
+      )}
+    />
+  );
+}
+```
+
+`alwaysRender` accepts:
+- `top` / `bottom`: keep the first/last N items mounted
+- `indices`: explicit indices to keep mounted
+- `keys`: keep specific keys mounted (requires `keyExtractor`)
 
 
 ## examples/chat-interfaces
@@ -140,7 +235,7 @@ onEndReachedThreshold?: number;
 
 These callbacks fire when you scroll to the top or bottom of a list. This can be used to load more data in either direction. In a typical list you'll likely just use `onEndReached` to load more data when the users scrolls to the bottom.
 
-If you have a chat-like interface you may want to load more messages as you scroll up, and you can use `onStartReached` for that. If you are doing that, you will very likely want to use [maintainVisibleContentPosition](../../props#maintainvisiblecontentposition) so that the items loading above don't shift the viewport down.
+If you have a chat-like interface you may want to load more messages as you scroll up, and you can use `onStartReached` for that. If you are doing that, you will very likely want to use [maintainVisibleContentPosition](../../props#maintainvisiblecontentposition) with `data: true` so that the items loading above don't shift the viewport down.
 
 ## Example Implementation
 
@@ -185,6 +280,7 @@ export function InfiniteScrollExample() {
       onStartReached={loadMoreAtStart}
       onEndReachedThreshold={0.5}
       onStartReachedThreshold={0.5}
+      maintainVisibleContentPosition={{ data: true }}
       recycleItems
     />
   );
@@ -192,9 +288,71 @@ export function InfiniteScrollExample() {
 ```
 
 
+## getting-started-web
+
+Legend List runs natively on the web with DOM elements. You do **not** need React Native or react-native-web to use it.
+
+- ⚡️ Virtualized, fast scrolling lists in React
+- 🧠 Dynamic item sizes
+- 🧩 Same API as the React Native version
+
+<Callout>
+Looking for the React Native version? Start with <a href="../getting-started">Getting Started (React Native)</a>.
+</Callout>
+
+## Install
+
+```npm
+npm install @legendapp/list
+```
+
+## Usage
+
+On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+
+```jsx
+import { LegendList } from "@legendapp/list";
+
+const items = Array.from({ length: 1000 }, (_, i) => ({
+  id: String(i),
+  title: `Item ${i + 1}`,
+}));
+
+export function WebList() {
+  return (
+    <div style={{ height: 480, border: "1px solid #e5e7eb" }}>
+      <LegendList
+        data={items}
+        keyExtractor={(item) => item.id}
+        estimatedItemSize={44}
+        renderItem={({ item }) => (
+          <div style={{ padding: 12, borderBottom: "1px solid #f1f5f9" }}>
+            {item.title}
+          </div>
+        )}
+        style={{ height: "100%" }}
+      />
+    </div>
+  );
+}
+```
+
+### Important layout notes
+
+- The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
+- `style` and `contentContainerStyle` accept CSS properties on web.
+- If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
+
+### TypeScript note
+
+Legend List’s types reference `react-native` for shared types. If your TS setup complains about missing `react-native` types, add `react-native` as a dev dependency or provide a minimal module stub.
+
+See [Props](../props) for the shared API and platform-specific callouts.
+
+
 ## getting-started
 
-Legend List is a high performance virtualized ScrollView library for React Native. Compared to FlatList and FlashList it's faster, simpler, and has useful features they don't support.
+Legend List is a high performance virtualized list for React Native. Compared to FlatList and FlashList it's faster, simpler, and supports dynamic item sizes without hacks.
 
 - ✨ Extremely fast
 - ✨ Dynamic item sizes
@@ -204,11 +362,14 @@ Legend List is a high performance virtualized ScrollView library for React Nativ
 - ✨ Maintain content view position
 - ✨ Recycling hooks
 
+<Callout>
+Building for the web? Start with <a href="../getting-started-web">Getting Started (Web)</a> instead.
+</Callout>
+
 For more information, check out:
 - [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
 - [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
 - [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
-
 
 ## It's fast!
 
@@ -243,9 +404,7 @@ npm install @legendapp/list
 
 ## Usage
 
-Legend List is a virtualized ScrollView component for React Native with optional recycling, that can massively increase performance of rendering long lists. Rather than rendering every item in the list, it only renders the items that are in view, which significantly reduces the amount of items that need to render.
-
-Legend List is a drop-in replacement for FlatList or FlashList. So since you're likely coming from one of those, we'll start with a guide on how to switch.
+Legend List is a drop-in replacement for FlatList or FlashList. It only renders the items that are in view, which significantly reduces render cost for long lists.
 
 ### Quick Start
 
@@ -273,7 +432,7 @@ export function MyList() {
 
 ### Switch from FlashList
 
-If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`. See [Recycling Items](../performance#recycling-list-items) for more details of recycling behavior.
+If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`.
 
 ```diff
 return (
@@ -288,7 +447,7 @@ return (
 
 ### Switch from FlatList
 
-If you're coming from FlatList, Legend List should immediately be much faster. But you may want to add the `recycleItems` prop to add extra performance.
+Legend List should immediately be much faster. But you may want to add the `recycleItems` prop for extra performance.
 
 ```diff
 return (
@@ -307,7 +466,6 @@ See [Props](../props) for all properties of LegendList.
 
 - Android
 - iOS
-- React Native Web
 - React Native MacOS
 - React Native Windows
 - TV platforms
@@ -326,6 +484,36 @@ We welcome contributions! Please read our [Contributing Guide](https://github.co
 ## Legend Kit
 
 Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.
+
+
+## overview
+
+<Callout>
+Version 3 is currently **beta**. The React Native API is stable; web support is new and evolving.
+</Callout>
+
+Legend List is a high‑performance, virtualized list for **React Native and Web**. It’s a drop‑in replacement for FlatList/FlashList on mobile and a fast, DOM‑native list on the web.
+
+- ✨ Dynamic item sizes
+- ⚡️ High performance virtualization
+- 🧲 Sticky headers and SectionList support
+- 🔁 Optional recycling
+- 💬 Built for chat and infinite scroll
+
+## Choose your platform
+
+- **React Native** → [Getting Started (React Native)](../getting-started)
+- **Web** → [Getting Started (Web)](../getting-started-web)
+
+## What’s new in v3
+
+- Web support (no React Native dependency required)
+- SectionList component (`@legendapp/list/section-list`)
+- `alwaysRender` for keeping selected items mounted
+- New `maintainVisibleContentPosition` configuration
+- `stickyHeaderIndices` (with `stickyIndices` deprecated)
+
+Read the full change summary in [Version 3](../version-3).
 
 
 ## performance
@@ -362,8 +550,8 @@ So there are some tradeoffs with recycling:
 
 ```ts
 estimatedItemSize?: number;
-getEstimatedItemSize?: (index: number, item: T, itemType?: string) => number;
-getFixedItemSize?: (index: number, item: T, itemType?: string) => number | undefined; // (v2)
+getEstimatedItemSize?: (item: T, index: number, itemType?: string) => number;
+getFixedItemSize?: (item: T, index: number, itemType?: string) => number | undefined;
 onItemSizeChanged?: (info: {
         size: number;
         previous: number;
@@ -378,6 +566,14 @@ If your list elements are a fixed size, then use `getFixedItemSize` to skip all 
 Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the better the first render experience.
 
 Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
+
+### Keep Specific Items Mounted
+
+```ts
+alwaysRender?: { top?: number; bottom?: number; indices?: number[]; keys?: string[] };
+```
+
+Use `alwaysRender` to keep important items mounted even when they scroll out of view (e.g., pinned headers, chat sentinels). This slightly increases render work, so use it sparingly for the items that truly need to stay mounted.
 
 ### Set DrawDistance Prop
 
@@ -403,6 +599,10 @@ If the size of your list items differs significantly from the estimate, you may 
 
 Below is a list of all the properties for LegendList:
 
+<Callout>
+Props apply to both React Native and Web unless otherwise noted. Platform-specific notes are called out inline.
+</Callout>
+
 ## Required Props
 ___
 ### data
@@ -416,10 +616,10 @@ An array of the items to render. This can also be an array of keys if you want t
 ### renderItem
 
 ```ts
-renderItem?: (props: { item: ItemT; index: number; extraData: any; itemType?: string }) => ReactNode;
+renderItem?: (props: { item: ItemT; index: number; extraData: any; type?: string; data: ItemT[] }) => ReactNode;
 ```
 
-Takes an item from data and renders it into the list. The `itemType` parameter is available when using `getItemType`.
+Takes an item from data and renders it into the list. The `type` parameter is available when using `getItemType`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#renderItem).
 
@@ -458,6 +658,14 @@ alignItemsAtEnd?: boolean; // default: false
 
 Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces without inverted](../examples/chat-interfaces) for more.
 
+### alwaysRender
+
+```ts
+alwaysRender?: { top?: number; bottom?: number; indices?: number[]; keys?: string[] };
+```
+
+Keeps selected items mounted even when they scroll out of view. Use this for pinned items or sentinels. `keys` requires a stable `keyExtractor`.
+
 ### columnWrapperStyle
 
 ```ts
@@ -473,6 +681,15 @@ contentContainerStyle?: StyleProp<ViewStyle>;
 ```
 
 Style applied to the underlying ScrollView's content container.
+On web, this maps to the inner content div’s CSS styles.
+
+### contentInset
+
+```ts
+contentInset?: { top: number; left: number; bottom: number; right: number };
+```
+
+React Native only. Sets ScrollView content insets. On web, prefer padding via `contentContainerStyle` or `style`.
 
 ### drawDistance
 
@@ -500,23 +717,31 @@ Extra data to trigger re-rendering when changed.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
+### dataVersion
+
+```ts
+dataVersion?: Key;
+```
+
+Version token that forces the list to treat data as updated even when the array reference is stable. Increment this when mutating `data` in place.
+
 ### getEstimatedItemSize
 
 ```ts
-getEstimatedItemSize?: (index: number, item: ItemT, itemType?: string) => number;
+getEstimatedItemSize?: (item: ItemT, index: number, itemType?: string) => number;
 ```
 
 An estimated size for each item which is used to estimate the list layout before items actually render. If you don't provide this, it will log a suggested value for optimal performance.
 
-### getFixedItemSize (v2)
+### getFixedItemSize
 
 ```ts
-getFixedItemSize?: (index: number, item: ItemT, itemType?: string) => number | undefined;
+getFixedItemSize?: (item: ItemT, index: number, itemType?: string) => number | undefined;
 ```
 
 For items with known fixed sizes, this enables optimal performance as it disables the overhead of measuring and updating item size. Return a number for fixed-size items or undefined for dynamic-size items.
 
-### getItemType (v2)
+### getItemType
 
 ```ts
 getItemType?: (item: ItemT, index: number) => string;
@@ -543,10 +768,10 @@ Ratio of initial container pool size to data length. The container pool is extra
 ### initialScrollIndex
 
 ```ts
-initialScrollIndex?: number;
+initialScrollIndex?: number | { index: number; viewOffset?: number; viewPosition?: number };
 ```
 
-Start scrolled with this item at the top. By default, to have accurate scrolling position you will need to provide accurate element positions to the [getEstimatedItemSize](#getestimateditemsize) function. When accurate positions are not known (e.g., for dynamically sized list items), please enable [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop. This will allow LegendList to automatically adjust its top boundary when elements below initialScrollIndex will be measured.
+Start scrolled with this item at the top (or at the provided `viewPosition`). If item sizes are dynamic, the list will adjust after measurement using the default scroll‑stabilization behavior.
 
 ### initialScrollOffset
 
@@ -555,6 +780,14 @@ initialScrollOffset?: number;
 ```
 
 Start scrolled to this offset.
+
+### initialScrollAtEnd
+
+```ts
+initialScrollAtEnd?: boolean; // default: false
+```
+
+When true, the list initializes scrolled to the last item. Overrides `initialScrollIndex` and `initialScrollOffset` when data is available.
 
 ### ItemSeparatorComponent
 
@@ -641,16 +874,22 @@ See [Chat interfaces without `inverted`](../examples/chat-interfaces) for more.
 ### maintainVisibleContentPosition
 
 ```ts
-maintainVisibleContentPosition?: boolean; // default: true
+maintainVisibleContentPosition?: boolean | {
+  data?: boolean;
+  size?: boolean;
+  shouldRestorePosition?: (item: ItemT, index: number, data: ItemT[]) => boolean;
+};
 ```
 
-The `maintainVisibleContentPosition` prop automatically adjusts item positions when items are added/removed/resized above the viewport so that there is no shift in the visible content. This is very helpful for some scenarios, but if you have a static list of fixed sized items you probably don't need it.
+Controls how the list stabilizes scroll position when items above the viewport change.
 
-- If items get added/removed/resized above the viewport, items will not move on screen
-- When using `initialScrollOffset` or `initialScrollIndex`, items will not jump around when scrolling up if they're different sizes than the estimate
-- When scrolling to an index far down the list and then back up, items will not jump around as they layout
+- `size` (default: true): stabilizes during size/layout changes while scrolling
+- `data` (default: false): anchors when the data array changes
+- `shouldRestorePosition`: return `false` to skip anchoring for specific items
 
-LegendList utilizes ScrollView's [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) prop internally, so your target react-native version should support that prop. To use maintainVisibleContentPosition on Android you will need at least React Native version [0.72](https://github.com/facebook/react-native/commit/c19548728c9be3ecc91e6fefb35bc14929109d60).
+Passing `true` enables both `size` and `data`. Passing `false` disables both.
+
+React Native note: when `data` anchoring is enabled, LegendList uses ScrollView’s [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) under the hood. Android requires React Native 0.72+ for that prop.
 
 ### numColumns
 
@@ -690,13 +929,21 @@ onItemSizeChanged?: (info: {
 
 Called whenever an item's rendered size changes. This can be used to adjust the estimatedItemSize to match the actual size, which can improve performance or reduce layout shifting.
 
+### onMetricsChange
+
+```ts
+onMetricsChange?: (metrics: { headerSize: number; footerSize: number }) => void;
+```
+
+Called when list layout metrics change (header or footer size updates).
+
 ### onRefresh
 
 ```ts
 onRefresh?: () => void;
 ```
 
-Called whenever a user pulls down to refresh. See [React Native Docs](https://reactnative.dev/docs/flatlist#onRefresh).
+React Native only. Called whenever a user pulls down to refresh. See [React Native Docs](https://reactnative.dev/docs/flatlist#onRefresh).
 
 ### onStartReached
 
@@ -731,7 +978,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#onviewableitemscha
 progressViewOffset?: number | undefined;
 ```
 
-Offset in pixels for the refresh indicator.
+React Native only. Offset in pixels for the refresh indicator.
 
 ### ref
 
@@ -747,7 +994,7 @@ Used to call `scrollTo` [methods](#ref-methods).
 refreshing?: boolean;
 ```
 
-Set this true while waiting for new data from a refresh.
+React Native only. Set this true while waiting for new data from a refresh.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#refreshing).
 
@@ -757,7 +1004,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#refreshing).
 renderScrollComponent?: (props: ScrollViewProps) => ReactNode
 ```
 
-Render a custom ScrollView component. This allows customization of the underlying ScrollView.
+React Native only. Render a custom ScrollView component. This allows customization of the underlying ScrollView.
 
 Note that passing `renderScrollComponent` as an inline function might cause you to lose scroll position if the list is rerendered.
 
@@ -773,7 +1020,7 @@ const CustomScrollView = (props: ScrollViewProps) => {
 };
 ```
 
-### snapToIndices (v2)
+### snapToIndices
 
 ```ts
 snapToIndices?: number[];
@@ -781,13 +1028,22 @@ snapToIndices?: number[];
 
 An array of indices that the scroll position can snap to. When scrolling stops near one of these indices, the scroll position will automatically adjust to align with that item.
 
-### stickyIndices (v2)
+### stickyHeaderIndices
+
+```ts
+stickyHeaderIndices?: number[];
+```
+
+An array of indices for items that should stick to the top of the list while scrolling. Sticky headers remain visible at the top of the viewport as you scroll past them.
+Not supported with `horizontal={true}`.
+
+### stickyIndices (deprecated)
 
 ```ts
 stickyIndices?: number[];
 ```
 
-An array of indices for items that should stick to the top of the list while scrolling. Sticky headers remain visible at the top of the viewport as you scroll past them.
+Deprecated alias for `stickyHeaderIndices`.
 
 ### style
 
@@ -795,7 +1051,7 @@ An array of indices for items that should stick to the top of the list while scr
 style?: StyleProp<ViewStyle>;
 ```
 
-Style applied to the underlying ScrollView.
+Style applied to the underlying ScrollView. On web this maps to the scroll container’s CSS style.
 
 ### viewabilityConfig
 
@@ -834,21 +1090,29 @@ ___
 
 ```ts
 getState: () => {
+    activeStickyIndex: number;
     contentLength: number;
     data: ItemT[];
+    elementAtIndex: (index: number) => View | null | undefined;
     end: number;
     endBuffered: number;
     isAtEnd: boolean;
     isAtStart: boolean;
+    listen: (type: string, callback: (value: any) => void) => () => void;
+    listenToPosition: (key: string, callback: (value: number) => void) => () => void;
     positionAtIndex: (index: number) => number;
+    positions: Map<string, number>;
     scroll: number;
     scrollLength: number;
+    scrollVelocity: number;
+    sizeAtIndex: (index: number) => number;
+    sizes: Map<string, number>;
     start: number;
     startBuffered: number;
 }
 ```
 
-Returns the internal scroll state of the list. New in v2: includes `data` for debugging, `positionAtIndex` function for getting the scroll position of any index.
+Returns the internal scroll state of the list for advanced integrations. Includes element access, listeners, and scroll velocity.
 
 ### scrollToIndex
 
@@ -856,12 +1120,12 @@ Returns the internal scroll state of the list. New in v2: includes `data` for de
 scrollToIndex: (params: {
   index: number;
   animated?: boolean;
+  viewOffset?: number;
+  viewPosition?: number;
 });
 ```
 
-Scrolls to the item at the specified index. By default ([maintainVisibleContentPosition](#maintainvisiblecontentposition) is false), accurate scroll is guaranteed only if all accurate sizes of elements are provided to [getEstimatedItemSize](#getestimateditemsize) function(similar FlatList).
-
-If estimated item sizes are not known, [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop need to be set to true. In this mode, list would automatically select element you are scrolling to as anchor element and guarantee accurate scroll.
+Scrolls to the item at the specified index. For the most accurate results, provide good size estimates via [getEstimatedItemSize](#getestimateditemsize) or [getFixedItemSize](#getfixeditemsize). Size stabilization is enabled by default for dynamic items.
 
 ### scrollToOffset
 
@@ -883,8 +1147,10 @@ Valid parameters:
 
 ```ts
 scrollToItem(params: {
-  animated?: ?boolean,
+  animated?: boolean,
   item: Item,
+  viewOffset?: number;
+  viewPosition?: number;
 });
 ```
 
@@ -900,6 +1166,7 @@ Valid parameters:
 ```ts
 scrollToEnd(params?: {
   animated?: boolean,
+  viewOffset?: number,
 });
 ```
 
@@ -930,7 +1197,7 @@ export function ScrollExample() {
 
   const scrollToItem = () => {
     // Scroll to the item at index 10
-    listRef.current?.scrollIndexIntoView(10);
+    listRef.current?.scrollIndexIntoView({ index: 10 });
   };
 
   return (
@@ -968,7 +1235,7 @@ export function ScrollToItemExample() {
 
   const scrollToSpecificItem = () => {
     // Scroll to the item that matches targetItem
-    listRef.current?.scrollItemIntoView(targetItem);
+    listRef.current?.scrollItemIntoView({ item: targetItem });
   };
 
   return (
@@ -983,6 +1250,30 @@ export function ScrollToItemExample() {
   );
 }
 ```
+
+### setVisibleContentAnchorOffset
+
+```ts
+setVisibleContentAnchorOffset(value: number | ((current: number) => number)): void;
+```
+
+Adjusts the internal anchor offset used by `maintainVisibleContentPosition`. Useful for advanced scroll anchoring behavior.
+
+### setScrollProcessingEnabled
+
+```ts
+setScrollProcessingEnabled(enabled: boolean): void;
+```
+
+Enables or disables scroll processing. Useful when you need to temporarily opt out of list virtualization behavior.
+
+### reportContentInset
+
+```ts
+reportContentInset(inset?: { top?: number; left?: number; bottom?: number; right?: number } | null): void;
+```
+
+Reports an externally measured content inset (merged with props/native insets). Pass `null`/`undefined` to clear.
 
 <br />
 
@@ -1133,7 +1424,7 @@ export function ItemComponent({ item }) {
 }
 ```
 
-### useSyncLayout (v2)
+### useSyncLayout
 
 ```ts
 useSyncLayout: (callback: () => void) => void;
@@ -1162,64 +1453,52 @@ export function ItemComponent({ item }) {
 
 ## version-3
 
-Version 3 is faster, more accurate, and smaller. There are no breaking changes, but it's almost a full rewrite, so we're calling it a major version!
+Version 3 introduces first‑class Web support and a new SectionList component, plus several API improvements. It’s currently labeled **beta** while we collect feedback.
 
-This update is primarily focused on accuracy and performance. The `maintainVisibleContentPosition` algorithm was rewritten in a way that's much more accurate and performant, and also allowed us to remove a ton of hacks, workarounds, and lots of management code.
+## ✨ New in v3
 
-The new simpler implementation of `maintainVisibleContentPosition` enabled new features like sticky headers.
+### Web Support
+- DOM‑native rendering (no React Native dependency required)
+- Same virtualization core as React Native
+- Web examples and docs
 
-Many features were added to support advanced customization and behaviors for complex lists like AI chats.
+### SectionList Component
+- `@legendapp/list/section-list` with a React Native‑compatible API
+- `scrollToLocation` support
+- Sticky section headers powered by `stickyHeaderIndices`
 
-## Install the update
+### Always Render
+- `alwaysRender` keeps selected items mounted outside the virtualization window
+
+### Better Scroll & Metrics APIs
+- `initialScrollAtEnd` for chat and feeds
+- `onMetricsChange` for header/footer size changes
+- `getState()` now exposes listeners, element access, and scroll velocity
+
+## 🔄 Breaking changes from v2
+
+1) **`maintainVisibleContentPosition` behavior**
+   - v2 default: always anchors during data changes
+   - v3 default: only stabilizes during scroll/layout changes
+   - To restore v2 behavior: `maintainVisibleContentPosition={{ data: true }}` or simply `true`
+
+2) **Size callbacks argument order**
+   - `getEstimatedItemSize` is now `(item, index, type)`
+   - `getFixedItemSize` is now `(item, index, type)`
+
+3) **Sticky headers prop rename**
+   - `stickyIndices` → `stickyHeaderIndices` (deprecated alias kept for now)
+
+## Migration checklist
+
+- Update size callback signatures to `(item, index, type)`
+- Replace `stickyIndices` with `stickyHeaderIndices`
+- If you relied on data‑change anchoring, set `maintainVisibleContentPosition={{ data: true }}`
+- (Optional) Consider `alwaysRender` for pinned items
+
+## Install
 
 ```npm
-@legendapp/list
+npm install @legendapp/list
 ```
-
-## 🎉 Major Improvements
-
-### Accuracy
-
-- Perfectly accurate `initialScrollIndex`, `scrollToIndex`, and `scrollToEnd`
-- Bidirectional infinite scroll never has any flashing or jumpiness
-- Uses average sizes after the first render so `estimatedItemSize` is now optional
-
-### Scroll Performance
-- `maintainVisibleContentPosition` is so much better and faster that it's now enabled by default
-- Reduced number/size of renders while updating positions
-- Improved container recycling to reuse containers more efficiently
-
-## ✨ New Features
-
-### Sticky Headers
-- `stickyIndices` prop for creating sticky headers that remain visible while scrolling
-
-### Enhanced Item Type System
-- `getItemType` prop allows categorizing different item types for better performance optimization
-- `getFixedItemSize` prop for items with known fixed sizes, enabling performance optimizations
-- `renderItem`, `getFixedItemSize`, and `getEstimatedItemSize` functions now receive an item type parameter
-
-### Lazy List
-- Built-in lazy list support directly in the `LegendList` component
-
-### Scroll Position Management
-- `snapToIndices` prop for snapping scroll position to specific item indices
-- `maintainVisibleContentPosition` is now enabled by default for better scroll stability
-
-### Advanced Hooks and References
-- `useSyncLayout` hook for synchronizing layout operations
-- Ref function to enable/disable scroll processing for advanced use cases
-- `getState()` now includes `positionAtIndex` and `data` for debugging and advanced integrations
-
-### Code Quality
-- Extracted most functionality into small, testable functions
-- Added extensive test infrastructure
-
-## 🔄 Migration Guide
-
-### From v1 to v2
-
-Most v2 changes are backward compatible, but note this one change:
-
-1. `maintainVisibleContentPosition` now defaults to `true`. It has no significant overhead so it should be fine to leave it enabled. It's required for accurate `initialScrollIndex`, `scrollToIndex`, and infinite scrolling up.
 

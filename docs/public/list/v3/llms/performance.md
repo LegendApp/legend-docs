@@ -30,8 +30,8 @@ So there are some tradeoffs with recycling:
 
 ```ts
 estimatedItemSize?: number;
-getEstimatedItemSize?: (index: number, item: T, itemType?: string) => number;
-getFixedItemSize?: (index: number, item: T, itemType?: string) => number | undefined; // (v2)
+getEstimatedItemSize?: (item: T, index: number, itemType?: string) => number;
+getFixedItemSize?: (item: T, index: number, itemType?: string) => number | undefined;
 onItemSizeChanged?: (info: {
         size: number;
         previous: number;
@@ -46,6 +46,14 @@ If your list elements are a fixed size, then use `getFixedItemSize` to skip all 
 Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the better the first render experience.
 
 Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
+
+### Keep Specific Items Mounted
+
+```ts
+alwaysRender?: { top?: number; bottom?: number; indices?: number[]; keys?: string[] };
+```
+
+Use `alwaysRender` to keep important items mounted even when they scroll out of view (e.g., pinned headers, chat sentinels). This slightly increases render work, so use it sparingly for the items that truly need to stay mounted.
 
 ### Set DrawDistance Prop
 

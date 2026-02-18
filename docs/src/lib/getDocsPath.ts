@@ -1,6 +1,6 @@
 export function getFirstDocsPath(docType: 'list' | 'list1' | 'list2' | 'state' | 'motion' | 'state2'): string {
     if (docType === 'list') {
-        return '/list/v3/getting-started';
+        return '/list/v3/overview';
     } else if (docType === 'list2') {
         return '/list/v2/getting-started';
     } else if (docType === 'list1') {

@@ -1,0 +1,57 @@
+Legend List ships a SectionList‑compatible component built on top of the LegendList virtualization core.
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+```
+
+## Quick example
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+
+const sections = [
+  { title: "A", data: ["Apple", "Avocado"] },
+  { title: "B", data: ["Banana", "Blueberry"] },
+];
+
+export function MySectionList() {
+  return (
+    <SectionList
+      sections={sections}
+      keyExtractor={(item) => item}
+      renderSectionHeader={({ section }) => (
+        <Header title={section.title} />
+      )}
+      renderItem={({ item }) => <Row label={item} />}
+      stickySectionHeadersEnabled
+      estimatedItemSize={48}
+    />
+  );
+}
+```
+
+## Behavior and API
+
+- Mirrors React Native’s SectionList props: `sections`, `renderSectionHeader`, `renderSectionFooter`, separators, `stickySectionHeadersEnabled`, and `scrollToLocation`.
+- Accepts LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, `drawDistance`, etc.
+- Uses `stickyHeaderIndices` internally; you don’t pass it directly.
+
+## scrollToLocation
+
+```ts
+ref.current?.scrollToLocation({
+  sectionIndex: 2,
+  itemIndex: 10,
+  viewPosition: 0,
+  viewOffset: 12,
+  animated: true,
+});
+```
+
+## Limitations
+
+- `horizontal` disables sticky section headers.
+- `numColumns` and `columnWrapperStyle` are not supported (SectionList is always one column).
+- `stickyHeaderIndices` is managed internally.
+
+See [Props](../../props) for shared LegendList props.

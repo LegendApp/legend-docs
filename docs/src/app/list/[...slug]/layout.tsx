@@ -30,13 +30,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                     },
                     {
                         title: 'Version 2',
-                        description: 'Previous stable version',
+                        description: 'Stable version',
                         url: getFirstDocsPath('list2'),
                         icon: <TbHexagonNumber2Filled size={20} />,
                     },
                     {
                         title: 'Version 3',
-                        description: 'Current stable version',
+                        description: 'Beta version',
                         url: getFirstDocsPath('list'),
                         icon: <TbHexagonNumber3Filled size={20} />,
                     },

@@ -1,5 +1,9 @@
 Below is a list of all the properties for LegendList:
 
+<Callout>
+Props apply to both React Native and Web unless otherwise noted. Platform-specific notes are called out inline.
+</Callout>
+
 ## Required Props
 ___
 ### data
@@ -13,10 +17,10 @@ An array of the items to render. This can also be an array of keys if you want t
 ### renderItem
 
 ```ts
-renderItem?: (props: { item: ItemT; index: number; extraData: any; itemType?: string }) => ReactNode;
+renderItem?: (props: { item: ItemT; index: number; extraData: any; type?: string; data: ItemT[] }) => ReactNode;
 ```
 
-Takes an item from data and renders it into the list. The `itemType` parameter is available when using `getItemType`.
+Takes an item from data and renders it into the list. The `type` parameter is available when using `getItemType`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#renderItem).
 
@@ -55,6 +59,14 @@ alignItemsAtEnd?: boolean; // default: false
 
 Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces without inverted](../examples/chat-interfaces) for more.
 
+### alwaysRender
+
+```ts
+alwaysRender?: { top?: number; bottom?: number; indices?: number[]; keys?: string[] };
+```
+
+Keeps selected items mounted even when they scroll out of view. Use this for pinned items or sentinels. `keys` requires a stable `keyExtractor`.
+
 ### columnWrapperStyle
 
 ```ts
@@ -70,6 +82,15 @@ contentContainerStyle?: StyleProp<ViewStyle>;
 ```
 
 Style applied to the underlying ScrollView's content container.
+On web, this maps to the inner content div’s CSS styles.
+
+### contentInset
+
+```ts
+contentInset?: { top: number; left: number; bottom: number; right: number };
+```
+
+React Native only. Sets ScrollView content insets. On web, prefer padding via `contentContainerStyle` or `style`.
 
 ### drawDistance
 
@@ -97,23 +118,31 @@ Extra data to trigger re-rendering when changed.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
+### dataVersion
+
+```ts
+dataVersion?: Key;
+```
+
+Version token that forces the list to treat data as updated even when the array reference is stable. Increment this when mutating `data` in place.
+
 ### getEstimatedItemSize
 
 ```ts
-getEstimatedItemSize?: (index: number, item: ItemT, itemType?: string) => number;
+getEstimatedItemSize?: (item: ItemT, index: number, itemType?: string) => number;
 ```
 
 An estimated size for each item which is used to estimate the list layout before items actually render. If you don't provide this, it will log a suggested value for optimal performance.
 
-### getFixedItemSize (v2)
+### getFixedItemSize
 
 ```ts
-getFixedItemSize?: (index: number, item: ItemT, itemType?: string) => number | undefined;
+getFixedItemSize?: (item: ItemT, index: number, itemType?: string) => number | undefined;
 ```
 
 For items with known fixed sizes, this enables optimal performance as it disables the overhead of measuring and updating item size. Return a number for fixed-size items or undefined for dynamic-size items.
 
-### getItemType (v2)
+### getItemType
 
 ```ts
 getItemType?: (item: ItemT, index: number) => string;
@@ -140,10 +169,10 @@ Ratio of initial container pool size to data length. The container pool is extra
 ### initialScrollIndex
 
 ```ts
-initialScrollIndex?: number;
+initialScrollIndex?: number | { index: number; viewOffset?: number; viewPosition?: number };
 ```
 
-Start scrolled with this item at the top. By default, to have accurate scrolling position you will need to provide accurate element positions to the [getEstimatedItemSize](#getestimateditemsize) function. When accurate positions are not known (e.g., for dynamically sized list items), please enable [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop. This will allow LegendList to automatically adjust its top boundary when elements below initialScrollIndex will be measured.
+Start scrolled with this item at the top (or at the provided `viewPosition`). If item sizes are dynamic, the list will adjust after measurement using the default scroll‑stabilization behavior.
 
 ### initialScrollOffset
 
@@ -152,6 +181,14 @@ initialScrollOffset?: number;
 ```
 
 Start scrolled to this offset.
+
+### initialScrollAtEnd
+
+```ts
+initialScrollAtEnd?: boolean; // default: false
+```
+
+When true, the list initializes scrolled to the last item. Overrides `initialScrollIndex` and `initialScrollOffset` when data is available.
 
 ### ItemSeparatorComponent
 
@@ -238,16 +275,22 @@ See [Chat interfaces without `inverted`](../examples/chat-interfaces) for more.
 ### maintainVisibleContentPosition
 
 ```ts
-maintainVisibleContentPosition?: boolean; // default: true
+maintainVisibleContentPosition?: boolean | {
+  data?: boolean;
+  size?: boolean;
+  shouldRestorePosition?: (item: ItemT, index: number, data: ItemT[]) => boolean;
+};
 ```
 
-The `maintainVisibleContentPosition` prop automatically adjusts item positions when items are added/removed/resized above the viewport so that there is no shift in the visible content. This is very helpful for some scenarios, but if you have a static list of fixed sized items you probably don't need it.
+Controls how the list stabilizes scroll position when items above the viewport change.
 
-- If items get added/removed/resized above the viewport, items will not move on screen
-- When using `initialScrollOffset` or `initialScrollIndex`, items will not jump around when scrolling up if they're different sizes than the estimate
-- When scrolling to an index far down the list and then back up, items will not jump around as they layout
+- `size` (default: true): stabilizes during size/layout changes while scrolling
+- `data` (default: false): anchors when the data array changes
+- `shouldRestorePosition`: return `false` to skip anchoring for specific items
 
-LegendList utilizes ScrollView's [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) prop internally, so your target react-native version should support that prop. To use maintainVisibleContentPosition on Android you will need at least React Native version [0.72](https://github.com/facebook/react-native/commit/c19548728c9be3ecc91e6fefb35bc14929109d60).
+Passing `true` enables both `size` and `data`. Passing `false` disables both.
+
+React Native note: when `data` anchoring is enabled, LegendList uses ScrollView’s [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) under the hood. Android requires React Native 0.72+ for that prop.
 
 ### numColumns
 
@@ -287,13 +330,21 @@ onItemSizeChanged?: (info: {
 
 Called whenever an item's rendered size changes. This can be used to adjust the estimatedItemSize to match the actual size, which can improve performance or reduce layout shifting.
 
+### onMetricsChange
+
+```ts
+onMetricsChange?: (metrics: { headerSize: number; footerSize: number }) => void;
+```
+
+Called when list layout metrics change (header or footer size updates).
+
 ### onRefresh
 
 ```ts
 onRefresh?: () => void;
 ```
 
-Called whenever a user pulls down to refresh. See [React Native Docs](https://reactnative.dev/docs/flatlist#onRefresh).
+React Native only. Called whenever a user pulls down to refresh. See [React Native Docs](https://reactnative.dev/docs/flatlist#onRefresh).
 
 ### onStartReached
 
@@ -328,7 +379,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#onviewableitemscha
 progressViewOffset?: number | undefined;
 ```
 
-Offset in pixels for the refresh indicator.
+React Native only. Offset in pixels for the refresh indicator.
 
 ### ref
 
@@ -344,7 +395,7 @@ Used to call `scrollTo` [methods](#ref-methods).
 refreshing?: boolean;
 ```
 
-Set this true while waiting for new data from a refresh.
+React Native only. Set this true while waiting for new data from a refresh.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#refreshing).
 
@@ -354,7 +405,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#refreshing).
 renderScrollComponent?: (props: ScrollViewProps) => ReactNode
 ```
 
-Render a custom ScrollView component. This allows customization of the underlying ScrollView.
+React Native only. Render a custom ScrollView component. This allows customization of the underlying ScrollView.
 
 Note that passing `renderScrollComponent` as an inline function might cause you to lose scroll position if the list is rerendered.
 
@@ -370,7 +421,7 @@ const CustomScrollView = (props: ScrollViewProps) => {
 };
 ```
 
-### snapToIndices (v2)
+### snapToIndices
 
 ```ts
 snapToIndices?: number[];
@@ -378,13 +429,22 @@ snapToIndices?: number[];
 
 An array of indices that the scroll position can snap to. When scrolling stops near one of these indices, the scroll position will automatically adjust to align with that item.
 
-### stickyIndices (v2)
+### stickyHeaderIndices
+
+```ts
+stickyHeaderIndices?: number[];
+```
+
+An array of indices for items that should stick to the top of the list while scrolling. Sticky headers remain visible at the top of the viewport as you scroll past them.
+Not supported with `horizontal={true}`.
+
+### stickyIndices (deprecated)
 
 ```ts
 stickyIndices?: number[];
 ```
 
-An array of indices for items that should stick to the top of the list while scrolling. Sticky headers remain visible at the top of the viewport as you scroll past them.
+Deprecated alias for `stickyHeaderIndices`.
 
 ### style
 
@@ -392,7 +452,7 @@ An array of indices for items that should stick to the top of the list while scr
 style?: StyleProp<ViewStyle>;
 ```
 
-Style applied to the underlying ScrollView.
+Style applied to the underlying ScrollView. On web this maps to the scroll container’s CSS style.
 
 ### viewabilityConfig
 
@@ -431,21 +491,29 @@ ___
 
 ```ts
 getState: () => {
+    activeStickyIndex: number;
     contentLength: number;
     data: ItemT[];
+    elementAtIndex: (index: number) => View | null | undefined;
     end: number;
     endBuffered: number;
     isAtEnd: boolean;
     isAtStart: boolean;
+    listen: (type: string, callback: (value: any) => void) => () => void;
+    listenToPosition: (key: string, callback: (value: number) => void) => () => void;
     positionAtIndex: (index: number) => number;
+    positions: Map<string, number>;
     scroll: number;
     scrollLength: number;
+    scrollVelocity: number;
+    sizeAtIndex: (index: number) => number;
+    sizes: Map<string, number>;
     start: number;
     startBuffered: number;
 }
 ```
 
-Returns the internal scroll state of the list. New in v2: includes `data` for debugging, `positionAtIndex` function for getting the scroll position of any index.
+Returns the internal scroll state of the list for advanced integrations. Includes element access, listeners, and scroll velocity.
 
 ### scrollToIndex
 
@@ -453,12 +521,12 @@ Returns the internal scroll state of the list. New in v2: includes `data` for de
 scrollToIndex: (params: {
   index: number;
   animated?: boolean;
+  viewOffset?: number;
+  viewPosition?: number;
 });
 ```
 
-Scrolls to the item at the specified index. By default ([maintainVisibleContentPosition](#maintainvisiblecontentposition) is false), accurate scroll is guaranteed only if all accurate sizes of elements are provided to [getEstimatedItemSize](#getestimateditemsize) function(similar FlatList).
-
-If estimated item sizes are not known, [maintainVisibleContentPosition](#maintainvisiblecontentposition) prop need to be set to true. In this mode, list would automatically select element you are scrolling to as anchor element and guarantee accurate scroll.
+Scrolls to the item at the specified index. For the most accurate results, provide good size estimates via [getEstimatedItemSize](#getestimateditemsize) or [getFixedItemSize](#getfixeditemsize). Size stabilization is enabled by default for dynamic items.
 
 ### scrollToOffset
 
@@ -480,8 +548,10 @@ Valid parameters:
 
 ```ts
 scrollToItem(params: {
-  animated?: ?boolean,
+  animated?: boolean,
   item: Item,
+  viewOffset?: number;
+  viewPosition?: number;
 });
 ```
 
@@ -497,6 +567,7 @@ Valid parameters:
 ```ts
 scrollToEnd(params?: {
   animated?: boolean,
+  viewOffset?: number,
 });
 ```
 
@@ -527,7 +598,7 @@ export function ScrollExample() {
 
   const scrollToItem = () => {
     // Scroll to the item at index 10
-    listRef.current?.scrollIndexIntoView(10);
+    listRef.current?.scrollIndexIntoView({ index: 10 });
   };
 
   return (
@@ -565,7 +636,7 @@ export function ScrollToItemExample() {
 
   const scrollToSpecificItem = () => {
     // Scroll to the item that matches targetItem
-    listRef.current?.scrollItemIntoView(targetItem);
+    listRef.current?.scrollItemIntoView({ item: targetItem });
   };
 
   return (
@@ -580,6 +651,30 @@ export function ScrollToItemExample() {
   );
 }
 ```
+
+### setVisibleContentAnchorOffset
+
+```ts
+setVisibleContentAnchorOffset(value: number | ((current: number) => number)): void;
+```
+
+Adjusts the internal anchor offset used by `maintainVisibleContentPosition`. Useful for advanced scroll anchoring behavior.
+
+### setScrollProcessingEnabled
+
+```ts
+setScrollProcessingEnabled(enabled: boolean): void;
+```
+
+Enables or disables scroll processing. Useful when you need to temporarily opt out of list virtualization behavior.
+
+### reportContentInset
+
+```ts
+reportContentInset(inset?: { top?: number; left?: number; bottom?: number; right?: number } | null): void;
+```
+
+Reports an externally measured content inset (merged with props/native insets). Pass `null`/`undefined` to clear.
 
 <br />
 
@@ -730,7 +825,7 @@ export function ItemComponent({ item }) {
 }
 ```
 
-### useSyncLayout (v2)
+### useSyncLayout
 
 ```ts
 useSyncLayout: (callback: () => void) => void;

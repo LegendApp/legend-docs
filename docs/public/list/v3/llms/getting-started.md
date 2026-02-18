@@ -1,4 +1,4 @@
-Legend List is a high performance virtualized ScrollView library for React Native. Compared to FlatList and FlashList it's faster, simpler, and has useful features they don't support.
+Legend List is a high performance virtualized list for React Native. Compared to FlatList and FlashList it's faster, simpler, and supports dynamic item sizes without hacks.
 
 - ✨ Extremely fast
 - ✨ Dynamic item sizes
@@ -8,11 +8,14 @@ Legend List is a high performance virtualized ScrollView library for React Nativ
 - ✨ Maintain content view position
 - ✨ Recycling hooks
 
+<Callout>
+Building for the web? Start with <a href="../getting-started-web">Getting Started (Web)</a> instead.
+</Callout>
+
 For more information, check out:
 - [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
 - [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
 - [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
-
 
 ## It's fast!
 
@@ -47,9 +50,7 @@ npm install @legendapp/list
 
 ## Usage
 
-Legend List is a virtualized ScrollView component for React Native with optional recycling, that can massively increase performance of rendering long lists. Rather than rendering every item in the list, it only renders the items that are in view, which significantly reduces the amount of items that need to render.
-
-Legend List is a drop-in replacement for FlatList or FlashList. So since you're likely coming from one of those, we'll start with a guide on how to switch.
+Legend List is a drop-in replacement for FlatList or FlashList. It only renders the items that are in view, which significantly reduces render cost for long lists.
 
 ### Quick Start
 
@@ -77,7 +78,7 @@ export function MyList() {
 
 ### Switch from FlashList
 
-If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. But note that Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`. See [Recycling Items](../performance#recycling-list-items) for more details of recycling behavior.
+If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`.
 
 ```diff
 return (
@@ -92,7 +93,7 @@ return (
 
 ### Switch from FlatList
 
-If you're coming from FlatList, Legend List should immediately be much faster. But you may want to add the `recycleItems` prop to add extra performance.
+Legend List should immediately be much faster. But you may want to add the `recycleItems` prop for extra performance.
 
 ```diff
 return (
@@ -111,7 +112,6 @@ See [Props](../props) for all properties of LegendList.
 
 - Android
 - iOS
-- React Native Web
 - React Native MacOS
 - React Native Windows
 - TV platforms

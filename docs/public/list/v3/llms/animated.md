@@ -1,3 +1,7 @@
+<Callout>
+These integrations are React Native only. On web, use standard DOM animation libraries or CSS transitions.
+</Callout>
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -36,7 +40,7 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 
 ## Reanimated
 
-The Reanimated version of AnimatedLegendList supports animated props with Renimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
 
 ```jsx
 import { useEffect } from "react";
@@ -67,7 +71,7 @@ export function ReanimatedExample() {
 LegendList integrates with the `KeyboardAvoidingView` in [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller) for smoother keyboard interactions. Note that it is important to use `behavior="position"` for best compatibility with Legend List.
 
 <Callout>
-This is currently working less than ideally with Legend List v2 and we will try to fix it soon. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
+This integration is still evolving. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
 </Callout>
 
 ```jsx
