@@ -1,5 +1,5 @@
 ---
-title: Animated & Keyboard (React Native)
+title: Keyboard & Animated
 ---
 
 <Callout>
@@ -70,30 +70,51 @@ export function ReanimatedExample() {
 }
 ```
 
-## Keyboard Controller
+## KeyboardAvoidingLegendList
 
-LegendList integrates with the `KeyboardAvoidingView` in [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller) for smoother keyboard interactions. Note that it is important to use `behavior="position"` for best compatibility with Legend List.
+Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
 
 <Callout>
-This integration is still evolving. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
+This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
 </Callout>
+
+```jsx
+import { KeyboardGestureArea, KeyboardProvider, KeyboardStickyView } from "react-native-keyboard-controller";
+import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
+
+export function KeyboardAvoidingExample() {
+  return (
+    <KeyboardProvider>
+      <KeyboardGestureArea interpolator="ios">
+        <KeyboardAvoidingLegendList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          alignItemsAtEnd
+          maintainScrollAtEnd
+        />
+        <KeyboardStickyView>
+          <Composer />
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
+    </KeyboardProvider>
+  );
+}
+```
+
+## Keyboard Controller wrapper
+
+If you prefer wrapping an existing list component with keyboard-controller behavior, use `@legendapp/list/keyboard-controller`.
 
 ```jsx
 import { KeyboardAvoidingView, KeyboardProvider } from "react-native-keyboard-controller";
 import { LegendList } from "@legendapp/list/keyboard-controller";
 
-export function KeyboardControllerExample() {
+export function KeyboardControllerWrapperExample() {
   return (
     <KeyboardProvider>
-      <KeyboardAvoidingView
-        behavior="position"
-        keyboardVerticalOffset={headerHeight}
-      >
-        <LegendList
-          data={data}
-          renderItem={renderItem}
-          behavior="position"
-        />
+      <KeyboardAvoidingView behavior="position">
+        <LegendList data={data} renderItem={renderItem} />
       </KeyboardAvoidingView>
     </KeyboardProvider>
   );

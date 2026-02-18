@@ -1,607 +1,25 @@
-## animated
+## api
 
-<Callout>
-These integrations are React Native only. On web, use standard DOM animation libraries or CSS transitions.
-</Callout>
-
-## Animated
-
-AnimatedLegendList supports animated props with React Native's Animated.
-
-```jsx
-import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
-import { AnimatedLegendList } from "@legendapp/list/animated";
-
-export function AnimatedExample() {
-  const animated = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(animated, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
-  return (
-    <AnimatedLegendList
-      data={data}
-      renderItem={renderItem}
-      style={{ opacity: animated }}
-    />
-  );
-}
-```
-
-Note that this is just a wrapper around the normal `createAnimatedComponent` so you can use that if you prefer.
-
-```ts
-const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
-```
-
-## Reanimated
-
-The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
-
-```jsx
-import { useEffect } from "react";
-import { AnimatedLegendList } from "@legendapp/list/reanimated";
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
-
-export function ReanimatedExample() {
-  const scale = useSharedValue(0.8);
-
-  useEffect(() => {
-    scale.value = withSpring(1);
-  }, []);
-
-  return (
-    <AnimatedLegendList
-      data={data}
-      renderItem={renderItem}
-      style={useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }]
-      }))}
-    />
-  );
-}
-```
-
-## Keyboard Controller
-
-LegendList integrates with the `KeyboardAvoidingView` in [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller) for smoother keyboard interactions. Note that it is important to use `behavior="position"` for best compatibility with Legend List.
-
-<Callout>
-This integration is still evolving. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
-</Callout>
-
-```jsx
-import { KeyboardAvoidingView, KeyboardProvider } from "react-native-keyboard-controller";
-import { LegendList } from "@legendapp/list/keyboard-controller";
-
-export function KeyboardControllerExample() {
-  return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView
-        behavior="position"
-        keyboardVerticalOffset={headerHeight}
-      >
-        <LegendList
-          data={data}
-          renderItem={renderItem}
-          behavior="position"
-        />
-      </KeyboardAvoidingView>
-    </KeyboardProvider>
-  );
-}
-```
-
-
-## components/section-list
-
-Legend List ships a SectionList‑compatible component built on top of the LegendList virtualization core.
-
-```tsx
-import { SectionList } from "@legendapp/list/section-list";
-```
-
-## Quick example
-
-```tsx
-import { SectionList } from "@legendapp/list/section-list";
-
-const sections = [
-  { title: "A", data: ["Apple", "Avocado"] },
-  { title: "B", data: ["Banana", "Blueberry"] },
-];
-
-export function MySectionList() {
-  return (
-    <SectionList
-      sections={sections}
-      keyExtractor={(item) => item}
-      renderSectionHeader={({ section }) => (
-        <Header title={section.title} />
-      )}
-      renderItem={({ item }) => <Row label={item} />}
-      stickySectionHeadersEnabled
-      estimatedItemSize={48}
-    />
-  );
-}
-```
-
-## Behavior and API
-
-- Mirrors React Native’s SectionList props: `sections`, `renderSectionHeader`, `renderSectionFooter`, separators, `stickySectionHeadersEnabled`, and `scrollToLocation`.
-- Accepts LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, `drawDistance`, etc.
-- Uses `stickyHeaderIndices` internally; you don’t pass it directly.
-
-## scrollToLocation
-
-```ts
-ref.current?.scrollToLocation({
-  sectionIndex: 2,
-  itemIndex: 10,
-  viewPosition: 0,
-  viewOffset: 12,
-  animated: true,
-});
-```
-
-## Limitations
-
-- `horizontal` disables sticky section headers.
-- `numColumns` and `columnWrapperStyle` are not supported (SectionList is always one column).
-- `stickyHeaderIndices` is managed internally.
-
-See [Props](../../props) for shared LegendList props.
-
-
-## examples/always-render
-
-Use `alwaysRender` to keep selected items mounted even when they scroll out of view.
-
-```tsx
-import { LegendList } from "@legendapp/list";
-
-const data = Array.from({ length: 100 }, (_, i) => ({ id: String(i), title: `Item ${i + 1}` }));
-
-export function AlwaysRenderExample() {
-  return (
-    <LegendList
-      data={data}
-      keyExtractor={(item) => item.id}
-      estimatedItemSize={48}
-      alwaysRender={{ top: 2, bottom: 2 }}
-      renderItem={({ item, index }) => (
-        <Row label={item.title} pinned={index < 2 || index >= data.length - 2} />
-      )}
-    />
-  );
-}
-```
-
-`alwaysRender` accepts:
-- `top` / `bottom`: keep the first/last N items mounted
-- `indices`: explicit indices to keep mounted
-- `keys`: keep specific keys mounted (requires `keyExtractor`)
-
-
-## examples/chat-interfaces
-
-## Chat Interfaces Without `inverted`
-
-In other list libraries if you wanted items to start scrolling from the bottom, you'd need to use an `inverted` prop, which would apply a negative scale transform. But that causes a lot of weird issues, so Legend List explicitly does not do that.
-
-```ts
-alignItemsAtEnd?: boolean;
-maintainScrollAtEnd?: boolean;
-maintainScrollAtEndThreshold?: number;
-```
-
-Instead, to align items at the end you can just use the `alignItemsAtEnd` prop, which will apply padding above items to fill the screen and stick them to the bottom.
-
-The `maintainScrollAtEnd` prop will check if you are already scrolled to the bottom when `data` changes, and if so it keeps you scrolled to the bottom.
-
-The `maintainScrollAtEndThreshold` prop (which defaults to 0.1) defines what percent of the screen counts as the bottom.
-
-So using Legend List for a chat interface would look like this:
-
-```tsx
-  <LegendList
-    data={items}
-    renderItem={({ item }) => <Text>{item.title}</Text>}
-    estimatedItemSize={320}
-    alignItemsAtEnd
-    maintainScrollAtEnd
-    maintainScrollAtEndThreshold={0.1}
-  />
-```
-
-
-## examples/infinite-scrolling
-
-## Two-way infinite scrolling
-
-```ts
-onStartReached?: ((info: { distanceFromStart: number }) => void) | null | undefined;
-onStartReachedThreshold?: number;
-onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
-onEndReachedThreshold?: number;
-```
-
-These callbacks fire when you scroll to the top or bottom of a list. This can be used to load more data in either direction. In a typical list you'll likely just use `onEndReached` to load more data when the users scrolls to the bottom.
-
-If you have a chat-like interface you may want to load more messages as you scroll up, and you can use `onStartReached` for that. If you are doing that, you will very likely want to use [maintainVisibleContentPosition](../../props#maintainvisiblecontentposition) with `data: true` so that the items loading above don't shift the viewport down.
-
-## Example Implementation
-
-```tsx
-import { LegendList } from "@legendapp/list";
-import { useState, useCallback } from "react";
-
-export function InfiniteScrollExample() {
-  const [data, setData] = useState(initialData);
-  const [loading, setLoading] = useState(false);
-
-  const loadMoreAtEnd = useCallback(async () => {
-    if (loading) return;
-
-    setLoading(true);
-    try {
-      const newItems = await fetchMoreItems(data.length);
-      setData(prev => [...prev, ...newItems]);
-    } finally {
-      setLoading(false);
-    }
-  }, [data.length, loading]);
-
-  const loadMoreAtStart = useCallback(async () => {
-    if (loading) return;
-
-    setLoading(true);
-    try {
-      const newItems = await fetchPreviousItems(data[0]?.id);
-      setData(prev => [...newItems, ...prev]);
-    } finally {
-      setLoading(false);
-    }
-  }, [data, loading]);
-
-  return (
-    <LegendList
-      data={data}
-      renderItem={({ item }) => <MessageItem item={item} />}
-      keyExtractor={item => item.id}
-      onEndReached={loadMoreAtEnd}
-      onStartReached={loadMoreAtStart}
-      onEndReachedThreshold={0.5}
-      onStartReachedThreshold={0.5}
-      maintainVisibleContentPosition={{ data: true }}
-      recycleItems
-    />
-  );
-}
-```
-
-
-## getting-started-web
-
-Legend List runs natively on the web with DOM elements. You do **not** need React Native or react-native-web to use it.
-
-- ⚡️ Virtualized, fast scrolling lists in React
-- 🧠 Dynamic item sizes
-- 🧩 Same API as the React Native version
-
-<Callout>
-Looking for the React Native version? Start with <a href="../getting-started">Getting Started (React Native)</a>.
-</Callout>
-
-## Install
-
-```npm
-npm install @legendapp/list
-```
-
-## Usage
-
-On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
-
-```jsx
-import { LegendList } from "@legendapp/list";
-
-const items = Array.from({ length: 1000 }, (_, i) => ({
-  id: String(i),
-  title: `Item ${i + 1}`,
-}));
-
-export function WebList() {
-  return (
-    <div style={{ height: 480, border: "1px solid #e5e7eb" }}>
-      <LegendList
-        data={items}
-        keyExtractor={(item) => item.id}
-        estimatedItemSize={44}
-        renderItem={({ item }) => (
-          <div style={{ padding: 12, borderBottom: "1px solid #f1f5f9" }}>
-            {item.title}
-          </div>
-        )}
-        style={{ height: "100%" }}
-      />
-    </div>
-  );
-}
-```
-
-### Important layout notes
-
-- The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
-- `style` and `contentContainerStyle` accept CSS properties on web.
-- If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
-
-### TypeScript note
-
-Legend List’s types reference `react-native` for shared types. If your TS setup complains about missing `react-native` types, add `react-native` as a dev dependency or provide a minimal module stub.
-
-See [Props](../props) for the shared API and platform-specific callouts.
-
-
-## getting-started
-
-Legend List is a high performance virtualized list for React Native. Compared to FlatList and FlashList it's faster, simpler, and supports dynamic item sizes without hacks.
-
-- ✨ Extremely fast
-- ✨ Dynamic item sizes
-- ✨ Optional recycling
-- ✨ Bidirectional infinite lists
-- ✨ Chat list without inverting
-- ✨ Maintain content view position
-- ✨ Recycling hooks
-
-<Callout>
-Building for the web? Start with <a href="../getting-started-web">Getting Started (Web)</a> instead.
-</Callout>
-
-For more information, check out:
-- [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
-- [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
-- [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
-
-## It's fast!
-
-This video was recorded as a performance test scrolling ludicrously fast with heavy items. LegendList handles expensive components with a quick recovery.
-
-<div className="w-[800px] max-w-full mx-auto rounded-xl overflow-hidden">
-    <video
-        src="/open-source/assets/legendlist2.mp4"
-        controls
-        width="100%"
-        height="100%"
-        autoPlay
-        loop
-        muted
-        className="rounded-xl"
-    />
-</div>
-
-<br />
-
-## It uses less resources
-
-A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
-
-<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
-
-## Install
-
-```npm
-npm install @legendapp/list
-```
-
-## Usage
-
-Legend List is a drop-in replacement for FlatList or FlashList. It only renders the items that are in view, which significantly reduces render cost for long lists.
-
-### Quick Start
-
-```jsx
-import { Text } from "react-native";
-import { LegendList } from "@legendapp/list";
-
-const items = [
-  { id: "1", title: "Item 1" },
-  { id: "2", title: "Item 2" },
-  { id: "3", title: "Item 3" },
-];
-
-export function MyList() {
-  return (
-    <LegendList
-      data={items}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
-      keyExtractor={(item) => item.id}
-      recycleItems
-    />
-  );
-}
-```
-
-### Switch from FlashList
-
-If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`.
-
-```diff
-return (
--  <FlashList
-+  <LegendList
-      data={items}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
-+     recycleItems
-  />
-)
-```
-
-### Switch from FlatList
-
-Legend List should immediately be much faster. But you may want to add the `recycleItems` prop for extra performance.
-
-```diff
-return (
--  <FlatList
-+  <LegendList
-      data={items}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
-+     recycleItems
-  />
-)
-```
-
-See [Props](../props) for all properties of LegendList.
-
-## Supported Platforms
-
-- Android
-- iOS
-- React Native MacOS
-- React Native Windows
-- TV platforms
-- Any React Native platform should work since there's no native code, but if not please let us know!
-
-## Community
-
-Join us on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-list) to get involved with the Legend community.
-
-Talk to Jay on [Bluesky](https://bsky.app/profile/jayz.us) or [Twitter](https://twitter.com/jmeistrich).
-
-## Contributing
-
-We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-list) on Github. And we welcome documentation PRs in our [documentation repo](https://github.com/LegendApp/legend-docs).
-
-## Legend Kit
-
-Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.
-
-
-## overview
-
-<Callout>
-Version 3 is currently **beta**. The React Native API is stable; web support is new and evolving.
-</Callout>
-
-Legend List is a high‑performance, virtualized list for **React Native and Web**. It’s a drop‑in replacement for FlatList/FlashList on mobile and a fast, DOM‑native list on the web.
-
-- ✨ Dynamic item sizes
-- ⚡️ High performance virtualization
-- 🧲 Sticky headers and SectionList support
-- 🔁 Optional recycling
-- 💬 Built for chat and infinite scroll
-
-## Choose your platform
-
-- **React Native** → [Getting Started (React Native)](../getting-started)
-- **Web** → [Getting Started (Web)](../getting-started-web)
-
-## What’s new in v3
-
-- Web support (no React Native dependency required)
-- SectionList component (`@legendapp/list/section-list`)
-- `alwaysRender` for keeping selected items mounted
-- New `maintainVisibleContentPosition` configuration
-- `stickyHeaderIndices` (with `stickyIndices` deprecated)
-
-Read the full change summary in [Version 3](../version-3).
-
-
-## performance
-
-Legend List is very optimized by default, so it may already be working well without any configuration. But these are some common ways to improve your list behavior.
-
-It's important to provide an `estimatedItemSize` (if items are the same size or all dynamic sizes) or `getEstimatedItemSize` (if items are different known sizes). Legend List uses this as the default item size, then as items are rendered it updates their positions with the actual size. So getting this estimate as close as possible to the real size will reduce layout shifting and blank spaces as items render. If not provided it will use `100px` as the default.
-
-The `onItemSizeChanged` event can also help with your estimations - it will be called whenever an item's size changes. So you can use it to log what the actual rendered size is to adjust your estimates.
-
-### Use `keyExtractor` Prop
-
-```ts
-keyExtractor?: (item: T, index: number) => string;
-```
-
-The `keyExtractor` prop lets Legend List save item layouts by key, so that if the `data` array changes it can reuse previous layout information and only update the changed items. Without `keyExtractor`, item sizes will reset to their default whenever `data` changes. So it is *very recommended* to have a `keyExtractor` if `data` ever changes. If your items are a fixed size, providing a `keyExtractor` that returns the index will tell it to reuse size information.
-
-### Recycling List Items
-
-```ts
-recycleItems?: boolean // default: false
-```
-
-Legend List has an optional `recycleItems` prop which enables view recycling. This will reuse the component rendered by your `renderItem` function. This can be a big performance optimization because it does not need to destroy/create views while scrolling. But it also reuses any local state, which can cause some weird behavior that may not be desirable depending on your app. But see the [recycling hooks](../props#userecyclingstate) to make that easier.
-
-So there are some tradeoffs with recycling:
-
-- 👍 If you have items with no state then recycling should be great
-- 👎 If you have simple items with complex state then it may be more trouble than it's worth
-- 👍 If you have heavy items with complex state then working around the state recycling may be worth it for the performance gains
-
-### Estimate Item Sizes
-
-```ts
-estimatedItemSize?: number;
-getEstimatedItemSize?: (item: T, index: number, itemType?: string) => number;
-getFixedItemSize?: (item: T, index: number, itemType?: string) => number | undefined;
-onItemSizeChanged?: (info: {
-        size: number;
-        previous: number;
-        index: number;
-        itemKey: string;
-        itemData: ItemT;
-    }) => void;
-```
-
-If your list elements are a fixed size, then use `getFixedItemSize` to skip all of the work of measuring and adjusting items.
-
-Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the better the first render experience.
-
-Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
-
-### Keep Specific Items Mounted
-
-```ts
-alwaysRender?: { top?: number; bottom?: number; indices?: number[]; keys?: string[] };
-```
-
-Use `alwaysRender` to keep important items mounted even when they scroll out of view (e.g., pinned headers, chat sentinels). This slightly increases render work, so use it sparingly for the items that truly need to stay mounted.
-
-### Set DrawDistance Prop
-
-```ts
-drawDistance?: number // default: 250
-```
-
-The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. So for example if your screen is `2000px` tall and your draw distance is `1000`, then it will render double your screen size, from `-1000px` above the viewport to `1000px` below the viewport.
-
-This can help reduce the amount of blank space while scrolling quickly. But if your items are computationally expensive, it may reduce performance because more items are rendering at once. So you should experiment with it to find the most optimal behavior for your app.
-
-
-### Set `waitForInitialLayout` Prop
-
-```ts
-waitForInitialLayout?: boolean // default: true
-```
-
-If the size of your list items differs significantly from the estimate, you may see a layout jump after the first render. If so, the `waitForInitialLayout` prop solves that by delaying displaying list items by one frame so they start at the correct position. But, if you have fixed sized items then you may not want to disable it to avoid waiting a frame.
-
-
-## props
-
-Below is a list of all the properties for LegendList:
+This page documents LegendList APIs for both React Native and React (Web).
 
 <Callout>
 Props apply to both React Native and Web unless otherwise noted. Platform-specific notes are called out inline.
 </Callout>
+
+## Imports and entrypoints
+
+```ts
+// Choose one platform-specific LegendList import
+import { LegendList } from "@legendapp/list/react-native";
+import { LegendList as LegendListWeb } from "@legendapp/list/react";
+
+// Optional entrypoints
+import { SectionList } from "@legendapp/list/section-list";
+import { AnimatedLegendList } from "@legendapp/list/animated";
+import { AnimatedLegendList as ReanimatedLegendList } from "@legendapp/list/reanimated";
+import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
+import { LegendList as KeyboardControllerLegendList } from "@legendapp/list/keyboard-controller";
+```
 
 ## Required Props
 ___
@@ -656,7 +74,7 @@ ___
 alignItemsAtEnd?: boolean; // default: false
 ```
 
-Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces without inverted](../examples/chat-interfaces) for more.
+Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces](../guides#chat-interfaces) for more.
 
 ### alwaysRender
 
@@ -859,7 +277,7 @@ maintainScrollAtEnd?: boolean;
 
 This will check if you are already scrolled to the bottom when `data` changes, and if so it keeps you scrolled to the bottom.
 
-See [Chat interfaces without `inverted`](../examples/chat-interfaces) for more.
+See [Chat interfaces](../guides#chat-interfaces) for more.
 
 ### maintainScrollAtEndThreshold
 
@@ -869,7 +287,7 @@ maintainScrollAtEndThreshold?: number;
 
 This defines what percent of the screen counts as the bottom. Defaults to `0.1`.
 
-See [Chat interfaces without `inverted`](../examples/chat-interfaces) for more.
+See [Chat interfaces](../guides#chat-interfaces) for more.
 
 ### maintainVisibleContentPosition
 
@@ -1080,6 +498,64 @@ waitForInitialLayout?: boolean; // default true
 ```
 
 If true, delays rendering until initial layout is complete
+
+<br />
+
+## SectionList
+
+Legend List ships a SectionList-compatible component built on the same virtualization core.
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+```
+
+### Quick example
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+
+const sections = [
+  { title: "A", data: ["Apple", "Avocado"] },
+  { title: "B", data: ["Banana", "Blueberry"] },
+];
+
+export function MySectionList() {
+  return (
+    <SectionList
+      sections={sections}
+      keyExtractor={(item) => item}
+      renderSectionHeader={({ section }) => <Header title={section.title} />}
+      renderItem={({ item }) => <Row label={item} />}
+      stickySectionHeadersEnabled
+      estimatedItemSize={48}
+    />
+  );
+}
+```
+
+### Behavior and API
+
+- Mirrors React Native `SectionList` props: `sections`, `renderSectionHeader`, `renderSectionFooter`, separators, `stickySectionHeadersEnabled`, and `scrollToLocation`.
+- Accepts shared LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, and `drawDistance`.
+- Manages `stickyHeaderIndices` internally.
+
+### scrollToLocation
+
+```ts
+ref.current?.scrollToLocation({
+  sectionIndex: 2,
+  itemIndex: 10,
+  viewPosition: 0,
+  viewOffset: 12,
+  animated: true,
+});
+```
+
+### Limitations
+
+- `horizontal` disables sticky section headers.
+- `numColumns` and `columnWrapperStyle` are not supported (SectionList is always one column).
+- `stickyHeaderIndices` is managed internally.
 
 <br />
 
@@ -1451,7 +927,134 @@ export function ItemComponent({ item }) {
 ```
 
 
-## version-3
+## guides
+
+Practical recipes for common Legend List use cases.
+
+## Chat Interfaces
+
+Use this when your messages should start at the bottom without using `inverted`.
+
+```ts
+alignItemsAtEnd?: boolean;
+maintainScrollAtEnd?: boolean;
+maintainScrollAtEndThreshold?: number;
+```
+
+```tsx
+<LegendList
+  data={items}
+  renderItem={({ item }) => <Text>{item.title}</Text>}
+  estimatedItemSize={320}
+  alignItemsAtEnd
+  maintainScrollAtEnd
+  maintainScrollAtEndThreshold={0.1}
+/>
+```
+
+Pitfalls:
+- Avoid `inverted`; it can cause animation and scroll edge cases.
+- Tune `maintainScrollAtEndThreshold` for your UX.
+
+## Infinite Scrolling
+
+Use `onEndReached` for standard feeds and `onStartReached` for prepending older items.
+
+```ts
+onStartReached?: ((info: { distanceFromStart: number }) => void) | null | undefined;
+onStartReachedThreshold?: number;
+onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
+onEndReachedThreshold?: number;
+```
+
+```tsx
+<LegendList
+  data={data}
+  renderItem={({ item }) => <MessageItem item={item} />}
+  keyExtractor={(item) => item.id}
+  onEndReached={loadMoreAtEnd}
+  onStartReached={loadMoreAtStart}
+  onEndReachedThreshold={0.5}
+  onStartReachedThreshold={0.5}
+  maintainVisibleContentPosition={{ data: true }}
+  recycleItems
+/>
+```
+
+Pitfalls:
+- Guard against duplicate loads (`loading` state or request dedupe).
+- For prepend flows, keep `maintainVisibleContentPosition={{ data: true }}`.
+
+## Always Render
+
+Use `alwaysRender` to keep specific rows mounted outside the virtualized window.
+
+```tsx
+<LegendList
+  data={data}
+  keyExtractor={(item) => item.id}
+  estimatedItemSize={48}
+  alwaysRender={{ top: 2, bottom: 2 }}
+  renderItem={({ item, index }) => (
+    <Row label={item.title} pinned={index < 2 || index >= data.length - 2} />
+  )}
+/>
+```
+
+`alwaysRender` accepts:
+- `top` / `bottom`: keep first/last N items mounted
+- `indices`: keep explicit indices mounted
+- `keys`: keep specific keys mounted (requires `keyExtractor`)
+
+## Maintain Visible Content Position
+
+Use this when data or size changes above the viewport should not move what the user is reading.
+
+```ts
+maintainVisibleContentPosition?:
+  | boolean
+  | {
+      data?: boolean;
+      size?: boolean;
+      shouldRestorePosition?: (item: ItemT, index: number, data: ItemT[]) => boolean;
+    };
+```
+
+Defaults:
+- `size: true` stabilizes scroll during size/layout changes
+- `data: false` does not anchor on data changes unless enabled
+
+Common setup for prepend-heavy feeds:
+
+```tsx
+<LegendList
+  data={messages}
+  maintainVisibleContentPosition={{ data: true, size: true }}
+  onStartReached={loadOlderMessages}
+/>
+```
+
+## SectionList patterns
+
+For grouped data with headers/footers per section, use `SectionList`.
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+
+<SectionList
+  sections={sections}
+  keyExtractor={(item) => item.id}
+  renderSectionHeader={({ section }) => <Header title={section.title} />}
+  renderItem={({ item }) => <Row item={item} />}
+  stickySectionHeadersEnabled
+  estimatedItemSize={48}
+/>
+```
+
+For full prop and method details (including `scrollToLocation`), see [API Reference](../api#sectionlist).
+
+
+## migration
 
 Version 3 introduces first‑class Web support and a new SectionList component, plus several API improvements. It’s currently labeled **beta** while we collect feedback.
 
@@ -1501,4 +1104,433 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 ```npm
 npm install @legendapp/list
 ```
+
+
+## overview
+
+<Callout>
+Version 3 is currently **beta**. The React Native API is stable; web support is new and evolving.
+</Callout>
+
+Legend List is a high‑performance, virtualized list for **React Native and Web**. It’s a drop‑in replacement for FlatList/FlashList on mobile and a fast, DOM‑native list on the web.
+
+- ✨ Dynamic item sizes
+- ⚡️ High performance virtualization
+- 🧲 Sticky headers and SectionList support
+- 🔁 Optional recycling
+- 💬 Built for chat and infinite scroll
+
+## Choose your platform
+
+- **React Native** → [Getting Started (React Native)](../react-native/getting-started)
+- **Web** → [Getting Started (Web)](../react/getting-started)
+
+## What’s new in v3
+
+- Web support (no React Native dependency required)
+- SectionList component (`@legendapp/list/section-list`)
+- `alwaysRender` for keeping selected items mounted
+- New `maintainVisibleContentPosition` configuration
+- `stickyHeaderIndices` (with `stickyIndices` deprecated)
+
+Read the full change summary in [Migration to v3](../migration).
+
+
+## performance
+
+Legend List is very optimized by default, so it may already be working well without any configuration. But these are some common ways to improve your list behavior.
+
+It's important to provide an `estimatedItemSize` (if items are the same size or all dynamic sizes) or `getEstimatedItemSize` (if items are different known sizes). Legend List uses this as the default item size, then as items are rendered it updates their positions with the actual size. So getting this estimate as close as possible to the real size will reduce layout shifting and blank spaces as items render. If not provided it will use `100px` as the default.
+
+The `onItemSizeChanged` event can also help with your estimations - it will be called whenever an item's size changes. So you can use it to log what the actual rendered size is to adjust your estimates.
+
+### Use `keyExtractor` Prop
+
+```ts
+keyExtractor?: (item: T, index: number) => string;
+```
+
+The `keyExtractor` prop lets Legend List save item layouts by key, so that if the `data` array changes it can reuse previous layout information and only update the changed items. Without `keyExtractor`, item sizes will reset to their default whenever `data` changes. So it is *very recommended* to have a `keyExtractor` if `data` ever changes. If your items are a fixed size, providing a `keyExtractor` that returns the index will tell it to reuse size information.
+
+### Recycling List Items
+
+```ts
+recycleItems?: boolean // default: false
+```
+
+Legend List has an optional `recycleItems` prop which enables view recycling. This will reuse the component rendered by your `renderItem` function. This can be a big performance optimization because it does not need to destroy/create views while scrolling. But it also reuses any local state, which can cause some weird behavior that may not be desirable depending on your app. But see the [recycling hooks](../api#userecyclingstate) to make that easier.
+
+So there are some tradeoffs with recycling:
+
+- 👍 If you have items with no state then recycling should be great
+- 👎 If you have simple items with complex state then it may be more trouble than it's worth
+- 👍 If you have heavy items with complex state then working around the state recycling may be worth it for the performance gains
+
+### Estimate Item Sizes
+
+```ts
+estimatedItemSize?: number;
+getEstimatedItemSize?: (item: T, index: number, itemType?: string) => number;
+getFixedItemSize?: (item: T, index: number, itemType?: string) => number | undefined;
+onItemSizeChanged?: (info: {
+        size: number;
+        previous: number;
+        index: number;
+        itemKey: string;
+        itemData: ItemT;
+    }) => void;
+```
+
+If your list elements are a fixed size, then use `getFixedItemSize` to skip all of the work of measuring and adjusting items.
+
+Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the better the first render experience.
+
+Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
+
+### Keep Specific Items Mounted
+
+```ts
+alwaysRender?: { top?: number; bottom?: number; indices?: number[]; keys?: string[] };
+```
+
+Use `alwaysRender` to keep important items mounted even when they scroll out of view (e.g., pinned headers, chat sentinels). This slightly increases render work, so use it sparingly for the items that truly need to stay mounted.
+
+### Set DrawDistance Prop
+
+```ts
+drawDistance?: number // default: 250
+```
+
+The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. So for example if your screen is `2000px` tall and your draw distance is `1000`, then it will render double your screen size, from `-1000px` above the viewport to `1000px` below the viewport.
+
+This can help reduce the amount of blank space while scrolling quickly. But if your items are computationally expensive, it may reduce performance because more items are rendering at once. So you should experiment with it to find the most optimal behavior for your app.
+
+
+### Set `waitForInitialLayout` Prop
+
+```ts
+waitForInitialLayout?: boolean // default: true
+```
+
+If the size of your list items differs significantly from the estimate, you may see a layout jump after the first render. If so, the `waitForInitialLayout` prop solves that by delaying displaying list items by one frame so they start at the correct position. But, if you have fixed sized items then you may not want to disable it to avoid waiting a frame.
+
+
+## react-native/getting-started
+
+Legend List is a high performance virtualized list for React Native. Compared to FlatList and FlashList it's faster, simpler, and supports dynamic item sizes without hacks.
+
+- ✨ Extremely fast
+- ✨ Dynamic item sizes
+- ✨ Optional recycling
+- ✨ Bidirectional infinite lists
+- ✨ Chat list without inverting
+- ✨ Maintain content view position
+- ✨ Recycling hooks
+
+<Callout>
+Building for the web? Start with <a href="../../react/getting-started">Getting Started (Web)</a> instead.
+</Callout>
+
+For more information, check out:
+- [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
+- [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
+- [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
+
+## It's fast!
+
+This video was recorded as a performance test scrolling ludicrously fast with heavy items. LegendList handles expensive components with a quick recovery.
+
+<div className="w-[800px] max-w-full mx-auto rounded-xl overflow-hidden">
+    <video
+        src="/open-source/assets/legendlist2.mp4"
+        controls
+        width="100%"
+        height="100%"
+        autoPlay
+        loop
+        muted
+        className="rounded-xl"
+    />
+</div>
+
+<br />
+
+## It uses less resources
+
+A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
+
+<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
+
+## Install
+
+```npm
+npm install @legendapp/list
+```
+
+## Usage
+
+Legend List is a drop-in replacement for FlatList or FlashList. It only renders the items that are in view, which significantly reduces render cost for long lists.
+
+### Quick Start
+
+```jsx
+import { Text } from "react-native";
+import { LegendList } from "@legendapp/list/react-native";
+
+const items = [
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
+];
+
+export function MyList() {
+  return (
+    <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
+      keyExtractor={(item) => item.id}
+      recycleItems
+    />
+  );
+}
+```
+
+### Switch from FlashList
+
+If you're coming from FlashList, in most cases you can just rename the component and it will work as expected. Legend List does not recycle items by default, so to match FlashList's behavior you can enable `recycleItems`.
+
+```diff
+return (
+-  <FlashList
++  <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
++     recycleItems
+  />
+)
+```
+
+### Switch from FlatList
+
+Legend List should immediately be much faster. But you may want to add the `recycleItems` prop for extra performance.
+
+```diff
+return (
+-  <FlatList
++  <LegendList
+      data={items}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
++     recycleItems
+  />
+)
+```
+
+See [API Reference](../../api) for all properties of LegendList.
+
+## Supported Platforms
+
+- Android
+- iOS
+- React Native MacOS
+- React Native Windows
+- TV platforms
+- Any React Native platform should work since there's no native code, but if not please let us know!
+
+## Community
+
+Join us on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-list) to get involved with the Legend community.
+
+Talk to Jay on [Bluesky](https://bsky.app/profile/jayz.us) or [Twitter](https://twitter.com/jmeistrich).
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-list) on Github. And we welcome documentation PRs in our [documentation repo](https://github.com/LegendApp/legend-docs).
+
+## Legend Kit
+
+Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.
+
+
+## react-native/keyboard-and-animated
+
+<Callout>
+These integrations are React Native only. On web, use standard DOM animation libraries or CSS transitions.
+</Callout>
+
+## Animated
+
+AnimatedLegendList supports animated props with React Native's Animated.
+
+```jsx
+import { useEffect, useRef } from "react";
+import { Animated } from "react-native";
+import { AnimatedLegendList } from "@legendapp/list/animated";
+
+export function AnimatedExample() {
+  const animated = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animated, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      renderItem={renderItem}
+      style={{ opacity: animated }}
+    />
+  );
+}
+```
+
+Note that this is just a wrapper around the normal `createAnimatedComponent` so you can use that if you prefer.
+
+```ts
+const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
+```
+
+## Reanimated
+
+The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+
+```jsx
+import { useEffect } from "react";
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+
+export function ReanimatedExample() {
+  const scale = useSharedValue(0.8);
+
+  useEffect(() => {
+    scale.value = withSpring(1);
+  }, []);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      renderItem={renderItem}
+      style={useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }]
+      }))}
+    />
+  );
+}
+```
+
+## KeyboardAvoidingLegendList
+
+Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
+
+<Callout>
+This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
+</Callout>
+
+```jsx
+import { KeyboardGestureArea, KeyboardProvider, KeyboardStickyView } from "react-native-keyboard-controller";
+import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
+
+export function KeyboardAvoidingExample() {
+  return (
+    <KeyboardProvider>
+      <KeyboardGestureArea interpolator="ios">
+        <KeyboardAvoidingLegendList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          alignItemsAtEnd
+          maintainScrollAtEnd
+        />
+        <KeyboardStickyView>
+          <Composer />
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
+    </KeyboardProvider>
+  );
+}
+```
+
+## Keyboard Controller wrapper
+
+If you prefer wrapping an existing list component with keyboard-controller behavior, use `@legendapp/list/keyboard-controller`.
+
+```jsx
+import { KeyboardAvoidingView, KeyboardProvider } from "react-native-keyboard-controller";
+import { LegendList } from "@legendapp/list/keyboard-controller";
+
+export function KeyboardControllerWrapperExample() {
+  return (
+    <KeyboardProvider>
+      <KeyboardAvoidingView behavior="position">
+        <LegendList data={data} renderItem={renderItem} />
+      </KeyboardAvoidingView>
+    </KeyboardProvider>
+  );
+}
+```
+
+
+## react/getting-started
+
+Legend List runs natively on the web with DOM elements. You do **not** need React Native or react-native-web to use it.
+
+- ⚡️ Virtualized, fast scrolling lists in React
+- 🧠 Dynamic item sizes
+- 🧩 Same API as the React Native version
+
+<Callout>
+Looking for the React Native version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
+</Callout>
+
+## Install
+
+```npm
+npm install @legendapp/list
+```
+
+## Usage
+
+On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+
+```jsx
+import { LegendList } from "@legendapp/list/react";
+
+const items = Array.from({ length: 1000 }, (_, i) => ({
+  id: String(i),
+  title: `Item ${i + 1}`,
+}));
+
+export function WebList() {
+  return (
+    <div style={{ height: 480, border: "1px solid #e5e7eb" }}>
+      <LegendList
+        data={items}
+        keyExtractor={(item) => item.id}
+        estimatedItemSize={44}
+        renderItem={({ item }) => (
+          <div style={{ padding: 12, borderBottom: "1px solid #f1f5f9" }}>
+            {item.title}
+          </div>
+        )}
+        style={{ height: "100%" }}
+      />
+    </div>
+  );
+}
+```
+
+### Important layout notes
+
+- The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
+- `style` and `contentContainerStyle` accept CSS properties on web.
+- If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
+
+### TypeScript note
+
+Legend List’s types reference `react-native` for shared types. If your TS setup complains about missing `react-native` types, add `react-native` as a dev dependency or provide a minimal module stub.
+
+See [API Reference](../../api) for the shared API and platform-specific callouts.
 

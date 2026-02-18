@@ -1,3 +1,7 @@
+---
+title: Getting Started (Web)
+---
+
 Legend List runs natively on the web with DOM elements. You do **not** need React Native or react-native-web to use it.
 
 - ⚡️ Virtualized, fast scrolling lists in React
@@ -5,7 +9,7 @@ Legend List runs natively on the web with DOM elements. You do **not** need Reac
 - 🧩 Same API as the React Native version
 
 <Callout>
-Looking for the React Native version? Start with <a href="../getting-started">Getting Started (React Native)</a>.
+Looking for the React Native version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
 </Callout>
 
 ## Install
@@ -19,7 +23,7 @@ npm install @legendapp/list
 On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
 
 ```jsx
-import { LegendList } from "@legendapp/list";
+import { LegendList } from "@legendapp/list/react";
 
 const items = Array.from({ length: 1000 }, (_, i) => ({
   id: String(i),
@@ -55,4 +59,4 @@ export function WebList() {
 
 Legend List’s types reference `react-native` for shared types. If your TS setup complains about missing `react-native` types, add `react-native` as a dev dependency or provide a minimal module stub.
 
-See [Props](../props) for the shared API and platform-specific callouts.
+See [API Reference](../../api) for the shared API and platform-specific callouts.

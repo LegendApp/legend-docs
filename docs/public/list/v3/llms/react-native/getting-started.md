@@ -9,7 +9,7 @@ Legend List is a high performance virtualized list for React Native. Compared to
 - ✨ Recycling hooks
 
 <Callout>
-Building for the web? Start with <a href="../getting-started-web">Getting Started (Web)</a> instead.
+Building for the web? Start with <a href="../../react/getting-started">Getting Started (Web)</a> instead.
 </Callout>
 
 For more information, check out:
@@ -56,7 +56,7 @@ Legend List is a drop-in replacement for FlatList or FlashList. It only renders 
 
 ```jsx
 import { Text } from "react-native";
-import { LegendList } from "@legendapp/list";
+import { LegendList } from "@legendapp/list/react-native";
 
 const items = [
   { id: "1", title: "Item 1" },
@@ -106,7 +106,7 @@ return (
 )
 ```
 
-See [Props](../props) for all properties of LegendList.
+See [API Reference](../../api) for all properties of LegendList.
 
 ## Supported Platforms
 

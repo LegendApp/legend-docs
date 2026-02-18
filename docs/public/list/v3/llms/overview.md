@@ -12,8 +12,8 @@ Legend List is a high‑performance, virtualized list for **React Native and Web
 
 ## Choose your platform
 
-- **React Native** → [Getting Started (React Native)](../getting-started)
-- **Web** → [Getting Started (Web)](../getting-started-web)
+- **React Native** → [Getting Started (React Native)](../react-native/getting-started)
+- **Web** → [Getting Started (Web)](../react/getting-started)
 
 ## What’s new in v3
 
@@ -23,4 +23,4 @@ Legend List is a high‑performance, virtualized list for **React Native and Web
 - New `maintainVisibleContentPosition` configuration
 - `stickyHeaderIndices` (with `stickyIndices` deprecated)
 
-Read the full change summary in [Version 3](../version-3).
+Read the full change summary in [Migration to v3](../migration).

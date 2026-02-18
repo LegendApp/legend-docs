@@ -1,11 +1,8 @@
-https://www.legendapp.com/open-source/list/v3/llms/animated.md
-https://www.legendapp.com/open-source/list/v3/llms/components/section-list.md
-https://www.legendapp.com/open-source/list/v3/llms/examples/always-render.md
-https://www.legendapp.com/open-source/list/v3/llms/examples/chat-interfaces.md
-https://www.legendapp.com/open-source/list/v3/llms/examples/infinite-scrolling.md
-https://www.legendapp.com/open-source/list/v3/llms/getting-started-web.md
-https://www.legendapp.com/open-source/list/v3/llms/getting-started.md
+https://www.legendapp.com/open-source/list/v3/llms/api.md
+https://www.legendapp.com/open-source/list/v3/llms/guides.md
+https://www.legendapp.com/open-source/list/v3/llms/migration.md
 https://www.legendapp.com/open-source/list/v3/llms/overview.md
 https://www.legendapp.com/open-source/list/v3/llms/performance.md
-https://www.legendapp.com/open-source/list/v3/llms/props.md
-https://www.legendapp.com/open-source/list/v3/llms/version-3.md
+https://www.legendapp.com/open-source/list/v3/llms/react-native/getting-started.md
+https://www.legendapp.com/open-source/list/v3/llms/react-native/keyboard-and-animated.md
+https://www.legendapp.com/open-source/list/v3/llms/react/getting-started.md

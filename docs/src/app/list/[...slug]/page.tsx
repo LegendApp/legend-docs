@@ -10,7 +10,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
     } else if (params.slug?.length === 1 && params.slug[0] === 'v2') {
         redirect(getFirstDocsPath('list2'));
     } else if (params.slug?.length === 1 && params.slug[0] === 'v1') {
-        redirect(getFirstDocsPath('list3'));
+        redirect(getFirstDocsPath('list1'));
     } else {
         return <DocsPageTemplate source={source} params={props.params} />;
     }

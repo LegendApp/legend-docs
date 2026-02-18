@@ -1,8 +1,23 @@
-Below is a list of all the properties for LegendList:
+This page documents LegendList APIs for both React Native and React (Web).
 
 <Callout>
 Props apply to both React Native and Web unless otherwise noted. Platform-specific notes are called out inline.
 </Callout>
+
+## Imports and entrypoints
+
+```ts
+// Choose one platform-specific LegendList import
+import { LegendList } from "@legendapp/list/react-native";
+import { LegendList as LegendListWeb } from "@legendapp/list/react";
+
+// Optional entrypoints
+import { SectionList } from "@legendapp/list/section-list";
+import { AnimatedLegendList } from "@legendapp/list/animated";
+import { AnimatedLegendList as ReanimatedLegendList } from "@legendapp/list/reanimated";
+import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
+import { LegendList as KeyboardControllerLegendList } from "@legendapp/list/keyboard-controller";
+```
 
 ## Required Props
 ___
@@ -57,7 +72,7 @@ ___
 alignItemsAtEnd?: boolean; // default: false
 ```
 
-Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces without inverted](../examples/chat-interfaces) for more.
+Aligns to the end of the screen. If there's only a few items, Legend List will add padding to the top to align them to the bottom. See [Chat interfaces](../guides#chat-interfaces) for more.
 
 ### alwaysRender
 
@@ -260,7 +275,7 @@ maintainScrollAtEnd?: boolean;
 
 This will check if you are already scrolled to the bottom when `data` changes, and if so it keeps you scrolled to the bottom.
 
-See [Chat interfaces without `inverted`](../examples/chat-interfaces) for more.
+See [Chat interfaces](../guides#chat-interfaces) for more.
 
 ### maintainScrollAtEndThreshold
 
@@ -270,7 +285,7 @@ maintainScrollAtEndThreshold?: number;
 
 This defines what percent of the screen counts as the bottom. Defaults to `0.1`.
 
-See [Chat interfaces without `inverted`](../examples/chat-interfaces) for more.
+See [Chat interfaces](../guides#chat-interfaces) for more.
 
 ### maintainVisibleContentPosition
 
@@ -481,6 +496,64 @@ waitForInitialLayout?: boolean; // default true
 ```
 
 If true, delays rendering until initial layout is complete
+
+<br />
+
+## SectionList
+
+Legend List ships a SectionList-compatible component built on the same virtualization core.
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+```
+
+### Quick example
+
+```tsx
+import { SectionList } from "@legendapp/list/section-list";
+
+const sections = [
+  { title: "A", data: ["Apple", "Avocado"] },
+  { title: "B", data: ["Banana", "Blueberry"] },
+];
+
+export function MySectionList() {
+  return (
+    <SectionList
+      sections={sections}
+      keyExtractor={(item) => item}
+      renderSectionHeader={({ section }) => <Header title={section.title} />}
+      renderItem={({ item }) => <Row label={item} />}
+      stickySectionHeadersEnabled
+      estimatedItemSize={48}
+    />
+  );
+}
+```
+
+### Behavior and API
+
+- Mirrors React Native `SectionList` props: `sections`, `renderSectionHeader`, `renderSectionFooter`, separators, `stickySectionHeadersEnabled`, and `scrollToLocation`.
+- Accepts shared LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, and `drawDistance`.
+- Manages `stickyHeaderIndices` internally.
+
+### scrollToLocation
+
+```ts
+ref.current?.scrollToLocation({
+  sectionIndex: 2,
+  itemIndex: 10,
+  viewPosition: 0,
+  viewOffset: 12,
+  animated: true,
+});
+```
+
+### Limitations
+
+- `horizontal` disables sticky section headers.
+- `numColumns` and `columnWrapperStyle` are not supported (SectionList is always one column).
+- `stickyHeaderIndices` is managed internally.
 
 <br />
 

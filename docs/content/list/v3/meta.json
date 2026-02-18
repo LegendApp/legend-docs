@@ -4,12 +4,11 @@
     "root": true,
     "pages": [
         "overview",
-        "getting-started",
-        "getting-started-web",
-        "props",
-        "components",
+        "react-native",
+        "react",
+        "api",
+        "guides",
         "performance",
-        "animated",
-        "examples"
+        "migration"
     ]
 }

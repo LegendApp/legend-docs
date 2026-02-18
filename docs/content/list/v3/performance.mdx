@@ -22,7 +22,7 @@ The `keyExtractor` prop lets Legend List save item layouts by key, so that if th
 recycleItems?: boolean // default: false
 ```
 
-Legend List has an optional `recycleItems` prop which enables view recycling. This will reuse the component rendered by your `renderItem` function. This can be a big performance optimization because it does not need to destroy/create views while scrolling. But it also reuses any local state, which can cause some weird behavior that may not be desirable depending on your app. But see the [recycling hooks](../props#userecyclingstate) to make that easier.
+Legend List has an optional `recycleItems` prop which enables view recycling. This will reuse the component rendered by your `renderItem` function. This can be a big performance optimization because it does not need to destroy/create views while scrolling. But it also reuses any local state, which can cause some weird behavior that may not be desirable depending on your app. But see the [recycling hooks](../api#userecyclingstate) to make that easier.
 
 So there are some tradeoffs with recycling:
 
