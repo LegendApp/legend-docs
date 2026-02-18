@@ -1,6 +1,6 @@
 {
   "title": "Version 1",
-  "description": "Current stable version",
+  "description": "Legacy version",
   "root": true,
   "pages": [
     "getting-started",

@@ -1,0 +1,93 @@
+## Animated
+
+AnimatedLegendList supports animated props with React Native's Animated.
+
+```jsx
+import { useEffect, useRef } from "react";
+import { Animated } from "react-native";
+import { AnimatedLegendList } from "@legendapp/list/animated";
+
+export function AnimatedExample() {
+  const animated = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animated, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      renderItem={renderItem}
+      style={{ opacity: animated }}
+    />
+  );
+}
+```
+
+Note that this is just a wrapper around the normal `createAnimatedComponent` so you can use that if you prefer.
+
+```ts
+const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
+```
+
+## Reanimated
+
+The Reanimated version of AnimatedLegendList supports animated props with Renimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+
+```jsx
+import { useEffect } from "react";
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+
+export function ReanimatedExample() {
+  const scale = useSharedValue(0.8);
+
+  useEffect(() => {
+    scale.value = withSpring(1);
+  }, []);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      renderItem={renderItem}
+      style={useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }]
+      }))}
+    />
+  );
+}
+```
+
+## Keyboard Controller
+
+LegendList integrates with the `KeyboardAvoidingView` in [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller) for smoother keyboard interactions. Note that it is important to use `behavior="position"` for best compatibility with Legend List.
+
+<Callout>
+This is currently working less than ideally with Legend List v2 and we will try to fix it soon. If you need it asap please [post an issue](https://github.com/LegendApp/legend-docs/issues) or [talk to Jay on Twitter](https://twitter.com/jmeistrich).
+</Callout>
+
+```jsx
+import { KeyboardAvoidingView, KeyboardProvider } from "react-native-keyboard-controller";
+import { LegendList } from "@legendapp/list/keyboard-controller";
+
+export function KeyboardControllerExample() {
+  return (
+    <KeyboardProvider>
+      <KeyboardAvoidingView
+        behavior="position"
+        keyboardVerticalOffset={headerHeight}
+      >
+        <LegendList
+          data={data}
+          renderItem={renderItem}
+          behavior="position"
+        />
+      </KeyboardAvoidingView>
+    </KeyboardProvider>
+  );
+}
+```

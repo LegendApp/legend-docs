@@ -5,8 +5,10 @@ import { getFirstDocsPath } from '@/lib/getDocsPath';
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
     const params = await props.params;
-    if (params.slug?.length === 1 && params.slug[0] === 'v2') {
+    if (params.slug?.length === 1 && params.slug[0] === 'v3') {
         redirect(getFirstDocsPath('list'));
+    } else if (params.slug?.length === 1 && params.slug[0] === 'v2') {
+        redirect(getFirstDocsPath('list2'));
     } else if (params.slug?.length === 1 && params.slug[0] === 'v1') {
         redirect(getFirstDocsPath('list1'));
     } else {

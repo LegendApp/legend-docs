@@ -2,6 +2,7 @@ import { Header } from './Header';
 import { Text } from './Text';
 import { Button } from './Button';
 import Link from 'next/link';
+import { getFirstDocsPath } from '@/lib/getDocsPath';
 
 export function HeroSection() {
     return (
@@ -29,7 +30,7 @@ export function HeroSection() {
                     </Text>
 
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-                        <Link href="/list/v2/getting-started" className="no-underline">
+                        <Link href={getFirstDocsPath('list')} className="no-underline">
                             <Button
                                 color="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25"
                                 size="large"

@@ -5,7 +5,7 @@ import { source } from '@/lib/sources/list';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { cn } from 'fumadocs-ui/utils/cn';
 import type { ReactNode } from 'react';
-import { TbHexagonNumber1Filled, TbHexagonNumber2Filled } from 'react-icons/tb';
+import { TbHexagonNumber1Filled, TbHexagonNumber2Filled, TbHexagonNumber3Filled } from 'react-icons/tb';
 
 export default function Layout({ children }: { children: ReactNode }) {
     const sidebarEnabled = true;
@@ -24,15 +24,21 @@ export default function Layout({ children }: { children: ReactNode }) {
                 tabs: [
                     {
                         title: 'Version 1',
-                        description: 'first version',
+                        description: 'Legacy version',
                         url: getFirstDocsPath('list1'),
                         icon: <TbHexagonNumber1Filled size={20} />,
                     },
                     {
                         title: 'Version 2',
+                        description: 'Previous stable version',
+                        url: getFirstDocsPath('list2'),
+                        icon: <TbHexagonNumber2Filled size={20} />,
+                    },
+                    {
+                        title: 'Version 3',
                         description: 'Current stable version',
                         url: getFirstDocsPath('list'),
-                        icon: <TbHexagonNumber2Filled size={20} />,
+                        icon: <TbHexagonNumber3Filled size={20} />,
                     },
                 ],
             }}

@@ -1,0 +1,12 @@
+{
+    "title": "Version 3",
+    "description": "Current beta version",
+    "root": true,
+    "pages": [
+        "getting-started",
+        "props",
+        "performance",
+        "animated",
+        "examples"
+    ]
+}
