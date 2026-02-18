@@ -26,13 +26,20 @@ The root import (`@legendapp/list`) is still functional (they all share the same
 
 ## Required Props
 ___
+LegendList supports two render modes:
+
+- Data mode: `data` + `renderItem`
+- Children mode: `children`
+
+When using one mode, the other mode's props should not be provided.
+
 ### data
 
 ```ts
 data: ItemT[];
 ```
 
-An array of the items to render. This can also be an array of keys if you want to get the item by key in [renderItem](#renderitem).
+An array of the items to render in data mode. This can also be an array of keys if you want to get the item by key in [renderItem](#renderitem).
 
 ### renderItem
 
@@ -40,9 +47,17 @@ An array of the items to render. This can also be an array of keys if you want t
 renderItem: (props: { item: ItemT; index: number; extraData: any; type?: string; data: readonly ItemT[] }) => ReactNode;
 ```
 
-Takes an item from data and renders it into the list. The `type` parameter is available when using `getItemType`.
+Takes an item from data and renders it into the list in data mode. The `type` parameter is available when using `getItemType`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#renderItem).
+
+### children
+
+```ts
+children: ReactNode;
+```
+
+Render list items directly as children in children mode (instead of `data`/`renderItem`).
 
 <br />
 
@@ -160,7 +175,8 @@ Version token that forces the list to treat data as updated even when the array 
 getEstimatedItemSize?: (item: ItemT, index: number, itemType?: string) => number;
 ```
 
-An estimated size for each item which is used to estimate the list layout before items actually render. If you don't provide this, it will log a suggested value for optimal performance.
+An estimated size for each item which is used to estimate the list layout before items actually render.
+If omitted, LegendList uses measured averages (and initial `estimatedItemSize`). To log suggestions in development, enable [`suggestEstimatedItemSize`](#suggestestimateditemsize).
 
 ### getFixedItemSize
 
@@ -244,13 +260,6 @@ ListEmptyComponent?: React.ComponentType<any> | React.ReactElement | null | unde
 Rendered when the list is empty.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#listemptycomponent).
-
-### ListEmptyComponentStyle
-
-```ts
-ListEmptyComponentStyle?: StyleProp<ViewStyle> | undefined;
-```
-Styling for internal View for `ListEmptyComponent`.
 
 
 ### ListFooterComponent
@@ -415,7 +424,7 @@ Called on scroll events with platform-specific scroll data.
 onStartReached?: ((info: { distanceFromStart: number }) => void) | null | undefined;
 ```
 
-A callback that's called only once when scroll is within `onStartReachedThreshold` of the top of the list. It resets when scroll goes below the threshold and then will be called again when scrolling back into the threshold.
+A callback that's called only once when scroll is within `onStartReachedThreshold` of the top of the list. It resets when scroll goes above the threshold and then will be called again when scrolling back into the threshold.
 
 ### onStartReachedThreshold
 
@@ -423,7 +432,7 @@ A callback that's called only once when scroll is within `onStartReachedThreshol
 onStartReachedThreshold?: number | null | undefined;
 ```
 
-The distance from the start as a percentage that the scroll should be from the end to trigger `onStartReached`. It is multiplied by screen size, so a value of 0.5 will trigger `onStartReached` when scrolling to half a screen from the start.
+The distance from the start as a percentage that the scroll should be from the start to trigger `onStartReached`. It is multiplied by screen size, so a value of 0.5 will trigger `onStartReached` when scrolling to half a screen from the start.
 
 ### onStickyHeaderChange
 
@@ -495,10 +504,11 @@ Ref to the underlying scroll container instance.
 ### renderScrollComponent
 
 ```ts
-renderScrollComponent?: (props: ScrollViewProps) => ReactNode
+renderScrollComponent?: (props: ScrollViewProps) => ReactElement | null
 ```
 
 Render a custom scroll component. On React Native this is typically a `ScrollView`; on web this is the underlying DOM scroll element wrapper.
+On React Native, when using `stickyHeaderIndices`, provide an Animated-capable scroll component.
 
 Note that passing `renderScrollComponent` as an inline function might cause you to lose scroll position if the list is rerendered.
 
@@ -893,7 +903,9 @@ interface LegendListRecyclingState<T> {
     index: number;
     prevIndex: number | undefined;
 }
-useRecyclingState: <T>(updateState: ((info: LegendListRecyclingState<T>) => T) | T) => [T, Dispatch<T>];
+useRecyclingState: <T>(
+  updateState: ((info: LegendListRecyclingState<T>) => T) | T
+) => [T, Dispatch<SetStateAction<T>>];
 ```
 
 `useRecyclingState` automatically resets the state when an item is recycled into a new item.
@@ -908,6 +920,24 @@ export function ItemComponent({ item }) {
 }
 ```
 
+### useIsLastItem
+
+```ts
+useIsLastItem: () => boolean;
+```
+
+Returns `true` when the current rendered item is one of the list's last items.
+Useful for conditional spacing, CTA rows, or end-of-list UI logic.
+
+### useListScrollSize
+
+```ts
+useListScrollSize: () => { width: number; height: number };
+```
+
+Returns the current scroll viewport size for the parent list.
+Useful when item rendering depends on viewport dimensions.
+
 ### useRecyclingEffect
 
 ```ts
@@ -917,7 +947,7 @@ interface LegendListRecyclingState<T> {
     index: number;
     prevIndex: number | undefined;
 }
-useRecyclingEffect: <T>(effect: (info: LegendListRecyclingState<T>) => void | (() => void)) => void;
+useRecyclingEffect: (effect: (info: LegendListRecyclingState<unknown>) => void | (() => void)) => void;
 ```
 
 `useRecyclingEffect` can be used to reset any side effects when an item gets recycled.
