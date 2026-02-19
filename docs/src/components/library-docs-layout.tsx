@@ -1,16 +1,20 @@
 import { baseOptions } from '@/app/layout.config';
 import { SidebarSearchBanner } from '@/components/sidebar-search-banner';
+import { buildLibraryTabs, type LibraryVersionConfig } from '@/lib/buildLibraryTabs';
 import { DocsLayout, type DocsLayoutProps } from 'fumadocs-ui/layouts/notebook';
 import type { ReactNode } from 'react';
 
 type LibraryDocsLayoutProps = {
     tree: DocsLayoutProps['tree'];
     title: string;
-    tabs: NonNullable<NonNullable<DocsLayoutProps['sidebar']>['tabs']>;
+    libraryBase: 'list' | 'state' | 'motion';
+    versions: LibraryVersionConfig;
     children: ReactNode;
 };
 
-export function LibraryDocsLayout({ tree, title, tabs, children }: LibraryDocsLayoutProps) {
+export function LibraryDocsLayout({ tree, title, libraryBase, versions, children }: LibraryDocsLayoutProps) {
+    const tabs = buildLibraryTabs(tree, libraryBase, versions);
+
     return (
         <DocsLayout
             tree={tree}
