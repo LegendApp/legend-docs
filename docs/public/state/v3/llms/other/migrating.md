@@ -96,7 +96,7 @@ const Component = observer(() => {
 This was a shortcut to use `get()` without needing observer, but since we're discouraging `get()` anyway, this becomes less useful. It's broken in React 19, so we're deprecating it rather than try to fix it for no ongoing benefit.
 
 ```jsx
-enableReactAutoTracking({ auto: true })
+enableReactTracking({ auto: true })
 const state$ = observable({ value: 10 })
 const Component = () => {
     const value = state$.value.get()

@@ -422,11 +422,11 @@ state$.text.assign({ value: "hello there" })
 // ❌ Error. Cannot call assign on a primitive.
 ```
 
-If you really want to assign directly to observables, there is an extension to add `$` as a property you can get/set. See [configuration](../configuring#enable$get) for details.
+If you really want to assign directly to observables, there is an extension to add `$` as a property you can get/set. See [configuration](../configuring) for details.
 
 ```js
-import { enable$get } from "@legendapp/state/config/enable$get"
-enable$get()
+import { enable$GetSet } from "@legendapp/state/config/enable$GetSet"
+enable$GetSet()
 
 // Now you can use $ as a shorthand for get()
 const testValue = state$.test.$

@@ -89,7 +89,7 @@ function ButtonWithTooltip() {
 `useIsMounted` returns an observable whose value is `true | false` based on whether the component is mounted. This can be useful in delayed or asynchronous functions to make sure it's running an a component that's still mounted.
 
 ```jsx
-import { useIsMounted } from "@legendapp/state/react/useIsMounted";
+import { useIsMounted } from "@legendapp/state/react";
 
 function Component() {
   const isMounted = useIsMounted();

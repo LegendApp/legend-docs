@@ -1017,7 +1017,7 @@ const Component = observer(() => {
 This was a shortcut to use `get()` without needing observer, but since we're discouraging `get()` anyway, this becomes less useful. It's broken in React 19, so we're deprecating it rather than try to fix it for no ongoing benefit.
 
 ```jsx
-enableReactAutoTracking({ auto: true })
+enableReactTracking({ auto: true })
 const state$ = observable({ value: 10 })
 const Component = () => {
     const value = state$.value.get()
@@ -2372,7 +2372,7 @@ function ButtonWithTooltip() {
 `useIsMounted` returns an observable whose value is `true | false` based on whether the component is mounted. This can be useful in delayed or asynchronous functions to make sure it's running an a component that's still mounted.
 
 ```jsx
-import { useIsMounted } from "@legendapp/state/react/useIsMounted";
+import { useIsMounted } from "@legendapp/state/react";
 
 function Component() {
   const isMounted = useIsMounted();
@@ -3803,8 +3803,9 @@ We'll start with a full example to see what a full setup looks like, then go int
 ```ts
 import { observable } from '@legendapp/state'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-import { configureSynced } from '@legendapp/state/sync/'
-import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { configureSynced } from '@legendapp/state/sync'
+import KSUID from 'ksuid'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
 import { APIClient } from './keelClient'
 
 const client = new APIClient({
@@ -3856,7 +3857,7 @@ const messages$ = observable(sync({
 const messages = messages$.get()
 
 function addMessage(text: string) {
-    const id = generateKeelId()
+    const id = KSUID.randomSync().string
     // Add keyed by id to the messages$ observable to trigger the create action
     messages$[id].set({
         id,
@@ -3882,7 +3883,7 @@ The first step to using the Keel plugin is to set some global configuration opti
 ```ts
 import { observable } from '@legendapp/state'
 import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
-import { configureSynced } from '@legendapp/state/sync/'
+import { configureSynced } from '@legendapp/state/sync'
 import { APIClient } from './keelClient'
 
 const client = new APIClient({
@@ -4168,7 +4169,8 @@ Note that since `createdAt` and `updatedAt` are defined as required in the types
 ```ts
 import { Message } from './keelClient'
 import { observable } from '@legendapp/state'
-import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import KSUID from 'ksuid'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
 
 
 const profile$ = observable(syncedKeel({
@@ -4179,7 +4181,7 @@ const profile$ = observable(syncedKeel({
 }))
 
 function addMessage(text: string) {
-    const id = generateKeelId()
+    const id = KSUID.randomSync().string
     // Add keyed by id to the messages$ observable
     messages$[id].set({
         id,
@@ -5912,11 +5914,11 @@ state$.text.assign({ value: "hello there" })
 // ❌ Error. Cannot call assign on a primitive.
 ```
 
-If you really want to assign directly to observables, there is an extension to add `$` as a property you can get/set. See [configuration](../configuring#enable$get) for details.
+If you really want to assign directly to observables, there is an extension to add `$` as a property you can get/set. See [configuration](../configuring) for details.
 
 ```js
-import { enable$get } from "@legendapp/state/config/enable$get"
-enable$get()
+import { enable$GetSet } from "@legendapp/state/config/enable$GetSet"
+enable$GetSet()
 
 // Now you can use $ as a shorthand for get()
 const testValue = state$.test.$

@@ -49,8 +49,9 @@ We'll start with a full example to see what a full setup looks like, then go int
 ```ts
 import { observable } from '@legendapp/state'
 import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-import { configureSynced } from '@legendapp/state/sync/'
-import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import { configureSynced } from '@legendapp/state/sync'
+import KSUID from 'ksuid'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
 import { APIClient } from './keelClient'
 
 const client = new APIClient({
@@ -102,7 +103,7 @@ const messages$ = observable(sync({
 const messages = messages$.get()
 
 function addMessage(text: string) {
-    const id = generateKeelId()
+    const id = KSUID.randomSync().string
     // Add keyed by id to the messages$ observable to trigger the create action
     messages$[id].set({
         id,
@@ -128,7 +129,7 @@ The first step to using the Keel plugin is to set some global configuration opti
 ```ts
 import { observable } from '@legendapp/state'
 import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
-import { configureSynced } from '@legendapp/state/sync/'
+import { configureSynced } from '@legendapp/state/sync'
 import { APIClient } from './keelClient'
 
 const client = new APIClient({
@@ -414,7 +415,8 @@ Note that since `createdAt` and `updatedAt` are defined as required in the types
 ```ts
 import { Message } from './keelClient'
 import { observable } from '@legendapp/state'
-import { generateKeelId, syncedKeel } from '@legendapp/state/sync-plugins/keel'
+import KSUID from 'ksuid'
+import { syncedKeel } from '@legendapp/state/sync-plugins/keel'
 
 
 const profile$ = observable(syncedKeel({
@@ -425,7 +427,7 @@ const profile$ = observable(syncedKeel({
 }))
 
 function addMessage(text: string) {
-    const id = generateKeelId()
+    const id = KSUID.randomSync().string
     // Add keyed by id to the messages$ observable
     messages$[id].set({
         id,
