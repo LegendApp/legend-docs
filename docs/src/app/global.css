@@ -1,27 +1,17 @@
 @import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+@import 'fumadocs-ui/css/solar.css';
 
 :root {
     --fd-nav-height: 50px !important;
-    --fd-banner-height: 50px !important;
     --fd-toc-nav-height: 50px !important;
     --fd-color-primary: #0099dd !important;
     --color-fd-primary: #0099dd !important;
     --fd-tocnav-height: 0 !important;
 }
 
-#nd-docs-layout {
-    padding-top: var(--fd-banner-height) !important;
-}
-
-#nd-sidebar {
-    align-items: flex-start !important;
-    width: var(--fd-sidebar-width) !important;
-}
-
-#nd-docs-layout [data-sidebar-placeholder] {
-    height: calc(var(--fd-docs-height) - var(--fd-banner-height) - 8px) !important;
+#nd-subnav {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .bg-fd-primary {

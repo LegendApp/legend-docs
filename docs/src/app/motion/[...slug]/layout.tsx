@@ -1,8 +1,8 @@
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import type { ReactNode } from 'react';
 import { baseOptions } from '@/app/layout.config';
 import { source } from '@/lib/sources/motion';
-import { CustomNavbar } from '@/components/navbar';
+import { SidebarSearchBanner } from '@/components/sidebar-search-banner';
 import { TbHexagonNumber1Filled } from 'react-icons/tb';
 import { getVersionTabUrls } from '@/lib/getVersionTabUrls';
 
@@ -13,9 +13,24 @@ export default function Layout({ children }: { children: ReactNode }) {
         <DocsLayout
             tree={source.pageTree}
             {...baseOptions}
-            nav={{ component: <CustomNavbar />, title: 'Legend Motion' }}
+            nav={{
+                title: (
+                    <span className="inline-block pb-1 text-[1.1rem] font-bold tracking-tight text-fd-foreground">
+                        Legend Motion
+                    </span>
+                ),
+                mode: 'auto',
+            }}
+            themeSwitch={{
+                enabled: false,
+            }}
+            searchToggle={{
+                enabled: false,
+            }}
             sidebar={{
                 defaultOpenLevel: 1,
+                collapsible: false,
+                banner: <SidebarSearchBanner />,
                 tabs: [
                     {
                         title: 'Version 2',

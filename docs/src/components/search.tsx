@@ -81,6 +81,14 @@ function normalizePath(path: string, basePath: string) {
     return cleaned;
 }
 
+function getLibraryScope(path: string): string | null {
+    if (path === '/list' || path.startsWith('/list/')) return '/list';
+    if (path === '/state' || path.startsWith('/state/')) return '/state';
+    if (path === '/motion' || path.startsWith('/motion/')) return '/motion';
+
+    return null;
+}
+
 function SearchResultItem({ item, onClick }: { item: SortedResult; onClick: () => void }) {
     const pathLabel = formatPath(item.url);
 
@@ -122,8 +130,16 @@ export default function StaticSearchDialog(props: SharedProps) {
         }
 
         const currentPath = normalizePath(pathname, basePath);
+        const scope = getLibraryScope(currentPath);
 
-        return query.data.filter((item) => normalizePath(item.url, basePath) === currentPath);
+        if (!scope) {
+            return query.data;
+        }
+
+        return query.data.filter((item) => {
+            const itemPath = normalizePath(item.url, basePath);
+            return itemPath === scope || itemPath.startsWith(`${scope}/`);
+        });
     }, [query.data, pathname, basePath]);
 
     return (

@@ -20,4 +20,36 @@ export const baseOptions: BaseLayoutProps = {
             </>
         ),
     },
+    links: [
+        {
+            text: 'Legend',
+            url: '/',
+            active: 'url',
+        },
+        {
+            text: 'Kit',
+            url: '/kit',
+            active: 'nested-url',
+        },
+        {
+            text: 'List',
+            url: '/list',
+            active: 'nested-url',
+        },
+        {
+            text: 'State',
+            url: '/state',
+            active: 'nested-url',
+        },
+        {
+            text: 'Motion',
+            url: '/motion',
+            active: 'nested-url',
+        },
+        {
+            text: 'Blog',
+            url: '/blog',
+            active: 'nested-url',
+        },
+    ],
 };

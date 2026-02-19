@@ -1,14 +1,13 @@
 import { baseOptions } from '@/app/layout.config';
-import { CustomNavbar } from '@/components/navbar';
 import { getFirstDocsPath } from '@/lib/getDocsPath';
 import { getVersionTabUrls } from '@/lib/getVersionTabUrls';
 import { source } from '@/lib/sources/list';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
+import { SidebarSearchBanner } from '@/components/sidebar-search-banner';
 import type { ReactNode } from 'react';
 import { TbHexagonNumber1Filled, TbHexagonNumber2Filled, TbHexagonNumber3Filled } from 'react-icons/tb';
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const sidebarEnabled = true;
     const version1Url = getFirstDocsPath('list1');
     const version2Url = getFirstDocsPath('list2');
     const version3Url = getFirstDocsPath('list');
@@ -18,12 +17,23 @@ export default function Layout({ children }: { children: ReactNode }) {
             tree={source.pageTree}
             {...baseOptions}
             nav={{
-                component: <CustomNavbar />,
-                title: 'Legend List',
+                title: (
+                    <span className="inline-block pb-1 text-[1.1rem] font-bold tracking-tight text-fd-foreground">
+                        Legend List
+                    </span>
+                ),
+                mode: 'auto',
+            }}
+            themeSwitch={{
+                enabled: false,
+            }}
+            searchToggle={{
+                enabled: false,
             }}
             sidebar={{
-                enabled: sidebarEnabled,
                 defaultOpenLevel: 1,
+                collapsible: false,
+                banner: <SidebarSearchBanner />,
                 tabs: [
                     {
                         title: 'Version 1',
@@ -47,10 +57,6 @@ export default function Layout({ children }: { children: ReactNode }) {
                         icon: <TbHexagonNumber3Filled size={20} />,
                     },
                 ],
-            }}
-            containerProps={{
-                className:
-                    '[--fd-nav-height:106px] md:[--fd-nav-height:50px] [--fd-banner-height:106px] md:[--fd-banner-height:50px]',
             }}
         >
             {children}
