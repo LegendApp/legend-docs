@@ -11,7 +11,7 @@
 }
 
 #nd-subnav {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: color-mix(in srgb, var(--color-fd-background) 20%, transparent);
 }
 
 .bg-fd-primary {
