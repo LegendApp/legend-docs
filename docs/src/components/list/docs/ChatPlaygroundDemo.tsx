@@ -65,6 +65,10 @@ const attachmentTemplates = [
     'Release checklist:\n1. Run smoke tests\n2. Validate chat replay\n3. Monitor scroll metrics',
 ];
 
+function cx(...parts: Array<string | false | null | undefined>) {
+    return parts.filter(Boolean).join(' ');
+}
+
 function ChatMessageItem({
     message,
     onAddReaction,
@@ -80,51 +84,13 @@ function ChatMessageItem({
     }, [message.id]);
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: isMine ? 'flex-end' : 'flex-start',
-                padding: '6px 16px',
-            }}
-        >
-            <div
-                style={{
-                    alignItems: isMine ? 'flex-end' : 'flex-start',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    maxWidth: '80%',
-                    position: 'relative',
-                }}
-            >
-                <div
-                    style={{
-                        alignItems: 'flex-end',
-                        display: 'flex',
-                        flexDirection: isMine ? 'row-reverse' : 'row',
-                        gap: 8,
-                        width: '100%',
-                    }}
-                >
-                    <div style={{ flexShrink: 0, position: 'relative' }}>
+        <div className={cx('flex px-4 py-1.5', isMine ? 'justify-end' : 'justify-start')}>
+            <div className={cx('relative flex max-w-[80%] flex-col', isMine ? 'items-end' : 'items-start')}>
+                <div className={cx('flex w-full items-end gap-2', isMine ? 'flex-row-reverse' : 'flex-row')}>
+                    <div className="relative shrink-0">
                         <button
                             onClick={() => setIsReactionMenuOpen((previous) => !previous)}
-                            style={{
-                                alignItems: 'center',
-                                background: '#18181b',
-                                border: '1px solid #3f3f46',
-                                borderRadius: 9999,
-                                color: '#d4d4d8',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                flexShrink: 0,
-                                fontSize: 12,
-                                height: 28,
-                                justifyContent: 'center',
-                                minHeight: 28,
-                                minWidth: 28,
-                                padding: 0,
-                                width: 28,
-                            }}
+                            className="inline-flex h-7 w-7 min-h-7 min-w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 p-0 text-xs text-zinc-300"
                             title="Add reaction"
                             type="button"
                         >
@@ -133,20 +99,10 @@ function ChatMessageItem({
 
                         {isReactionMenuOpen ? (
                             <div
-                                style={{
-                                    background: '#18181b',
-                                    border: '1px solid #3f3f46',
-                                    borderRadius: 10,
-                                    boxShadow: '0 8px 22px rgba(0, 0, 0, 0.4)',
-                                    display: 'flex',
-                                    gap: 6,
-                                    left: isMine ? 'auto' : 0,
-                                    padding: 6,
-                                    position: 'absolute',
-                                    right: isMine ? 0 : 'auto',
-                                    top: 34,
-                                    zIndex: 10,
-                                }}
+                                className={cx(
+                                    'absolute top-[34px] z-10 flex gap-1.5 rounded-[10px] border border-zinc-700 bg-zinc-900 p-1.5 shadow-[0_8px_22px_rgba(0,0,0,0.4)]',
+                                    isMine ? 'right-0' : 'left-0',
+                                )}
                             >
                                 {REACTION_OPTIONS.map((emoji) => (
                                     <button
@@ -155,15 +111,7 @@ function ChatMessageItem({
                                             onAddReaction(message.id, emoji);
                                             setIsReactionMenuOpen(false);
                                         }}
-                                        style={{
-                                            background: '#27272a',
-                                            border: '1px solid #3f3f46',
-                                            borderRadius: 8,
-                                            cursor: 'pointer',
-                                            fontSize: 16,
-                                            lineHeight: 1,
-                                            padding: '6px 8px',
-                                        }}
+                                        className="cursor-pointer rounded-lg border border-zinc-700 bg-zinc-800 px-2 py-1.5 text-base leading-none"
                                         type="button"
                                     >
                                         {emoji}
@@ -174,43 +122,22 @@ function ChatMessageItem({
                     </div>
 
                     <div
-                        style={{
-                            background: isMine ? '#2563eb' : '#18181b',
-                            borderRadius: 16,
-                            color: isMine ? '#ffffff' : '#e4e4e7',
-                            overflow: 'hidden',
-                            padding: '10px 12px',
-                        }}
+                        className={cx(
+                            'overflow-hidden rounded-2xl px-3 py-2.5',
+                            isMine ? 'bg-blue-600 text-white' : 'bg-zinc-900 text-zinc-200',
+                        )}
                     >
-                        <div
-                            style={{
-                                fontSize: 14,
-                                lineHeight: 1.5,
-                                whiteSpace: 'pre-line',
-                            }}
-                        >
-                            {message.text}
-                        </div>
+                        <div className="whitespace-pre-line text-sm leading-6">{message.text}</div>
 
                         {message.reactions.length > 0 ? (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: 6,
-                                    marginTop: 8,
-                                }}
-                            >
+                            <div className="mt-2 flex flex-wrap gap-1.5">
                                 {message.reactions.map((reaction, index) => (
                                     <span
                                         key={`${message.id}-reaction-${index}`}
-                                        style={{
-                                            background: isMine ? 'rgba(255,255,255,0.22)' : '#3f3f46',
-                                            borderRadius: 9999,
-                                            color: '#f4f4f5',
-                                            fontSize: 13,
-                                            padding: '2px 8px',
-                                        }}
+                                        className={cx(
+                                            'rounded-full px-2 py-0.5 text-[13px] text-zinc-100',
+                                            isMine ? 'bg-white/20' : 'bg-zinc-700',
+                                        )}
                                     >
                                         {reaction}
                                     </span>
@@ -220,13 +147,7 @@ function ChatMessageItem({
                     </div>
                 </div>
 
-                <div
-                    style={{
-                        color: '#a1a1aa',
-                        fontSize: 11,
-                        marginTop: 4,
-                    }}
-                >
+                <div className="mt-1 text-[11px] text-zinc-400">
                     {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
             </div>
@@ -499,22 +420,8 @@ export function ChatPlaygroundDemo() {
         ({ item }: { item: ChatRow }) => {
             if (item.type === 'day') {
                 return (
-                    <div style={{ padding: '8px 16px', pointerEvents: 'none' }}>
-                        <div
-                            style={{
-                                backdropFilter: 'blur(3px)',
-                                background: 'rgba(24, 24, 27, 0.92)',
-                                border: '1px solid #3f3f46',
-                                borderRadius: 9999,
-                                color: '#d4d4d8',
-                                fontSize: 12,
-                                fontWeight: 600,
-                                margin: '0 auto',
-                                maxWidth: 220,
-                                padding: '4px 10px',
-                                textAlign: 'center',
-                            }}
-                        >
+                    <div className="pointer-events-none px-4 py-2">
+                        <div className="mx-auto max-w-[220px] rounded-full border border-zinc-700 bg-[rgba(24,24,27,0.92)] px-2.5 py-1 text-center text-xs font-semibold text-zinc-300 backdrop-blur-[3px]">
                             {item.label}
                         </div>
                     </div>
@@ -523,19 +430,8 @@ export function ChatPlaygroundDemo() {
 
             if (item.type === 'typing') {
                 return (
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '6px 16px' }}>
-                        <div
-                            style={{
-                                background: '#27272a',
-                                borderRadius: 16,
-                                color: '#e4e4e7',
-                                fontSize: 14,
-                                maxWidth: '72%',
-                                padding: '10px 12px',
-                            }}
-                        >
-                            Typing…
-                        </div>
+                    <div className="flex justify-start px-4 py-1.5">
+                        <div className="max-w-[72%] rounded-2xl bg-zinc-800 px-3 py-2.5 text-sm text-zinc-200">Typing…</div>
                     </div>
                 );
             }
@@ -551,29 +447,13 @@ export function ChatPlaygroundDemo() {
     }, []);
 
     return (
-        <div style={{ border: '1px solid #3f3f46', borderRadius: 12, overflow: 'hidden' }}>
-            <div
-                style={{
-                    background: '#111214',
-                    borderBottom: '1px solid #3f3f46',
-                    display: 'grid',
-                    gap: 12,
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                    padding: 12,
-                }}
-            >
-                <label style={{ color: '#d4d4d8', display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
+        <div className="overflow-hidden rounded-xl border border-zinc-700">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3 border-b border-zinc-700 bg-[#111214] p-3">
+                <label className="flex flex-col gap-1.5 text-xs text-zinc-300">
                     Incoming speed
                     <select
                         onChange={(event) => setIncomingSpeedSec(Number(event.target.value))}
-                        style={{
-                            background: '#18181b',
-                            border: '1px solid #3f3f46',
-                            borderRadius: 8,
-                            color: '#e4e4e7',
-                            fontSize: 13,
-                            padding: '8px 10px',
-                        }}
+                        className="rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-2 text-[13px] text-zinc-200"
                         value={incomingSpeedSec}
                     >
                         {INCOMING_SPEED_OPTIONS.map((option) => (
@@ -584,18 +464,11 @@ export function ChatPlaygroundDemo() {
                     </select>
                 </label>
 
-                <label style={{ color: '#d4d4d8', display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
+                <label className="flex flex-col gap-1.5 text-xs text-zinc-300">
                     Load older delay
                     <select
                         onChange={(event) => setLoadOlderDelayMs(Number(event.target.value))}
-                        style={{
-                            background: '#18181b',
-                            border: '1px solid #3f3f46',
-                            borderRadius: 8,
-                            color: '#e4e4e7',
-                            fontSize: 13,
-                            padding: '8px 10px',
-                        }}
+                        className="rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-2 text-[13px] text-zinc-200"
                         value={loadOlderDelayMs}
                     >
                         {LOAD_OLDER_DELAY_OPTIONS.map((option) => (
@@ -606,18 +479,11 @@ export function ChatPlaygroundDemo() {
                     </select>
                 </label>
 
-                <label style={{ color: '#d4d4d8', display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
+                <label className="flex flex-col gap-1.5 text-xs text-zinc-300">
                     maintainScrollAtEndThreshold
                     <select
                         onChange={(event) => setThreshold(Number(event.target.value))}
-                        style={{
-                            background: '#18181b',
-                            border: '1px solid #3f3f46',
-                            borderRadius: 8,
-                            color: '#e4e4e7',
-                            fontSize: 13,
-                            padding: '8px 10px',
-                        }}
+                        className="rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-2 text-[13px] text-zinc-200"
                         value={threshold}
                     >
                         {THRESHOLD_OPTIONS.map((option) => (
@@ -629,25 +495,16 @@ export function ChatPlaygroundDemo() {
                 </label>
             </div>
 
-            <div style={{ background: '#0d0f12', display: 'flex', flexDirection: 'column', height: 680, minHeight: 0, position: 'relative' }}>
+            <div className="relative flex h-[680px] min-h-0 flex-col bg-[#0d0f12]">
                 {isLoadingOlder ? (
-                    <div
-                        style={{
-                            background: 'rgba(161, 161, 170, 0.12)',
-                            borderBottom: '1px solid #3f3f46',
-                            color: '#d4d4d8',
-                            fontSize: 12,
-                            padding: '6px 12px',
-                            textAlign: 'center',
-                        }}
-                    >
+                    <div className="border-b border-zinc-700 bg-[rgba(161,161,170,0.12)] px-3 py-1.5 text-center text-xs text-zinc-300">
                         Loading older messages…
                     </div>
                 ) : null}
 
                 <LegendList<ChatRow>
                     alignItemsAtEnd
-                    contentContainerStyle={{ paddingBottom: 12, paddingTop: 8 }}
+                    className="min-h-0 flex-1 bg-[#0d0f12]"
                     data={rows}
                     estimatedItemSize={90}
                     initialScrollIndex={Math.max(rows.length - 1, 0)}
@@ -661,32 +518,17 @@ export function ChatPlaygroundDemo() {
                     ref={listRef}
                     renderItem={renderRow}
                     stickyHeaderIndices={stickyHeaderIndices}
-                    style={{ background: '#0d0f12', flex: 1, minHeight: 0 }}
                 />
 
                 {showScrollToLatest ? (
                     <button
                         aria-label="Scroll to latest"
                         onClick={scrollToLatest}
-                        style={{
-                            background: '#1d4ed8',
-                            border: 'none',
-                            borderRadius: 9999,
-                            bottom: 74,
-                            color: '#ffffff',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: 36,
-                            position: 'absolute',
-                            right: 16,
-                            width: 36,
-                        }}
+                        className="absolute bottom-[74px] right-4 flex h-9 w-9 items-center justify-center rounded-full bg-blue-700 text-white"
                         title="Scroll to latest"
                         type="button"
                     >
-                        <svg aria-hidden="true" fill="none" height="14" viewBox="0 0 16 16" width="14">
+                        <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 16 16">
                             <path
                                 d="M4 6L8 10L12 6"
                                 stroke="currentColor"
@@ -700,40 +542,16 @@ export function ChatPlaygroundDemo() {
 
                 <form
                     onSubmit={handleSendMessage}
-                    style={{
-                        alignItems: 'center',
-                        background: '#111214',
-                        borderTop: '1px solid #3f3f46',
-                        display: 'flex',
-                        gap: 8,
-                        padding: 10,
-                    }}
+                    className="flex items-center gap-2 border-t border-zinc-700 bg-[#111214] p-2.5"
                 >
                     <input
                         onChange={(event) => setInputText(event.target.value)}
                         placeholder="Send a message..."
-                        style={{
-                            background: '#18181b',
-                            border: '1px solid #3f3f46',
-                            borderRadius: 9999,
-                            color: '#e4e4e7',
-                            flex: 1,
-                            fontSize: 14,
-                            minWidth: 0,
-                            padding: '10px 14px',
-                        }}
+                        className="min-w-0 flex-1 rounded-full border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-200"
                         value={inputText}
                     />
                     <button
-                        style={{
-                            background: '#2563eb',
-                            border: 'none',
-                            borderRadius: 9999,
-                            color: '#ffffff',
-                            cursor: 'pointer',
-                            fontWeight: 600,
-                            padding: '10px 16px',
-                        }}
+                        className="cursor-pointer rounded-full bg-blue-600 px-4 py-2.5 font-semibold text-white"
                         type="submit"
                     >
                         Send
