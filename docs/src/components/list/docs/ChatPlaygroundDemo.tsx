@@ -65,6 +65,163 @@ const attachmentTemplates = [
     'Release checklist:\n1. Run smoke tests\n2. Validate chat replay\n3. Monitor scroll metrics',
 ];
 
+function ChatMessageItem({
+    message,
+    onAddReaction,
+}: {
+    message: ChatMessage;
+    onAddReaction: (messageId: string, emoji: string) => void;
+}) {
+    const isMine = message.sender === 'me';
+    const [isReactionMenuOpen, setIsReactionMenuOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsReactionMenuOpen(false);
+    }, [message.id]);
+
+    return (
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: isMine ? 'flex-end' : 'flex-start',
+                padding: '6px 16px',
+            }}
+        >
+            <div
+                style={{
+                    alignItems: isMine ? 'flex-end' : 'flex-start',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    maxWidth: '80%',
+                    position: 'relative',
+                }}
+            >
+                <div
+                    style={{
+                        alignItems: 'flex-end',
+                        display: 'flex',
+                        flexDirection: isMine ? 'row-reverse' : 'row',
+                        gap: 8,
+                        width: '100%',
+                    }}
+                >
+                    <button
+                        onClick={() => setIsReactionMenuOpen((previous) => !previous)}
+                        style={{
+                            background: '#18181b',
+                            border: '1px solid #3f3f46',
+                            borderRadius: 9999,
+                            color: '#d4d4d8',
+                            cursor: 'pointer',
+                            fontSize: 12,
+                            height: 28,
+                            width: 28,
+                        }}
+                        title="Add reaction"
+                        type="button"
+                    >
+                        +
+                    </button>
+
+                    <div
+                        style={{
+                            background: isMine ? '#2563eb' : '#18181b',
+                            borderRadius: 16,
+                            color: isMine ? '#ffffff' : '#e4e4e7',
+                            overflow: 'hidden',
+                            padding: '10px 12px',
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: 14,
+                                lineHeight: 1.5,
+                                whiteSpace: 'pre-line',
+                            }}
+                        >
+                            {message.text}
+                        </div>
+
+                        {message.reactions.length > 0 ? (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    gap: 6,
+                                    marginTop: 8,
+                                }}
+                            >
+                                {message.reactions.map((reaction, index) => (
+                                    <span
+                                        key={`${message.id}-reaction-${index}`}
+                                        style={{
+                                            background: isMine ? 'rgba(255,255,255,0.22)' : '#3f3f46',
+                                            borderRadius: 9999,
+                                            color: '#f4f4f5',
+                                            fontSize: 13,
+                                            padding: '2px 8px',
+                                        }}
+                                    >
+                                        {reaction}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : null}
+                    </div>
+                </div>
+
+                {isReactionMenuOpen ? (
+                    <div
+                        style={{
+                            background: '#18181b',
+                            border: '1px solid #3f3f46',
+                            borderRadius: 10,
+                            boxShadow: '0 8px 22px rgba(0, 0, 0, 0.4)',
+                            display: 'flex',
+                            gap: 6,
+                            marginTop: 6,
+                            padding: 6,
+                            zIndex: 10,
+                        }}
+                    >
+                        {REACTION_OPTIONS.map((emoji) => (
+                            <button
+                                key={`${message.id}-${emoji}`}
+                                onClick={() => {
+                                    onAddReaction(message.id, emoji);
+                                    setIsReactionMenuOpen(false);
+                                }}
+                                style={{
+                                    background: '#27272a',
+                                    border: '1px solid #3f3f46',
+                                    borderRadius: 8,
+                                    cursor: 'pointer',
+                                    fontSize: 16,
+                                    lineHeight: 1,
+                                    padding: '6px 8px',
+                                }}
+                                type="button"
+                            >
+                                {emoji}
+                            </button>
+                        ))}
+                    </div>
+                ) : null}
+
+                <div
+                    style={{
+                        color: '#a1a1aa',
+                        fontSize: 11,
+                        marginTop: 4,
+                    }}
+                >
+                    {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function toDayKey(timestamp: number): string {
     const date = new Date(timestamp);
     const year = date.getFullYear();
@@ -217,7 +374,6 @@ export function ChatPlaygroundDemo() {
     const [showScrollToLatest, setShowScrollToLatest] = React.useState<boolean>(false);
     const [isTyping, setIsTyping] = React.useState<boolean>(false);
     const [isLoadingOlder, setIsLoadingOlder] = React.useState<boolean>(false);
-    const [openReactionMenuForId, setOpenReactionMenuForId] = React.useState<string | null>(null);
 
     const { rows, stickyHeaderIndices } = React.useMemo(() => buildRows(messages, isTyping), [messages, isTyping]);
 
@@ -306,6 +462,10 @@ export function ChatPlaygroundDemo() {
                 },
             ]);
             setInputText('');
+            requestAnimationFrame(() => {
+                listRef.current?.scrollToEnd?.({ animated: true });
+                setShowScrollToLatest(false);
+            });
         },
         [createId, inputText],
     );
@@ -321,7 +481,6 @@ export function ChatPlaygroundDemo() {
                     : message,
             ),
         );
-        setOpenReactionMenuForId(null);
     }, []);
 
     const renderRow = React.useCallback(
@@ -332,10 +491,10 @@ export function ChatPlaygroundDemo() {
                         <div
                             style={{
                                 backdropFilter: 'blur(3px)',
-                                background: 'rgba(248, 250, 252, 0.92)',
-                                border: '1px solid #e2e8f0',
+                                background: 'rgba(24, 24, 27, 0.92)',
+                                border: '1px solid #3f3f46',
                                 borderRadius: 9999,
-                                color: '#334155',
+                                color: '#d4d4d8',
                                 fontSize: 12,
                                 fontWeight: 600,
                                 margin: '0 auto',
@@ -355,9 +514,9 @@ export function ChatPlaygroundDemo() {
                     <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '6px 16px' }}>
                         <div
                             style={{
-                                background: '#e2e8f0',
+                                background: '#27272a',
                                 borderRadius: 16,
-                                color: '#334155',
+                                color: '#e4e4e7',
                                 fontSize: 14,
                                 maxWidth: '72%',
                                 padding: '10px 12px',
@@ -369,151 +528,9 @@ export function ChatPlaygroundDemo() {
                 );
             }
 
-            const { message } = item;
-            const isMine = message.sender === 'me';
-            const isReactionMenuOpen = openReactionMenuForId === message.id;
-
-            return (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: isMine ? 'flex-end' : 'flex-start',
-                        padding: '6px 16px',
-                    }}
-                >
-                    <div
-                        style={{
-                            alignItems: isMine ? 'flex-end' : 'flex-start',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            maxWidth: '80%',
-                            position: 'relative',
-                        }}
-                    >
-                        <div
-                            style={{
-                                alignItems: 'flex-end',
-                                display: 'flex',
-                                flexDirection: isMine ? 'row-reverse' : 'row',
-                                gap: 8,
-                                width: '100%',
-                            }}
-                        >
-                            <button
-                                onClick={() =>
-                                    setOpenReactionMenuForId((previous) => (previous === message.id ? null : message.id))
-                                }
-                                style={{
-                                    background: '#f8fafc',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: 9999,
-                                    color: '#475569',
-                                    cursor: 'pointer',
-                                    fontSize: 12,
-                                    height: 28,
-                                    width: 28,
-                                }}
-                                title="Add reaction"
-                                type="button"
-                            >
-                                +
-                            </button>
-
-                            <div
-                                style={{
-                                    background: isMine ? '#2563eb' : '#f1f5f9',
-                                    borderRadius: 16,
-                                    color: isMine ? '#ffffff' : '#0f172a',
-                                    overflow: 'hidden',
-                                    padding: '10px 12px',
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        fontSize: 14,
-                                        lineHeight: 1.5,
-                                        whiteSpace: 'pre-line',
-                                    }}
-                                >
-                                    {message.text}
-                                </div>
-
-                                {message.reactions.length > 0 ? (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 6,
-                                            marginTop: 8,
-                                        }}
-                                    >
-                                        {message.reactions.map((reaction, index) => (
-                                            <span
-                                                key={`${message.id}-reaction-${index}`}
-                                                style={{
-                                                    background: isMine ? 'rgba(255,255,255,0.22)' : '#e2e8f0',
-                                                    borderRadius: 9999,
-                                                    fontSize: 13,
-                                                    padding: '2px 8px',
-                                                }}
-                                            >
-                                                {reaction}
-                                            </span>
-                                        ))}
-                                    </div>
-                                ) : null}
-                            </div>
-                        </div>
-
-                        {isReactionMenuOpen ? (
-                            <div
-                                style={{
-                                    background: '#ffffff',
-                                    border: '1px solid #e2e8f0',
-                                    borderRadius: 10,
-                                    boxShadow: '0 6px 20px rgba(15, 23, 42, 0.12)',
-                                    display: 'flex',
-                                    gap: 6,
-                                    marginTop: 6,
-                                    padding: 6,
-                                    zIndex: 10,
-                                }}
-                            >
-                                {REACTION_OPTIONS.map((emoji) => (
-                                    <button
-                                        key={`${message.id}-${emoji}`}
-                                        onClick={() => handleAddReaction(message.id, emoji)}
-                                        style={{
-                                            background: '#f8fafc',
-                                            border: '1px solid #e2e8f0',
-                                            borderRadius: 8,
-                                            cursor: 'pointer',
-                                            fontSize: 16,
-                                            lineHeight: 1,
-                                            padding: '6px 8px',
-                                        }}
-                                        type="button"
-                                    >
-                                        {emoji}
-                                    </button>
-                                ))}
-                            </div>
-                        ) : null}
-
-                        <div
-                            style={{
-                                color: '#64748b',
-                                fontSize: 11,
-                                marginTop: 4,
-                            }}
-                        >
-                            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                    </div>
-                </div>
-            );
+            return <ChatMessageItem message={item.message} onAddReaction={handleAddReaction} />;
         },
-        [handleAddReaction, openReactionMenuForId],
+        [handleAddReaction],
     );
 
     const scrollToLatest = React.useCallback(() => {
@@ -522,21 +539,29 @@ export function ChatPlaygroundDemo() {
     }, []);
 
     return (
-        <div style={{ border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ border: '1px solid #3f3f46', borderRadius: 12, overflow: 'hidden' }}>
             <div
                 style={{
-                    background: '#f8fafc',
-                    borderBottom: '1px solid #e2e8f0',
+                    background: '#111214',
+                    borderBottom: '1px solid #3f3f46',
                     display: 'grid',
                     gap: 12,
                     gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                     padding: 12,
                 }}
             >
-                <label style={{ display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
+                <label style={{ color: '#d4d4d8', display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
                     Incoming speed
                     <select
                         onChange={(event) => setIncomingSpeedSec(Number(event.target.value))}
+                        style={{
+                            background: '#18181b',
+                            border: '1px solid #3f3f46',
+                            borderRadius: 8,
+                            color: '#e4e4e7',
+                            fontSize: 13,
+                            padding: '8px 10px',
+                        }}
                         value={incomingSpeedSec}
                     >
                         {INCOMING_SPEED_OPTIONS.map((option) => (
@@ -547,10 +572,18 @@ export function ChatPlaygroundDemo() {
                     </select>
                 </label>
 
-                <label style={{ display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
+                <label style={{ color: '#d4d4d8', display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
                     Load older delay
                     <select
                         onChange={(event) => setLoadOlderDelayMs(Number(event.target.value))}
+                        style={{
+                            background: '#18181b',
+                            border: '1px solid #3f3f46',
+                            borderRadius: 8,
+                            color: '#e4e4e7',
+                            fontSize: 13,
+                            padding: '8px 10px',
+                        }}
                         value={loadOlderDelayMs}
                     >
                         {LOAD_OLDER_DELAY_OPTIONS.map((option) => (
@@ -561,9 +594,20 @@ export function ChatPlaygroundDemo() {
                     </select>
                 </label>
 
-                <label style={{ display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
+                <label style={{ color: '#d4d4d8', display: 'flex', flexDirection: 'column', fontSize: 12, gap: 6 }}>
                     maintainScrollAtEndThreshold
-                    <select onChange={(event) => setThreshold(Number(event.target.value))} value={threshold}>
+                    <select
+                        onChange={(event) => setThreshold(Number(event.target.value))}
+                        style={{
+                            background: '#18181b',
+                            border: '1px solid #3f3f46',
+                            borderRadius: 8,
+                            color: '#e4e4e7',
+                            fontSize: 13,
+                            padding: '8px 10px',
+                        }}
+                        value={threshold}
+                    >
                         {THRESHOLD_OPTIONS.map((option) => (
                             <option key={option} value={option}>
                                 {option.toFixed(1)}
@@ -573,13 +617,13 @@ export function ChatPlaygroundDemo() {
                 </label>
             </div>
 
-            <div style={{ background: '#ffffff', display: 'flex', flexDirection: 'column', height: 680, minHeight: 0, position: 'relative' }}>
+            <div style={{ background: '#0d0f12', display: 'flex', flexDirection: 'column', height: 680, minHeight: 0, position: 'relative' }}>
                 {isLoadingOlder ? (
                     <div
                         style={{
-                            background: 'rgba(15, 23, 42, 0.05)',
-                            borderBottom: '1px solid #e2e8f0',
-                            color: '#475569',
+                            background: 'rgba(161, 161, 170, 0.12)',
+                            borderBottom: '1px solid #3f3f46',
+                            color: '#d4d4d8',
                             fontSize: 12,
                             padding: '6px 12px',
                             textAlign: 'center',
@@ -605,14 +649,14 @@ export function ChatPlaygroundDemo() {
                     ref={listRef}
                     renderItem={renderRow}
                     stickyHeaderIndices={stickyHeaderIndices}
-                    style={{ flex: 1, minHeight: 0 }}
+                    style={{ background: '#0d0f12', flex: 1, minHeight: 0 }}
                 />
 
                 {showScrollToLatest ? (
                     <button
                         onClick={scrollToLatest}
                         style={{
-                            background: '#0f172a',
+                            background: '#1d4ed8',
                             border: 'none',
                             borderRadius: 9999,
                             bottom: 74,
@@ -634,7 +678,8 @@ export function ChatPlaygroundDemo() {
                     onSubmit={handleSendMessage}
                     style={{
                         alignItems: 'center',
-                        borderTop: '1px solid #e2e8f0',
+                        background: '#111214',
+                        borderTop: '1px solid #3f3f46',
                         display: 'flex',
                         gap: 8,
                         padding: 10,
@@ -644,8 +689,10 @@ export function ChatPlaygroundDemo() {
                         onChange={(event) => setInputText(event.target.value)}
                         placeholder="Send a message..."
                         style={{
-                            border: '1px solid #d1d5db',
+                            background: '#18181b',
+                            border: '1px solid #3f3f46',
                             borderRadius: 9999,
+                            color: '#e4e4e7',
                             flex: 1,
                             fontSize: 14,
                             minWidth: 0,
