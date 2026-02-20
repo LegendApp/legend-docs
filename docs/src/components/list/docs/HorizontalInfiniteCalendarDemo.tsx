@@ -168,11 +168,6 @@ export function HorizontalInfiniteCalendarDemo() {
 
             leftIndexRef.current = snappedIndex;
             setLeftIndex(snappedIndex);
-
-            const snappedOffset = snappedIndex * itemWidth;
-            if (Math.abs(snappedOffset - x) > 1) {
-                listRef.current?.scrollToOffset({ animated: false, offset: snappedOffset });
-            }
         },
         [itemWidth],
     );
@@ -299,9 +294,9 @@ export function HorizontalInfiniteCalendarDemo() {
                 </div>
             </div>
 
-            <div ref={containerRef} className="py-4">
+            <div ref={containerRef} >
                 <LegendList<number>
-                    className="min-h-0"
+                    className="min-h-0 py-4"
                     data={months}
                     estimatedItemSize={itemWidth}
                     horizontal
