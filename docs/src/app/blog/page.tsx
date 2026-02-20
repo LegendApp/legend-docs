@@ -4,6 +4,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import type { Item as PageTreeItem, Node as PageTreeNode } from 'fumadocs-core/page-tree';
+import '@/styles/blog-post.css';
 
 function removeFilenameDatePrefix(slug: string): string {
     // Remove YYYY-MM-DD- prefix from slug
@@ -98,8 +99,8 @@ export default async function BlogPage() {
             sidebar={{}}
             nav={{ component: <CustomNavbar /> }}
         >
-            <div className="flex flex-1 flex-col divide-y divide-dashed divide-border/70 border-border/70 border-dashed sm:border-b dark:divide-border dark:border-border">
-                <div className="container mx-auto px-6 py-12">
+            <div className="blog-page flex flex-1 flex-col">
+                <div className="mx-auto w-full max-w-[1200px] px-4 pt-24 pb-12 sm:px-6 lg:px-8 lg:pt-28">
                     <div className="mx-auto max-w-4xl">
                         <div className="mb-12 text-center">
                             <h1 className="mb-4 text-4xl font-bold tracking-tight">Legend Open Source Blog</h1>

@@ -45,51 +45,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const MDX = page.data.body;
 
     return (
-        <div className="pt-12 blog-page">
-            <div className="relative container px-4 py-8 lg:py-12 lg:px-6 text-left mx-auto max-w-(--fd-page-width)">
-                <div className="mb-4 text-zinc-600 dark:text-zinc-400 text-sm font-medium">
-                    <div className="flex flex-wrap gap-3">
-                        <span className="inline-flex items-center gap-1.5">
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                            {new Date(pageData.date).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                            })}
-                        </span>
-                        {page.data.author && (
-                            <>
-                                <span>•</span>
-                                <span className="inline-flex items-center gap-1.5">
-                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                        />
-                                    </svg>
-                                    {page.data.author}
-                                </span>
-                            </>
-                        )}
-                    </div>
-                </div>
-
-                <h1 className="text-left dark:text-white text-4xl font-bold mb-4">{page.data.title}</h1>
-
-                {page.data.description && (
-                    <p className="text-left mt-3 dark:text-zinc-300 text-lg">{page.data.description}</p>
-                )}
-            </div>
-
+        <div className="blog-page">
             <DocsLayout
                 nav={{ component: <CustomNavbar /> }}
                 tree={{
@@ -98,13 +54,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 }}
                 sidebar={{ enabled: false, prefetch: false, tabs: false }}
                 containerProps={{
-                    className: 'flex-row-reverse relative container pt-0 [&>*]:pt-0',
+                    className: 'flex-row-reverse relative mx-auto w-full max-w-[1200px] px-4 lg:px-6',
                 }}
             >
                 <DocsPage
                     toc={page.data.toc}
                     full={page.data.full}
-                    className="border-t border-white/10"
+                    className="!pt-24 md:!pt-28"
+                    breadcrumb={{ enabled: false }}
                     footer={{
                         enabled: false,
                     }}
@@ -129,7 +86,46 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         ),
                     }}
                 >
-                    <DocsBody className="blog-post max-w-none bg-zinc-50/50 dark:bg-zinc-900/50 py-8 md:py-12 border-l border-r border-white/10">
+                    <div className="mb-4 text-zinc-600 dark:text-zinc-400 text-sm font-medium">
+                        <div className="flex flex-wrap gap-3">
+                            <span className="inline-flex items-center gap-1.5">
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                                {new Date(pageData.date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })}
+                            </span>
+                            {page.data.author && (
+                                <>
+                                    <span>•</span>
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                            />
+                                        </svg>
+                                        {page.data.author}
+                                    </span>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                    <h1 className="text-left dark:text-white text-4xl font-bold mb-4">{page.data.title}</h1>
+                    {page.data.description && (
+                        <p className="text-left mt-3 mb-8 dark:text-zinc-300 text-lg">{page.data.description}</p>
+                    )}
+                    <DocsBody className="blog-post max-w-none pt-0 pb-8 md:pb-12">
                         <MDX
                             components={getMDXComponents({
                                 pre: (props) => (
