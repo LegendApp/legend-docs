@@ -1,5 +1,6 @@
 import { Editor } from '@/components/Editor';
 import { ChatPlaygroundDemo } from '@/components/list/docs/ChatPlaygroundDemo';
+import { HorizontalInfiniteCalendarDemo } from '@/components/list/docs/HorizontalInfiniteCalendarDemo';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
@@ -9,6 +10,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
         ...defaultMdxComponents,
         Editor,
         ChatPlaygroundDemo,
+        HorizontalInfiniteCalendarDemo,
         ...components,
     };
 }
