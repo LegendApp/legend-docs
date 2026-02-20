@@ -28,9 +28,15 @@ export default async function BlogPage() {
     const tree = sanitizeBlogPageTree(source.pageTree);
 
     return (
-        <DocsLayout tree={tree} sidebar={{}} nav={{ component: <CustomNavbar /> }}>
+        <DocsLayout
+            tree={tree}
+            sidebar={{}}
+            nav={{ component: <CustomNavbar /> }}
+            containerProps={{
+                className: 'pt-[var(--fd-nav-height)]',
+            }}
+        >
             <DocsPage
-                className="!pt-[calc(var(--fd-nav-height)+1.5rem)] md:!pt-[calc(var(--fd-nav-height)+2rem)]"
                 breadcrumb={{ enabled: false }}
                 footer={{ enabled: false }}
                 tableOfContent={{ enabled: false }}

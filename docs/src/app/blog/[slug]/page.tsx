@@ -34,11 +34,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const tree = sanitizeBlogPageTree(source.pageTree);
 
     return (
-        <DocsLayout nav={{ component: <CustomNavbar /> }} tree={tree} sidebar={{}}>
+        <DocsLayout
+            nav={{ component: <CustomNavbar /> }}
+            tree={tree}
+            sidebar={{}}
+            containerProps={{
+                className: 'pt-[var(--fd-nav-height)]',
+            }}
+        >
             <DocsPage
                 toc={page.data.toc}
                 full={page.data.full}
-                className="!pt-[calc(var(--fd-nav-height)+1.5rem)] md:!pt-[calc(var(--fd-nav-height)+2rem)]"
                 tableOfContent={{
                     style: 'clerk',
                 }}
