@@ -3,74 +3,7 @@ import Link from 'next/link';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
-import type { Item as PageTreeItem, Node as PageTreeNode } from 'fumadocs-core/page-tree';
-import '@/styles/blog-post.css';
-
-function removeFilenameDatePrefix(slug: string): string {
-    // Remove YYYY-MM-DD- prefix from slug
-    return slug.replace(/^\d{4}-\d{2}-\d{2}-/, '');
-}
-
-function removeDatePrefixFromUrl(url: string): string {
-    if (!url.startsWith('/blog/')) {
-        return url;
-    }
-
-    const parsedUrl = new URL(url, 'http://localhost');
-    const segments = parsedUrl.pathname.split('/').filter(Boolean);
-
-    if (segments.length === 0) {
-        return url;
-    }
-
-    const lastIndex = segments.length - 1;
-    const lastSegment = segments[lastIndex];
-    const sanitizedSegment = removeFilenameDatePrefix(lastSegment);
-
-    if (sanitizedSegment === lastSegment) {
-        return url;
-    }
-
-    segments[lastIndex] = sanitizedSegment;
-    parsedUrl.pathname = `/${segments.join('/')}`;
-
-    return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
-}
-
-function sanitizeSidebarItem(item: PageTreeItem): PageTreeItem {
-    const sanitizedUrl = removeDatePrefixFromUrl(item.url);
-
-    if (sanitizedUrl === item.url) {
-        return item;
-    }
-
-    return {
-        ...item,
-        url: sanitizedUrl,
-    };
-}
-
-function sanitizeSidebarNode(node: PageTreeNode): PageTreeNode {
-    if (node.type === 'page') {
-        return sanitizeSidebarItem(node);
-    }
-
-    if (node.type === 'folder') {
-        const sanitizedIndex = node.index ? sanitizeSidebarItem(node.index) : undefined;
-
-        return {
-            ...node,
-            ...(node.index ? { index: sanitizedIndex } : {}),
-            children: node.children.map(sanitizeSidebarNode),
-        };
-    }
-
-    return node;
-}
-
-function sanitizeSidebarNodes(nodes: PageTreeNode[]): PageTreeNode[] {
-    return nodes.map(sanitizeSidebarNode);
-}
+import { removeFilenameDatePrefix, sanitizeBlogPageTree } from '@/lib/blog-routing';
 
 export default async function BlogPage() {
     const posts = source
@@ -91,14 +24,10 @@ export default async function BlogPage() {
             return dateB.getTime() - dateA.getTime();
         });
 
-    const pageTreeChildren = sanitizeSidebarNodes([...source.pageTree.children].reverse());
+    const tree = sanitizeBlogPageTree(source.pageTree);
 
     return (
-        <DocsLayout
-            tree={{ ...source.pageTree, children: pageTreeChildren }}
-            sidebar={{}}
-            nav={{ component: <CustomNavbar /> }}
-        >
+        <DocsLayout tree={tree} sidebar={{}} nav={{ component: <CustomNavbar /> }}>
             <div className="blog-page flex flex-1 flex-col">
                 <div className="mx-auto w-full max-w-[1200px] px-4 pt-24 pb-12 sm:px-6 lg:px-8 lg:pt-28">
                     <div className="mx-auto max-w-4xl">

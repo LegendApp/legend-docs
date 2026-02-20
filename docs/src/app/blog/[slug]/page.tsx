@@ -2,7 +2,7 @@ import { Example } from '@/components/Example';
 import { TwoExamples } from '@/components/TwoExamples';
 import { source } from '@/lib/sources/blog';
 import type { Metadata } from 'next';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
+import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { CustomNavbar } from '@/components/navbar';
@@ -10,23 +10,11 @@ import { getMDXComponents } from '@/mdx-components';
 import { CodeBlock, CodeBlockProps, Pre } from 'fumadocs-ui/components/codeblock';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import '@/styles/blog-post.css';
-import Link from 'fumadocs-core/link';
-
-function addFilenameDatePrefix(slug: string): string {
-    // Try to find the original page with date prefix
-    const pages = source.getPages();
-    const pageWithPrefix = pages.find((p) => p.slugs[0].endsWith(`-${slug}`) || p.slugs[0] === slug);
-    if (pageWithPrefix) {
-        return pageWithPrefix.slugs[0];
-    }
-    // If not found, assume it might already have the prefix
-    return slug;
-}
+import { findOriginalBlogSlug, removeFilenameDatePrefix, sanitizeBlogPageTree } from '@/lib/blog-routing';
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const resolvedParams = await params;
-    // Try to find page with the original filename (with date prefix)
-    const originalSlug = addFilenameDatePrefix(resolvedParams.slug);
+    const originalSlug = findOriginalBlogSlug(resolvedParams.slug, source.getPages());
     let page = source.getPage([originalSlug]);
 
     // If not found with prefix, try without
@@ -43,119 +31,82 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     };
 
     const MDX = page.data.body;
+    const tree = sanitizeBlogPageTree(source.pageTree);
 
     return (
-        <div className="blog-page">
-            <DocsLayout
-                nav={{ component: <CustomNavbar /> }}
-                tree={{
-                    name: 'Tree',
-                    children: [],
-                }}
-                sidebar={{ enabled: false, prefetch: false, tabs: false }}
-                containerProps={{
-                    className: 'flex-row-reverse relative mx-auto w-full max-w-[1200px] px-4 lg:px-6',
+        <DocsLayout nav={{ component: <CustomNavbar /> }} tree={tree} sidebar={{}}>
+            <DocsPage
+                toc={page.data.toc}
+                full={page.data.full}
+                tableOfContent={{
+                    style: 'clerk',
                 }}
             >
-                <DocsPage
-                    toc={page.data.toc}
-                    full={page.data.full}
-                    className="!pt-24 md:!pt-28"
-                    breadcrumb={{ enabled: false }}
-                    footer={{
-                        enabled: false,
-                    }}
-                    tableOfContent={{
-                        style: 'clerk',
-                        single: false,
-                        header: (
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center gap-2 text-sm text-fd-muted-foreground hover:text-white transition-colors mb-6 -mt-6"
-                            >
-                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M15 19l-7-7 7-7"
-                                    />
-                                </svg>
-                                All posts
-                            </Link>
-                        ),
-                    }}
-                >
-                    <div className="mb-4 text-zinc-600 dark:text-zinc-400 text-sm font-medium">
-                        <div className="flex flex-wrap gap-3">
-                            <span className="inline-flex items-center gap-1.5">
-                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    />
-                                </svg>
-                                {new Date(pageData.date).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}
-                            </span>
-                            {page.data.author && (
-                                <>
-                                    <span>•</span>
-                                    <span className="inline-flex items-center gap-1.5">
-                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                            />
-                                        </svg>
-                                        {page.data.author}
-                                    </span>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    <h1 className="text-left dark:text-white text-4xl font-bold mb-4">{page.data.title}</h1>
-                    {page.data.description && (
-                        <p className="text-left mt-3 mb-8 dark:text-zinc-300 text-lg">{page.data.description}</p>
-                    )}
-                    <DocsBody className="blog-post max-w-none pt-0 pb-8 md:pb-12">
-                        <MDX
-                            components={getMDXComponents({
-                                pre: (props) => (
-                                    <CodeBlock {...(props as CodeBlockProps)}>
-                                        <Pre>{props.children}</Pre>
-                                    </CodeBlock>
-                                ),
-                                Example,
-                                TwoExamples,
+                <div className="mb-4 text-zinc-600 dark:text-zinc-400 text-sm font-medium">
+                    <div className="flex flex-wrap gap-3">
+                        <span className="inline-flex items-center gap-1.5">
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                            </svg>
+                            {new Date(pageData.date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
                             })}
-                        />
-                    </DocsBody>
-                </DocsPage>
-            </DocsLayout>
-        </div>
+                        </span>
+                        {page.data.author && (
+                            <>
+                                <span>•</span>
+                                <span className="inline-flex items-center gap-1.5">
+                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                        />
+                                    </svg>
+                                    {page.data.author}
+                                </span>
+                            </>
+                        )}
+                    </div>
+                </div>
+                <DocsTitle>{page.data.title}</DocsTitle>
+                <DocsDescription>{page.data.description}</DocsDescription>
+                <DocsBody className="blog-post">
+                    <MDX
+                        components={getMDXComponents({
+                            pre: (props) => (
+                                <CodeBlock {...(props as CodeBlockProps)}>
+                                    <Pre>{props.children}</Pre>
+                                </CodeBlock>
+                            ),
+                            Example,
+                            TwoExamples,
+                        })}
+                    />
+                </DocsBody>
+            </DocsPage>
+        </DocsLayout>
     );
 }
 
 export async function generateStaticParams() {
     const params = source.generateParams();
     return params.map((param) => ({
-        // Remove date prefix from slug for cleaner URLs
-        slug: param.slug[0].replace(/^\d{4}-\d{2}-\d{2}-/, ''),
+        slug: removeFilenameDatePrefix(param.slug[0]),
     }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const resolvedParams = await params;
-    // Try to find page with the original filename (with date prefix)
-    const originalSlug = addFilenameDatePrefix(resolvedParams.slug);
+    const originalSlug = findOriginalBlogSlug(resolvedParams.slug, source.getPages());
     let page = source.getPage([originalSlug]);
 
     // If not found with prefix, try without
