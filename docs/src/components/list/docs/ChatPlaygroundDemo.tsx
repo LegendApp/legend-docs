@@ -191,7 +191,7 @@ function buildMixedMessageText(index: number): string {
 
 function createSeedMessages(getNextId: () => string): ChatMessage[] {
     const now = Date.now();
-    const start = now - 1000 * 60 * 60 * 48;
+    const start = now - 1000 * 60 * 60 * 24 * 10;
     const totalMessages = 64;
     const span = now - start;
 
@@ -214,12 +214,13 @@ function createOlderBatch(getNextId: () => string, beforeTimestamp: number, inde
     let cursor = beforeTimestamp;
 
     for (let index = 0; index < PREPEND_BATCH_SIZE; index++) {
-        const minutes = 2 + ((index + indexSeed) % 5);
+        const minutes = 120 + ((index + indexSeed) % 4) * 60;
         cursor -= minutes * 60 * 1000;
+        const sender: Sender = (index + indexSeed) % 3 === 0 ? 'me' : 'other';
         messages.push({
             id: getNextId(),
             reactions: [],
-            sender: index % 2 === 0 ? 'other' : 'me',
+            sender,
             text: buildMixedMessageText(indexSeed + index),
             timestamp: cursor,
         });
@@ -504,6 +505,7 @@ export function ChatPlaygroundDemo() {
 
                 <LegendList<ChatRow>
                     alignItemsAtEnd
+                    ListFooterComponent={<div className="h-4" />}
                     className="min-h-0 flex-1 bg-[#0d0f12]"
                     data={rows}
                     estimatedItemSize={90}
@@ -524,7 +526,7 @@ export function ChatPlaygroundDemo() {
                     <button
                         aria-label="Scroll to latest"
                         onClick={scrollToLatest}
-                        className="absolute bottom-[74px] right-4 flex h-9 w-9 items-center justify-center rounded-full bg-blue-700 text-white"
+                        className="absolute bottom-[90px] right-4 flex h-9 w-9 items-center justify-center rounded-full bg-zinc-700 text-zinc-100 shadow-lg shadow-black/40"
                         title="Scroll to latest"
                         type="button"
                     >
