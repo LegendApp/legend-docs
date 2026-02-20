@@ -159,7 +159,7 @@ export function CustomNavbar() {
     return (
         <>
             <nav className="fixed top-0 left-0 right-0 z-50 h-[50px]">
-                <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between border-b bg-fd-background/20 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
+                <div className="mx-auto flex h-full w-full max-w-[97rem] items-center justify-between border-b bg-fd-background/20 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-2">
                         <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
 
@@ -219,7 +219,7 @@ export function CustomNavbar() {
             </nav>
             {isMenuOpen ? (
                 <div className="fixed top-[50px] left-0 right-0 z-50 md:hidden">
-                    <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8">
+                    <div className="mx-auto w-full max-w-[97rem] px-4 sm:px-6 lg:px-8">
                         <div className="ml-auto mt-2 w-48 rounded-md border border-border bg-fd-background/60 backdrop-blur-lg">
                             <div className="flex flex-col p-2 text-md">
                                 {navItems.map(({ label, href, matches }) => renderNavLink(label, href, matches, true))}

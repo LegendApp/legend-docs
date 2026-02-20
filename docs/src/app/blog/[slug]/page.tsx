@@ -38,6 +38,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <DocsPage
                 toc={page.data.toc}
                 full={page.data.full}
+                className="!pt-[calc(var(--fd-nav-height)+1.5rem)] md:!pt-[calc(var(--fd-nav-height)+2rem)]"
                 tableOfContent={{
                     style: 'clerk',
                 }}

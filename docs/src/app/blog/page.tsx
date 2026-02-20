@@ -30,6 +30,7 @@ export default async function BlogPage() {
     return (
         <DocsLayout tree={tree} sidebar={{}} nav={{ component: <CustomNavbar /> }}>
             <DocsPage
+                className="!pt-[calc(var(--fd-nav-height)+1.5rem)] md:!pt-[calc(var(--fd-nav-height)+2rem)]"
                 breadcrumb={{ enabled: false }}
                 footer={{ enabled: false }}
                 tableOfContent={{ enabled: false }}
