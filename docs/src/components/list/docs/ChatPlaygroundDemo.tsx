@@ -105,23 +105,73 @@ function ChatMessageItem({
                         width: '100%',
                     }}
                 >
-                    <button
-                        onClick={() => setIsReactionMenuOpen((previous) => !previous)}
-                        style={{
-                            background: '#18181b',
-                            border: '1px solid #3f3f46',
-                            borderRadius: 9999,
-                            color: '#d4d4d8',
-                            cursor: 'pointer',
-                            fontSize: 12,
-                            height: 28,
-                            width: 28,
-                        }}
-                        title="Add reaction"
-                        type="button"
-                    >
-                        +
-                    </button>
+                    <div style={{ flexShrink: 0, position: 'relative' }}>
+                        <button
+                            onClick={() => setIsReactionMenuOpen((previous) => !previous)}
+                            style={{
+                                alignItems: 'center',
+                                background: '#18181b',
+                                border: '1px solid #3f3f46',
+                                borderRadius: 9999,
+                                color: '#d4d4d8',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                flexShrink: 0,
+                                fontSize: 12,
+                                height: 28,
+                                justifyContent: 'center',
+                                minHeight: 28,
+                                minWidth: 28,
+                                padding: 0,
+                                width: 28,
+                            }}
+                            title="Add reaction"
+                            type="button"
+                        >
+                            +
+                        </button>
+
+                        {isReactionMenuOpen ? (
+                            <div
+                                style={{
+                                    background: '#18181b',
+                                    border: '1px solid #3f3f46',
+                                    borderRadius: 10,
+                                    boxShadow: '0 8px 22px rgba(0, 0, 0, 0.4)',
+                                    display: 'flex',
+                                    gap: 6,
+                                    left: isMine ? 'auto' : 0,
+                                    padding: 6,
+                                    position: 'absolute',
+                                    right: isMine ? 0 : 'auto',
+                                    top: 34,
+                                    zIndex: 10,
+                                }}
+                            >
+                                {REACTION_OPTIONS.map((emoji) => (
+                                    <button
+                                        key={`${message.id}-${emoji}`}
+                                        onClick={() => {
+                                            onAddReaction(message.id, emoji);
+                                            setIsReactionMenuOpen(false);
+                                        }}
+                                        style={{
+                                            background: '#27272a',
+                                            border: '1px solid #3f3f46',
+                                            borderRadius: 8,
+                                            cursor: 'pointer',
+                                            fontSize: 16,
+                                            lineHeight: 1,
+                                            padding: '6px 8px',
+                                        }}
+                                        type="button"
+                                    >
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : null}
+                    </div>
 
                     <div
                         style={{
@@ -169,44 +219,6 @@ function ChatMessageItem({
                         ) : null}
                     </div>
                 </div>
-
-                {isReactionMenuOpen ? (
-                    <div
-                        style={{
-                            background: '#18181b',
-                            border: '1px solid #3f3f46',
-                            borderRadius: 10,
-                            boxShadow: '0 8px 22px rgba(0, 0, 0, 0.4)',
-                            display: 'flex',
-                            gap: 6,
-                            marginTop: 6,
-                            padding: 6,
-                            zIndex: 10,
-                        }}
-                    >
-                        {REACTION_OPTIONS.map((emoji) => (
-                            <button
-                                key={`${message.id}-${emoji}`}
-                                onClick={() => {
-                                    onAddReaction(message.id, emoji);
-                                    setIsReactionMenuOpen(false);
-                                }}
-                                style={{
-                                    background: '#27272a',
-                                    border: '1px solid #3f3f46',
-                                    borderRadius: 8,
-                                    cursor: 'pointer',
-                                    fontSize: 16,
-                                    lineHeight: 1,
-                                    padding: '6px 8px',
-                                }}
-                                type="button"
-                            >
-                                {emoji}
-                            </button>
-                        ))}
-                    </div>
-                ) : null}
 
                 <div
                     style={{
@@ -402,7 +414,7 @@ export function ChatPlaygroundDemo() {
         const intervalId = window.setInterval(() => {
             setIsTyping(true);
 
-            const typingDuration = Math.min(900, Math.max(450, intervalMs - 150));
+            const typingDuration = Math.min(3200, Math.max(700, Math.floor(intervalMs * 0.75)));
             const timeoutId = window.setTimeout(() => {
                 incomingMessageIndexRef.current += 1;
                 setMessages((prev) => [...prev, createIncomingMessage(createId, incomingMessageIndexRef.current)]);
@@ -654,6 +666,7 @@ export function ChatPlaygroundDemo() {
 
                 {showScrollToLatest ? (
                     <button
+                        aria-label="Scroll to latest"
                         onClick={scrollToLatest}
                         style={{
                             background: '#1d4ed8',
@@ -662,15 +675,26 @@ export function ChatPlaygroundDemo() {
                             bottom: 74,
                             color: '#ffffff',
                             cursor: 'pointer',
-                            fontSize: 12,
-                            fontWeight: 600,
-                            padding: '10px 14px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 36,
                             position: 'absolute',
                             right: 16,
+                            width: 36,
                         }}
+                        title="Scroll to latest"
                         type="button"
                     >
-                        Scroll to latest
+                        <svg aria-hidden="true" fill="none" height="14" viewBox="0 0 16 16" width="14">
+                            <path
+                                d="M4 6L8 10L12 6"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="1.8"
+                            />
+                        </svg>
                     </button>
                 ) : null}
 
