@@ -4,11 +4,46 @@ Version 3 is currently **beta**. The React Native API is stable; web support is 
 
 Legend List is a high‑performance, virtualized list for **React Native and Web**. It’s a drop‑in replacement for FlatList/FlashList on mobile and a fast, DOM‑native list on the web.
 
+Compared to FlatList and FlashList, it's faster, simpler, and supports dynamic item sizes without hacks on React Native.
+
+- ✨ Extremely fast
 - ✨ Dynamic item sizes
-- ⚡️ High performance virtualization
+- ✨ Optional recycling
+- ✨ Bidirectional infinite lists
+- ✨ Chat list without inverting
+- ✨ Maintain content view position
+- ✨ Recycling hooks
 - 🧲 Sticky headers and SectionList support
-- 🔁 Optional recycling
-- 💬 Built for chat and infinite scroll
+
+For more information, check out:
+- [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
+- [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
+- [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
+
+## It's fast
+
+This video was recorded as a performance test scrolling ludicrously fast with heavy items. LegendList handles expensive components with a quick recovery.
+
+<div className="w-[800px] max-w-full mx-auto rounded-xl overflow-hidden">
+    <video
+        src="/open-source/assets/legendlist2.mp4"
+        controls
+        width="100%"
+        height="100%"
+        autoPlay
+        loop
+        muted
+        className="rounded-xl"
+    />
+</div>
+
+<br />
+
+## It uses less resources
+
+A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
+
+<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
 
 ## Choose your platform
 

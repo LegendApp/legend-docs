@@ -1425,11 +1425,46 @@ Version 3 is currently **beta**. The React Native API is stable; web support is 
 
 Legend List is a high‑performance, virtualized list for **React Native and Web**. It’s a drop‑in replacement for FlatList/FlashList on mobile and a fast, DOM‑native list on the web.
 
+Compared to FlatList and FlashList, it's faster, simpler, and supports dynamic item sizes without hacks on React Native.
+
+- ✨ Extremely fast
 - ✨ Dynamic item sizes
-- ⚡️ High performance virtualization
+- ✨ Optional recycling
+- ✨ Bidirectional infinite lists
+- ✨ Chat list without inverting
+- ✨ Maintain content view position
+- ✨ Recycling hooks
 - 🧲 Sticky headers and SectionList support
-- 🔁 Optional recycling
-- 💬 Built for chat and infinite scroll
+
+For more information, check out:
+- [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
+- [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
+- [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
+
+## It's fast
+
+This video was recorded as a performance test scrolling ludicrously fast with heavy items. LegendList handles expensive components with a quick recovery.
+
+<div className="w-[800px] max-w-full mx-auto rounded-xl overflow-hidden">
+    <video
+        src="/open-source/assets/legendlist2.mp4"
+        controls
+        width="100%"
+        height="100%"
+        autoPlay
+        loop
+        muted
+        className="rounded-xl"
+    />
+</div>
+
+<br />
+
+## It uses less resources
+
+A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
+
+<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
 
 ## Choose your platform
 
@@ -1527,50 +1562,6 @@ If the size of your list items differs significantly from the estimate, you may 
 
 
 ## react-native/getting-started
-
-Legend List is a high performance virtualized list for React Native. Compared to FlatList and FlashList it's faster, simpler, and supports dynamic item sizes without hacks.
-
-- ✨ Extremely fast
-- ✨ Dynamic item sizes
-- ✨ Optional recycling
-- ✨ Bidirectional infinite lists
-- ✨ Chat list without inverting
-- ✨ Maintain content view position
-- ✨ Recycling hooks
-
-<Callout>
-Building for the web? Start with <a href="../../react/getting-started">Getting Started (Web)</a> instead.
-</Callout>
-
-For more information, check out:
-- [Legend List: Optimizing for Mobile & Web | React Universe Conf 2025](https://www.youtube.com/watch?v=Ui3qVl80Pzg)
-- [Legend List: Optimizing for Peak List Performance | App.js Conf 2025](https://www.youtube.com/watch?v=4nfxSE9OByQ)
-- [Jay's conversation on React Native Radio](https://infinite.red/react-native-radio/rnr-325-legend-list-with-jay-meistrich)
-
-## It's fast!
-
-This video was recorded as a performance test scrolling ludicrously fast with heavy items. LegendList handles expensive components with a quick recovery.
-
-<div className="w-[800px] max-w-full mx-auto rounded-xl overflow-hidden">
-    <video
-        src="/open-source/assets/legendlist2.mp4"
-        controls
-        width="100%"
-        height="100%"
-        autoPlay
-        loop
-        muted
-        className="rounded-xl"
-    />
-</div>
-
-<br />
-
-## It uses less resources
-
-A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
-
-<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
 
 ## Install
 
@@ -1671,6 +1662,12 @@ These integrations are React Native only. On web, use standard DOM animation lib
 ## Reanimated
 
 The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
+
+Under the hood, these integrations use `Reanimated.ScrollView`.
+
+<Callout type="warn" title="Reanimated 4 sticky headers">
+In Reanimated 4, sticky headers can have performance problems. See <a href="https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/#%EF%B8%8F-flickeringjittering-while-scrolling">Flickering/jittering while scrolling</a>.
+</Callout>
 
 ```jsx
 import { useEffect } from "react";
@@ -1818,17 +1815,22 @@ export function KeyboardAvoidingExample() {
 ```
 
 
+## react/examples
+
+## Chat Playground
+
+This demo combines the core behaviors needed for production chat feeds:
+
+- `onStartReached` prepends older messages from the top
+- `maintainVisibleContentPosition` keeps the viewport stable while prepending
+- `initialScrollIndex` starts the feed at the latest messages
+- `maintainScrollAtEndThreshold` controls bottom-follow behavior
+- Sticky day boundaries are always enabled
+
+<ChatPlaygroundDemo />
+
+
 ## react/getting-started
-
-Legend List runs natively on the web with DOM elements in React.
-
-- ⚡️ Virtualized, fast scrolling lists in React
-- 🧠 Dynamic item sizes
-- 🧩 Same API as the React Native version
-
-<Callout>
-Looking for the React Native or React Native Web version? Start with <a href="../../react-native/getting-started">Getting Started (React Native)</a>.
-</Callout>
 
 ## Install
 
@@ -1838,28 +1840,33 @@ npm install @legendapp/list
 
 ## Usage
 
-`renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+Legend List is a drop-in replacement for virtualized lists in React. It only renders the items that are in view, which significantly reduces render cost for long lists.
+
+On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+
+### Quick Start
 
 ```jsx
 import { LegendList } from "@legendapp/list/react";
 
-const items = Array.from({ length: 1000 }, (_, i) => ({
-  id: String(i),
-  title: `Item ${i + 1}`,
-}));
+const items = [
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
+];
 
-export function WebList() {
+export function MyList() {
   return (
     <div style={{ height: 480, border: "1px solid #e5e7eb" }}>
       <LegendList
         data={items}
-        keyExtractor={(item) => item.id}
-        estimatedItemSize={44}
         renderItem={({ item }) => (
           <div style={{ padding: 12, borderBottom: "1px solid #f1f5f9" }}>
             {item.title}
           </div>
         )}
+        keyExtractor={(item) => item.id}
+        recycleItems
         style={{ height: "100%" }}
       />
     </div>
@@ -1872,4 +1879,28 @@ export function WebList() {
 - The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
 - `style` and `contentContainerStyle` accept CSS properties on web.
 - If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
+
+See [API Reference](../../api) for all properties of LegendList.
+
+## Supported Platforms
+
+- Chrome
+- Safari
+- Firefox
+- Edge
+- Any modern browser with current React support
+
+## Community
+
+Join us on [Discord](https://discord.gg/5CBaNtADNX) or [Github](https://github.com/LegendApp/legend-list) to get involved with the Legend community.
+
+Talk to Jay on [Bluesky](https://bsky.app/profile/jayz.us) or [Twitter](https://twitter.com/jmeistrich).
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](https://github.com/LegendApp/legend-list) on Github. And we welcome documentation PRs in our [documentation repo](https://github.com/LegendApp/legend-docs).
+
+## Legend Kit
+
+Legend Kit is our early but growing collection of high performance headless components, general purpose observables, transformer computeds, React hooks that don't re-render, and observable tools for popular frameworks. [Check out Legend Kit](https://www.legendapp.com/kit) to learn more.
 

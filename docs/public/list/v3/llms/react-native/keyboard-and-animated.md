@@ -6,6 +6,12 @@ These integrations are React Native only. On web, use standard DOM animation lib
 
 The Reanimated version of AnimatedLegendList supports animated props with Reanimated. Note that using `Animated.createAnimatedComponent` will not work as it needs more boilerplate, so you should use this instead.
 
+Under the hood, these integrations use `Reanimated.ScrollView`.
+
+<Callout type="warn" title="Reanimated 4 sticky headers">
+In Reanimated 4, sticky headers can have performance problems. See <a href="https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/#%EF%B8%8F-flickeringjittering-while-scrolling">Flickering/jittering while scrolling</a>.
+</Callout>
+
 ```jsx
 import { useEffect } from "react";
 import { AnimatedLegendList } from "@legendapp/list/reanimated";
