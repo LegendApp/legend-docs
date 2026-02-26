@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
-import ts from "../docs/node_modules/typescript/lib/typescript.js";
+import ts from "typescript";
 
 const repo = path.resolve(".");
 const docsDir = path.join(repo, "docs");

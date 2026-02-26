@@ -40,9 +40,22 @@ export function MyList() {
 }
 ```
 
+### Window Scroll Pages
+
+If your page already scrolls at the window level (instead of a fixed-height list container), set `useWindowScroll`.
+
+```jsx
+<LegendList
+  data={items}
+  keyExtractor={(item) => item.id}
+  renderItem={renderItem}
+  useWindowScroll
+/>
+```
+
 ### Important layout notes
 
-- The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
+- The scroll container must have a height (unless you use `useWindowScroll`). Use a fixed height, or a flex parent with a set height.
 - `style` and `contentContainerStyle` accept CSS properties on web.
 - If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
 

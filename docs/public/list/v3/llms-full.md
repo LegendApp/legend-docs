@@ -18,6 +18,8 @@ import { SectionList } from "@legendapp/list/section-list";
 import { AnimatedLegendList } from "@legendapp/list/animated";
 import { AnimatedLegendList as ReanimatedLegendList } from "@legendapp/list/reanimated";
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
+// Experimental entrypoint
+import { KeyboardAvoidingLegendList as KeyboardAvoidingLegendListExperimental } from "@legendapp/list/keyboard-test";
 ```
 
 <Callout>
@@ -201,6 +203,14 @@ horizontal?: boolean; // default: false
 ```
 
 Renders all items in the list in horizontal.
+
+### useWindowScroll
+
+```ts
+useWindowScroll?: boolean; // default: false
+```
+
+Web only. When true, LegendList listens to window/body scrolling instead of rendering its own scrollable container.
 
 ### initialContainerPoolRatio
 
@@ -728,15 +738,16 @@ Returns the platform scroll responder object for advanced integrations.
 ### scrollToIndex
 
 ```ts
-scrollToIndex: (params: {
+scrollToIndex(params: {
   index: number;
   animated?: boolean;
   viewOffset?: number;
   viewPosition?: number;
-});
+}): Promise<void>;
 ```
 
 Scrolls to the item at the specified index. For the most accurate results, provide good size estimates via [getEstimatedItemSize](#getestimateditemsize) or [getFixedItemSize](#getfixeditemsize). Size stabilization is enabled by default for dynamic items.
+Returns a promise that resolves when the imperative scroll finishes (or immediately if no scroll was needed).
 
 ### scrollToOffset
 
@@ -744,7 +755,7 @@ Scrolls to the item at the specified index. For the most accurate results, provi
 scrollToOffset(params: {
   offset: number;
   animated?: boolean;
-});
+}): Promise<void>;
 ```
 
 Scroll to a specific content pixel offset in the list.
@@ -762,7 +773,7 @@ scrollToItem(params: {
   item: Item,
   viewOffset?: number;
   viewPosition?: number;
-});
+}): Promise<void>;
 ```
 
 Requires linear scan through data - use [scrollToIndex](#scrolltoindex) instead if possible. Provided for compatibility with FlatList only.
@@ -778,7 +789,7 @@ Valid parameters:
 scrollToEnd(params?: {
   animated?: boolean,
   viewOffset?: number,
-});
+}): Promise<void>;
 ```
 
 Scrolls to the end of the list.
@@ -795,7 +806,7 @@ Scrolls the index into view. If the index is above the viewable range it will be
 scrollIndexIntoView(params: {
   animated?: boolean | undefined;
   index: number;
-}): void
+}): Promise<void>
 ```
 
 ```jsx
@@ -832,7 +843,7 @@ Scrolls the item into view. If the item is above the viewable range it will be s
 scrollItemIntoView(params: {
   animated?: boolean | undefined;
   item: any;
-}): void;
+}): Promise<void>;
 ```
 
 ```jsx
@@ -1108,7 +1119,7 @@ type LegendListState = {
   ) => () => void;
   listenToPosition: (key: string, callback: (value: number) => void) => () => void;
   positionAtIndex: (index: number) => number;
-  positions: Map<string, number>;
+  positionByKey: (key: string) => number | undefined;
   scroll: number;
   scrollLength: number;
   scrollVelocity: number;
@@ -1131,7 +1142,7 @@ type LegendListState = {
 - `scroll`: current scroll offset
 - `scrollLength`: viewport length along scroll axis
 - `scrollVelocity`: current estimated scroll velocity
-- `positions`: key-to-position map of known item offsets
+- `positionByKey(key)`: known position for an item key (if available)
 - `sizes`: key-to-size map of known measured item sizes
 - `positionAtIndex(index)`: known position for an index
 - `sizeAtIndex(index)`: known measured size for an index
@@ -1157,8 +1168,9 @@ type LegendListState = {
 ### Caveats
 
 - `positionAtIndex` and `sizeAtIndex` assume the item has been measured; for unmeasured items values may be unavailable.
+- `positionByKey` can return `undefined` if a key is unknown or not measured yet.
 - `elementAtIndex` can return `null`/`undefined` when the item is not currently rendered.
-- `positions` and `sizes` are live `Map` references that update as list state changes.
+- `sizes` is a live `Map` reference that updates as list state changes.
 
 ### Examples
 
@@ -1693,6 +1705,26 @@ export function ReanimatedExample() {
 }
 ```
 
+### itemLayoutAnimation
+
+Use `itemLayoutAnimation` to apply a Reanimated layout transition to list item containers.
+
+```tsx
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+import { LinearTransition } from "react-native-reanimated";
+
+export function ReanimatedLayoutTransitionExample() {
+  return (
+    <AnimatedLegendList
+      data={data}
+      itemLayoutAnimation={LinearTransition.duration(280)}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+    />
+  );
+}
+```
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -1732,6 +1764,12 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 ## KeyboardAvoidingLegendList
 
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
+
+An experimental entrypoint is also available at `@legendapp/list/keyboard-test`. It currently uses `KeyboardChatScrollView` and is likely to replace `@legendapp/list/keyboard` soon.
+
+```ts
+import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard-test";
+```
 
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
 
@@ -1885,9 +1923,22 @@ export function MyList() {
 }
 ```
 
+### Window Scroll Pages
+
+If your page already scrolls at the window level (instead of a fixed-height list container), set `useWindowScroll`.
+
+```jsx
+<LegendList
+  data={items}
+  keyExtractor={(item) => item.id}
+  renderItem={renderItem}
+  useWindowScroll
+/>
+```
+
 ### Important layout notes
 
-- The scroll container must have a height. Use a fixed height, or a flex parent with a set height.
+- The scroll container must have a height (unless you use `useWindowScroll`). Use a fixed height, or a flex parent with a set height.
 - `style` and `contentContainerStyle` accept CSS properties on web.
 - If you are rendering inside a flex layout, be sure the list can actually shrink (e.g. `minHeight: 0` on the parent).
 

@@ -40,6 +40,26 @@ export function ReanimatedExample() {
 }
 ```
 
+### itemLayoutAnimation
+
+Use `itemLayoutAnimation` to apply a Reanimated layout transition to list item containers.
+
+```tsx
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+import { LinearTransition } from "react-native-reanimated";
+
+export function ReanimatedLayoutTransitionExample() {
+  return (
+    <AnimatedLegendList
+      data={data}
+      itemLayoutAnimation={LinearTransition.duration(280)}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+    />
+  );
+}
+```
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -79,6 +99,12 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 ## KeyboardAvoidingLegendList
 
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
+
+An experimental entrypoint is also available at `@legendapp/list/keyboard-test`. It currently uses `KeyboardChatScrollView` and is likely to replace `@legendapp/list/keyboard` soon.
+
+```ts
+import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard-test";
+```
 
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
 
