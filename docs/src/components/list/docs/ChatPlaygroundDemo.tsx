@@ -304,7 +304,8 @@ export function ChatPlaygroundDemo() {
     const [inputText, setInputText] = React.useState('');
     const [incomingSpeedSec, setIncomingSpeedSec] = React.useState<number>(5);
     const [loadOlderDelayMs, setLoadOlderDelayMs] = React.useState<number>(0);
-    const [threshold, setThreshold] = React.useState<number>(0.1);
+    const [maintainScrollAtEndThreshold, setMaintainScrollAtEndThreshold] = React.useState<number>(0.1);
+    const [startReachedThreshold, setStartReachedThreshold] = React.useState<number>(0.2);
     const [showScrollToLatest, setShowScrollToLatest] = React.useState<boolean>(false);
     const [isTyping, setIsTyping] = React.useState<boolean>(false);
     const [isLoadingOlder, setIsLoadingOlder] = React.useState<boolean>(false);
@@ -320,7 +321,7 @@ export function ChatPlaygroundDemo() {
     React.useEffect(() => {
         const raf = requestAnimationFrame(() => updateScrollToLatestVisibility());
         return () => cancelAnimationFrame(raf);
-    }, [rows.length, threshold, updateScrollToLatestVisibility]);
+    }, [maintainScrollAtEndThreshold, rows.length, updateScrollToLatestVisibility]);
 
     React.useEffect(() => {
         const clearAllTimeouts = () => {
@@ -449,7 +450,7 @@ export function ChatPlaygroundDemo() {
 
     return (
         <div className="overflow-hidden rounded-xl border border-zinc-700">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3 border-b border-zinc-700 bg-[#111214] p-3">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3 border-b border-zinc-700 bg-[#111214] p-3">
                 <label className="flex flex-col gap-1.5 text-xs text-zinc-300">
                     Incoming speed
                     <select
@@ -483,9 +484,24 @@ export function ChatPlaygroundDemo() {
                 <label className="flex flex-col gap-1.5 text-xs text-zinc-300">
                     maintainScrollAtEndThreshold
                     <select
-                        onChange={(event) => setThreshold(Number(event.target.value))}
+                        onChange={(event) => setMaintainScrollAtEndThreshold(Number(event.target.value))}
                         className="rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-2 text-[13px] text-zinc-200"
-                        value={threshold}
+                        value={maintainScrollAtEndThreshold}
+                    >
+                        {THRESHOLD_OPTIONS.map((option) => (
+                            <option key={option} value={option}>
+                                {option.toFixed(1)}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+
+                <label className="flex flex-col gap-1.5 text-xs text-zinc-300">
+                    onStartReachedThreshold
+                    <select
+                        onChange={(event) => setStartReachedThreshold(Number(event.target.value))}
+                        className="rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-2 text-[13px] text-zinc-200"
+                        value={startReachedThreshold}
                     >
                         {THRESHOLD_OPTIONS.map((option) => (
                             <option key={option} value={option}>
@@ -506,17 +522,17 @@ export function ChatPlaygroundDemo() {
                 <LegendList<ChatRow>
                     alignItemsAtEnd
                     ListFooterComponent={<div className="h-4" />}
-                    className="min-h-0 flex-1 bg-[#0d0f12]"
+                    className="min-h-0 flex-1 bg-[#0d0f12] overscroll-contain"
                     data={rows}
                     estimatedItemSize={90}
                     initialScrollIndex={Math.max(rows.length - 1, 0)}
                     keyExtractor={(item) => item.id}
                     maintainScrollAtEnd
-                    maintainScrollAtEndThreshold={threshold}
+                    maintainScrollAtEndThreshold={maintainScrollAtEndThreshold}
                     maintainVisibleContentPosition
                     onScroll={updateScrollToLatestVisibility}
                     onStartReached={handleStartReached}
-                    onStartReachedThreshold={0.2}
+                    onStartReachedThreshold={startReachedThreshold}
                     ref={listRef}
                     renderItem={renderRow}
                     stickyHeaderIndices={stickyHeaderIndices}

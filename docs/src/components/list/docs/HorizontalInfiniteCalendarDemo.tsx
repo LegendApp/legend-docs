@@ -9,6 +9,7 @@ const EXTEND_BY = 5;
 const INITIAL_LEFT_INDEX = 1;
 const DAYS_IN_GRID = 42;
 const EPOCH_YEAR = 1970;
+const CALENDAR_VIEWPORT_HEIGHT = 320;
 
 const MONTH_LABEL_FORMATTER = new Intl.DateTimeFormat(undefined, {
     month: 'long',
@@ -74,7 +75,6 @@ function buildMonthGrid(offset: number): MonthCell[] {
 export function HorizontalInfiniteCalendarDemo() {
     const listRef = React.useRef<LegendListRef | null>(null);
     const containerRef = React.useRef<HTMLDivElement | null>(null);
-    const pendingScrollIndexRef = React.useRef<number | null>(null);
 
     const now = React.useMemo(() => new Date(), []);
     const todayOffset = React.useMemo(() => yearMonthToOffset(now.getFullYear(), now.getMonth()), [now]);
@@ -88,13 +88,21 @@ export function HorizontalInfiniteCalendarDemo() {
     const monthsRef = React.useRef(months);
     const leftIndexRef = React.useRef(leftIndex);
 
-    React.useEffect(() => {
-        monthsRef.current = months;
-    }, [months]);
+    const setMonthsSynced = React.useCallback((nextMonths: number[]) => {
+        monthsRef.current = nextMonths;
+        setMonths(nextMonths);
+    }, []);
 
-    React.useEffect(() => {
-        leftIndexRef.current = leftIndex;
-    }, [leftIndex]);
+    const setLeftIndexSynced = React.useCallback((nextLeftIndex: number) => {
+        leftIndexRef.current = nextLeftIndex;
+        setLeftIndex(nextLeftIndex);
+    }, []);
+
+    const scrollToIndexNextFrame = React.useCallback((index: number, animated: boolean) => {
+        requestAnimationFrame(() => {
+            listRef.current?.scrollToIndex({ animated, index });
+        });
+    }, []);
 
     React.useEffect(() => {
         const node = containerRef.current;
@@ -108,17 +116,6 @@ export function HorizontalInfiniteCalendarDemo() {
 
         return () => observer.disconnect();
     }, []);
-
-    React.useEffect(() => {
-        const pendingIndex = pendingScrollIndexRef.current;
-        if (pendingIndex === null) return;
-
-        pendingScrollIndexRef.current = null;
-
-        requestAnimationFrame(() => {
-            listRef.current?.scrollToIndex({ animated: false, index: pendingIndex });
-        });
-    }, [months]);
 
     const itemWidth = React.useMemo(() => {
         if (!viewportWidth) return 360;
@@ -134,13 +131,10 @@ export function HorizontalInfiniteCalendarDemo() {
         const shiftedIndex = leftIndexRef.current + EXTEND_BY;
         const resolvedIndex = nextLeftIndex ?? shiftedIndex;
 
-        monthsRef.current = nextMonths;
-        leftIndexRef.current = resolvedIndex;
-
-        setMonths(nextMonths);
-        setLeftIndex(resolvedIndex);
-        pendingScrollIndexRef.current = resolvedIndex;
-    }, []);
+        setMonthsSynced(nextMonths);
+        setLeftIndexSynced(resolvedIndex);
+        scrollToIndexNextFrame(resolvedIndex, false);
+    }, [scrollToIndexNextFrame, setLeftIndexSynced, setMonthsSynced]);
 
     const appendMonths = React.useCallback(() => {
         const currentMonths = monthsRef.current;
@@ -148,9 +142,8 @@ export function HorizontalInfiniteCalendarDemo() {
         const appended = buildMonthOffsets(lastOffset + 1, EXTEND_BY);
         const nextMonths = [...currentMonths, ...appended];
 
-        monthsRef.current = nextMonths;
-        setMonths(nextMonths);
-    }, []);
+        setMonthsSynced(nextMonths);
+    }, [setMonthsSynced]);
 
     const handleStartReached = React.useCallback(() => {
         prependMonths();
@@ -166,10 +159,9 @@ export function HorizontalInfiniteCalendarDemo() {
             const maxLeft = Math.max(0, monthsRef.current.length - MONTHS_IN_VIEW);
             const snappedIndex = clamp(Math.round(x / itemWidth), 0, maxLeft);
 
-            leftIndexRef.current = snappedIndex;
-            setLeftIndex(snappedIndex);
+            setLeftIndexSynced(snappedIndex);
         },
-        [itemWidth],
+        [itemWidth, setLeftIndexSynced],
     );
 
     const handleScroll = React.useCallback(
@@ -179,11 +171,10 @@ export function HorizontalInfiniteCalendarDemo() {
             const nextLeftIndex = clamp(Math.round(x / itemWidth), 0, maxLeft);
 
             if (nextLeftIndex !== leftIndexRef.current) {
-                leftIndexRef.current = nextLeftIndex;
-                setLeftIndex(nextLeftIndex);
+                setLeftIndexSynced(nextLeftIndex);
             }
         },
-        [itemWidth],
+        [itemWidth, setLeftIndexSynced],
     );
 
     const goByMonths = React.useCallback(
@@ -202,23 +193,19 @@ export function HorizontalInfiniteCalendarDemo() {
             const maxLeft = Math.max(0, monthsRef.current.length - MONTHS_IN_VIEW);
             const target = clamp(currentIndex + delta, 0, maxLeft);
 
-            leftIndexRef.current = target;
-            setLeftIndex(target);
+            setLeftIndexSynced(target);
             listRef.current?.scrollToIndex({ animated: true, index: target });
         },
-        [appendMonths, prependMonths],
+        [appendMonths, prependMonths, setLeftIndexSynced],
     );
 
     const goToToday = React.useCallback(() => {
         const nextMonths = buildMonthOffsets(todayOffset - INITIAL_LEFT_INDEX - 1, INITIAL_WINDOW_SIZE);
 
-        monthsRef.current = nextMonths;
-        leftIndexRef.current = INITIAL_LEFT_INDEX;
-
-        setMonths(nextMonths);
-        setLeftIndex(INITIAL_LEFT_INDEX);
-        pendingScrollIndexRef.current = INITIAL_LEFT_INDEX;
-    }, [todayOffset]);
+        setMonthsSynced(nextMonths);
+        setLeftIndexSynced(INITIAL_LEFT_INDEX);
+        scrollToIndexNextFrame(INITIAL_LEFT_INDEX, false);
+    }, [scrollToIndexNextFrame, setLeftIndexSynced, setMonthsSynced, todayOffset]);
 
     const visibleCenterLabel = React.useMemo(() => {
         const centerOffset = months[leftIndex + 1] ?? months[leftIndex] ?? months[0] ?? todayOffset;
@@ -294,9 +281,9 @@ export function HorizontalInfiniteCalendarDemo() {
                 </div>
             </div>
 
-            <div ref={containerRef} >
+            <div ref={containerRef} style={{ height: CALENDAR_VIEWPORT_HEIGHT }}>
                 <LegendList<number>
-                    className="min-h-0 py-4"
+                    className="h-full min-h-0 py-4 overscroll-contain"
                     data={months}
                     estimatedItemSize={itemWidth}
                     horizontal

@@ -1829,6 +1829,17 @@ This demo combines the core behaviors needed for production chat feeds:
 
 <ChatPlaygroundDemo />
 
+## Horizontal Infinite Calendar
+
+This demo shows a month-based calendar timeline with:
+
+- horizontal scrolling
+- 3 months visible at a time
+- buttons for previous/next month and today
+- true unbounded scrolling via recentering
+
+<HorizontalInfiniteCalendarDemo />
+
 
 ## react/getting-started
 
