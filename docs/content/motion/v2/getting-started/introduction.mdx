@@ -83,13 +83,13 @@ See the [Overview page](../../usage/overview) for a more detailed usage guide.
 
 **Interoperable with React**: At [Legend](https://legendapp.com) and [Bravely](https://bravely.io) our web apps mix React.js with components from our React Native apps using react-native-web, and we wanted them to work the same way.
 
-**High performance**: Performance is extremely important to us so we designed for maximum performance with as little overhead as possible, using 0 dependences and minimal code. This library is tree shakeable and comes in at a total of 3kb gzipped if you use every feature.
+**High performance**: Performance is extremely important to us so we designed for maximum performance with as little overhead as possible, using 0 dependencies and minimal code. This library is tree-shakeable and comes in at a total of 3kb gzipped if you use every feature.
 
-**Svg and Gradients**: The [Bravely](https://bravely.io) app makes heavy use of gradient and svg animations, so we wanted to make that easy for our developers and yours.
+**SVG and Gradients**: The [Bravely](https://bravely.io) app makes heavy use of gradient and SVG animations, so we wanted to make that easy for our developers and yours.
 
 ## How it works
 
-To keep the code small and and performance high, we tried to design this as simply as possible.
+To keep the code small and performance high, we tried to design this as simply as possible.
 
 When a prop passed into `animate` changes, the `Motion` component starts an `Animated.spring` or `Animated.timing` animation with the new prop. If the prop is a string or array, it needs to be interpolated, so it bounces the value of an `AnimatedInterpolation` between 0 and 1, interpolating between the previous prop and the new prop.
 

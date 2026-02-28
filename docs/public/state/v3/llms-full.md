@@ -215,7 +215,7 @@ Legend-State is a super fast all-in-one local and remote state library that help
 - [Why Legend-State](./intro/why) - Why you'll love it
 - [Performance](./intro/fast) - How it's so fast
 
-### Core Usage
+### Core Usage  
 - [Observable](./usage/observable) - Creating and using observables
 - [Reactivity](./usage/reactivity) - Tracking changes
 - [Helper Functions](./usage/helper-functions) - Useful utilities
@@ -925,15 +925,15 @@ Observables prevent direct assignment, favoring more purposeful `set` and `assig
 
 Based on discussions with the React Compiler team and a lot of feedback from the community, we're changing the suggested primary way of using observables in React. The old ways will still work for a while so we don't break existing apps and we have some tools to aid in the migration, which can be done slowly over time.
 
-Basically, we need to change from `observer` tracking all `get()` calls to using a `useValue` hook instead, which is just a renamed `useValue`.
+Basically, we need to change from `observer` tracking all `get()` calls to using a `useValue` hook instead, which is just a renamed `useSelector`.
 
-#### useValue to useValue
+#### useSelector to useValue
 
-`useValue` is renamed to `useValue`, because the term "Selector" has a lot of baggage from other state libraries and many new users found it confusing. `useValue` will still work for a while so you can make the change slowly if you want, or a global find and replace should work.
+`useSelector` is renamed to `useValue`, because the term "Selector" has a lot of baggage from other state libraries and many new users found it confusing. `useSelector` will still work for a while so you can make the change slowly if you want, or a global find and replace should work.
 
 ```jsx
 // 🔴 From
-const value = useValue(state$.value)
+const value = useSelector(state$.value)
 // ✅ To
 const value = useValue(state$.value)
 ```
@@ -962,7 +962,7 @@ const Component = observer(() => {
 
 #### The full details
 
-- ✅ A new hook `useValue` (just `useValue` with a new name) is now the default way to consume observables
+- ✅ A new hook `useValue` (just `useSelector` with a new name) is now the default way to consume observables
 
 ```jsx
 const state$ = observable({ value: 10 })
@@ -1517,7 +1517,7 @@ Just change `evt.dispatch()` to `evt.fire()` and all is good 👍.
 
 ### Deprecated automatic observing
 
-We are deprecating the automatic observing that depended on hooking into React's internals. Components will no longer track observables automatically, but you can easily it per component in a few ways:
+We are deprecating the automatic observing that depended on hooking into React's internals. Components will no longer track observables automatically, but you can easily do it per component in a few ways:
 
 - Wrap components in `observer` to make them track automatically
 - Wrap observable access in `useValue` to return a value and track automatically.
@@ -2456,12 +2456,12 @@ function Component() {
 
 ### useValue
 
-<Callout title="Migration from useValue$">
-In previous versions this was called useValue or use$. If you were using `useValue` or `use$` it will still work for a while, but we suggest changing them to `useValue` as we'll remove `useValue` in a later version. Many people were unsure of what a "selector" was so it was unclear what it did. Plus, `useValue` is shorter 😀
+<Callout title="Migration from useSelector or use$">
+In previous versions this was called 'useSelector' or 'use$'. If you were using `useSelector` or `use$` it will still work for a while, but we suggest changing them to `useValue` as we'll remove `useSelector` and 'use$' in a later version. Many people were unsure of what a "selector" was so it was unclear what it did. Plus, `useValue` is shorter 😀
 </Callout>
 
 <Callout type="warn" title="Migration from use$">
-`use$` was not compatible with React Compiler, so if you're using Compiler we strongly suggest migrating from `useValue`.
+`use$` was not compatible with React Compiler, so if you're using Compiler we strongly suggest migrating to `useValue`.
 </Callout>
 
 `useValue` computes a value and automatically listens to any observables accessed while running, and only re-renders if the computed value changes. This can take either an observable or a function that consumes observables.
@@ -3513,7 +3513,8 @@ const profile$ = observable(syncedCrud({
     update: updateProfile,
     delete: deleteProfile,
 }))
-// profile$.get() is a Profile
+
+profile$.get() // => Profile
 ```
 
 The behavior when using `list` is:
@@ -3532,7 +3533,8 @@ const profiles$ = observable(syncedCrud({
     update: updateProfile,
     delete: deleteProfile,
 }))
-// profile$.get() is a Record<string, Profile>
+
+profiles$.get() // => Record<string, Profile>
 ```
 
 The `list` function expects an array of rows to be returned from your API.
@@ -3940,7 +3942,7 @@ const profile$ = observable(syncedKeel({
 
 The behavior when using `list` is:
 - **list**: Observable value is an object containing the listed values keyed by id
-- **create**: Adding a new value to the object will will create
+- **create**: Adding a new value to the object will create
 - **update**: Updating a child value will update it with the changed fields
 - **delete**: Setting a child value to null or undefined, or calling `delete()`, will delete
 
@@ -4671,7 +4673,7 @@ Legend-State includes helpers for easily stringifying data or you can create you
 
 This can be used in many ways. Some examples:
 
-1. **Migrate between versions**: If the local data has legacy values in it, you can can transform it to the latest format. This can be done by either keeping a version number or just checking for specific fields. This example migrates old persisted data by checking the version and old field name.
+1. **Migrate between versions**: If the local data has legacy values in it, you can transform it to the latest format. This can be done by either keeping a version number or just checking for specific fields. This example migrates old persisted data by checking the version and old field name.
 
 ```ts
 import { observable } from "@legendapp/state";

@@ -4,15 +4,15 @@
 
 Based on discussions with the React Compiler team and a lot of feedback from the community, we're changing the suggested primary way of using observables in React. The old ways will still work for a while so we don't break existing apps and we have some tools to aid in the migration, which can be done slowly over time.
 
-Basically, we need to change from `observer` tracking all `get()` calls to using a `useValue` hook instead, which is just a renamed `useValue`.
+Basically, we need to change from `observer` tracking all `get()` calls to using a `useValue` hook instead, which is just a renamed `useSelector`.
 
-#### useValue to useValue
+#### useSelector to useValue
 
-`useValue` is renamed to `useValue`, because the term "Selector" has a lot of baggage from other state libraries and many new users found it confusing. `useValue` will still work for a while so you can make the change slowly if you want, or a global find and replace should work.
+`useSelector` is renamed to `useValue`, because the term "Selector" has a lot of baggage from other state libraries and many new users found it confusing. `useSelector` will still work for a while so you can make the change slowly if you want, or a global find and replace should work.
 
 ```jsx
 // 🔴 From
-const value = useValue(state$.value)
+const value = useSelector(state$.value)
 // ✅ To
 const value = useValue(state$.value)
 ```
@@ -41,7 +41,7 @@ const Component = observer(() => {
 
 #### The full details
 
-- ✅ A new hook `useValue` (just `useValue` with a new name) is now the default way to consume observables
+- ✅ A new hook `useValue` (just `useSelector` with a new name) is now the default way to consume observables
 
 ```jsx
 const state$ = observable({ value: 10 })
@@ -596,7 +596,7 @@ Just change `evt.dispatch()` to `evt.fire()` and all is good 👍.
 
 ### Deprecated automatic observing
 
-We are deprecating the automatic observing that depended on hooking into React's internals. Components will no longer track observables automatically, but you can easily it per component in a few ways:
+We are deprecating the automatic observing that depended on hooking into React's internals. Components will no longer track observables automatically, but you can easily do it per component in a few ways:
 
 - Wrap components in `observer` to make them track automatically
 - Wrap observable access in `useValue` to return a value and track automatically.

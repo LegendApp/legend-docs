@@ -36,6 +36,7 @@ export function LibraryDocsLayout({ tree, title, libraryBase, versions, children
             sidebar={{
                 defaultOpenLevel: 1,
                 collapsible: false,
+                prefetch: false,
                 banner: <SidebarSearchBanner />,
                 tabs,
             }}

@@ -22,7 +22,8 @@ const profile$ = observable(syncedCrud({
     update: updateProfile,
     delete: deleteProfile,
 }))
-// profile$.get() is a Profile
+
+profile$.get() // => Profile
 ```
 
 The behavior when using `list` is:
@@ -41,7 +42,8 @@ const profiles$ = observable(syncedCrud({
     update: updateProfile,
     delete: deleteProfile,
 }))
-// profile$.get() is a Record<string, Profile>
+
+profiles$.get() // => Record<string, Profile>
 ```
 
 The `list` function expects an array of rows to be returned from your API.

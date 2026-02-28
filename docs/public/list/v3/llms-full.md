@@ -630,12 +630,16 @@ import { SectionList } from "@legendapp/list/section-list";
 ### Quick example
 
 ```tsx
+import { Text } from "react-native";
 import { SectionList } from "@legendapp/list/section-list";
 
 const sections = [
   { title: "A", data: ["Apple", "Avocado"] },
   { title: "B", data: ["Banana", "Blueberry"] },
 ];
+
+const Header = ({ title }: { title: string }) => <Text>{title}</Text>;
+const Row = ({ label }: { label: string }) => <Text>{label}</Text>;
 
 export function MySectionList() {
   return (
@@ -1000,6 +1004,14 @@ A hook that provides callbacks when an item's viewability changes. This hook reg
 import { useState } from "react";
 import { View, Text } from "react-native";
 import { useViewability } from "@legendapp/list/react-native"
+
+function ExpensiveComponent() {
+    return <Text>Expensive content</Text>;
+}
+
+function PlaceholderComponent() {
+    return <Text>Placeholder</Text>;
+}
 
 export function ItemComponent({ item }) {
     const [isVisible, setIsVisible] = useState(false);

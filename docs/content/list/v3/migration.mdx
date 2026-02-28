@@ -26,10 +26,14 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 
 ## 🔄 Breaking changes from v2
 
-1) **`maintainVisibleContentPosition` behavior**
-   - v2 default: always anchors during data changes
-   - v3 default: only stabilizes during scroll/layout changes
-   - To restore v2 behavior: `maintainVisibleContentPosition={{ data: true }}` or simply `true`
+1) **`maintainVisibleContentPosition` defaults**
+   - v3 now enables scroll-position stabilization on size changes by default
+   - Default behavior is equivalent to `maintainVisibleContentPosition={{ size: true, data: false }}`
+   - Toggle specific behavior as needed:
+     - `maintainVisibleContentPosition={{ data: true }}` to anchor on data changes too
+     - `maintainVisibleContentPosition={{ size: false }}` to disable size/layout stabilization
+     - `maintainVisibleContentPosition={true}` to enable both `size` and `data`
+     - `maintainVisibleContentPosition={false}` to disable both
 
 2) **Size callbacks argument order**
    - `getEstimatedItemSize` is now `(item, index, type)`
@@ -49,11 +53,9 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 - Update size callback signatures to `(item, index, type)`
 - Replace `stickyIndices` with `stickyHeaderIndices`
 - Move imports to typed platform entrypoints (`/react-native` or `/react`)
-- If you relied on data‑change anchoring, set `maintainVisibleContentPosition={{ data: true }}`
-- (Optional) Consider `alwaysRender` for pinned items
 
 ## Install
 
 ```npm
-npm install @legendapp/list
+npm install @legendapp/list@beta
 ```
