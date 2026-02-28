@@ -1,0 +1,3 @@
+#nd-page.blog-list-page::before {
+    content: none !important;
+}

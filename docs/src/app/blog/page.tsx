@@ -5,6 +5,7 @@ import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import { removeFilenameDatePrefix, sanitizeBlogPageTree } from '@/lib/blog-routing';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { CustomNavbar } from '@/components/navbar';
+import '@/styles/blog-list.css';
 
 export default async function BlogPage() {
     const posts = source
@@ -39,12 +40,13 @@ export default async function BlogPage() {
             }}
         >
             <DocsPage
+                className="blog-list-page"
                 breadcrumb={{ enabled: false }}
                 footer={{ enabled: false }}
                 tableOfContent={{ enabled: false }}
             >
-                <DocsTitle>Legend Open Source Blog</DocsTitle>
-                <DocsDescription>Latest updates from the Legend open source projects</DocsDescription>
+                <DocsTitle className="text-center">Legend Open Source Blog</DocsTitle>
+                <DocsDescription className="text-center">Latest updates from the Legend open source projects</DocsDescription>
 
                 <DocsBody>
                     <div className="not-prose">
