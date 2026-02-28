@@ -48,11 +48,36 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
      - React Native: `@legendapp/list/react-native`
      - React (Web): `@legendapp/list/react`
 
+5) **Keyboard integration entrypoint update**
+   - v2 keyboard docs used `@legendapp/list/keyboard-controller` and `LegendList`.
+   - In v3 use `@legendapp/list/keyboard` and import `KeyboardAvoidingLegendList`.
+   - `LegendList` is no longer exported from the `@legendapp/list/keyboard` entrypoint.
+
+6) **Imperative scroll methods are async**
+   - These ref methods now return `Promise<void>`:
+     - `scrollIndexIntoView`
+     - `scrollItemIntoView`
+     - `scrollToEnd`
+     - `scrollToIndex`
+     - `scrollToItem`
+     - `scrollToOffset`
+   - If you run logic after a programmatic scroll, `await` the call.
+
+7) **`getState()` shape changed for advanced integrations**
+   - `state.positions` is no longer part of the public `getState()` return value.
+   - Replace direct map access with:
+     - `positionAtIndex(index)`
+     - `positionByKey(key)`
+   - `getState()` now also exposes listener helpers (`listen`, `listenToPosition`) and `scrollVelocity`.
+
 ## Migration checklist
 
 - Update size callback signatures to `(item, index, type)`
 - Replace `stickyIndices` with `stickyHeaderIndices`
 - Move imports to typed platform entrypoints (`/react-native` or `/react`)
+- Update keyboard imports from `@legendapp/list/keyboard-controller` to `@legendapp/list/keyboard` and use `KeyboardAvoidingLegendList`
+- `await` imperative scroll calls if your code depends on post-scroll timing
+- Update advanced `getState()` consumers to use `positionAtIndex` / `positionByKey` instead of `positions`
 
 ## Install
 
