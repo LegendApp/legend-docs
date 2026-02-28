@@ -1,10 +1,10 @@
 import { source } from '@/lib/sources/blog';
 import Link from 'next/link';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { CustomNavbar } from '@/components/navbar';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import { removeFilenameDatePrefix, sanitizeBlogPageTree } from '@/lib/blog-routing';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
+import { CustomNavbar } from '@/components/navbar';
 
 export default async function BlogPage() {
     const posts = source
@@ -30,8 +30,10 @@ export default async function BlogPage() {
     return (
         <DocsLayout
             tree={tree}
-            sidebar={{}}
-            nav={{ component: <CustomNavbar /> }}
+            sidebar={{
+                collapsible: false
+            }}
+            nav={{ component: <CustomNavbar hideSidebarTrigger /> }}
             containerProps={{
                 className: 'pt-[var(--fd-nav-height)]',
             }}

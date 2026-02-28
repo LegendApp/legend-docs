@@ -5,12 +5,12 @@ import type { Metadata } from 'next';
 import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { CustomNavbar } from '@/components/navbar';
 import { getMDXComponents } from '@/mdx-components';
 import { CodeBlock, CodeBlockProps, Pre } from 'fumadocs-ui/components/codeblock';
 import { extractDateFromSlug } from '@/lib/extractDateFromSlug';
 import '@/styles/blog-post.css';
 import { findOriginalBlogSlug, removeFilenameDatePrefix, sanitizeBlogPageTree } from '@/lib/blog-routing';
+import { CustomNavbar } from '@/components/navbar';
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const resolvedParams = await params;
@@ -35,9 +35,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     return (
         <DocsLayout
-            nav={{ component: <CustomNavbar /> }}
             tree={tree}
-            sidebar={{}}
+            sidebar={{ collapsible: false }}
+            nav={{ component: <CustomNavbar hideSidebarTrigger /> }}
             containerProps={{
                 className: 'pt-[var(--fd-nav-height)]',
             }}

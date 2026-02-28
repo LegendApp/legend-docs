@@ -86,7 +86,10 @@ function OptionalSidebarTrigger() {
     );
 }
 
-export function CustomNavbar() {
+export function CustomNavbar({
+    hideSidebarTrigger = false,
+    roundedBottom = false,
+}: { hideSidebarTrigger?: boolean; roundedBottom?: boolean } = {}) {
     const pathname = usePathname();
     const currentPath = normalizePath(pathname);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -141,9 +144,9 @@ export function CustomNavbar() {
                 key={label}
                 href={href.replace('~', '')}
                 className={classNames(
-                    'font-medium transition-colors',
+                    'text-sm  transition-colors',
                     isCompact && 'rounded px-3 py-2',
-                    isActive ? 'text-blue-400 hover:text-blue-300' : 'text-foreground/70 hover:text-foreground/90',
+                    isActive ? 'text-blue-400 hover:text-blue-300' : 'text-fd-muted-foreground hover:text-fd-accent-foreground',
                 )}
                 onClick={() => {
                     if (isCompact) {
@@ -158,8 +161,13 @@ export function CustomNavbar() {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 h-[50px]">
-                <div className="mx-auto flex h-full w-full max-w-[97rem] items-center justify-between border-b bg-fd-background/20 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
+            <nav className="fixed top-0 left-0 right-0 z-50 h-14">
+                <div
+                    className={classNames(
+                        'mx-auto flex h-full w-full max-w-[97rem] items-center justify-between border-b bg-fd-background/20 px-4 backdrop-blur-sm sm:px-6 lg:px-8',
+                        roundedBottom && 'rounded-b-lg',
+                    )}
+                >
                     <Link href="/" className="flex items-center gap-2">
                         <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
 
@@ -210,9 +218,9 @@ export function CustomNavbar() {
                         </button>
                         {searchToggleConfig?.enabled !== false ? searchToggleNode : null}
 
-                        <OptionalSidebarTrigger />
+                        {/* {!hideSidebarTrigger && <OptionalSidebarTrigger />} */}
                     </div>
-                    <div className="hidden md:flex items-center gap-8 text-sm">
+                    <div className="hidden md:flex items-center gap-6 text-sm">
                         {navItems.map(({ label, href, matches }) => renderNavLink(label, href, matches))}
                     </div>
                 </div>
