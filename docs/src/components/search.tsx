@@ -145,7 +145,7 @@ export default function StaticSearchDialog(props: SharedProps) {
     return (
         <SearchDialog search={search} onSearchChange={setSearch} isLoading={query.isLoading} {...props}>
             <SearchDialogOverlay />
-            <SearchDialogContent className="mt-10 md:mt-0">
+            <SearchDialogContent className="mt-10 bg-fd-popover/50 backdrop-blur-md md:mt-0">
                 <SearchDialogHeader>
                     <SearchDialogIcon />
                     <SearchDialogInput />
