@@ -1,6 +1,5 @@
 'use client';
 
-import { create } from '@orama/orama';
 import { useDocsSearch } from 'fumadocs-core/search/client';
 import {
     SearchDialog,
@@ -20,14 +19,6 @@ import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { FileText, Hash } from 'lucide-react';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function initOrama(): any {
-    return create({
-        schema: { _: 'string' },
-        language: 'english',
-    });
-}
 
 const iconByType: Record<SortedResult['type'], ReactNode> = {
     page: (
@@ -116,7 +107,6 @@ export default function StaticSearchDialog(props: SharedProps) {
 
     const { search, setSearch, query } = useDocsSearch({
         type: 'static',
-        initOrama,
         from: searchEndpoint,
     });
 
