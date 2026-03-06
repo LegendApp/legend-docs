@@ -1,7 +1,3 @@
-<Callout>
-Version 3 is currently **beta**. The React Native API is stable; web support is new and evolving.
-</Callout>
-
 Legend List is a high‑performance, virtualized list for **React Native and Web**. It’s a drop‑in replacement for FlatList/FlashList on mobile and a fast, DOM‑native list on the web.
 
 Compared to FlatList and FlashList, it's faster, simpler, and supports dynamic item sizes without hacks on React Native.
