@@ -42,6 +42,48 @@ function renderHighlights(nodes: HighlightedText[]): ReactNode {
     });
 }
 
+function stripMarkdownSyntax(text: string) {
+    return text
+        .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/(\*\*|__)(.*?)\1/g, '$2')
+        .replace(/(\*|_)(.*?)\1/g, '$2')
+        .replace(/~~(.*?)~~/g, '$1')
+        .replace(/^\s{0,3}(?:[-*+]|\d+\.)\s+/gm, '')
+        .replace(/^\s{0,3}>+\s?/gm, '')
+        .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+        .replace(/<\/?[^>]+>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function renderHighlightedMarkdown(content: string): ReactNode {
+    const parts = content.split(/(<mark>.*?<\/mark>)/gi);
+    const nodes: ReactNode[] = [];
+
+    for (const [index, part] of parts.entries()) {
+        if (!part) continue;
+
+        const match = part.match(/^<mark>([\s\S]*?)<\/mark>$/i);
+        const text = stripMarkdownSyntax(match ? match[1] : part);
+
+        if (!text) continue;
+
+        nodes.push(
+            match ? (
+                <span key={index} className="bg-fd-primary/10 text-fd-primary">
+                    {text}
+                </span>
+            ) : (
+                <span key={index}>{text}</span>
+            ),
+        );
+    }
+
+    return nodes;
+}
+
 function formatPath(url: string) {
     const [path, hash] = url.split('#');
     const cleanPath = decodeURI(path).replace(/^\//, '');
@@ -80,6 +122,20 @@ function getLibraryScope(path: string): string | null {
     return null;
 }
 
+function getVersionScope(path: string): string | null {
+    const segments = path.split('/').filter(Boolean);
+
+    if (segments.length < 2) {
+        return null;
+    }
+
+    if (!/^v\d+$/.test(segments[1])) {
+        return null;
+    }
+
+    return `/${segments[0]}/${segments[1]}`;
+}
+
 function SearchResultItem({ item, onClick }: { item: SortedResult; onClick: () => void }) {
     const pathLabel = formatPath(item.url);
 
@@ -92,7 +148,9 @@ function SearchResultItem({ item, onClick }: { item: SortedResult; onClick: () =
                     <div className="mt-1 h-4 w-1 rounded-sm bg-fd-muted-foreground/40" />
                 )}
                 <p className="min-w-0 flex-1 truncate font-medium text-fd-popover-foreground">
-                    {item.contentWithHighlights ? renderHighlights(item.contentWithHighlights) : item.content}
+                    {item.contentWithHighlights
+                        ? renderHighlights(item.contentWithHighlights)
+                        : renderHighlightedMarkdown(item.content)}
                 </p>
             </div>
             <div className="w-full text-xs text-fd-muted-foreground/80">{pathLabel}</div>
@@ -120,7 +178,7 @@ export default function StaticSearchDialog(props: SharedProps) {
         }
 
         const currentPath = normalizePath(pathname, basePath);
-        const scope = getLibraryScope(currentPath);
+        const scope = getVersionScope(currentPath) ?? getLibraryScope(currentPath);
 
         if (!scope) {
             return query.data;
