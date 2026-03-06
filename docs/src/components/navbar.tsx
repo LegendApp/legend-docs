@@ -99,8 +99,13 @@ export function CustomNavbar({
 
     const navItems = [
         {
-            label: 'Legend',
+            label: 'Legend App',
             href: '~/',
+            matches: ['~/'],
+        },
+        {
+            label: 'Home',
+            href: '/',
             matches: ['/'],
         },
         {

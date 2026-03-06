@@ -22,14 +22,31 @@ export const baseOptions: BaseLayoutProps = {
     },
     links: [
         {
-            text: 'Legend',
+            type: 'custom',
+            children: (
+                <a
+                    href="/"
+                    className="text-sm text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground"
+                >
+                    Legend App
+                </a>
+            ),
+        },
+        {
+            text: 'Home',
             url: '/',
             active: 'url',
         },
         {
-            text: 'Kit',
-            url: '/kit',
-            active: 'nested-url',
+            type: 'custom',
+            children: (
+                <a
+                    href="/kit"
+                    className="text-sm text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground"
+                >
+                    Kit
+                </a>
+            ),
         },
         {
             text: 'List',
