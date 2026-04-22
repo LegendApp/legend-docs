@@ -155,7 +155,8 @@ The `drawDistance` (defaults to `250`) is the buffer size in pixels above and be
 estimatedItemSize?: number;
 ```
 
-An estimated size for all items which is used to estimate the list layout before items actually render. This can help to provide a hint for how large items will be in the first frame and can speed up initial layout, but subsequent renders will use the average item size.
+Optional performance hint for the initial layout before items are measured.
+Legend List works without this prop, but providing a good estimate can reduce mount-time work by letting the list allocate a viewport-sized set of items more accurately before measurements are available. After the first render, Legend List uses measured item sizes and averages.
 
 ### estimatedListSize
 
@@ -189,8 +190,8 @@ Version token that forces the list to treat data as updated even when the array 
 getEstimatedItemSize?: (item: ItemT, index: number, itemType?: string) => number;
 ```
 
-An estimated size for each item which is used to estimate the list layout before items actually render.
-If omitted, LegendList uses measured averages (and initial `estimatedItemSize`). To log suggestions in development, enable [`suggestEstimatedItemSize`](#suggestestimateditemsize).
+Optional per-item performance hint for the initial layout before items are measured.
+If omitted, LegendList uses measured averages (and `estimatedItemSize` if provided). To log suggestions in development, enable [`suggestEstimatedItemSize`](#suggestestimateditemsize).
 
 ### getFixedItemSize
 

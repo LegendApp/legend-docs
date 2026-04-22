@@ -153,7 +153,8 @@ The `drawDistance` (defaults to `250`) is the buffer size in pixels above and be
 estimatedItemSize?: number;
 ```
 
-An estimated size for all items which is used to estimate the list layout before items actually render. This can help to provide a hint for how large items will be in the first frame and can speed up initial layout, but subsequent renders will use the average item size.
+Optional performance hint for the initial layout before items are measured.
+Legend List works without this prop, but providing a good estimate can reduce mount-time work by letting the list allocate a viewport-sized set of items more accurately before measurements are available. After the first render, Legend List uses measured item sizes and averages.
 
 ### estimatedListSize
 
@@ -187,8 +188,8 @@ Version token that forces the list to treat data as updated even when the array 
 getEstimatedItemSize?: (item: ItemT, index: number, itemType?: string) => number;
 ```
 
-An estimated size for each item which is used to estimate the list layout before items actually render.
-If omitted, LegendList uses measured averages (and initial `estimatedItemSize`). To log suggestions in development, enable [`suggestEstimatedItemSize`](#suggestestimateditemsize).
+Optional per-item performance hint for the initial layout before items are measured.
+If omitted, LegendList uses measured averages (and `estimatedItemSize` if provided). To log suggestions in development, enable [`suggestEstimatedItemSize`](#suggestestimateditemsize).
 
 ### getFixedItemSize
 
@@ -1579,7 +1580,8 @@ Read the full change summary in [Migration to v3](../migration).
 
 Legend List is very optimized by default, so it may already be working well without any configuration. But these are some common ways to improve your list behavior.
 
-It's important to provide an `estimatedItemSize` (if items are the same size or all dynamic sizes) or `getEstimatedItemSize` (if items are different known sizes). Legend List uses this as the default item size, then as items are rendered it updates their positions with the actual size. So getting this estimate as close as possible to the real size will reduce layout shifting and blank spaces as items render. If not provided it will use `100px` as the default.
+`estimatedItemSize` and `getEstimatedItemSize` are optional optimizations.
+Legend List works without them. If you provide them, they can reduce mount-time work by helping Legend List allocate a viewport-sized set of items more accurately before real measurements are available. If you omit them, Legend List falls back to measured averages and a default initial estimate of `100px`.
 
 The `onItemSizeChanged` event can also help with your estimations - it will be called whenever an item's size changes. So you can use it to log what the actual rendered size is to adjust your estimates.
 
@@ -1622,9 +1624,18 @@ onItemSizeChanged?: (info: {
 
 If your list elements are a fixed size, then use `getFixedItemSize` to skip all of the work of measuring and adjusting items.
 
-Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the better the first render experience.
+Use `estimatedItemSize` or `getEstimatedItemSize` only if you want to optimize the first render. They are not required for correctness.
 
-Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px which will likely cause scrollbar jumping and layout issues.
+Providing accurate item size estimates helps determine the number of containers to allocate, based on screen size / estimatedItemSize. `estimatedItemSize` is used only for the first render, then Legend List switches to using the average of actually rendered item sizes. If you provide `getEstimatedItemSize`, it will use that function instead of averages. The more accurate your initial estimates, the less extra mount-time work Legend List needs to do before measurements arrive.
+
+As a rule of thumb:
+
+- Use `getFixedItemSize` when item sizes are truly fixed.
+- Use `estimatedItemSize` when most items are roughly the same size.
+- Use `getEstimatedItemSize` when item sizes vary and you can predict them reasonably well.
+- Skip all of them if the default behavior already looks good enough.
+
+Use `onItemSizeChanged` to log actual vs estimated sizes and improve your estimates over time. It's generally better to slightly underestimate than overestimate item sizes. Without estimates, Legend List defaults to 100px, which can make the initial container allocation less efficient until real measurements are collected.
 
 ### Keep Specific Items Mounted
 
