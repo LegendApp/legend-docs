@@ -170,7 +170,11 @@ Estimated size of the list viewport used as a first-render hint before actual la
 extraData?: any;
 ```
 
-Extra data to trigger re-rendering when changed.
+Avoid this when possible.
+
+Changing `extraData` causes Legend List to re-render all items because the value is passed through every `renderItem` call.
+
+Prefer selecting the state each item needs inside the item itself, for example with React context or a state library selector, instead of threading shared state through the list.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
@@ -1606,6 +1610,22 @@ So there are some tradeoffs with recycling:
 - 👍 If you have items with no state then recycling should be great
 - 👎 If you have simple items with complex state then it may be more trouble than it's worth
 - 👍 If you have heavy items with complex state then working around the state recycling may be worth it for the performance gains
+
+### Avoid `extraData`
+
+```ts
+extraData?: any;
+```
+
+Avoid `extraData` when possible.
+
+Changing `extraData` causes Legend List to re-render all items because the value is passed through every `renderItem` call. This is convenient, but it pushes shared state changes through the whole list.
+
+Prefer reading the state each item needs inside the item itself:
+
+- Use React context when the state is naturally scoped that way.
+- Use a state library selector so each item subscribes only to the values it needs.
+- Avoid passing frequently changing shared state through the list just to reach `renderItem`.
 
 ### Estimate Item Sizes
 

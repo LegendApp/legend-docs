@@ -168,7 +168,11 @@ Estimated size of the list viewport used as a first-render hint before actual la
 extraData?: any;
 ```
 
-Extra data to trigger re-rendering when changed.
+Avoid this when possible.
+
+Changing `extraData` causes Legend List to re-render all items because the value is passed through every `renderItem` call.
+
+Prefer selecting the state each item needs inside the item itself, for example with React context or a state library selector, instead of threading shared state through the list.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
