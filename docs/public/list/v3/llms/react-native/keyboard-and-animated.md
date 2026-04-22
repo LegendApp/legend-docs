@@ -56,6 +56,44 @@ export function ReanimatedLayoutTransitionExample() {
 }
 ```
 
+### sharedValues
+
+Use `sharedValues` when you want LegendList to keep external Reanimated shared values in sync with list state.
+
+```tsx
+import { useSharedValue } from "react-native-reanimated";
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+
+export function ReanimatedSharedValuesExample() {
+  const scrollOffset = useSharedValue(0);
+  const isAtEnd = useSharedValue(false);
+  const isNearEnd = useSharedValue(false);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      sharedValues={{
+        scrollOffset,
+        isAtEnd,
+        isNearEnd,
+      }}
+    />
+  );
+}
+```
+
+Supported shared values:
+
+- `activeStickyIndex`
+- `isAtEnd`
+- `isAtStart`
+- `isNearEnd`
+- `isNearStart`
+- `isWithinMaintainScrollAtEndThreshold`
+- `scrollOffset`
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -96,7 +134,7 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
 
-An experimental entrypoint is also available at `@legendapp/list/keyboard-test`. It currently uses `KeyboardChatScrollView` and is likely to replace `@legendapp/list/keyboard` soon.
+An experimental entrypoint is also available at `@legendapp/list/keyboard-test`. It currently uses `KeyboardChatScrollView`.
 
 ```ts
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard-test";
@@ -116,6 +154,25 @@ Let the list manage keyboard-aware behavior, and adjacent UI (like composers/inp
 <Callout title="Advanced customization">
 If your app needs more advanced keyboard-avoidance behavior, use `KeyboardAvoidingLegendList` as a starting point and adapt it for your scenario. See the source: <a href="https://github.com/LegendApp/legend-list/blob/main/src/integrations/keyboard.tsx">src/integrations/keyboard.tsx</a>.
 </Callout>
+
+## KeyboardChatLegendList
+
+Use `KeyboardChatLegendList` from `@legendapp/list/keyboard-chat` if you want a lower-level `KeyboardChatScrollView` integration with explicit `anchoredEndSpace` control.
+
+```ts
+import { KeyboardChatLegendList } from "@legendapp/list/keyboard-chat";
+```
+
+This is useful for chat-style layouts where you want to keep a specific row anchored while blank space below the content grows or shrinks.
+
+```tsx
+<KeyboardChatLegendList
+  data={messages}
+  keyExtractor={(item) => item.id}
+  renderItem={ChatMessage}
+  anchoredEndSpace={{ anchorIndex: messages.length - 1, anchorOffset: 16 }}
+/>
+```
 
 ### Chat Example
 
