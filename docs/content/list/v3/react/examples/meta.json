@@ -1,0 +1,18 @@
+{
+  "title": "Examples",
+  "description": "Curated product-style web examples",
+  "pages": [
+    "chat",
+    "ai-chat",
+    "notifications-inbox",
+    "directory",
+    "sectioned-directory",
+    "activity-history",
+    "product-shelf",
+    "cards-feed",
+    "gallery-grid",
+    "media-rails",
+    "video-feed",
+    "infinite-calendar"
+  ]
+}

@@ -1,6 +1,6 @@
 import { Editor } from '@/components/Editor';
-import { ChatPlaygroundDemo } from '@/components/list/docs/ChatPlaygroundDemo';
-import { HorizontalInfiniteCalendarDemo } from '@/components/list/docs/HorizontalInfiniteCalendarDemo';
+import { LegendListCuratedExamplePage } from '@/components/list/docs/LegendListCuratedExamplePage';
+import { LegendListCuratedExamplesIndex } from '@/components/list/docs/LegendListCuratedExamplesIndex';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
@@ -9,8 +9,8 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     return {
         ...defaultMdxComponents,
         Editor,
-        ChatPlaygroundDemo,
-        HorizontalInfiniteCalendarDemo,
+        LegendListCuratedExamplePage,
+        LegendListCuratedExamplesIndex,
         ...components,
     };
 }

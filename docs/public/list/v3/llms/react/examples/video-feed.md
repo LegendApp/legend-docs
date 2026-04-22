@@ -1,0 +1,1 @@
+<LegendListCuratedExamplePage slug="video-feed" />

@@ -1,0 +1,1 @@
+<LegendListCuratedExamplePage slug="media-rails" />

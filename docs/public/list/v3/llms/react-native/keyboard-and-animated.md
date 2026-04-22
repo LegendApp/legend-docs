@@ -143,7 +143,7 @@ import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard-test";
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
 
 ```npm
-npm install react-native-keyboard-controller
+npm install react-native-keyboard-controller react-native-reanimated
 ```
 
 <Callout type="warn" title="Integration guidance">
@@ -163,7 +163,7 @@ Use `KeyboardChatLegendList` from `@legendapp/list/keyboard-chat` if you want a 
 import { KeyboardChatLegendList } from "@legendapp/list/keyboard-chat";
 ```
 
-This is useful for chat-style layouts where you want to keep a specific row anchored while blank space below the content grows or shrinks.
+This is useful for chat apps where you want to scroll the user message to the top on send.
 
 ```tsx
 <KeyboardChatLegendList
@@ -172,6 +172,12 @@ This is useful for chat-style layouts where you want to keep a specific row anch
   renderItem={ChatMessage}
   anchoredEndSpace={{ anchorIndex: messages.length - 1, anchorOffset: 16 }}
 />
+```
+
+This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
+
+```npm
+npm install react-native-keyboard-controller react-native-reanimated
 ```
 
 ### Chat Example

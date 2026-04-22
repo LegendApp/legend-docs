@@ -1,0 +1,1 @@
+<LegendListCuratedExamplePage slug="cards-feed" />

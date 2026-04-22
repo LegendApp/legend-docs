@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { createMDX } from 'fumadocs-mdx/next';
 
 const svgModuleEntry = 'react-native-svg/lib/module/ReactNativeSVG.web.js';

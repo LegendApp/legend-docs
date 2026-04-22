@@ -1924,7 +1924,7 @@ import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard-test";
 This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
 
 ```npm
-npm install react-native-keyboard-controller
+npm install react-native-keyboard-controller react-native-reanimated
 ```
 
 <Callout type="warn" title="Integration guidance">
@@ -1944,7 +1944,7 @@ Use `KeyboardChatLegendList` from `@legendapp/list/keyboard-chat` if you want a 
 import { KeyboardChatLegendList } from "@legendapp/list/keyboard-chat";
 ```
 
-This is useful for chat-style layouts where you want to keep a specific row anchored while blank space below the content grows or shrinks.
+This is useful for chat apps where you want to scroll the user message to the top on send.
 
 ```tsx
 <KeyboardChatLegendList
@@ -1953,6 +1953,12 @@ This is useful for chat-style layouts where you want to keep a specific row anch
   renderItem={ChatMessage}
   anchoredEndSpace={{ anchorIndex: messages.length - 1, anchorOffset: 16 }}
 />
+```
+
+This integration depends on `react-native-reanimated` and `react-native-keyboard-controller`.
+
+```npm
+npm install react-native-keyboard-controller react-native-reanimated
 ```
 
 ### Chat Example
@@ -2022,30 +2028,69 @@ export function KeyboardAvoidingExample() {
 ```
 
 
-## react/examples
+## react/examples/activity-history
 
-## Chat Playground
+<LegendListCuratedExamplePage slug="activity-history" />
 
-This demo combines the core behaviors needed for production chat feeds:
 
-- `onStartReached` prepends older messages from the top
-- `maintainVisibleContentPosition` keeps the viewport stable while prepending
-- `initialScrollIndex` starts the feed at the latest messages
-- `maintainScrollAtEndThreshold` controls bottom-follow behavior
-- Sticky day boundaries are always enabled
+## react/examples/ai-chat
 
-<ChatPlaygroundDemo />
+<LegendListCuratedExamplePage slug="ai-chat" />
 
-## Horizontal Infinite Calendar
 
-This demo shows a month-based calendar timeline with:
+## react/examples/cards-feed
 
-- horizontal scrolling
-- 3 months visible at a time
-- buttons for previous/next month and today
-- true unbounded scrolling via recentering
+<LegendListCuratedExamplePage slug="cards-feed" />
 
-<HorizontalInfiniteCalendarDemo />
+
+## react/examples/chat
+
+<LegendListCuratedExamplePage slug="chat" />
+
+
+## react/examples/directory
+
+<LegendListCuratedExamplePage slug="directory" />
+
+
+## react/examples/gallery-grid
+
+<LegendListCuratedExamplePage slug="gallery-grid" />
+
+
+## react/examples/index
+
+<LegendListCuratedExamplesIndex />
+
+
+## react/examples/infinite-calendar
+
+<LegendListCuratedExamplePage slug="infinite-calendar" />
+
+
+## react/examples/media-rails
+
+<LegendListCuratedExamplePage slug="media-rails" />
+
+
+## react/examples/notifications-inbox
+
+<LegendListCuratedExamplePage slug="notifications-inbox" />
+
+
+## react/examples/product-shelf
+
+<LegendListCuratedExamplePage slug="product-shelf" />
+
+
+## react/examples/sectioned-directory
+
+<LegendListCuratedExamplePage slug="sectioned-directory" />
+
+
+## react/examples/video-feed
+
+<LegendListCuratedExamplePage slug="video-feed" />
 
 
 ## react/getting-started
