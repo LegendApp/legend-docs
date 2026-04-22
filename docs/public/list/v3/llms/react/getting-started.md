@@ -8,7 +8,13 @@ npm install @legendapp/list
 
 Legend List is a drop-in replacement for virtualized lists in React. It only renders the items that are in view, which significantly reduces render cost for long lists.
 
-On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+This guide is for React apps rendered with `react-dom`. Use `@legendapp/list/react` for a DOM-native list with no React Native components or dependencies.
+
+<Callout title="Using React Native Web?">
+If your app uses React Native Web, follow [Getting Started (React Native)](../../react-native/getting-started) instead and use the React Native entrypoint.
+</Callout>
+
+Your list needs a height, either directly or via a parent with a fixed height.
 
 ### Quick Start
 

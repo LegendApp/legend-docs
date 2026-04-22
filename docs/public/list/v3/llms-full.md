@@ -18,6 +18,7 @@ import { SectionList } from "@legendapp/list/section-list";
 import { AnimatedLegendList } from "@legendapp/list/animated";
 import { AnimatedLegendList as ReanimatedLegendList } from "@legendapp/list/reanimated";
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard";
+import { KeyboardChatLegendList } from "@legendapp/list/keyboard-chat";
 // Experimental entrypoint
 import { KeyboardAvoidingLegendList as KeyboardAvoidingLegendListExperimental } from "@legendapp/list/keyboard-test";
 ```
@@ -120,6 +121,15 @@ contentContainerStyle?: StyleProp<ViewStyle>;
 
 Style applied to the underlying ScrollView's content container.
 On web, this maps to the inner content div’s CSS styles.
+
+### contentContainerClassName
+
+```ts
+contentContainerClassName?: string;
+```
+
+Web only. Adds a `className` to the inner content div inside the scroll container.
+Use this when your app styles the content container with CSS classes instead of inline styles.
 
 ### contentInset
 
@@ -315,16 +325,21 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponen
 
 ```ts
 maintainScrollAtEnd?: boolean | {
-  onLayout?: boolean;
-  onItemLayout?: boolean;
-  onDataChange?: boolean;
+  animated?: boolean;
+  on?: {
+    dataChange?: boolean;
+    itemLayout?: boolean;
+    layout?: boolean;
+  };
 };
 ```
 
 If enabled, LegendList keeps the view pinned to end when you are near the bottom.
 
 - `true`: enables end-maintenance for layout, item-layout, and data updates.
-- object form: choose which update types should keep end-position pinned.
+- `animated`: whether the automatic scroll-to-end should animate. Defaults to `false`.
+- If `on` is omitted, the object form enables all triggers.
+- If `on` is provided, only the keys set to `true` are enabled.
 
 See [Chat interfaces](../guides#chat-interfaces) for more.
 
@@ -357,6 +372,29 @@ Controls how the list stabilizes scroll position when items above the viewport c
 Passing `true` enables both `size` and `data`. Passing `false` disables both.
 
 React Native note: when `data` anchoring is enabled, LegendList uses ScrollView’s [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) under the hood. Android requires React Native 0.72+ for that prop.
+
+### anchoredEndSpace
+
+```ts
+anchoredEndSpace?: {
+  anchorIndex: number;
+  anchorOffset?: number;
+  anchorMaxSize?: number;
+  onSizeChanged?: (size: number) => void;
+};
+```
+
+Keeps a chosen item visually anchored to the start by adding trailing space when the content below that item underflows.
+
+- `anchorIndex`: required index of the item to keep anchored.
+- `anchorOffset`: subtracts pixels from the computed blank space. Useful when the anchored row should stop short of the edge.
+- `anchorMaxSize`: caps the amount of inserted blank space.
+- `onSizeChanged`: called whenever the inserted blank space changes.
+
+Platform notes:
+
+- Web: available on `LegendList` from `@legendapp/list/react`.
+- React Native: use `KeyboardChatLegendList` from `@legendapp/list/keyboard-chat` for this lower-level integration.
 
 ### numColumns
 
@@ -1125,6 +1163,11 @@ type LegendListState = {
   endBuffered: number;
   isAtEnd: boolean;
   isAtStart: boolean;
+  isNearEnd: boolean;
+  isNearStart: boolean;
+  isEndReached: boolean;
+  isStartReached: boolean;
+  isWithinMaintainScrollAtEndThreshold: boolean;
   listen: <T extends LegendListListenerType>(
     listenerType: T,
     callback: (value: ListenerTypeValueMap[T]) => void
@@ -1151,6 +1194,9 @@ type LegendListState = {
 - `start` / `end`: visible range bounds without buffer
 - `startBuffered` / `endBuffered`: virtualized range bounds including draw buffer
 - `isAtStart` / `isAtEnd`: threshold-based booleans for edge-of-list state
+- `isNearStart` / `isNearEnd`: proximity booleans based on the configured start/end thresholds
+- `isStartReached` / `isEndReached`: whether the one-shot threshold callbacks are currently latched
+- `isWithinMaintainScrollAtEndThreshold`: whether the current scroll position is close enough to the tail for `maintainScrollAtEnd` to apply
 - `scroll`: current scroll offset
 - `scrollLength`: viewport length along scroll axis
 - `scrollVelocity`: current estimated scroll velocity
@@ -1760,6 +1806,44 @@ export function ReanimatedLayoutTransitionExample() {
 }
 ```
 
+### sharedValues
+
+Use `sharedValues` when you want LegendList to keep external Reanimated shared values in sync with list state.
+
+```tsx
+import { useSharedValue } from "react-native-reanimated";
+import { AnimatedLegendList } from "@legendapp/list/reanimated";
+
+export function ReanimatedSharedValuesExample() {
+  const scrollOffset = useSharedValue(0);
+  const isAtEnd = useSharedValue(false);
+  const isNearEnd = useSharedValue(false);
+
+  return (
+    <AnimatedLegendList
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      sharedValues={{
+        scrollOffset,
+        isAtEnd,
+        isNearEnd,
+      }}
+    />
+  );
+}
+```
+
+Supported shared values:
+
+- `activeStickyIndex`
+- `isAtEnd`
+- `isAtStart`
+- `isNearEnd`
+- `isNearStart`
+- `isWithinMaintainScrollAtEndThreshold`
+- `scrollOffset`
+
 ## Animated
 
 AnimatedLegendList supports animated props with React Native's Animated.
@@ -1800,7 +1884,7 @@ const AnimatedLegendList = Animated.createAnimatedComponent(LegendList);
 
 Use `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard` for smooth keyboard-aware scrolling and inset behavior.
 
-An experimental entrypoint is also available at `@legendapp/list/keyboard-test`. It currently uses `KeyboardChatScrollView` and is likely to replace `@legendapp/list/keyboard` soon.
+An experimental entrypoint is also available at `@legendapp/list/keyboard-test`. It currently uses `KeyboardChatScrollView`.
 
 ```ts
 import { KeyboardAvoidingLegendList } from "@legendapp/list/keyboard-test";
@@ -1820,6 +1904,25 @@ Let the list manage keyboard-aware behavior, and adjacent UI (like composers/inp
 <Callout title="Advanced customization">
 If your app needs more advanced keyboard-avoidance behavior, use `KeyboardAvoidingLegendList` as a starting point and adapt it for your scenario. See the source: <a href="https://github.com/LegendApp/legend-list/blob/main/src/integrations/keyboard.tsx">src/integrations/keyboard.tsx</a>.
 </Callout>
+
+## KeyboardChatLegendList
+
+Use `KeyboardChatLegendList` from `@legendapp/list/keyboard-chat` if you want a lower-level `KeyboardChatScrollView` integration with explicit `anchoredEndSpace` control.
+
+```ts
+import { KeyboardChatLegendList } from "@legendapp/list/keyboard-chat";
+```
+
+This is useful for chat-style layouts where you want to keep a specific row anchored while blank space below the content grows or shrinks.
+
+```tsx
+<KeyboardChatLegendList
+  data={messages}
+  keyExtractor={(item) => item.id}
+  renderItem={ChatMessage}
+  anchoredEndSpace={{ anchorIndex: messages.length - 1, anchorOffset: 16 }}
+/>
+```
 
 ### Chat Example
 
@@ -1926,7 +2029,13 @@ npm install @legendapp/list
 
 Legend List is a drop-in replacement for virtualized lists in React. It only renders the items that are in view, which significantly reduces render cost for long lists.
 
-On web, `renderItem` should return DOM elements (e.g. `div`). Your list needs a height, either directly or via a parent with a fixed height.
+This guide is for React apps rendered with `react-dom`. Use `@legendapp/list/react` for a DOM-native list with no React Native components or dependencies.
+
+<Callout title="Using React Native Web?">
+If your app uses React Native Web, follow [Getting Started (React Native)](../../react-native/getting-started) instead and use the React Native entrypoint.
+</Callout>
+
+Your list needs a height, either directly or via a parent with a fixed height.
 
 ### Quick Start
 
