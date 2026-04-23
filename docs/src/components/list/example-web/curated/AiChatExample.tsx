@@ -7,6 +7,7 @@ import { buttonStyle, CARD_CLASS, cardStyle, listViewportStyle, Shell } from "./
 export function AiChatExample({ showTitle = true }: { showTitle?: boolean } = {}) {
     const conversation = React.useMemo(() => buildAiConversation(), []);
     const [messages, setMessages] = React.useState<AiMessage[]>(() => conversation.initialMessages);
+    const [anchorIndex, setAnchorIndex] = React.useState<number | undefined>(undefined);
     const [input, setInput] = React.useState("");
     const nextIdRef = React.useRef(conversation.initialMessages.length);
     const streamTimerRef = React.useRef<number | null>(null);
@@ -31,6 +32,7 @@ export function AiChatExample({ showTitle = true }: { showTitle?: boolean } = {}
             const placeholderId = `assistant-${nextIdRef.current++}`;
             const nextAnchorIndex = messages.length;
 
+            setAnchorIndex(nextAnchorIndex);
             setMessages((current) => [
                 ...current,
                 {
@@ -81,12 +83,14 @@ export function AiChatExample({ showTitle = true }: { showTitle?: boolean } = {}
         <Shell showTitle={showTitle} title="AI Chat">
             <div className="flex min-h-0 flex-1 flex-col">
                 <LegendList
+                    anchoredEndSpace={anchorIndex !== undefined ? { anchorIndex } : undefined}
                     contentContainerStyle={{ padding: 8 }}
                     data={messages}
                     estimatedItemSize={520}
                     initialScrollAtEnd
                     keyExtractor={(item) => item.id}
                     maintainVisibleContentPosition
+                    recycleItems
                     ref={listRef}
                     renderItem={({ item }: { item: AiMessage }) => (
                         <div
