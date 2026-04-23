@@ -28,6 +28,7 @@ const sourcePaths: Record<ExampleSlug, string> = {
     'notifications-inbox': 'example-web/src/examples/curated/NotificationsInboxExample.tsx',
     'product-shelf': 'example-web/src/examples/curated/ProductShelfExample.tsx',
     'sectioned-directory': 'example-web/src/examples/curated/SectionedDirectoryExample.tsx',
+    'virtual-list-comparison': 'example-web/src/examples/VirtualListComparison.tsx',
     'video-feed': 'example-web/src/examples/curated/VideoFeedExample.tsx',
 };
 
@@ -186,6 +187,16 @@ const featuresUsedBySlug: Record<ExampleSlug, ExampleFeature[]> = {
         {
             description: 'to append more clips as the viewer approaches the end of the feed.',
             name: 'onEndReached',
+        },
+    ],
+    'virtual-list-comparison': [
+        {
+            description: 'to preload rows beyond the viewport so the Legend List panel is compared at a matched draw distance.',
+            name: 'drawDistance',
+        },
+        {
+            description: 'to reuse row shells during the heavier comparison workload instead of remounting every card.',
+            name: 'recycleItems',
         },
     ],
 };

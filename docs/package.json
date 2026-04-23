@@ -14,10 +14,11 @@
         "validate-links": "bun ./scripts/validate-links.ts"
     },
     "dependencies": {
-        "@legendapp/list": "^3.0.0-beta.33",
+        "@legendapp/list": "^3.0.0-beta.47",
         "@legendapp/motion": "^2.5.3",
         "@legendapp/state": "^3.0.0-beta.35",
         "@next/third-parties": "16.1.6",
+        "@tanstack/react-virtual": "^3.13.12",
         "@tanstack/react-query": "^5.85.3",
         "@types/react-native-web": "^0.19.2",
         "axios": "^1.11.0",
@@ -36,7 +37,10 @@
         "react-native-svg": "^12.3.0",
         "react-native-web": "^0.21.0",
         "react-native-web-linear-gradient": "^1.1.2",
-        "usehooks-ts": "^3.1.1"
+        "react-virtuoso": "^4.13.0",
+        "react-window": "^2.2.5",
+        "usehooks-ts": "^3.1.1",
+        "virtua": "^0.41.5"
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.18.6",

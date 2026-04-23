@@ -75,6 +75,12 @@ export const CURATED_EXAMPLES: ExampleMeta[] = [
         slug: "infinite-calendar",
         title: "Infinite Calendar",
     },
+    {
+        description: "Side-by-side comparison against other popular React virtual list libraries.",
+        group: "Comparison",
+        slug: "virtual-list-comparison",
+        title: "Virtual List Comparison",
+    },
 ];
 
-export const CURATED_GROUP_ORDER = ["Messaging", "Directory", "Commerce", "Media"] as const;
+export const CURATED_GROUP_ORDER = ["Messaging", "Directory", "Commerce", "Media", "Comparison"] as const;

@@ -39,7 +39,9 @@ export async function LegendListCuratedExamplePage({ slug }: { slug: ExampleSlug
                     className={
                         example.windowScroll
                             ? 'rounded-2xl border border-fd-border bg-fd-card p-4'
-                            : 'flex h-[820px] min-h-0 flex-col rounded-2xl border border-fd-border bg-fd-card p-4'
+                            : example.slug === 'virtual-list-comparison'
+                              ? 'flex h-[980px] min-h-0 flex-col rounded-2xl border border-fd-border bg-fd-card p-4'
+                              : 'flex h-[820px] min-h-0 flex-col rounded-2xl border border-fd-border bg-fd-card p-4'
                     }
                 >
                     <CuratedExamplePreview showTitle={false} slug={slug} variant={example.variant} />

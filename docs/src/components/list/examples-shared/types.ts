@@ -1,4 +1,4 @@
-export type CatalogGroup = "Messaging" | "Directory" | "Commerce" | "Media";
+export type CatalogGroup = "Messaging" | "Directory" | "Commerce" | "Media" | "Comparison";
 
 export type ExampleSlug =
     | "chat"
@@ -12,7 +12,8 @@ export type ExampleSlug =
     | "notifications-inbox"
     | "activity-history"
     | "gallery-grid"
-    | "infinite-calendar";
+    | "infinite-calendar"
+    | "virtual-list-comparison";
 
 export type ExampleMeta = {
     description: string;

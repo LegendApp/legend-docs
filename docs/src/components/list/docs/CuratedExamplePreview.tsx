@@ -13,6 +13,7 @@ import { MediaRailsExample } from '@/components/list/example-web/curated/MediaRa
 import { NotificationsInboxExample } from '@/components/list/example-web/curated/NotificationsInboxExample';
 import { ProductShelfExample } from '@/components/list/example-web/curated/ProductShelfExample';
 import { SectionedDirectoryExample } from '@/components/list/example-web/curated/SectionedDirectoryExample';
+import { VirtualListComparisonExample } from '@/components/list/example-web/curated/VirtualListComparisonExample';
 import { VideoFeedExample } from '@/components/list/example-web/curated/VideoFeedExample';
 import type { ExampleSlug } from '@/components/list/examples-shared/catalog';
 
@@ -50,6 +51,8 @@ export function CuratedExamplePreview({ showTitle = false, slug, variant = 'defa
             return <GalleryGridExample showTitle={showTitle} />;
         case 'infinite-calendar':
             return <InfiniteCalendarExample showTitle={showTitle} />;
+        case 'virtual-list-comparison':
+            return <VirtualListComparisonExample showTitle={showTitle} />;
         default:
             return null;
     }

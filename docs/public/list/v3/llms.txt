@@ -18,4 +18,5 @@ https://www.legendapp.com/open-source/list/v3/llms/react/examples/notifications-
 https://www.legendapp.com/open-source/list/v3/llms/react/examples/product-shelf.md
 https://www.legendapp.com/open-source/list/v3/llms/react/examples/sectioned-directory.md
 https://www.legendapp.com/open-source/list/v3/llms/react/examples/video-feed.md
+https://www.legendapp.com/open-source/list/v3/llms/react/examples/virtual-list-comparison.md
 https://www.legendapp.com/open-source/list/v3/llms/react/getting-started.md

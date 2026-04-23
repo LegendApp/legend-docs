@@ -13,6 +13,7 @@
     "gallery-grid",
     "media-rails",
     "video-feed",
-    "infinite-calendar"
+    "infinite-calendar",
+    "virtual-list-comparison"
   ]
 }

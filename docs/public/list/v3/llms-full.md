@@ -2093,6 +2093,11 @@ export function KeyboardAvoidingExample() {
 <LegendListCuratedExamplePage slug="video-feed" />
 
 
+## react/examples/virtual-list-comparison
+
+<LegendListCuratedExamplePage slug="virtual-list-comparison" />
+
+
 ## react/getting-started
 
 ## Install
