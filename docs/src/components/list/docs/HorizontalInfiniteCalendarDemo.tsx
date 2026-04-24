@@ -153,17 +153,6 @@ export function HorizontalInfiniteCalendarDemo() {
         appendMonths();
     }, [appendMonths]);
 
-    const handleMomentumEnd = React.useCallback(
-        (event: { nativeEvent?: { contentOffset?: { x?: number } } }) => {
-            const x = event.nativeEvent?.contentOffset?.x ?? 0;
-            const maxLeft = Math.max(0, monthsRef.current.length - MONTHS_IN_VIEW);
-            const snappedIndex = clamp(Math.round(x / itemWidth), 0, maxLeft);
-
-            setLeftIndexSynced(snappedIndex);
-        },
-        [itemWidth, setLeftIndexSynced],
-    );
-
     const handleScroll = React.useCallback(
         (event: { nativeEvent?: { contentOffset?: { x?: number } } }) => {
             const x = event.nativeEvent?.contentOffset?.x ?? 0;
@@ -228,9 +217,9 @@ export function HorizontalInfiniteCalendarDemo() {
                         </div>
 
                         <div className="grid grid-cols-7 gap-1">
-                            {cells.map((cell, index) => (
+                            {cells.map((cell) => (
                                 <div
-                                    key={`${item}-${index}`}
+                                    key={`${item}`}
                                     className={cx(
                                         'flex h-8 items-center justify-center rounded-md text-sm',
                                         cell.isToday
@@ -291,16 +280,13 @@ export function HorizontalInfiniteCalendarDemo() {
                     keyExtractor={(item) => String(item)}
                     onEndReached={handleEndReached}
                     onEndReachedThreshold={0.2}
-                    onMomentumScrollEnd={handleMomentumEnd}
                     onScroll={handleScroll}
                     onStartReached={handleStartReached}
                     onStartReachedThreshold={0.2}
-                    pagingEnabled={false}
                     recycleItems
                     ref={listRef}
                     renderItem={renderMonth}
                     showsHorizontalScrollIndicator={false}
-                    snapToInterval={itemWidth}
                 />
             </div>
         </div>
