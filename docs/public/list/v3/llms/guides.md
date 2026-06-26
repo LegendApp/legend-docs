@@ -24,7 +24,6 @@ maintainScrollAtEndThreshold?: number;
 Pitfalls:
 - Avoid `inverted`; it can cause animation and scroll edge cases.
 - Tune `maintainScrollAtEndThreshold` for your UX.
-- If you use the object form of `maintainScrollAtEnd` with explicit `on` triggers, include `footerLayout: true` when a typing indicator or dynamic footer should keep the list pinned.
 
 ## Initial Positioning
 

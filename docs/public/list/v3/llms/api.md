@@ -297,7 +297,7 @@ Good uses for light mode include:
 
 - Rendering unformatted text instead of expensive formatted text, markdown, or syntax highlighting.
 - Rendering skeleton boxes instead of images, videos, charts, or rich previews.
-- Skipping gesture detectors, menus, modal setup, or other interactive wrappers that are only needed when the row is being inspected.
+- Skipping gesture detectors, menus, modal setup, or other interactive wrappers that are only needed when the row is stable in view.
 
 There are two main ways to use adaptive rendering:
 

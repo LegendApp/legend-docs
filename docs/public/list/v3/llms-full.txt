@@ -299,7 +299,7 @@ Good uses for light mode include:
 
 - Rendering unformatted text instead of expensive formatted text, markdown, or syntax highlighting.
 - Rendering skeleton boxes instead of images, videos, charts, or rich previews.
-- Skipping gesture detectors, menus, modal setup, or other interactive wrappers that are only needed when the row is being inspected.
+- Skipping gesture detectors, menus, modal setup, or other interactive wrappers that are only needed when the row is stable in view.
 
 There are two main ways to use adaptive rendering:
 
@@ -1543,7 +1543,6 @@ maintainScrollAtEndThreshold?: number;
 Pitfalls:
 - Avoid `inverted`; it can cause animation and scroll edge cases.
 - Tune `maintainScrollAtEndThreshold` for your UX.
-- If you use the object form of `maintainScrollAtEnd` with explicit `on` triggers, include `footerLayout: true` when a typing indicator or dynamic footer should keep the list pinned.
 
 ## Initial Positioning
 
