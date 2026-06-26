@@ -101,3 +101,19 @@ drawDistance?: number // default: 250
 The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. So for example if your screen is `2000px` tall and your draw distance is `1000`, then it will render double your screen size, from `-1000px` above the viewport to `1000px` below the viewport.
 
 This can help reduce the amount of blank space while scrolling quickly. But if your items are computationally expensive, it may reduce performance because more items are rendering at once. So you should experiment with it to find the most optimal behavior for your app.
+
+### Use Adaptive Rendering for Heavy Rows
+
+```ts
+experimental_adaptiveRender?: {
+  initialMode?: "normal" | "light";
+  enterVelocity?: number;
+  exitVelocity?: number;
+  exitDelay?: number;
+  onChange?: (mode: "normal" | "light") => void;
+};
+```
+
+If rows render charts, media, rich previews, or other expensive UI, enable `experimental_adaptiveRender` so they can switch to cheaper content during fast scrolls and back to full content after scrolling slows.
+
+Use item hooks for row-local behavior, or `experimental_adaptiveRender.onChange` to write the mode into global state. See [experimental_adaptiveRender](../api#experimental_adaptiverender) for the full API and usage patterns.

@@ -77,6 +77,7 @@ anchoredEndSpace?: {
   anchorIndex: number;
   anchorOffset?: number;
   anchorMaxSize?: number;
+  onReady?: (info: { anchorIndex?: number; anchorKey?: string; size: number }) => void;
   onSizeChanged?: (size: number) => void;
 };
 ```
@@ -121,8 +122,53 @@ const { contentInsetEndAdjustment, onComposerLayout } =
 
 Pitfalls:
 - Prefer `contentInsetEndAdjustment` over padding the list content when the overlay size changes dynamically.
-- Use `anchoredEndSpace` for the row you want to land near the start after sending.
+- Use `anchoredEndSpace` for the row you want to land near the start after sending. Use `anchoredEndSpace.onReady` if follow-up scroll work should wait until the anchored tail size is authoritative.
 - Keep a stable `keyExtractor`; changing keys while adjusting overlay inset will discard size and position caches.
+
+## Adaptive Rendering
+
+Use adaptive rendering when rows are expensive and can show a cheaper version during fast scrolls.
+
+```ts
+experimental_adaptiveRender?: {
+  initialMode?: "normal" | "light";
+  enterVelocity?: number;
+  exitVelocity?: number;
+  exitDelay?: number;
+  onChange?: (mode: "normal" | "light") => void;
+};
+```
+
+```tsx
+import { LegendList, useAdaptiveRender } from "@legendapp/list/react";
+
+function Row({ item }) {
+  const mode = useAdaptiveRender();
+
+  return mode === "light" ? (
+    <RowSkeleton title={item.title} />
+  ) : (
+    <FullAnalyticsRow item={item} />
+  );
+}
+
+<LegendList
+  data={items}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => <Row item={item} />}
+  experimental_adaptiveRender={{
+    initialMode: "light",
+    enterVelocity: 6,
+    exitVelocity: 3,
+    exitDelay: 250,
+  }}
+/>;
+```
+
+Pitfalls:
+- Keep the light render similar in height to the normal render, or pair it with fixed sizes so fast scrolling does not introduce large measurement corrections.
+- Do not use this for simple rows; the mode switch is only useful when it avoids meaningful row work such as charts, media, or expensive formatting.
+- Use `useAdaptiveRenderChange` for imperative pause/resume behavior that should happen when the mode changes.
 
 ## Web Layout and Window Scroll
 
@@ -311,8 +357,20 @@ import { SectionList } from "@legendapp/list/section-list";
   renderSectionHeader={({ section }) => <Header title={section.title} />}
   renderItem={({ item }) => <Row item={item} />}
   stickySectionHeadersEnabled
+  getFixedItemSize={(info) => {
+    switch (info.type) {
+      case "header":
+        return 36;
+      case "item":
+        return 48;
+      default:
+        return undefined;
+    }
+  }}
   estimatedItemSize={48}
 />
 ```
+
+Use SectionList's `getFixedItemSize` when section headers, footers, separators, or items have exact sizes. Return `undefined` for row types that should still be measured dynamically.
 
 For full prop and method details (including `scrollToLocation`), see [API Reference](../api#sectionlist).

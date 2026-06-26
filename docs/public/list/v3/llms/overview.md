@@ -6,6 +6,7 @@ Legend List is a high-performance virtualized list for **React Native and React 
 - ✨ Bidirectional infinite lists with scroll anchoring
 - ✨ Floating composer and overlay inset support
 - ✨ Optional item recycling with recycling-aware hooks
+- ✨ Adaptive rendering for expensive rows during fast scrolls
 - 🧲 Sticky headers, SectionList, and always-mounted rows
 - 🌐 React Native and DOM-native React support
 
@@ -82,9 +83,10 @@ Legend List v3 also includes:
 - `alwaysRender` for keeping top, bottom, explicit index, or key-based rows mounted
 - `numColumns` and `overrideItemLayout` for grid-style lists with spanning items
 - `dataVersion` and `itemsAreEqual` for mutable data or semantic equality checks
+- `experimental_adaptiveRender`, `useAdaptiveRender`, and `useAdaptiveRenderChange` for lightweight fast-scroll row rendering
 - `viewabilityConfig`, `viewabilityConfigCallbackPairs`, `useViewability`, and `useViewabilityAmount`
 - async imperative ref methods like `scrollToIndex`, `scrollToEnd`, and `scrollToOffset`
-- `getState()`, listener helpers, scroll metrics, and `clearCaches` for advanced integrations
+- `getState()`, listener helpers, `onFirstVisibleItemChanged`, `setItemSize`, scroll metrics, and `clearCaches` for advanced integrations
 
 ## What’s new in v3
 
@@ -95,10 +97,11 @@ Legend List v3 also includes:
 - `KeyboardAwareLegendList`, `useKeyboardChatComposerInset`, and `useKeyboardScrollToEnd`
 - SectionList component (`@legendapp/list/section-list`)
 - `alwaysRender` for keeping selected items mounted
+- Adaptive rendering hooks and config for expensive rows
 - `stickyHeaderIndices` and `stickyHeaderConfig`
 - `useWindowScroll` for document-level web scrolling
 - Reanimated `sharedValues` and `itemLayoutAnimation` props
-- `estimatedHeaderSize`, `dataVersion`, and `itemsAreEqual`
+- `estimatedHeaderSize`, `dataVersion`, `itemsAreEqual`, `setItemSize`, and `onFirstVisibleItemChanged`
 - Expanded `getState()` with listener helpers, `getAverageItemSizes()`, and scroll metrics
 
 Read the full change summary in [Migration to v3](../migration).

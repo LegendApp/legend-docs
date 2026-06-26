@@ -130,6 +130,11 @@ anchoredEndSpace?: {
   anchorIndex: number;
   anchorOffset?: number;
   anchorMaxSize?: number;
+  onReady?: (info: {
+    anchorIndex: number | undefined;
+    anchorKey: string | undefined;
+    size: number;
+  }) => void;
   onSizeChanged?: (size: number) => void;
 };
 ```
@@ -139,6 +144,7 @@ Keeps a chosen item visually anchored to the start by adding trailing space when
 - `anchorIndex`: required index of the item to keep anchored.
 - `anchorOffset`: subtracts pixels from the computed blank space. Useful when the anchored row should stop short of the edge.
 - `anchorMaxSize`: caps the amount of inserted blank space.
+- `onReady`: called when LegendList has authoritative anchored-tail sizing for the current anchor. Use this when an integration needs to wait until the inserted tail space is known before running follow-up scroll work.
 - `onSizeChanged`: called whenever the inserted blank space changes.
 
 Platform notes:
@@ -269,6 +275,53 @@ Prefer external state that each item subscribes to directly, for example React c
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
+### experimental_adaptiveRender
+
+```ts
+type AdaptiveRender = "normal" | "light";
+
+experimental_adaptiveRender?: {
+  initialMode?: AdaptiveRender; // default: "normal"
+  enterVelocity?: number; // default: 3 native, 6 web
+  exitVelocity?: number; // default: 1 native, 3 web
+  exitDelay?: number; // default: 250
+  onChange?: (mode: AdaptiveRender) => void;
+};
+```
+
+Enables an adaptive render signal for expensive item content. This is a performance optimization for lists whose rows do significant work while rendering, such as charts, media, syntax highlighting, rich previews, embeds, or expensive formatting.
+
+When scroll velocity crosses `enterVelocity`, LegendList switches the signal to `"light"` so rows can render a cheaper version while the list is moving quickly. After velocity drops below `exitVelocity` for `exitDelay` milliseconds, it returns to `"normal"`. This reduces JS/render work during fast scrolls and lets full content come back when the user slows down or stops.
+
+Use `initialMode` when rows should start in `"light"` mode before the list is ready, for example when you prefer a very cheap first pass before expensive media or charts render.
+
+Good uses for light mode include:
+
+- Rendering unformatted text instead of expensive formatted text, markdown, or syntax highlighting.
+- Rendering skeleton boxes instead of images, videos, charts, or rich previews.
+- Skipping gesture detectors, menus, modal setup, or other interactive wrappers that are only needed when the row is being inspected.
+
+There are two main ways to use adaptive rendering:
+
+1. Inside rendered items, read the current mode with [useAdaptiveRender](#useadaptiverender) or subscribe to changes with [useAdaptiveRenderChange](#useadaptiverenderchange). This is the simplest option when each row can choose its own light/full render.
+2. Use `experimental_adaptiveRender.onChange` to write the mode into global or external state, then let expensive child components subscribe to that state. This is useful when adaptive mode needs to affect components deeper in the row tree or components that are shared outside the direct list item boundary.
+
+```tsx
+<LegendList
+  data={items}
+  renderItem={({ item }) => <FeedRow item={item} />}
+  experimental_adaptiveRender={{
+    enterVelocity: 6,
+    exitVelocity: 3,
+    onChange: (mode) => adaptiveRenderStore.set(mode),
+  }}
+/>
+```
+
+Use adaptive rendering for the expensive part of a row, not as a replacement for basic row memoization or stable `renderItem` patterns. Simple text rows usually do not need it.
+
+The light version should keep the same rendered size as the normal version. If switching modes changes an item's height or width, the list has to correct measured positions while scrolling, which can cause visible layout shifts.
+
 ### getFixedItemSize
 
 ```ts
@@ -394,6 +447,7 @@ maintainScrollAtEnd?: boolean | {
   animated?: boolean;
   on?: {
     dataChange?: boolean;
+    footerLayout?: boolean;
     itemLayout?: boolean;
     layout?: boolean;
   };
@@ -406,6 +460,7 @@ If enabled, LegendList keeps the view pinned to end when you are near the bottom
 - `animated`: whether the automatic scroll-to-end should animate. Defaults to `false`.
 - If `on` is omitted, the object form enables all triggers.
 - If `on` is provided, only the keys set to `true` are enabled.
+- `footerLayout`: opt into footer size changes when using an explicit `on` config. This is useful for chat typing indicators and dynamic footers that should keep an end-pinned list at the bottom.
 
 See [Chat interfaces](../guides#chat-interfaces) for more.
 
@@ -462,6 +517,18 @@ onEndReachedThreshold?: number | null | undefined;
 ```
 
 The distance from the end as a percentage that the scroll should be from the end to trigger `onEndReached`. It is multiplied by screen size, so a value of 0.5 will trigger `onEndReached` when scrolling to half a screen from the end.
+
+### onFirstVisibleItemChanged
+
+```ts
+onFirstVisibleItemChanged?: (info: {
+  index: number;
+  item: ItemT;
+  key: string;
+}) => void;
+```
+
+Called when the first visible item changes. This is emitted from LegendList's core range calculation and is cheaper than full viewability tracking when you only need to follow the item at the top of the viewport, such as updating a section label, mini-map, or current date marker.
 
 ### onItemSizeChanged
 
@@ -737,7 +804,7 @@ export function MySectionList() {
 ### Behavior and API
 
 - Mirrors React Native `SectionList` props: `sections`, `renderSectionHeader`, `renderSectionFooter`, separators, `stickySectionHeadersEnabled`, and `scrollToLocation`.
-- Accepts shared LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, and `drawDistance`.
+- Accepts shared LegendList performance props like `recycleItems`, `maintainScrollAtEnd`, `drawDistance`, and `experimental_adaptiveRender`.
 - Manages `stickyHeaderIndices` internally.
 
 Common SectionList-specific props:
@@ -746,6 +813,13 @@ Common SectionList-specific props:
 type SectionListProps<ItemT, SectionT> = {
   ItemSeparatorComponent?: ComponentType<SectionListSeparatorProps<ItemT, SectionT>> | null;
   SectionSeparatorComponent?: ComponentType<SectionListSeparatorProps<ItemT, SectionT>> | ReactElement | null;
+  getFixedItemSize?: (info:
+    | (SectionListRenderItemInfo<ItemT, SectionT> & { type: "item" })
+    | { section: SectionListData<ItemT, SectionT>; type: "header" }
+    | { section: SectionListData<ItemT, SectionT>; type: "footer" }
+    | (SectionListSeparatorProps<ItemT, SectionT> & { type: "item-separator" })
+    | (SectionListSeparatorProps<ItemT, SectionT> & { type: "section-separator" })
+  ) => number | undefined;
   keyExtractor?: (item: ItemT, index: number) => string;
   onViewableItemsChanged?: SectionListOnViewableItemsChanged<ItemT, SectionT>;
   renderItem?: (info: SectionListRenderItemInfo<ItemT, SectionT>) => ReactElement | null;
@@ -759,6 +833,7 @@ type SectionListProps<ItemT, SectionT> = {
 Notes:
 
 - `stickySectionHeadersEnabled` defaults to the React Native platform behavior. It is enabled by default on iOS and disabled by default on other platforms.
+- `getFixedItemSize` can return exact sizes for section items, headers, footers, item separators, and section separators. Return `undefined` for row types that should stay dynamically measured.
 - `onViewableItemsChanged` receives item tokens mapped back to `{ item, index, key, isViewable, section }`, so callbacks do not need to understand the internal flattened section rows.
 - Section and item separators receive React Native-style separator helpers (`highlight`, `unhighlight`, `updateProps`) plus section/item context.
 
@@ -986,6 +1061,16 @@ Valid parameters:
 - *offset* (number) - The offset to scroll to. In case of horizontal being true, the offset is the x-value, in any other case the offset is the y-value. Required.
 - *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
 
+### setItemSize
+
+```ts
+setItemSize(itemKey: string, size: { height: number; width: number }): void;
+```
+
+Updates a known item's measured size directly and recalculates positions as needed. Use this when an item's content changes outside normal layout measurement, for example when media dimensions arrive from cache or a custom native surface reports its final size through a separate channel.
+
+`itemKey` is the value returned by `keyExtractor`, so stable keys are required.
+
 ### setScrollProcessingEnabled
 
 ```ts
@@ -1009,6 +1094,36 @@ Adjusts the internal anchor offset used by `maintainVisibleContentPosition`. Use
 <Callout>
 Hooks are exported from both `@legendapp/list/react-native` and `@legendapp/list/react`.
 </Callout>
+
+### useAdaptiveRender
+
+```ts
+useAdaptiveRender: () => "normal" | "light";
+```
+
+Returns the current adaptive render mode for the item being rendered. Enable the signal with [experimental_adaptiveRender](#experimental_adaptiverender), then use this hook inside rows to switch expensive content to a lighter render while the list is moving quickly.
+
+```tsx
+import { useAdaptiveRender } from "@legendapp/list/react-native";
+
+function FeedRow({ item }) {
+  const mode = useAdaptiveRender();
+
+  return (
+    <RowShell item={item}>
+      {mode === "light" ? <CompactPreview item={item} /> : <RichPreview item={item} />}
+    </RowShell>
+  );
+}
+```
+
+### useAdaptiveRenderChange
+
+```ts
+useAdaptiveRenderChange: (callback: (mode: "normal" | "light") => void) => void;
+```
+
+Runs `callback` whenever the adaptive render mode changes for the current item. Use this when switching modes should drive item-local imperative work, such as pausing a chart, video, or expensive animation while fast scrolling is active.
 
 ### useIsLastItem
 
@@ -1428,6 +1543,7 @@ maintainScrollAtEndThreshold?: number;
 Pitfalls:
 - Avoid `inverted`; it can cause animation and scroll edge cases.
 - Tune `maintainScrollAtEndThreshold` for your UX.
+- If you use the object form of `maintainScrollAtEnd` with explicit `on` triggers, include `footerLayout: true` when a typing indicator or dynamic footer should keep the list pinned.
 
 ## Initial Positioning
 
@@ -1477,6 +1593,7 @@ anchoredEndSpace?: {
   anchorIndex: number;
   anchorOffset?: number;
   anchorMaxSize?: number;
+  onReady?: (info: { anchorIndex?: number; anchorKey?: string; size: number }) => void;
   onSizeChanged?: (size: number) => void;
 };
 ```
@@ -1521,8 +1638,53 @@ const { contentInsetEndAdjustment, onComposerLayout } =
 
 Pitfalls:
 - Prefer `contentInsetEndAdjustment` over padding the list content when the overlay size changes dynamically.
-- Use `anchoredEndSpace` for the row you want to land near the start after sending.
+- Use `anchoredEndSpace` for the row you want to land near the start after sending. Use `anchoredEndSpace.onReady` if follow-up scroll work should wait until the anchored tail size is authoritative.
 - Keep a stable `keyExtractor`; changing keys while adjusting overlay inset will discard size and position caches.
+
+## Adaptive Rendering
+
+Use adaptive rendering when rows are expensive and can show a cheaper version during fast scrolls.
+
+```ts
+experimental_adaptiveRender?: {
+  initialMode?: "normal" | "light";
+  enterVelocity?: number;
+  exitVelocity?: number;
+  exitDelay?: number;
+  onChange?: (mode: "normal" | "light") => void;
+};
+```
+
+```tsx
+import { LegendList, useAdaptiveRender } from "@legendapp/list/react";
+
+function Row({ item }) {
+  const mode = useAdaptiveRender();
+
+  return mode === "light" ? (
+    <RowSkeleton title={item.title} />
+  ) : (
+    <FullAnalyticsRow item={item} />
+  );
+}
+
+<LegendList
+  data={items}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => <Row item={item} />}
+  experimental_adaptiveRender={{
+    initialMode: "light",
+    enterVelocity: 6,
+    exitVelocity: 3,
+    exitDelay: 250,
+  }}
+/>;
+```
+
+Pitfalls:
+- Keep the light render similar in height to the normal render, or pair it with fixed sizes so fast scrolling does not introduce large measurement corrections.
+- Do not use this for simple rows; the mode switch is only useful when it avoids meaningful row work such as charts, media, or expensive formatting.
+- Use `useAdaptiveRenderChange` for imperative pause/resume behavior that should happen when the mode changes.
 
 ## Web Layout and Window Scroll
 
@@ -1711,9 +1873,21 @@ import { SectionList } from "@legendapp/list/section-list";
   renderSectionHeader={({ section }) => <Header title={section.title} />}
   renderItem={({ item }) => <Row item={item} />}
   stickySectionHeadersEnabled
+  getFixedItemSize={(info) => {
+    switch (info.type) {
+      case "header":
+        return 36;
+      case "item":
+        return 48;
+      default:
+        return undefined;
+    }
+  }}
   estimatedItemSize={48}
 />
 ```
+
+Use SectionList's `getFixedItemSize` when section headers, footers, separators, or items have exact sizes. Return `undefined` for row types that should still be measured dynamically.
 
 For full prop and method details (including `scrollToLocation`), see [API Reference](../api#sectionlist).
 
@@ -1836,6 +2010,7 @@ Legend List is a high-performance virtualized list for **React Native and React 
 - ✨ Bidirectional infinite lists with scroll anchoring
 - ✨ Floating composer and overlay inset support
 - ✨ Optional item recycling with recycling-aware hooks
+- ✨ Adaptive rendering for expensive rows during fast scrolls
 - 🧲 Sticky headers, SectionList, and always-mounted rows
 - 🌐 React Native and DOM-native React support
 
@@ -1912,9 +2087,10 @@ Legend List v3 also includes:
 - `alwaysRender` for keeping top, bottom, explicit index, or key-based rows mounted
 - `numColumns` and `overrideItemLayout` for grid-style lists with spanning items
 - `dataVersion` and `itemsAreEqual` for mutable data or semantic equality checks
+- `experimental_adaptiveRender`, `useAdaptiveRender`, and `useAdaptiveRenderChange` for lightweight fast-scroll row rendering
 - `viewabilityConfig`, `viewabilityConfigCallbackPairs`, `useViewability`, and `useViewabilityAmount`
 - async imperative ref methods like `scrollToIndex`, `scrollToEnd`, and `scrollToOffset`
-- `getState()`, listener helpers, scroll metrics, and `clearCaches` for advanced integrations
+- `getState()`, listener helpers, `onFirstVisibleItemChanged`, `setItemSize`, scroll metrics, and `clearCaches` for advanced integrations
 
 ## What’s new in v3
 
@@ -1925,10 +2101,11 @@ Legend List v3 also includes:
 - `KeyboardAwareLegendList`, `useKeyboardChatComposerInset`, and `useKeyboardScrollToEnd`
 - SectionList component (`@legendapp/list/section-list`)
 - `alwaysRender` for keeping selected items mounted
+- Adaptive rendering hooks and config for expensive rows
 - `stickyHeaderIndices` and `stickyHeaderConfig`
 - `useWindowScroll` for document-level web scrolling
 - Reanimated `sharedValues` and `itemLayoutAnimation` props
-- `estimatedHeaderSize`, `dataVersion`, and `itemsAreEqual`
+- `estimatedHeaderSize`, `dataVersion`, `itemsAreEqual`, `setItemSize`, and `onFirstVisibleItemChanged`
 - Expanded `getState()` with listener helpers, `getAverageItemSizes()`, and scroll metrics
 
 Read the full change summary in [Migration to v3](../migration).
@@ -2035,6 +2212,22 @@ drawDistance?: number // default: 250
 The `drawDistance` (defaults to `250`) is the buffer size in pixels above and below the viewport that will be rendered in advance. So for example if your screen is `2000px` tall and your draw distance is `1000`, then it will render double your screen size, from `-1000px` above the viewport to `1000px` below the viewport.
 
 This can help reduce the amount of blank space while scrolling quickly. But if your items are computationally expensive, it may reduce performance because more items are rendering at once. So you should experiment with it to find the most optimal behavior for your app.
+
+### Use Adaptive Rendering for Heavy Rows
+
+```ts
+experimental_adaptiveRender?: {
+  initialMode?: "normal" | "light";
+  enterVelocity?: number;
+  exitVelocity?: number;
+  exitDelay?: number;
+  onChange?: (mode: "normal" | "light") => void;
+};
+```
+
+If rows render charts, media, rich previews, or other expensive UI, enable `experimental_adaptiveRender` so they can switch to cheaper content during fast scrolls and back to full content after scrolling slows.
+
+Use item hooks for row-local behavior, or `experimental_adaptiveRender.onChange` to write the mode into global state. See [experimental_adaptiveRender](../api#experimental_adaptiverender) for the full API and usage patterns.
 
 
 ## react-native/getting-started
