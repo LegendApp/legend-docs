@@ -51,7 +51,7 @@ Proxying by path also enables some really interesting list optimizations: in the
 
 ### Listeners at each node
 
-Each node keeps a `Set` of listeners so that you can listen to changes to any value anywhere within the state. This is great for performance because changes only call the few listeners that are affected by that change. JavaScript's `Set` provides nice benefits here as its uniquenesss constraint ensures callbacks are added only once, and removing listeners is an [instant O(1) operation](https://bretcameron.medium.com/how-to-make-your-code-faster-using-javascript-sets-b432457a4a77).
+Each node keeps a `Set` of listeners so that you can listen to changes to any value anywhere within the state. This is great for performance because changes only call the few listeners that are affected by that change. JavaScript's `Set` provides nice benefits here as its uniquenesss constraint ensures callbacks are added only once, and removing listeners is an [instant O(1) operation](https://www.bretcameron.com/blog/how-to-make-your-code-faster-using-javascript-sets).
 
 ### Granular renders
 
