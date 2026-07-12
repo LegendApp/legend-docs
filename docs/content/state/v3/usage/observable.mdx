@@ -557,3 +557,32 @@ const list = list$.get()
 const idx = list.findIndex((item) => item.id === itemId)
 list$[idx].delete()
 ```
+
+#### 3. The initial value passed to `observable()` is the underlying data
+
+Following from above: when you pass an object or array to `observable()`, that value becomes the underlying data — it is not cloned. As you call `.set()` on fields, the original object is mutated in place. This is intentional and what makes Legend-State fast, but it surprises people coming from libraries that treat their input as immutable (Zustand/Redux/MobX).
+
+A common pitfall is reusing a shared `initialState` constant as a "reset target":
+
+```js
+const initialState = { onboardingCompleted: false, name: '' }
+const state$ = observable(initialState)
+
+state$.onboardingCompleted.set(true)
+console.log(initialState)
+// { onboardingCompleted: true, name: '' }   ← mutated in place
+
+state$.set(initialState)
+// ❌ no-op: `initialState` IS the current value, so deep-equality check skips notify
+```
+
+If you want a stable reset target, use a factory so each call produces a fresh object:
+
+```js
+const createInitialState = () => ({ onboardingCompleted: false, name: '' })
+
+const state$ = observable(createInitialState())
+state$.onboardingCompleted.set(true)
+
+state$.set(createInitialState())  // ✅ fresh object, set fires
+```
