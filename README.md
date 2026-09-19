@@ -1,6 +1,6 @@
 # Legend website and documentation
 
-The community-maintained source for [legend.so](https://legend.so): Legend apps, open-source libraries, and Legend Framework. Issues and pull requests belong in this repository.
+The community-maintained source for [legend.so](https://legend.so): Legend apps, open-source libraries, and Legend Frame. Issues and pull requests belong in this repository.
 
 ## Develop
 
@@ -10,7 +10,7 @@ bun install
 bun dev
 ```
 
-The existing Next.js and Fumadocs app serves directly from `/`, without an `/open-source` base path.
+The Next.js and Fumadocs app serves directly from `/`.
 
 ```sh
 bun run build
@@ -29,9 +29,7 @@ Library documentation and interactive examples stay in their existing locations.
 
 The new landing pages live in `docs/src/app/(site)` with components in `docs/src/components/site`. Styles are scoped to `.legend-site` so they do not change library documentation or examples. The homepage uses a custom Legend hero, app screenshots, illustrated library previews, and short product summaries; there are no separate `/apps` or `/libraries` pages.
 
-## Before switching domains
-
-This branch prepares the source locally; it does not publish the site or change the existing deployment. Configure hosting for `legend.so`, then set up permanent redirects on the old host from `legendapp.com/open-source/*` to the corresponding `legend.so/*` path, preserving query strings. Keep separate mappings for historical URLs that no longer match current versioned routes. Verify redirects, search, assets, and representative interactive examples before switching traffic.
+## Configuration
 
 Set `GTM_ID` only if analytics should be enabled. `LLMS_BASE_URL` can override the default `https://legend.so` when generating documentation links.
 
@@ -40,3 +38,17 @@ Set `GTM_ID` only if analytics should be enabled. `LLMS_BASE_URL` can override t
 For corrections and documentation improvements, edit `docs/content` and open a pull request. For larger restructuring, start an issue so contributors can discuss the change.
 
 Homepage image sources and the hero generation prompt are documented in [showcase assets](docs/design/showcase-assets.md).
+
+## Cloudflare Pages
+
+- Production branch: `main`
+- Root directory: `docs`
+- Build command: `bun install --frozen-lockfile && bun run build`
+- Output directory: `dist`
+- Environment: `BUN_VERSION=1.3.14`, `LLMS_BASE_URL=https://legend.so`
+
+The curated Legend List source listings are checked in under
+`docs/vendor/legend-list`, pinned to an upstream commit. No sibling checkout is
+needed for deployment. See its [refresh instructions](docs/vendor/legend-list/README.md).
+
+Attach `legend.so` as the Pages custom domain. Pushing to `main` triggers the configured Pages deployment.

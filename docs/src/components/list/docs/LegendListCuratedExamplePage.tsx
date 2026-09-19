@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 
@@ -10,22 +9,8 @@ import type { ExampleSlug } from '@/components/list/examples-shared/catalog';
 import { CuratedExamplePreview } from './CuratedExamplePreview';
 import { LIST_EXAMPLE_DOCS_BY_SLUG } from './exampleDocsData';
 
-function resolveLegendListRoot() {
-    const cwd = process.cwd();
-    const candidates = [path.resolve(cwd, '..', 'legend-list'), path.resolve(cwd, '..', '..', 'legend-list')];
-
-    for (const candidate of candidates) {
-        if (fs.existsSync(path.join(candidate, 'example-web', 'src'))) {
-            return candidate;
-        }
-    }
-
-    throw new Error(`Could not resolve legend-list root from ${cwd}`);
-}
-
 async function readExampleSource(sourcePath: string) {
-    const legendListRoot = resolveLegendListRoot();
-    return fsPromises.readFile(path.join(legendListRoot, sourcePath), 'utf8');
+    return fsPromises.readFile(path.join(process.cwd(), 'vendor', 'legend-list', `${sourcePath}.txt`), 'utf8');
 }
 
 export async function LegendListCuratedExamplePage({ slug }: { slug: ExampleSlug }) {

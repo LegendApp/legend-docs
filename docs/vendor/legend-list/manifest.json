@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/LegendApp/legend-list",
+  "revision": "a71f2cf68b30061f72bc0735b1326c6a21e2f762",
+  "files": [
+    "example-web/src/examples/ChatExample.tsx",
+    "example-web/src/examples/AiChatExample.tsx",
+    "example-web/src/examples/DirectoryExample.tsx",
+    "example-web/src/examples/SectionedDirectoryExample.tsx",
+    "example-web/src/examples/ProductShelfExample.tsx",
+    "example-web/src/examples/CardsFeedExample.tsx",
+    "example-web/src/examples/MediaRailsExample.tsx",
+    "example-web/src/examples/VideoFeedExample.tsx",
+    "example-web/src/examples/NotificationsInboxExample.tsx",
+    "example-web/src/examples/ActivityHistoryExample.tsx",
+    "example-web/src/examples/GalleryGridExample.tsx",
+    "example-web/src/examples/InfiniteCalendarExample.tsx",
+    "example-web/src/examples/LibraryBenchmarkExample.tsx"
+  ]
+}

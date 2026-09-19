@@ -1,3 +1,4 @@
+import sourceManifest from '../../../../vendor/legend-list/manifest.json';
 import type { ExampleMeta, ExampleSlug } from '@/components/list/examples-shared/catalog';
 import { CURATED_EXAMPLES, CURATED_GROUP_ORDER } from '@/components/list/examples-shared/catalog';
 
@@ -216,7 +217,7 @@ const sourceUsesWindowScrollBySlug: Partial<Record<ExampleSlug, boolean>> = {
 export const LIST_EXAMPLE_DOCS: ExampleDocsEntry[] = CURATED_EXAMPLES.map((example) => ({
     ...example,
     featuresUsed: featuresUsedBySlug[example.slug],
-    githubUrl: `https://github.com/LegendApp/legend-list/blob/main/${sourcePaths[example.slug]}`,
+    githubUrl: `https://github.com/LegendApp/legend-list/blob/${sourceManifest.revision}/${sourcePaths[example.slug]}`,
     sourcePath: sourcePaths[example.slug],
     sourceUsesWindowScroll: sourceUsesWindowScrollBySlug[example.slug] ?? false,
     variant: variantBySlug[example.slug] ?? 'default',
