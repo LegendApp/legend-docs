@@ -216,7 +216,7 @@ This video was recorded as a performance test scrolling ludicrously fast with he
 
 <div className="w-[800px] max-w-full mx-auto rounded-xl overflow-hidden">
     <video
-        src="/open-source/assets/legendlist2.mp4"
+        src="/assets/legendlist2.mp4"
         controls
         width="100%"
         height="100%"
@@ -231,9 +231,9 @@ This video was recorded as a performance test scrolling ludicrously fast with he
 
 ## It uses less resources
 
-A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/open-source/list/flashlight.html) for more details.
+A FlashLight measurement of the above test shows that LegendList uses less CPU while scrolling. And it uses less memory too! See the [FlashLight results](/list/flashlight.html) for more details.
 
-<img src="/open-source/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
+<img src="/list/flashlight.png" className="w-[800px] max-w-full mx-auto mt-8 rounded-xl overflow-hidden border border-fd-border" />
 
 ## Install
 

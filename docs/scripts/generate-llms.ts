@@ -8,7 +8,7 @@ const PACKAGES = ['list', 'motion', 'state'] as const;
 const ROOT = path.resolve(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content');
 const PUBLIC_DIR = path.join(ROOT, 'public');
-const BASE_URL = process.env.LLMS_BASE_URL ?? 'https://www.legendapp.com/open-source';
+const BASE_URL = process.env.LLMS_BASE_URL ?? 'https://legend.so';
 
 function joinUrl(base: string, ...parts: string[]): string {
     const trimmedBase = base.replace(/\/+$/, '');

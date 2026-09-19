@@ -1,0 +1,5 @@
+{
+  "title": "Legend Markdown",
+  "root": true,
+  "pages": ["index", "availability", "reference"]
+}

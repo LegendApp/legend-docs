@@ -5,16 +5,12 @@ const svgModuleEntry = 'react-native-svg/lib/module/ReactNativeSVG.web.js';
 const svgCjsEntry = 'react-native-svg/lib/commonjs/ReactNativeSVG.web.js';
 
 const withMDX = createMDX();
-const basePath = '/open-source';
 
 /** @type {import('next').NextConfig} */
 const config = {
     reactStrictMode: true,
-    basePath,
-    env: {
-        NEXT_PUBLIC_BASE_PATH: basePath,
-    },
     output: 'export',
+    images: { unoptimized: true },
     distDir: 'dist',
     trailingSlash: true,
     transpilePackages: ['@legendapp/motion', 'react-native-linear-gradient', 'react-native-svg'],

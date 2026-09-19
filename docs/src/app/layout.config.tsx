@@ -1,72 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import { navigation } from '@/lib/navigation';
 
-/**
- * Shared layout configurations
- *
- * you can customise layouts individually from:
- * Home Layout: app/(home)/layout.tsx
- * Docs Layout: app/docs/layout.tsx
- */
 export const baseOptions: BaseLayoutProps = {
     nav: {
         title: (
-            <>
-                <div className="flex items-center gap-2">
-                    <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
-
-                    <span className="font-semibold">Legend Docs</span>
-                </div>
-            </>
+            <div className="flex items-center gap-2">
+                <img src="/assets/logo.png" alt="" width={24} height={24} />
+                <span className="font-semibold">Legend</span>
+            </div>
         ),
     },
     links: [
-        {
-            type: 'custom',
-            children: (
-                <a
-                    href="/"
-                    className="text-sm text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground"
-                >
-                    Legend App
-                </a>
-            ),
-        },
-        {
-            text: 'Home',
-            url: '/',
-            active: 'url',
-        },
-        {
-            type: 'custom',
-            children: (
-                <a
-                    href="/kit"
-                    className="text-sm text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground"
-                >
-                    Kit
-                </a>
-            ),
-        },
-        {
-            text: 'List',
-            url: '/list',
-            active: 'nested-url',
-        },
-        {
-            text: 'State',
-            url: '/state',
-            active: 'nested-url',
-        },
-        {
-            text: 'Motion',
-            url: '/motion',
-            active: 'nested-url',
-        },
-        {
-            text: 'Blog',
-            url: '/blog',
-            active: 'nested-url',
-        },
+        { text: 'Home', url: '/', active: 'url' },
+        ...navigation.map(({ title, url }) => ({ text: title, url, active: 'nested-url' as const })),
+        { text: 'Blog', url: '/blog', active: 'nested-url' },
     ],
 };

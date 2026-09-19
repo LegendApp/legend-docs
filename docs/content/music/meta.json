@@ -1,0 +1,5 @@
+{
+  "title": "Legend Music",
+  "root": true,
+  "pages": ["index", "availability", "reference"]
+}

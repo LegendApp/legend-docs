@@ -6,7 +6,7 @@ import { useSearchContext } from 'fumadocs-ui/contexts/search';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getFirstDocsPath } from '@/lib/getDocsPath';
+import { navigation } from '@/lib/navigation';
 import Link from 'fumadocs-core/link';
 import { baseOptions } from '@/app/layout.config';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
@@ -98,41 +98,20 @@ export function CustomNavbar({
     const searchToggleNode = searchToggleConfig?.components?.sm ?? <MobileSearchToggle className="p-2" />;
 
     const navItems = [
-        {
-            label: 'Legend App',
-            href: '~/',
-            matches: ['~/'],
-        },
-        {
-            label: 'Home',
-            href: '/',
-            matches: ['/'],
-        },
-        {
-            label: 'Kit',
-            href: '~/kit',
-            matches: ['/kit'],
-        },
-        {
-            label: 'List',
-            href: getFirstDocsPath('list'),
-            matches: ['/list'],
-        },
-        {
-            label: 'State',
-            href: '/state',
-            matches: ['/state'],
-        },
-        {
-            label: 'Motion',
-            href: getFirstDocsPath('motion'),
-            matches: ['/motion'],
-        },
-        {
-            label: 'Blog',
-            href: '/blog',
-            matches: ['/blog'],
-        },
+        { label: 'Home', href: '/', matches: ['/'] },
+        ...navigation.map(({ title, url }) => ({
+            label: title,
+            href: url,
+            matches:
+                title === 'Libraries'
+                    ? ['/list', '/state', '/motion']
+                    : title === 'Framework'
+                      ? ['/framework']
+                      : title === 'Demo Apps'
+                        ? ['/code', '/chat-history', '/hello-world']
+                        : ['/diff', '/markdown', '/music', '/slides'],
+        })),
+        { label: 'Blog', href: '/blog', matches: ['/blog'] },
     ];
 
     useEffect(() => {
@@ -151,7 +130,9 @@ export function CustomNavbar({
                 className={classNames(
                     'text-sm  transition-colors',
                     isCompact && 'rounded px-3 py-2',
-                    isActive ? 'text-blue-400 hover:text-blue-300' : 'text-fd-muted-foreground hover:text-fd-accent-foreground',
+                    isActive
+                        ? 'text-blue-400 hover:text-blue-300'
+                        : 'text-fd-muted-foreground hover:text-fd-accent-foreground',
                 )}
                 onClick={() => {
                     if (isCompact) {
@@ -174,10 +155,10 @@ export function CustomNavbar({
                     )}
                 >
                     <Link href="/" className="flex items-center gap-2">
-                        <img src="/open-source/assets/logo.png" alt="Legend" width={24} height={24} />
+                        <img src="/assets/logo.png" alt="Legend" width={24} height={24} />
 
-                        <span className="font-semibold hidden md:block">Legend Open Source</span>
-                        <span className="font-semibold md:hidden">Legend Docs</span>
+                        <span className="font-semibold hidden md:block">Legend</span>
+                        <span className="font-semibold md:hidden">Legend</span>
                     </Link>
 
                     <div className="flex items-center md:hidden">

@@ -1,0 +1,2925 @@
+/* Scoped to the new landing pages; existing library docs and examples keep their styles. */
+.legend-site {
+    --legend-blue: #0099dd;
+    --legend-link: #44baff;
+    --ink: #f1f1f1;
+    --muted: #999ca3;
+    --line: #25262a;
+    --surface: #141517;
+    --fd-nav-height: 56px;
+    --color-fd-primary: #0099dd;
+    --color-fd-background: #0d0d0e;
+    --color-fd-primary-foreground: #fff;
+    color-scheme: dark;
+}
+.legend-site {
+    scroll-behavior: smooth;
+    scroll-padding-top: 82px;
+}
+.legend-site {
+    margin: 0;
+    background: #0d0d0e;
+    color: var(--ink);
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+}
+:where(.legend-site) button,
+:where(.legend-site) a {
+    -webkit-tap-highlight-color: transparent;
+}
+:where(.legend-site) button {
+    cursor: pointer;
+}
+:where(.legend-site) a {
+    text-decoration: none;
+}
+:where(.legend-site) button,
+:where(.legend-site) a,
+:where(.legend-site) input {
+    outline-offset: 5px;
+}
+:where(.legend-site) :focus-visible {
+    outline: 2px solid var(--legend-link);
+}
+:where(.legend-site) ::selection {
+    background: #0099dd55;
+    color: #fff;
+}
+:where(.legend-site) .container {
+    width: min(1184px, calc(100% - 96px));
+    margin-inline: auto;
+}
+:where(.legend-site) .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: 57px;
+    background: #0d0d0edb;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+}
+:where(.legend-site) .nav-inner {
+    position: relative;
+    max-width: 1552px;
+    margin: auto;
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+:where(.legend-site) .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 650;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+}
+:where(.legend-site) .brand img {
+    border-radius: 5px;
+}
+:where(.legend-site) .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 29px;
+    margin-left: auto;
+    font-size: 14px;
+}
+:where(.legend-site) .desktop-nav a {
+    color: #a1a1a8;
+    transition: color 0.18s;
+}
+:where(.legend-site) .desktop-nav a:hover {
+    color: white;
+}
+:where(.legend-site) .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+:where(.legend-site) .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #a7a9b0;
+    border-radius: 5px;
+}
+:where(.legend-site) .icon-button:hover {
+    color: white;
+    background: #ffffff0b;
+}
+:where(.legend-site) .nav-divider {
+    width: 1px;
+    height: 15px;
+    background: var(--line);
+    margin: 0 4px;
+}
+:where(.legend-site) .mobile-toggle,
+:where(.legend-site) .mobile-nav {
+    display: none;
+}
+:where(.legend-site) .skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    transform: translateY(-160%);
+    background: var(--legend-blue);
+    padding: 8px 12px;
+    z-index: 100;
+    border-radius: 6px;
+}
+:where(.legend-site) .skip-link:focus {
+    transform: translateY(0);
+}
+:where(.legend-site) .hero {
+    display: grid;
+    grid-template-columns: 1.12fr 1fr;
+    gap: 56px;
+    align-items: center;
+    padding-block: 112px 105px;
+}
+:where(.legend-site) .eyebrow {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 1.15px;
+    color: #888c94;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    line-height: 1.8;
+}
+:where(.legend-site) .blue-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    background: var(--legend-blue);
+    border-radius: 50%;
+}
+:where(.legend-site) .hero h1 {
+    margin: 25px 0 25px;
+    font-size: clamp(50px, 5.4vw, 74px);
+    font-weight: 560;
+    letter-spacing: -4.6px;
+    line-height: 1.065;
+}
+:where(.legend-site) .hero h1 span {
+    color: #8f929a;
+}
+:where(.legend-site) .hero-copy > p {
+    color: #a0a2a8;
+    line-height: 1.8;
+    font-size: 15px;
+    letter-spacing: -0.15px;
+}
+:where(.legend-site) .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 31px;
+}
+:where(.legend-site) .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid transparent;
+    padding: 11px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 550;
+    min-height: 42px;
+    transition:
+        background 0.18s,
+        border-color 0.18s,
+        color 0.18s;
+}
+:where(.legend-site) .button-primary {
+    background: #008ccc;
+    border-color: #21a4df;
+    color: white;
+    box-shadow: inset 0 1px #ffffff1c;
+}
+:where(.legend-site) .button-primary:hover {
+    background: #049edf;
+    border-color: #5acaff;
+}
+:where(.legend-site) .button-quiet {
+    color: #b7b9bf;
+    padding-inline: 7px;
+}
+:where(.legend-site) .button-quiet:hover {
+    color: white;
+}
+:where(.legend-site) .button-outline {
+    background: #ffffff03;
+    border-color: #34353a;
+}
+:where(.legend-site) .button-outline:hover {
+    background: #ffffff09;
+    border-color: #5a5d64;
+}
+:where(.legend-site) .hero-footnote {
+    margin-top: 33px;
+    color: #787c85;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+}
+:where(.legend-site) .hero-footnote svg {
+    color: #9297a1;
+}
+:where(.legend-site) .hero-example {
+    min-width: 0;
+    padding-top: 4px;
+}
+:where(.legend-site) .code-showcase {
+    position: relative;
+    background: #111214;
+    border: 1px solid #2a2d32;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+        0 24px 60px #0003,
+        0 0 0 6px #ffffff02;
+}
+:where(.legend-site) .showcase-top {
+    height: 39px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+    color: #83868f;
+    font-size: 10px;
+}
+:where(.legend-site) .window-dots {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+:where(.legend-site) .window-dots i {
+    width: 6px;
+    height: 6px;
+    border: 1px solid #45474e;
+    border-radius: 50%;
+}
+:where(.legend-site) .code-tabs {
+    display: flex;
+    border-bottom: 1px solid #25262a;
+    padding: 0 14px;
+    gap: 6px;
+}
+:where(.legend-site) .code-tabs button {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 11px 13px;
+    color: #8b8f99;
+    font-size: 11px;
+    border-bottom: 1px solid transparent;
+    margin-bottom: -1px;
+}
+:where(.legend-site) .code-tabs button[aria-selected='true'] {
+    border-color: var(--legend-blue);
+    color: #eee;
+}
+:where(.legend-site) .tab-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #53565d;
+}
+:where(.legend-site) [aria-selected='true'] .tab-dot {
+    background: #0099dd;
+    box-shadow: 0 0 8px #0099dd60;
+}
+:where(.legend-site) .code-file {
+    padding: 17px 18px 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #737985;
+    font-size: 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+:where(.legend-site) .copy-button {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+:where(.legend-site) .copy-button:hover {
+    background: #ffffff0a;
+    color: white;
+}
+:where(.legend-site) .hero-code {
+    margin: 10px 0 19px;
+    height: 221px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    line-height: 22px;
+    color: #c3ccdb;
+    overflow: auto;
+    tab-size: 2;
+}
+:where(.legend-site) .hero-code code {
+    display: block;
+    min-width: max-content;
+    padding-right: 22px;
+}
+:where(.legend-site) .code-line {
+    display: block;
+    height: 22px;
+}
+:where(.legend-site) .line-number {
+    display: inline-block;
+    text-align: right;
+    width: 37px;
+    padding-right: 16px;
+    color: #4c515d;
+    user-select: none;
+}
+:where(.legend-site) .code-string {
+    color: #89bda4;
+}
+:where(.legend-site) .code-keyword {
+    color: #a08dda;
+}
+:where(.legend-site) .code-number {
+    color: #e1b37e;
+}
+:where(.legend-site) .code-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid var(--line);
+    padding: 14px 19px;
+    color: #797f88;
+    font-size: 10px;
+    background: #ffffff02;
+}
+:where(.legend-site) .code-bottom a {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    color: #46b6ea;
+}
+:where(.legend-site) .example-caption {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 9px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #656a74;
+    font-size: 8px;
+    letter-spacing: 1.3px;
+}
+:where(.legend-site) .caption-line {
+    height: 1px;
+    width: 23px;
+    background: #40454f;
+}
+:where(.legend-site) .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 33px;
+}
+:where(.legend-site) .section-heading h2 {
+    font-weight: 500;
+    letter-spacing: -1.25px;
+    font-size: 32px;
+    margin-top: 9px;
+    line-height: 1.2;
+}
+:where(.legend-site) .section-heading > p {
+    color: #9498a2;
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 2px;
+}
+:where(.legend-site) .libraries-section {
+    padding-top: 41px;
+    border-top: 1px solid var(--line);
+}
+:where(.legend-site) .library-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    overflow: hidden;
+    background: #111214;
+}
+:where(.legend-site) .library-card {
+    padding: 28px 27px 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: background 0.2s;
+}
+:where(.legend-site) .library-card:hover {
+    background: #14171b;
+}
+:where(.legend-site) .library-card + .library-card {
+    border-left: 1px solid var(--line);
+}
+:where(.legend-site) .library-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+:where(.legend-site) .project-icon {
+    color: #36ace3;
+    display: inline-flex;
+}
+:where(.legend-site) .library-index {
+    font-family: ui-monospace, monospace;
+    font-size: 9px;
+    color: #50545d;
+}
+:where(.legend-site) .library-card h3 {
+    font-size: 21px;
+    font-weight: 550;
+    letter-spacing: -0.65px;
+    margin-top: 14px;
+}
+:where(.legend-site) .library-card h3 a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+:where(.legend-site) .library-card h3 svg {
+    color: #676d78;
+    transition: color 0.2s;
+}
+:where(.legend-site) .library-card:hover h3 svg {
+    color: var(--legend-link);
+}
+:where(.legend-site) .library-art {
+    height: 127px;
+    position: relative;
+    margin: 14px 0 21px;
+    overflow: hidden;
+}
+:where(.legend-site) .art-list {
+    padding: 10px 33px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    mask-image: linear-gradient(transparent, black 16%, black 80%, transparent);
+}
+:where(.legend-site) .art-list > div {
+    height: 23px;
+    background: linear-gradient(90deg, #143042 0%, #122631 65%, #141b24 100%);
+    border: 1px solid #234355;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+:where(.legend-site) .art-list > div::after {
+    content: '';
+    height: 2px;
+    width: 65%;
+    background: #38627b;
+    display: block;
+    margin: 9px 12px;
+}
+:where(.legend-site) .art-list > div:nth-child(2) {
+    height: 34px;
+    border-color: #24749b;
+    background: #103345;
+}
+:where(.legend-site) .art-list > div:nth-child(2)::after {
+    margin-top: 14px;
+    width: 80%;
+    background: #3f92b5;
+}
+:where(.legend-site) .viewport-marker {
+    position: absolute;
+    right: 22px;
+    top: 27px;
+    height: 54px;
+    width: 3px;
+    border-radius: 2px;
+    background: #2c85ad;
+}
+:where(.legend-site) .art-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+:where(.legend-site) .state-node {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 34px;
+    border: 1px solid #28536b;
+    border-radius: 7px;
+    background: #152837;
+    color: #4fb8e4;
+    font-family: monospace;
+    font-size: 19px;
+}
+:where(.legend-site) .art-state > i {
+    width: 1px;
+    height: 20px;
+    background: #2c526b;
+}
+:where(.legend-site) .state-leaves {
+    display: flex;
+    width: 170px;
+    justify-content: space-between;
+    border-top: 1px solid #2c526b;
+    padding-top: 18px;
+    position: relative;
+}
+:where(.legend-site) .state-leaves span {
+    width: 23px;
+    height: 23px;
+    background: #161e25;
+    border: 1px solid #2a4253;
+    border-radius: 5px;
+    position: relative;
+}
+:where(.legend-site) .state-leaves span::before {
+    content: '';
+    position: absolute;
+    top: -19px;
+    left: 10px;
+    height: 18px;
+    width: 1px;
+    background: #2c526b;
+}
+:where(.legend-site) .state-leaves .active-leaf {
+    background: #0c5c84;
+    border-color: #239dd0;
+    box-shadow: 0 0 18px #0099dd15;
+}
+:where(.legend-site) .art-motion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+:where(.legend-site) .motion-track {
+    position: absolute;
+    top: 98px;
+    width: 205px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #364a5c 20%, #364a5c 80%, transparent);
+}
+:where(.legend-site) .motion-object,
+:where(.legend-site) .motion-ghost {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+}
+:where(.legend-site) .motion-object {
+    background: linear-gradient(135deg, #16719c, #0b3e60);
+    border: 1px solid #2784b3;
+    transform: translateX(51px) rotate(15deg);
+    box-shadow: inset 0 1px 3px #ffffff10;
+}
+:where(.legend-site) .ghost-one {
+    border: 1px dashed #25313f;
+    transform: translateX(-58px) rotate(-23deg);
+}
+:where(.legend-site) .ghost-two {
+    border: 1px solid #254455;
+    background: #102430;
+    transform: translateX(-4px) rotate(-6deg);
+}
+:where(.legend-site) .library-card h4 {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.15px;
+}
+:where(.legend-site) .library-card > p {
+    color: #999ea8;
+    font-size: 13px;
+    line-height: 1.85;
+    margin: 9px 0 26px;
+}
+:where(.legend-site) .library-links {
+    border-top: 1px solid var(--line);
+    margin-top: auto;
+    padding: 17px 0;
+    display: flex;
+    justify-content: space-between;
+    color: #959da9;
+    font-size: 11px;
+}
+:where(.legend-site) .library-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+:where(.legend-site) .library-links a:first-child {
+    color: #c7ccd4;
+}
+:where(.legend-site) .library-links a:hover {
+    color: var(--legend-link);
+}
+:where(.legend-site) .framework-section {
+    margin-block: 72px 87px;
+    padding: 39px 0 45px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 80px;
+    border-bottom: 1px solid var(--line);
+}
+:where(.legend-site) .status-badge {
+    display: inline-flex;
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+    border: 1px solid #34363c;
+    background: #ffffff03;
+    color: #9398a3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+:where(.legend-site) .framework-copy h2 {
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.13;
+    letter-spacing: -1.7px;
+    margin: 20px 0 17px;
+}
+:where(.legend-site) .framework-copy p {
+    color: #999da6;
+    font-size: 13px;
+    line-height: 1.85;
+}
+:where(.legend-site) .text-link {
+    display: inline-flex;
+    gap: 9px;
+    align-items: center;
+    font-size: 12px;
+    color: #c9cdd5;
+    margin-top: 25px;
+}
+:where(.legend-site) .text-link:hover {
+    color: var(--legend-link);
+}
+:where(.legend-site) .framework-diagram {
+    padding: 20px 23px 0;
+    text-align: center;
+}
+:where(.legend-site) .framework-source {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 13px;
+    margin-inline: auto;
+    font-size: 12px;
+    color: #bbbfc9;
+    border: 1px solid #2c3036;
+    border-radius: 6px;
+    padding: 11px 17px;
+    background: #141517;
+}
+:where(.legend-site) .framework-source svg {
+    color: #7ca8c2;
+}
+:where(.legend-site) .framework-source code {
+    color: #656f7e;
+    margin-left: 10px;
+    font-size: 10px;
+}
+:where(.legend-site) .framework-connector {
+    height: 27px;
+    width: 1px;
+    margin: auto;
+    background: #286581;
+}
+:where(.legend-site) .framework-engine {
+    border: 1px solid #27506a;
+    background: #0e1921;
+    border-radius: 7px;
+    padding: 22px 17px 20px;
+}
+:where(.legend-site) .framework-engine > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+:where(.legend-site) .framework-engine svg {
+    color: #349bcd;
+}
+:where(.legend-site) .framework-engine strong {
+    font-weight: 550;
+    font-size: 14px;
+}
+:where(.legend-site) .framework-engine > div > span {
+    font:
+        7px ui-monospace,
+        monospace;
+    letter-spacing: 0.6px;
+    color: #607f92;
+    padding-top: 2px;
+}
+:where(.legend-site) .framework-engine p {
+    font-family: ui-monospace, monospace;
+    font-size: 9px;
+    color: #8597a6;
+    margin-top: 13px;
+}
+:where(.legend-site) .framework-engine p span {
+    padding: 0 7px;
+    color: #3b6d88;
+}
+:where(.legend-site) .framework-branches {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px;
+    margin-top: 29px;
+}
+:where(.legend-site) .framework-branches span {
+    position: relative;
+    font-size: 10px;
+    border: 1px solid #2a3037;
+    padding: 9px 3px;
+    border-radius: 5px;
+    color: #9ca6b4;
+    background: #14171b;
+}
+:where(.legend-site) .framework-branches span::before {
+    content: '';
+    position: absolute;
+    height: 30px;
+    width: 1px;
+    background: #263e50;
+    bottom: 100%;
+    left: 50%;
+}
+:where(.legend-site) .framework-platform {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+    color: #697782;
+    margin-top: 22px;
+}
+:where(.legend-site) .framework-platform svg {
+    color: #618678;
+}
+:where(.legend-site) .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 28px;
+}
+:where(.legend-site) .app-card {
+    display: block;
+    min-width: 0;
+}
+:where(.legend-site) .app-preview {
+    padding: 29px 28px 0;
+    height: 260px;
+    overflow: hidden;
+    background: #11161a;
+    border: 1px solid #262d34;
+    border-radius: 8px;
+    transition:
+        border-color 0.25s,
+        background 0.25s;
+}
+:where(.legend-site) .app-card:hover .app-preview {
+    border-color: #495969;
+    background: #141d25;
+}
+:where(.legend-site) .preview-window {
+    border: 1px solid #383e45;
+    border-radius: 7px 7px 0 0;
+    height: 240px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px #0005;
+    background: #13161b;
+    transition: transform 0.3s;
+}
+:where(.legend-site) .app-card:hover .preview-window {
+    transform: translateY(-4px);
+}
+:where(.legend-site) .preview-titlebar {
+    height: 31px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border-bottom: 1px solid #2c3036;
+    background: #1b1f25;
+    color: #8b929f;
+    font-size: 8px;
+}
+:where(.legend-site) .preview-titlebar > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+:where(.legend-site) .preview-titlebar .window-dots {
+    gap: 4px;
+}
+:where(.legend-site) .preview-titlebar .window-dots i {
+    width: 5px;
+    height: 5px;
+    background: #4e5560;
+    border: none;
+}
+:where(.legend-site) .diff-preview-body {
+    display: grid;
+    grid-template-columns: 115px 1fr;
+    min-height: 207px;
+}
+:where(.legend-site) .diff-preview-body aside {
+    border-right: 1px solid #282e36;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 18px 9px;
+    gap: 8px;
+    color: #8c97a8;
+    font-size: 9px;
+}
+:where(.legend-site) .diff-preview-body aside small {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 8px;
+    padding: 6px 0;
+}
+:where(.legend-site) .diff-preview-body aside small b {
+    margin-left: auto;
+    font-weight: 400;
+    color: #72ab8a;
+}
+:where(.legend-site) .diff-code {
+    padding-top: 17px;
+    min-width: 0;
+}
+:where(.legend-site) .diff-code > div {
+    padding: 0 12px 11px;
+    font-size: 8px;
+    color: #8e97a5;
+    display: flex;
+    justify-content: space-between;
+}
+:where(.legend-site) .diff-code > div > span {
+    color: #739980;
+}
+:where(.legend-site) .diff-code code {
+    font-family: ui-monospace, monospace;
+    font-size: 9px;
+    color: #8b97aa;
+    line-height: 22px;
+    white-space: pre;
+}
+:where(.legend-site) .diff-code code > span {
+    display: block;
+    padding-left: 7px;
+}
+:where(.legend-site) .diff-code .removed {
+    background: #a8414824;
+    color: #c38a8e;
+}
+:where(.legend-site) .diff-code .added {
+    background: #207f5a26;
+    color: #8fbea9;
+}
+:where(.legend-site) .preview-markdown {
+    background: #1b1816;
+    border-color: #342e29;
+}
+:where(.legend-site) .preview-markdown .preview-window {
+    background: #1d1d1e;
+    border-color: #45403c;
+}
+:where(.legend-site) .preview-markdown .preview-titlebar {
+    background: #242323;
+    border-color: #353331;
+}
+:where(.legend-site) .markdown-preview-body {
+    display: flex;
+    gap: 26px;
+}
+:where(.legend-site) .markdown-preview-body aside {
+    display: flex;
+    flex-direction: column;
+    padding: 18px 11px;
+    gap: 21px;
+    border-right: 1px solid #33302e;
+    color: #8d8984;
+}
+:where(.legend-site) .markdown-preview-body > div {
+    padding-top: 25px;
+    flex: 1;
+    padding-right: 20px;
+}
+:where(.legend-site) .document-kicker {
+    font-size: 7px;
+    font-family: ui-monospace, monospace;
+    letter-spacing: 1.1px;
+    color: #938a7c;
+}
+:where(.legend-site) .markdown-preview-body h4 {
+    font-family: Georgia, serif;
+    font-size: 23px;
+    color: #e8e3d9;
+    margin-top: 13px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+:where(.legend-site) .markdown-preview-body p {
+    color: #a7a197;
+    font-size: 8px;
+    margin-top: 10px;
+}
+:where(.legend-site) .writing-line {
+    margin-top: 18px;
+    color: #b8b2a9;
+    font-size: 8px;
+    white-space: nowrap;
+}
+:where(.legend-site) .caret {
+    display: inline-block;
+    height: 11px;
+    width: 1px;
+    vertical-align: middle;
+    background: #c7b397;
+    margin-left: 2px;
+}
+:where(.legend-site) .mock-rule {
+    margin-top: 9px;
+    width: 93%;
+    height: 3px;
+    background: #524e473f;
+    border-radius: 1px;
+}
+:where(.legend-site) .mock-rule.short {
+    width: 64%;
+}
+:where(.legend-site) .document-footer {
+    display: block;
+    font-size: 7px;
+    color: #736e66;
+    margin-top: 22px;
+}
+:where(.legend-site) .preview-music {
+    background: #171a1a;
+    border-color: #2c3431;
+}
+:where(.legend-site) .preview-music .preview-window {
+    background: #181d1c;
+}
+:where(.legend-site) .preview-music .preview-titlebar {
+    background: #202524;
+    border-color: #303833;
+}
+:where(.legend-site) .music-preview-body {
+    display: flex;
+    gap: 27px;
+    padding: 27px 25px;
+    align-items: center;
+}
+:where(.legend-site) .album-art {
+    width: 137px;
+    height: 144px;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    background: #b2b9a0;
+    color: #34493e;
+    padding: 12px;
+}
+:where(.legend-site) .album-art > span {
+    font-size: 18px;
+    font-weight: 550;
+    letter-spacing: -1px;
+    line-height: 0.95;
+    position: relative;
+    z-index: 1;
+}
+:where(.legend-site) .album-art > small {
+    position: absolute;
+    bottom: 9px;
+    left: 12px;
+    font-family: monospace;
+    font-size: 5px;
+    letter-spacing: 0.9px;
+}
+:where(.legend-site) .record-rings {
+    position: absolute;
+    width: 165px;
+    height: 165px;
+    right: -46px;
+    bottom: -41px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle, #465e4c 0px, #465e4c 1px, transparent 2px, transparent 8px);
+}
+:where(.legend-site) .music-info {
+    flex: 1;
+    min-width: 0;
+}
+:where(.legend-site) .music-info .document-kicker {
+    color: #7f978d;
+    font-size: 6px;
+}
+:where(.legend-site) .music-info h4 {
+    font-weight: 450;
+    font-size: 20px;
+    letter-spacing: -0.7px;
+    margin-top: 12px;
+}
+:where(.legend-site) .music-info p {
+    font-size: 8px;
+    color: #829188;
+    margin-top: 4px;
+}
+:where(.legend-site) .music-progress {
+    height: 2px;
+    background: #354039;
+    margin-top: 19px;
+}
+:where(.legend-site) .music-progress i {
+    display: block;
+    height: 2px;
+    width: 34%;
+    background: #a7bda3;
+}
+:where(.legend-site) .music-times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 6px;
+    color: #6d8277;
+    margin-top: 5px;
+}
+:where(.legend-site) .music-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 14px;
+    color: #b3c2b8;
+}
+:where(.legend-site) .music-controls > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 29px;
+    height: 29px;
+    background: #36473b;
+    border-radius: 50%;
+}
+:where(.legend-site) .preview-slides {
+    background: #161720;
+    border-color: #30303c;
+}
+:where(.legend-site) .slides-preview-body {
+    display: flex;
+    height: 208px;
+}
+:where(.legend-site) .slides-preview-body aside {
+    padding: 16px 12px;
+    border-right: 1px solid #2c3038;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+:where(.legend-site) .slides-preview-body aside > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 28px;
+    background: #1e2230;
+    border: 1px solid #333b4b;
+    border-radius: 2px;
+    font-family: monospace;
+    font-size: 7px;
+    color: #667388;
+}
+:where(.legend-site) .slides-preview-body aside .selected-slide {
+    border-color: #5675a4;
+    color: #a1badd;
+}
+:where(.legend-site) .slide-canvas {
+    align-self: center;
+    flex: 1;
+    margin: 17px;
+    background: #cedbe2;
+    height: 164px;
+    color: #253c55;
+    padding: 18px 22px;
+}
+:where(.legend-site) .slide-kicker {
+    font-size: 5px;
+    letter-spacing: 1.2px;
+}
+:where(.legend-site) .slide-canvas h4 {
+    font-size: 31px;
+    letter-spacing: -1.5px;
+    font-weight: 550;
+    line-height: 1.07;
+    margin-top: 12px;
+}
+:where(.legend-site) .slide-canvas h4 em {
+    font-family: Georgia, serif;
+    font-weight: 400;
+}
+:where(.legend-site) .slide-canvas > div {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    font-size: 5px;
+    color: #557088;
+}
+:where(.legend-site) .app-card-caption {
+    padding: 19px 2px 0;
+}
+:where(.legend-site) .app-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+:where(.legend-site) .app-title h3 {
+    font-size: 15px;
+    font-weight: 550;
+    letter-spacing: -0.3px;
+}
+:where(.legend-site) .app-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #334657;
+    border-radius: 7px;
+    background: #152c3b;
+    color: #6db4e0;
+    margin-right: 2px;
+}
+:where(.legend-site) .icon-markdown {
+    background: #302b24;
+    border-color: #4b4235;
+    color: #c7ae81;
+}
+:where(.legend-site) .icon-music {
+    background: #26352b;
+    border-color: #3d5745;
+    color: #a2b899;
+}
+:where(.legend-site) .icon-slides {
+    background: #292d40;
+    border-color: #3b4261;
+    color: #94a8d2;
+}
+:where(.legend-site) .app-arrow {
+    margin-left: auto;
+    color: #6f7580;
+    transition: color 0.2s;
+}
+:where(.legend-site) .app-card:hover .app-arrow {
+    color: #ced6e3;
+}
+:where(.legend-site) .app-card-caption > p {
+    color: #8b9098;
+    font-size: 11px;
+    margin: 8px 0 0 43px;
+}
+:where(.legend-site) .apps-note {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: #6f747d;
+    font-size: 10px;
+    margin-top: 33px;
+}
+:where(.legend-site) .apps-note .blue-dot {
+    width: 4px;
+    height: 4px;
+    background: #597485;
+}
+:where(.legend-site) .demo-row {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    border-top: 1px solid var(--line);
+    margin-top: 30px;
+    padding-block: 24px;
+}
+:where(.legend-site) .demo-row > span {
+    font:
+        8px ui-monospace,
+        monospace;
+    letter-spacing: 1px;
+    color: #6c737e;
+}
+:where(.legend-site) .demo-row > div {
+    display: flex;
+    gap: 28px;
+    flex: 1;
+}
+:where(.legend-site) .demo-row a {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #9fa5b0;
+    font-size: 11px;
+}
+:where(.legend-site) .demo-row a:hover {
+    color: var(--legend-link);
+}
+:where(.legend-site) .demo-row a > svg:last-child {
+    color: #5f6978;
+}
+:where(.legend-site) .closing-section {
+    display: flex;
+    align-items: center;
+    gap: 27px;
+    padding-block: 68px 73px;
+    border-top: 1px solid var(--line);
+    margin-top: 37px;
+}
+:where(.legend-site) .closing-symbol {
+    align-self: flex-start;
+    padding-top: 7px;
+    color: #5a6f82;
+}
+:where(.legend-site) .closing-section h2 {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -1.2px;
+}
+:where(.legend-site) .closing-section h2 span {
+    color: #777d88;
+}
+:where(.legend-site) .closing-section p {
+    font-size: 11px;
+    color: #888f9a;
+    line-height: 1.9;
+    margin-top: 17px;
+}
+:where(.legend-site) .closing-section > a {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+:where(.legend-site) .site-footer {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    border-top: 1px solid var(--line);
+    padding-block: 30px 35px;
+}
+:where(.legend-site) .site-footer .brand {
+    font-size: 16px;
+}
+:where(.legend-site) .site-footer p {
+    font-size: 10px;
+    color: #6f747d;
+    margin-top: 8px;
+}
+:where(.legend-site) .footer-links {
+    display: flex;
+    gap: 24px;
+    margin-left: auto;
+    font-size: 10px;
+    color: #9299a3;
+}
+:where(.legend-site) .footer-links a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+:where(.legend-site) .footer-credit {
+    color: #636c78;
+    font-size: 9px;
+    line-height: 1.8;
+}
+:where(.legend-site) .footer-credit a {
+    color: #919ca9;
+}
+:where(.legend-site) .footer-links a:hover,
+:where(.legend-site) .footer-credit a:hover {
+    color: var(--legend-link);
+}
+
+/* Keep the documentation shell aligned with legend-docs' notebook layout. */
+:where(.legend-site) #nd-subnav {
+    background: #0d0d0e99;
+    backdrop-filter: blur(12px);
+}
+:where(.legend-site) .docs-brand {
+    font-size: 17px;
+}
+:where(.legend-site) .sidebar-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 10px 11px;
+    border: 1px solid #292b2f;
+    border-radius: 7px;
+    color: #92969f;
+    background: #ffffff03;
+    font-size: 12px;
+}
+:where(.legend-site) .sidebar-search:hover {
+    color: white;
+    background: #ffffff08;
+}
+:where(.legend-site) .sidebar-search kbd {
+    font-size: 9px;
+    margin-left: auto;
+    border: 1px solid #2c2f34;
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+:where(.legend-site) .sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 10px;
+    color: #6e7783;
+    padding: 12px 4px;
+}
+:where(.legend-site) .sidebar-footer a {
+    color: #8fa4b8;
+}
+:where(.legend-site) .docs-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #49abe1;
+    font:
+        10px ui-monospace,
+        monospace;
+    letter-spacing: 1px;
+}
+:where(.legend-site) .docs-eyebrow .status-badge {
+    margin-left: auto;
+}
+:where(.legend-site) #nd-page h1 {
+    font-size: 36px;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -1px;
+}
+:where(.legend-site) .prose p a,
+:where(.legend-site) .prose li a {
+    color: var(--legend-link);
+}
+:where(.legend-site) .not-found {
+    padding-block: 140px;
+    min-height: 70vh;
+}
+:where(.legend-site) .not-found h1 {
+    font-size: 50px;
+    font-weight: 500;
+    letter-spacing: -2px;
+    margin-top: 20px;
+}
+:where(.legend-site) .not-found p {
+    color: var(--muted);
+    margin-block: 15px 30px;
+}
+
+@media (min-width: 1500px) {
+    :where(.legend-site) .hero {
+        padding-block: 133px 127px;
+    }
+}
+@media (max-width: 1100px) {
+    :where(.legend-site) .container {
+        width: calc(100% - 64px);
+    }
+    :where(.legend-site) .hero {
+        gap: 30px;
+        padding-block: 85px;
+    }
+    :where(.legend-site) .hero h1 {
+        font-size: 56px;
+        letter-spacing: -3px;
+    }
+    :where(.legend-site) .hero-copy > p {
+        font-size: 13px;
+    }
+    :where(.legend-site) .hero .eyebrow {
+        font-size: 8px;
+        letter-spacing: 0.6px;
+    }
+    :where(.legend-site) .hero-code {
+        font-size: 9px;
+    }
+    :where(.legend-site) .hero-actions {
+        gap: 8px;
+    }
+    :where(.legend-site) .button {
+        padding-inline: 12px;
+        font-size: 11px;
+    }
+    :where(.legend-site) .framework-section {
+        gap: 30px;
+    }
+    :where(.legend-site) .framework-diagram {
+        padding-inline: 0;
+    }
+    :where(.legend-site) .library-card {
+        padding-inline: 21px;
+    }
+    :where(.legend-site) .library-card > p {
+        font-size: 11px;
+    }
+    :where(.legend-site) .app-preview {
+        padding-inline: 20px;
+        height: 243px;
+    }
+    :where(.legend-site) .music-preview-body {
+        padding-inline: 15px;
+        gap: 18px;
+    }
+    :where(.legend-site) .album-art {
+        width: 115px;
+        height: 133px;
+    }
+    :where(.legend-site) .markdown-preview-body {
+        gap: 16px;
+    }
+    :where(.legend-site) .markdown-preview-body h4 {
+        font-size: 21px;
+    }
+    :where(.legend-site) .slide-canvas {
+        margin: 13px;
+        padding-inline: 14px;
+    }
+    :where(.legend-site) .slide-canvas h4 {
+        font-size: 27px;
+    }
+}
+@media (max-width: 800px) {
+    :where(.legend-site) .nav-inner {
+        padding-inline: 24px;
+        gap: 20px;
+    }
+    :where(.legend-site) .desktop-nav {
+        gap: 19px;
+        font-size: 11px;
+    }
+    :where(.legend-site) .nav-actions {
+        gap: 4px;
+    }
+    :where(.legend-site) .hero {
+        grid-template-columns: 1fr;
+        gap: 47px;
+        padding-block: 68px 58px;
+    }
+    :where(.legend-site) .hero h1 {
+        font-size: 66px;
+        letter-spacing: -3.7px;
+    }
+    :where(.legend-site) .hero-copy > p {
+        font-size: 15px;
+    }
+    :where(.legend-site) .hero .eyebrow {
+        font-size: 9px;
+        letter-spacing: 0.9px;
+    }
+    :where(.legend-site) .hero-example {
+        width: 100%;
+        max-width: 570px;
+    }
+    :where(.legend-site) .hero-code {
+        font-size: 11px;
+    }
+    :where(.legend-site) .hero-footnote {
+        margin-top: 24px;
+    }
+    :where(.legend-site) .hero-actions {
+        gap: 17px;
+    }
+    :where(.legend-site) .button {
+        font-size: 12px;
+        padding-inline: 16px;
+    }
+    :where(.legend-site) .library-grid {
+        grid-template-columns: 1fr;
+    }
+    :where(.legend-site) .library-card {
+        position: relative;
+        padding: 24px 25px 0;
+    }
+    :where(.legend-site) .library-card + .library-card {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+    }
+    :where(.legend-site) .library-art {
+        position: absolute;
+        width: 180px;
+        right: 20px;
+        top: 17px;
+        height: 119px;
+    }
+    :where(.legend-site) .library-card h3 {
+        margin-bottom: 22px;
+        max-width: calc(100% - 210px);
+    }
+    :where(.legend-site) .library-card h3 svg {
+        display: none;
+    }
+    :where(.legend-site) .library-card > p {
+        font-size: 12px;
+        max-width: 470px;
+    }
+    :where(.legend-site) .library-card-top {
+        justify-content: flex-start;
+        gap: 15px;
+    }
+    :where(.legend-site) .library-index {
+        display: none;
+    }
+    :where(.legend-site) .art-list {
+        padding-inline: 15px;
+    }
+    :where(.legend-site) .viewport-marker {
+        right: 5px;
+    }
+    :where(.legend-site) .framework-section {
+        margin-block: 48px;
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+    :where(.legend-site) .framework-diagram {
+        max-width: 480px;
+        width: 100%;
+        margin-inline: auto;
+    }
+    :where(.legend-site) .apps-grid {
+        gap: 30px 20px;
+    }
+    :where(.legend-site) .app-preview {
+        height: 195px;
+        padding: 18px 13px 0;
+    }
+    :where(.legend-site) .preview-window {
+        width: 430px;
+        transform: scale(0.68);
+        transform-origin: top left;
+    }
+    :where(.legend-site) .app-card:hover .preview-window {
+        transform: scale(0.68) translateY(-4px);
+    }
+    :where(.legend-site) .app-title {
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+    :where(.legend-site) .app-title h3 {
+        font-size: 13px;
+    }
+    :where(.legend-site) .app-title .status-badge {
+        font-size: 8px;
+    }
+    :where(.legend-site) .app-icon {
+        width: 25px;
+        height: 25px;
+    }
+    :where(.legend-site) .app-icon svg {
+        width: 17px;
+    }
+    :where(.legend-site) .app-card-caption > p {
+        margin-left: 0;
+        font-size: 10px;
+        line-height: 1.6;
+    }
+    :where(.legend-site) .app-arrow {
+        display: none;
+    }
+    :where(.legend-site) .demo-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 17px;
+    }
+    :where(.legend-site) .demo-row > div {
+        flex-wrap: wrap;
+    }
+    :where(.legend-site) .section-heading > p {
+        font-size: 10px;
+    }
+    :where(.legend-site) .section-heading h2 {
+        font-size: 28px;
+    }
+    :where(.legend-site) .closing-section {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    :where(.legend-site) .closing-section > a {
+        margin-left: 46px;
+    }
+    :where(.legend-site) .site-footer {
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+    :where(.legend-site) .footer-links {
+        gap: 17px;
+    }
+    :where(.legend-site) .footer-credit {
+        width: 100%;
+    }
+}
+@media (max-width: 560px) {
+    :where(.legend-site) .container {
+        width: calc(100% - 40px);
+    }
+    :where(.legend-site) .nav-inner {
+        padding-inline: 20px;
+    }
+    :where(.legend-site) .desktop-nav {
+        display: none;
+    }
+    :where(.legend-site) .nav-actions {
+        margin-left: auto;
+    }
+    :where(.legend-site) .mobile-toggle {
+        display: inline-flex;
+    }
+    :where(.legend-site) .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        position: absolute;
+        top: 63px;
+        right: 14px;
+        width: 210px;
+        padding: 8px;
+        background: #17191d;
+        border: 1px solid #363a42;
+        border-radius: 9px;
+        box-shadow: 0 18px 35px #0006;
+    }
+    :where(.legend-site) .mobile-nav a {
+        padding: 11px 13px;
+        color: #b2b8c3;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+    :where(.legend-site) .mobile-nav a:hover {
+        background: #ffffff08;
+        color: white;
+    }
+    :where(.legend-site) .hero {
+        padding-block: 53px 47px;
+        gap: 37px;
+    }
+    :where(.legend-site) .hero h1 {
+        font-size: clamp(43px, 11.8vw, 64px);
+        letter-spacing: -2.9px;
+        margin-block: 22px;
+    }
+    :where(.legend-site) .hero .eyebrow {
+        font-size: 7.5px;
+        letter-spacing: 0.6px;
+        gap: 7px;
+    }
+    :where(.legend-site) .hero-copy > p {
+        font-size: 13px;
+        line-height: 1.8;
+        max-width: 340px;
+    }
+    :where(.legend-site) .desktop-break {
+        display: none;
+    }
+    :where(.legend-site) .hero-actions {
+        gap: 13px;
+        margin-top: 25px;
+    }
+    :where(.legend-site) .hero-actions .button {
+        font-size: 11px;
+        gap: 8px;
+        padding-inline: 11px;
+    }
+    :where(.legend-site) .hero-actions .button-quiet {
+        padding-inline: 0;
+    }
+    :where(.legend-site) .hero-footnote {
+        font-size: 9px;
+    }
+    :where(.legend-site) .hero-code {
+        font-size: 9px;
+    }
+    :where(.legend-site) .showcase-top {
+        gap: 15px;
+        font-size: 9px;
+    }
+    :where(.legend-site) .code-bottom {
+        font-size: 9px;
+        padding-inline: 13px;
+    }
+    :where(.legend-site) .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 13px;
+        margin-bottom: 25px;
+    }
+    :where(.legend-site) .section-heading > p {
+        font-size: 12px;
+    }
+    :where(.legend-site) .section-heading > p br {
+        display: none;
+    }
+    :where(.legend-site) .section-heading h2 {
+        font-size: 29px;
+    }
+    :where(.legend-site) .library-card {
+        padding-inline: 21px;
+    }
+    :where(.legend-site) .library-card h3 {
+        max-width: 100%;
+        font-size: 22px;
+    }
+    :where(.legend-site) .library-art {
+        width: 128px;
+        right: 16px;
+        top: 4px;
+        height: 110px;
+        transform: scale(0.75);
+        transform-origin: top right;
+        opacity: 0.8;
+    }
+    :where(.legend-site) .art-list {
+        padding-left: 30px;
+        padding-right: 0;
+    }
+    :where(.legend-site) .viewport-marker {
+        display: none;
+    }
+    :where(.legend-site) .state-leaves {
+        width: 100px;
+    }
+    :where(.legend-site) .motion-object,
+    :where(.legend-site) .motion-ghost {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+    }
+    :where(.legend-site) .motion-object {
+        transform: translateX(26px) rotate(15deg);
+    }
+    :where(.legend-site) .ghost-one {
+        transform: translateX(-37px) rotate(-23deg);
+    }
+    :where(.legend-site) .motion-track {
+        top: 87px;
+        width: 112px;
+    }
+    :where(.legend-site) .library-card h4 {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    :where(.legend-site) .library-card > p {
+        font-size: 12px;
+        margin-bottom: 22px;
+    }
+    :where(.legend-site) .framework-section {
+        margin-top: 30px;
+        padding-top: 32px;
+    }
+    :where(.legend-site) .framework-copy h2 {
+        font-size: 36px;
+    }
+    :where(.legend-site) .framework-copy .eyebrow {
+        font-size: 9px;
+        flex-wrap: wrap;
+    }
+    :where(.legend-site) .framework-engine > div > span {
+        display: none;
+    }
+    :where(.legend-site) .framework-engine p {
+        font-size: 8px;
+    }
+    :where(.legend-site) .framework-engine p span {
+        padding-inline: 3px;
+    }
+    :where(.legend-site) .framework-branches {
+        gap: 6px;
+    }
+    :where(.legend-site) .framework-branches span {
+        font-size: 9px;
+    }
+    :where(.legend-site) .apps-grid {
+        grid-template-columns: 1fr;
+        gap: 29px;
+    }
+    :where(.legend-site) .app-preview {
+        height: 226px;
+        padding: 24px 19px 0;
+    }
+    :where(.legend-site) .preview-window {
+        width: 430px;
+        transform: scale(0.82);
+    }
+    :where(.legend-site) .app-card:hover .preview-window {
+        transform: scale(0.82) translateY(-4px);
+    }
+    :where(.legend-site) .app-title h3 {
+        font-size: 15px;
+    }
+    :where(.legend-site) .app-title .status-badge {
+        font-size: 9px;
+    }
+    :where(.legend-site) .app-arrow {
+        display: block;
+    }
+    :where(.legend-site) .app-icon {
+        width: 30px;
+        height: 30px;
+    }
+    :where(.legend-site) .app-card-caption > p {
+        margin-left: 40px;
+        font-size: 11px;
+    }
+    :where(.legend-site) .apps-note {
+        align-items: baseline;
+        font-size: 9px;
+        line-height: 1.7;
+    }
+    :where(.legend-site) .demo-row > div {
+        gap: 19px;
+    }
+    :where(.legend-site) .demo-row a {
+        font-size: 10px;
+    }
+    :where(.legend-site) .closing-section {
+        padding-block: 43px;
+        margin-top: 20px;
+    }
+    :where(.legend-site) .closing-symbol {
+        display: none;
+    }
+    :where(.legend-site) .closing-section h2 {
+        font-size: 28px;
+    }
+    :where(.legend-site) .closing-section p br {
+        display: none;
+    }
+    :where(.legend-site) .closing-section > a {
+        margin-left: 0;
+    }
+    :where(.legend-site) .site-footer {
+        padding-block: 27px;
+        gap: 23px;
+    }
+    :where(.legend-site) .site-footer > div:first-child {
+        width: 100%;
+    }
+    :where(.legend-site) .footer-links {
+        margin-left: 0;
+        gap: 25px;
+    }
+    :where(.legend-site) .footer-credit {
+        font-size: 9px;
+    }
+    :where(.legend-site) .docs-eyebrow {
+        font-size: 9px;
+    }
+}
+@media (max-width: 375px) {
+    :where(.legend-site) .app-preview {
+        height: 201px;
+        padding-inline: 13px;
+    }
+    :where(.legend-site) .preview-window {
+        transform: scale(0.7);
+    }
+    :where(.legend-site) .app-card:hover .preview-window {
+        transform: scale(0.7) translateY(-4px);
+    }
+    :where(.legend-site) .library-art {
+        display: none;
+    }
+    :where(.legend-site) .library-card h3 {
+        font-size: 20px;
+    }
+    :where(.legend-site) .hero-footnote {
+        font-size: 8px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .legend-site {
+        scroll-behavior: auto;
+    }
+    :where(.legend-site) *,
+    :where(.legend-site) *::before,
+    :where(.legend-site) *::after {
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
+    }
+}
+
+:where(.legend-site) .desktop-nav a[aria-current='page'],
+:where(.legend-site) .mobile-nav a[aria-current='page'] {
+    color: var(--legend-link);
+}
+:where(.legend-site) .brand-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    padding-block: 69px 47px;
+}
+:where(.legend-site) .brand-hero h1 {
+    font-size: clamp(48px, 5.3vw, 69px);
+    font-weight: 530;
+    line-height: 1.04;
+    letter-spacing: -3.8px;
+    margin-block: 22px;
+}
+:where(.legend-site) .brand-hero h1 span,
+:where(.legend-site) .collection-header h1 span {
+    color: #999da5;
+}
+:where(.legend-site) .brand-hero-copy > p {
+    color: #a3a7af;
+    font-size: 15px;
+    line-height: 1.85;
+    max-width: 420px;
+}
+:where(.legend-site) .hero-composition {
+    position: relative;
+    height: 397px;
+    min-width: 0;
+}
+:where(.legend-site) .composition-label {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #646b77;
+    font:
+        8px ui-monospace,
+        monospace;
+    letter-spacing: 1px;
+}
+:where(.legend-site) .composition-markdown {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    width: 90%;
+    transform: rotate(2deg);
+}
+:where(.legend-site) .composition-music {
+    position: absolute;
+    top: 184px;
+    left: -5px;
+    width: 78%;
+    transform: rotate(-3deg);
+}
+:where(.legend-site) .hero-composition .app-preview {
+    padding: 0;
+    height: auto;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    overflow: visible;
+}
+:where(.legend-site) .hero-composition .preview-window {
+    width: 100%;
+    height: 218px;
+    transform: none;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px #0006;
+}
+:where(.legend-site) .hero-composition .preview-titlebar {
+    height: 30px;
+}
+:where(.legend-site) .hero-composition .markdown-preview-body {
+    gap: 22px;
+}
+:where(.legend-site) .hero-composition .markdown-preview-body > div {
+    padding-top: 23px;
+}
+:where(.legend-site) .hero-composition .markdown-preview-body h4 {
+    font-size: 23px;
+}
+:where(.legend-site) .hero-composition .music-preview-body {
+    padding: 21px;
+    gap: 22px;
+}
+:where(.legend-site) .hero-composition .album-art {
+    width: 113px;
+    height: 137px;
+}
+:where(.legend-site) .hero-composition .music-info h4 {
+    font-size: 19px;
+}
+:where(.legend-site) .hero-composition .music-info .document-kicker {
+    font-size: 6px;
+}
+:where(.legend-site) .composition-native {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+    font-size: 9px;
+    color: #808d9c;
+}
+:where(.legend-site) .composition-native svg {
+    color: #4c97bc;
+}
+:where(.legend-site) .native-line {
+    width: 15px;
+    height: 1px;
+    background: #384553;
+}
+:where(.legend-site) .destination-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid var(--line);
+}
+:where(.legend-site) .destination {
+    display: block;
+    padding: 22px 25px 22px 0;
+    transition: background 0.15s;
+}
+:where(.legend-site) .destination + .destination {
+    border-left: 1px solid var(--line);
+    padding-left: 29px;
+}
+:where(.legend-site) .destination:hover .destination-title > svg:last-child {
+    color: var(--legend-link);
+    transform: translateX(3px);
+}
+:where(.legend-site) .destination-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+:where(.legend-site) .destination-title > svg:first-child {
+    color: #5b9dc0;
+}
+:where(.legend-site) .destination-title > svg:last-child {
+    margin-left: auto;
+    color: #596575;
+    transition:
+        color 0.15s,
+        transform 0.15s;
+}
+:where(.legend-site) .destination h2 {
+    font-weight: 550;
+    font-size: 17px;
+    letter-spacing: -0.45px;
+}
+:where(.legend-site) .destination p {
+    font-size: 12px;
+    color: #949ba6;
+    line-height: 1.75;
+    margin: 8px 0 12px;
+    max-width: 290px;
+}
+:where(.legend-site) .destination-action {
+    font-size: 10px;
+    color: #b1bac6;
+}
+:where(.legend-site) .family-home > .apps-section {
+    margin-top: 76px;
+}
+:where(.legend-site) .family-home > .libraries-section {
+    margin-top: 76px;
+    padding-top: 43px;
+}
+:where(.legend-site) .family-home > .framework-section {
+    margin-block: 50px 0;
+    padding-block: 44px 65px;
+}
+:where(.legend-site) .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a8b5c7;
+    font-size: 12px;
+}
+:where(.legend-site) .section-link:hover {
+    color: var(--legend-link);
+}
+:where(.legend-site) .family-closing {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    padding-block: 55px;
+}
+:where(.legend-site) .family-closing h2 {
+    font-size: 28px;
+    line-height: 1.35;
+    letter-spacing: -0.8px;
+    font-weight: 480;
+    margin-top: 15px;
+}
+:where(.legend-site) .family-closing h2 span {
+    color: #808895;
+}
+:where(.legend-site) .collection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    padding-block: 72px 58px;
+}
+:where(.legend-site) .collection-header h1 {
+    font-size: clamp(40px, 4.5vw, 58px);
+    letter-spacing: -2.7px;
+    line-height: 1.07;
+    font-weight: 530;
+    margin-block: 22px;
+}
+:where(.legend-site) .collection-header > div > p {
+    font-size: 14px;
+    line-height: 1.85;
+    color: #9ca4af;
+}
+:where(.legend-site) .collection-header .eyebrow a:hover {
+    color: #d1d6df;
+}
+:where(.legend-site) .collection-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 11px;
+    border-left: 1px solid var(--line);
+    padding: 5px 0 5px 30px;
+    flex-shrink: 0;
+    min-width: 220px;
+}
+:where(.legend-site) .collection-aside > svg {
+    color: #5f8198;
+    margin-bottom: 5px;
+}
+:where(.legend-site) .collection-aside > strong {
+    font-size: 13px;
+    font-weight: 500;
+}
+:where(.legend-site) .collection-header .collection-aside > p {
+    font-size: 11px;
+    color: #838e9d;
+}
+:where(.legend-site) .collection-aside .status-badge {
+    margin-top: 5px;
+    font-size: 8px;
+}
+:where(.legend-site) .collection-aside .section-link {
+    font-size: 10px;
+}
+:where(.legend-site) .collection-section-label {
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 21px;
+    font:
+        9px ui-monospace,
+        monospace;
+    letter-spacing: 1px;
+    color: #78818f;
+}
+:where(.legend-site) .workbench-section {
+    margin-top: 80px;
+}
+:where(.legend-site) .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+:where(.legend-site) .demo-card {
+    padding: 23px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #121418;
+    display: flex;
+    flex-direction: column;
+}
+:where(.legend-site) .demo-card:hover {
+    border-color: #3c4c62;
+}
+:where(.legend-site) .demo-card > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #6f94b4;
+}
+:where(.legend-site) .demo-card > div > svg:last-child {
+    margin-left: auto;
+    color: #67778c;
+}
+:where(.legend-site) .demo-card h3 {
+    font-size: 16px;
+    letter-spacing: -0.4px;
+    font-weight: 520;
+    margin-block: 19px 9px;
+}
+:where(.legend-site) .demo-card p {
+    font-size: 12px;
+    color: #8e99a7;
+    line-height: 1.85;
+    margin-bottom: 23px;
+}
+:where(.legend-site) .demo-card .section-link {
+    margin-top: auto;
+    font-size: 11px;
+}
+:where(.legend-site) .collection-crosslink {
+    margin-top: 72px;
+    padding-block: 39px 48px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    align-items: center;
+}
+:where(.legend-site) .collection-crosslink h2 {
+    font-size: 26px;
+    font-weight: 480;
+    letter-spacing: -0.8px;
+    margin-top: 12px;
+}
+:where(.legend-site) .collection-crosslink p {
+    font-size: 12px;
+    color: #8d98a7;
+    line-height: 1.8;
+    margin-top: 8px;
+    max-width: 570px;
+}
+:where(.legend-site) .collection-crosslink > .button {
+    flex-shrink: 0;
+}
+:where(.legend-site) .library-examples-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 79px;
+}
+:where(.legend-site) .library-examples-section h2 {
+    font-size: 37px;
+    line-height: 1.15;
+    font-weight: 480;
+    letter-spacing: -1.4px;
+    margin-block: 20px;
+}
+:where(.legend-site) .library-examples-section h2 span {
+    color: #929ba7;
+}
+:where(.legend-site) .library-examples-section p {
+    font-size: 13px;
+    line-height: 1.85;
+    color: #949eac;
+    max-width: 360px;
+}
+:where(.legend-site) .example-library-links {
+    display: flex;
+    gap: 25px;
+    margin-top: 25px;
+}
+:where(.legend-site) .example-library-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a9bbd0;
+    font-size: 12px;
+}
+:where(.legend-site) .example-library-links a:hover {
+    color: var(--legend-link);
+}
+:where(.legend-site) .framework-landing .collection-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 85px;
+}
+:where(.legend-site) .framework-landing .collection-header .button {
+    margin-top: 25px;
+}
+:where(.legend-site) .framework-terminal {
+    background: #10161d;
+    border: 1px solid #2b4156;
+    border-radius: 9px;
+    overflow: hidden;
+}
+:where(.legend-site) .framework-terminal .showcase-top {
+    font-size: 8px;
+    letter-spacing: 0.4px;
+}
+:where(.legend-site) .runtime-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+}
+:where(.legend-site) .runtime-stack > svg {
+    color: #5b9dc6;
+}
+:where(.legend-site) .runtime-stack h2 {
+    font-size: 23px;
+    font-weight: 450;
+    letter-spacing: -0.5px;
+    margin-top: 10px;
+}
+:where(.legend-site) .runtime-stack > p {
+    font:
+        10px ui-monospace,
+        monospace;
+    color: #7f93a8;
+    margin-top: 8px;
+}
+:where(.legend-site) .runtime-rule {
+    width: 1px;
+    height: 24px;
+    background: #32698d;
+    margin-block: 15px;
+}
+:where(.legend-site) .runtime-stack > span {
+    font:
+        9px ui-monospace,
+        monospace;
+    letter-spacing: 1.7px;
+    color: #60acd9;
+}
+:where(.legend-site) .runtime-platforms {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-block: 19px;
+}
+:where(.legend-site) .runtime-platforms span {
+    border: 1px solid #2d465b;
+    padding: 8px 13px;
+    background: #14222f;
+    border-radius: 4px;
+    font-size: 10px;
+    color: #9fb2c6;
+}
+:where(.legend-site) .runtime-stack small {
+    font-size: 9px;
+    color: #687f92;
+}
+:where(.legend-site) .framework-status {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    padding: 16px 18px;
+    border: 1px solid #27333f;
+    background: #111922;
+    border-radius: 6px;
+}
+:where(.legend-site) .framework-status p {
+    color: #92a2b4;
+    font-size: 12px;
+    line-height: 1.8;
+}
+:where(.legend-site) .framework-features {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+    margin-top: 57px;
+}
+:where(.legend-site) .framework-features svg {
+    color: #6a93b5;
+}
+:where(.legend-site) .framework-features h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-block: 18px 9px;
+    letter-spacing: -0.4px;
+}
+:where(.legend-site) .framework-features p {
+    color: #929dac;
+    font-size: 12px;
+    line-height: 1.85;
+}
+:where(.legend-site) .framework-doc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-shrink: 0;
+}
+:where(.legend-site) .framework-doc-links a {
+    display: flex;
+    justify-content: space-between;
+    gap: 23px;
+    align-items: center;
+    font-size: 12px;
+    color: #9ebbd4;
+}
+
+@media (max-width: 1100px) {
+    :where(.legend-site) .brand-hero {
+        gap: 30px;
+    }
+    :where(.legend-site) .brand-hero h1 {
+        font-size: 60px;
+    }
+    :where(.legend-site) .hero-composition {
+        height: 370px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body {
+        gap: 14px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body h4 {
+        font-size: 21px;
+    }
+    :where(.legend-site) .hero-composition .music-preview-body {
+        padding: 20px 15px;
+        gap: 15px;
+    }
+    :where(.legend-site) .hero-composition .album-art {
+        width: 96px;
+        height: 122px;
+    }
+    :where(.legend-site) .hero-composition .music-info h4 {
+        font-size: 16px;
+    }
+    :where(.legend-site) .hero-composition .preview-window {
+        height: 205px;
+    }
+    :where(.legend-site) .composition-music {
+        top: 164px;
+    }
+    :where(.legend-site) .composition-native {
+        bottom: -22px;
+    }
+    :where(.legend-site) .collection-header h1 {
+        font-size: 48px;
+    }
+    :where(.legend-site) .collection-header {
+        gap: 25px;
+    }
+    :where(.legend-site) .collection-aside {
+        min-width: 185px;
+        padding-left: 23px;
+    }
+    :where(.legend-site) .library-examples-section {
+        gap: 45px;
+    }
+    :where(.legend-site) .framework-landing .collection-header {
+        gap: 40px;
+    }
+}
+@media (max-width: 800px) {
+    :where(.legend-site) .brand-hero {
+        padding-block: 57px;
+        gap: 20px;
+    }
+    :where(.legend-site) .brand-hero h1 {
+        font-size: 49px;
+        letter-spacing: -2.7px;
+    }
+    :where(.legend-site) .brand-hero-copy > p {
+        font-size: 13px;
+    }
+    :where(.legend-site) .hero-composition {
+        height: 330px;
+    }
+    :where(.legend-site) .hero-composition .preview-window {
+        height: 190px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body h4 {
+        font-size: 17px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body {
+        gap: 12px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body > div {
+        padding-top: 17px;
+        padding-right: 5px;
+    }
+    :where(.legend-site) .hero-composition .writing-line {
+        font-size: 6px;
+    }
+    :where(.legend-site) .hero-composition .music-preview-body {
+        padding: 17px 12px;
+        gap: 11px;
+    }
+    :where(.legend-site) .hero-composition .album-art {
+        width: 78px;
+        height: 115px;
+    }
+    :where(.legend-site) .hero-composition .album-art > span {
+        font-size: 15px;
+    }
+    :where(.legend-site) .hero-composition .music-info h4 {
+        font-size: 14px;
+    }
+    :where(.legend-site) .hero-composition .music-info .document-kicker {
+        display: none;
+    }
+    :where(.legend-site) .hero-composition .music-info p {
+        font-size: 7px;
+    }
+    :where(.legend-site) .hero-composition .music-controls {
+        gap: 10px;
+    }
+    :where(.legend-site) .composition-music {
+        width: 91%;
+        top: 147px;
+    }
+    :where(.legend-site) .composition-label {
+        font-size: 7px;
+        top: -7px;
+    }
+    :where(.legend-site) .composition-native {
+        display: none;
+    }
+    :where(.legend-site) .destination {
+        padding-right: 17px;
+    }
+    :where(.legend-site) .destination + .destination {
+        padding-left: 19px;
+    }
+    :where(.legend-site) .destination p {
+        font-size: 11px;
+    }
+    :where(.legend-site) .destination h2 {
+        font-size: 15px;
+    }
+    :where(.legend-site) .destination-action {
+        font-size: 9px;
+    }
+    :where(.legend-site) .collection-header h1 {
+        font-size: 39px;
+        letter-spacing: -1.9px;
+    }
+    :where(.legend-site) .collection-header {
+        padding-block: 54px 42px;
+    }
+    :where(.legend-site) .collection-header > div > p {
+        font-size: 12px;
+    }
+    :where(.legend-site) .collection-aside {
+        min-width: 175px;
+    }
+    :where(.legend-site) .collection-aside .status-badge {
+        font-size: 7px;
+    }
+    :where(.legend-site) .demo-grid {
+        gap: 12px;
+    }
+    :where(.legend-site) .demo-card {
+        padding: 18px;
+    }
+    :where(.legend-site) .demo-card h3 {
+        font-size: 14px;
+    }
+    :where(.legend-site) .demo-card p {
+        font-size: 11px;
+    }
+    :where(.legend-site) .library-examples-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    :where(.legend-site) .library-examples-section p {
+        max-width: 480px;
+    }
+    :where(.legend-site) .library-examples-section .code-showcase {
+        max-width: 600px;
+    }
+    :where(.legend-site) .collection-crosslink h2 {
+        font-size: 23px;
+    }
+    :where(.legend-site) .family-closing {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    :where(.legend-site) .framework-landing .collection-header {
+        gap: 30px;
+    }
+    :where(.legend-site) .framework-terminal .showcase-top > span {
+        font-size: 6px;
+    }
+    :where(.legend-site) .framework-features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    :where(.legend-site) .brand-hero {
+        grid-template-columns: 1fr;
+        padding-block: 44px 22px;
+        gap: 36px;
+    }
+    :where(.legend-site) .brand-hero h1 {
+        font-size: 55px;
+        letter-spacing: -3px;
+    }
+    :where(.legend-site) .brand-hero-copy > p {
+        font-size: 14px;
+        max-width: 390px;
+    }
+    :where(.legend-site) .hero-composition {
+        width: 100%;
+        max-width: 460px;
+        height: 325px;
+        margin: auto;
+    }
+    :where(.legend-site) .composition-markdown {
+        width: 88%;
+    }
+    :where(.legend-site) .composition-music {
+        width: 78%;
+        top: 149px;
+        left: 0;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body h4 {
+        font-size: 21px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body p {
+        font-size: 8px;
+    }
+    :where(.legend-site) .hero-composition .writing-line {
+        font-size: 7px;
+    }
+    :where(.legend-site) .hero-composition .music-info h4 {
+        font-size: 16px;
+    }
+    :where(.legend-site) .hero-composition .album-art {
+        width: 91px;
+        height: 119px;
+    }
+    :where(.legend-site) .composition-label {
+        top: 0;
+    }
+    :where(.legend-site) .destination-grid {
+        grid-template-columns: 1fr;
+    }
+    :where(.legend-site) .destination {
+        padding: 20px 0;
+    }
+    :where(.legend-site) .destination + .destination {
+        padding-left: 0;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+    }
+    :where(.legend-site) .destination h2 {
+        font-size: 18px;
+    }
+    :where(.legend-site) .destination p {
+        max-width: none;
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    :where(.legend-site) .destination-action {
+        font-size: 10px;
+    }
+    :where(.legend-site) .family-home > .apps-section,
+    :where(.legend-site) .family-home > .libraries-section {
+        margin-top: 46px;
+    }
+    :where(.legend-site) .family-home > .libraries-section {
+        padding-top: 31px;
+    }
+    :where(.legend-site) .family-home > .framework-section {
+        margin-top: 20px;
+        padding-bottom: 43px;
+    }
+    :where(.legend-site) .family-home .eyebrow {
+        font-size: 8px;
+        letter-spacing: 0.7px;
+    }
+    :where(.legend-site) .family-closing {
+        padding-block: 38px;
+        gap: 23px;
+    }
+    :where(.legend-site) .family-closing h2 {
+        font-size: 25px;
+    }
+    :where(.legend-site) .collection-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 25px;
+        padding-block: 44px 32px;
+    }
+    :where(.legend-site) .collection-header h1 {
+        font-size: 43px;
+        letter-spacing: -2.1px;
+        margin-block: 21px;
+    }
+    :where(.legend-site) .collection-header > div > p {
+        font-size: 13px;
+    }
+    :where(.legend-site) .collection-aside {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 12px;
+        row-gap: 6px;
+        border-left: 0;
+        padding: 15px 0 0;
+        border-top: 1px solid var(--line);
+        width: 100%;
+    }
+    :where(.legend-site) .collection-aside > svg {
+        grid-row: span 3;
+        margin-top: 2px;
+    }
+    :where(.legend-site) .collection-aside > p,
+    :where(.legend-site) .collection-aside > .status-badge,
+    :where(.legend-site) .collection-aside > .section-link {
+        grid-column: 2;
+        width: fit-content;
+    }
+    :where(.legend-site) .collection-aside p br {
+        display: none;
+    }
+    :where(.legend-site) .collection-aside .status-badge {
+        font-size: 8px;
+    }
+    :where(.legend-site) .workbench-section {
+        margin-top: 48px;
+    }
+    :where(.legend-site) .demo-grid {
+        grid-template-columns: 1fr;
+    }
+    :where(.legend-site) .demo-card {
+        padding: 22px;
+    }
+    :where(.legend-site) .demo-card h3 {
+        font-size: 17px;
+    }
+    :where(.legend-site) .demo-card p {
+        font-size: 12px;
+    }
+    :where(.legend-site) .collection-crosslink {
+        margin-top: 44px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 23px;
+    }
+    :where(.legend-site) .library-examples-section {
+        margin-top: 48px;
+    }
+    :where(.legend-site) .library-examples-section h2 {
+        font-size: 32px;
+    }
+    :where(.legend-site) .framework-landing .collection-header {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    :where(.legend-site) .framework-landing .collection-header h1 {
+        font-size: 49px;
+    }
+    :where(.legend-site) .framework-terminal {
+        width: 100%;
+    }
+    :where(.legend-site) .framework-terminal .showcase-top > span {
+        font-size: 7px;
+    }
+    :where(.legend-site) .framework-features {
+        gap: 27px 20px;
+        margin-top: 36px;
+    }
+    :where(.legend-site) .framework-features h2 {
+        font-size: 16px;
+    }
+    :where(.legend-site) .framework-features p {
+        font-size: 11px;
+    }
+    :where(.legend-site) .framework-status p {
+        font-size: 11px;
+    }
+}
+@media (max-width: 375px) {
+    :where(.legend-site) .brand-hero h1 {
+        font-size: 47px;
+        letter-spacing: -2.5px;
+    }
+    :where(.legend-site) .hero-composition .markdown-preview-body h4 {
+        font-size: 17px;
+    }
+    :where(.legend-site) .hero-composition .music-info h4 {
+        font-size: 13px;
+    }
+    :where(.legend-site) .hero-composition .album-art {
+        width: 71px;
+    }
+    :where(.legend-site) .collection-header h1 {
+        font-size: 36px;
+    }
+}
+
+:where(.legend-site) .footer-links {
+    flex-wrap: wrap;
+}
+
+:where(.legend-site) .legend-app-link {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    max-width: 420px;
+    margin-top: 25px;
+    padding: 15px;
+    border: 1px solid #28404f;
+    border-radius: 8px;
+    background: #101b23;
+    transition:
+        border-color 0.15s,
+        background 0.15s;
+}
+:where(.legend-site) .legend-app-link:hover {
+    border-color: var(--legend-blue);
+    background: #13232e;
+}
+:where(.legend-site) .legend-app-link > img {
+    flex-shrink: 0;
+}
+:where(.legend-site) .legend-app-link > span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+:where(.legend-site) .legend-app-link strong {
+    color: #edf4fa;
+    font-size: 14px;
+    font-weight: 550;
+    line-height: 1.4;
+}
+:where(.legend-site) .legend-app-link > span > span {
+    color: #9aaeba;
+    font-size: 11px;
+    line-height: 1.5;
+}
+:where(.legend-site) .legend-app-link > svg {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--legend-link);
+}
+
+:where(.legend-site) .legend-app-link > span > .legend-app-action {
+    color: var(--legend-link);
+    margin-top: 3px;
+}
+:where(.legend-site) .legend-app-feature {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 34px;
+    margin-bottom: 48px;
+    border: 1px solid #28404f;
+    border-radius: 9px;
+    background: #101b23;
+}
+:where(.legend-site) .legend-app-feature > img {
+    flex-shrink: 0;
+}
+:where(.legend-site) .legend-app-feature h2 {
+    font-size: 32px;
+    font-weight: 550;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-block: 8px;
+}
+:where(.legend-site) .legend-app-feature p {
+    font-size: 17px;
+    color: #d0dbe3;
+    line-height: 1.6;
+}
+:where(.legend-site) .legend-app-feature-detail {
+    display: block;
+    margin-top: 9px;
+    font-size: 12px;
+    color: #9aaeba;
+    line-height: 1.8;
+}
+:where(.legend-site) .legend-app-feature > .button {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+@media (max-width: 800px) {
+    :where(.legend-site) .legend-app-feature {
+        flex-wrap: wrap;
+        padding: 24px;
+        gap: 18px;
+    }
+    :where(.legend-site) .legend-app-feature > div {
+        flex: 1;
+        min-width: 180px;
+    }
+    :where(.legend-site) .legend-app-feature > .button {
+        margin-left: 0;
+    }
+}

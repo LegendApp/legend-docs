@@ -63,6 +63,7 @@ export function createGenerateMetadata(source: DocsSource) {
         return {
             title: page.data.title,
             description: page.data.description,
+            alternates: { canonical: page.url },
         };
     };
 }

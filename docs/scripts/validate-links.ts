@@ -30,7 +30,6 @@ interface FileCheckResult {
 class LinkValidator {
     private readonly rootDir: string;
     private readonly publicDir: string;
-    private readonly basePath: string;
     private readonly verbose: boolean;
     private errors: ValidationError[] = [];
 
@@ -40,7 +39,6 @@ class LinkValidator {
         const docsSuffix = `${path.sep}docs`;
         this.rootDir = cwd.endsWith(docsSuffix) ? path.dirname(cwd) : cwd;
         this.publicDir = path.join(this.rootDir, 'docs/public');
-        this.basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? '/open-source').replace(/\/+$/, '') || '/';
     }
 
     /**
@@ -106,8 +104,8 @@ class LinkValidator {
     private resolveLinkPath(linkUrl: string, fromFile: string): string {
         // URLs starting with "/" should be treated as site-root paths, not filesystem-absolute
         if (linkUrl.startsWith('/')) {
-            const withoutFragment = linkUrl.split('#')[0];
-            return withoutFragment;
+            const withoutFragment = linkUrl.split(/[?#]/)[0].replace(/\/+$/, '');
+            return path.join(this.rootDir, 'docs/content', withoutFragment);
         }
 
         const parsedPath = path.parse(fromFile);
@@ -142,11 +140,31 @@ class LinkValidator {
             });
         };
 
+        // Blog URLs omit the date prefix used by their source filenames.
+        const blogDir = path.join(this.rootDir, 'docs/content/blog');
+        if (path.dirname(targetPath) === blogDir) {
+            for (const file of fs.readdirSync(blogDir)) {
+                if (file.replace(/^\d{4}-\d{2}-\d{2}-/, '') === `${path.basename(targetPath)}.mdx`) {
+                    candidates.push(path.join(blogDir, file));
+                }
+            }
+        }
+
         // Original resolved path
         addCandidates(targetPath);
 
         // If the path is under the Next.js basePath, check the public directory
         addCandidates(targetPath.replace('/content/', '/public/'));
+
+        // Collection and library landing pages are app routes rather than MDX files.
+        const contentDir = path.join(this.rootDir, 'docs/content');
+        const relativePath = path.relative(contentDir, targetPath);
+        if (!relativePath.startsWith('..')) {
+            for (const group of ['', '(site)']) {
+                const route = path.join(this.rootDir, 'docs/src/app', group, relativePath, 'page.tsx');
+                candidates.push(route);
+            }
+        }
 
         for (const fullPath of candidates) {
             // Check if it's a file
@@ -190,10 +208,6 @@ class LinkValidator {
         }
 
         links.forEach((link) => {
-            if (link.url.includes('.html')) {
-                return;
-            }
-
             const targetPath = this.resolveLinkPath(link.url, filePath);
             const result = this.checkFileExists(targetPath);
 

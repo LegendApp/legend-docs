@@ -126,5 +126,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: page.data.title,
         description: page.data.description,
+        alternates: { canonical: `/blog/${removeFilenameDatePrefix(resolvedParams.slug)}/` },
     };
 }

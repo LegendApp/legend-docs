@@ -159,7 +159,7 @@ function SearchResultItem({ item, onClick }: { item: SortedResult; onClick: () =
 }
 
 export default function StaticSearchDialog(props: SharedProps) {
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+    const basePath = '';
     const searchEndpoint = `${basePath}/api/search`;
     const pathname = usePathname();
 
