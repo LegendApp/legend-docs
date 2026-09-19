@@ -6,6 +6,7 @@ Assets are in `public/assets/showcase/`.
 
 | Asset | Source |
 | --- | --- |
+| `legend-hero-blue-metal.png` | Selected blue anodized aluminum variant, generated with the built-in image tool. See [material prompts](hero-variants/README.md). |
 | `legend-hero.png` | Custom artwork generated with the built-in image generation tool, using the existing Legend logo as a reference. |
 | `legend.png` | Frame from Legend's public product recording at `https://legendapp.com/video/together.mp4`. |
 | `diff.png` | Captured from Legend Diff using a small sample patch. |

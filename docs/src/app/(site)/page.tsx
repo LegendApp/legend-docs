@@ -62,7 +62,7 @@ export default function HomePage() {
                 <header className="showcase-hero">
                     <Image
                         className="hero-art"
-                        src="/assets/showcase/legend-hero.png"
+                        src="/assets/showcase/legend-hero-blue-metal.png"
                         alt=""
                         width={1942}
                         height={809}
