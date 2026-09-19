@@ -12,11 +12,11 @@ Assets are in `public/assets/showcase/`.
 | `diff.png` | Captured from Legend Diff using a small sample patch. |
 | `code.png` | Captured from the Code app using a sample TSX document in the rebuilt shared native shell. |
 | `markdown.png` | Captured from the Markdown app using a sample Markdown document in the rebuilt shared native shell. |
-| `music.png` | Existing Legend Music screenshot from the September 8 app integration artifacts (`music-ai-toolbar/07-library-titlebarless.png`). |
+| `music-main.png` | Main player window from the September 8 app integration artifacts (`apple-music-playing.png`). |
 | `slides.png` | Existing Legend Slides screenshot from `legend-apps/.artifacts/slides-layouts/02-grid.png`. |
 | `chat-history.png` | Existing demonstration screenshot from the React Native desktop presentation in `legend-apps/apps/slides/decks/react-native-desktop/rnconnection-assets/`. |
 
-Library previews are illustrative HTML/CSS examples in `src/components/site/library-preview.tsx`; they are not app screenshots or interactive controls. The framework preview illustrates its layers.
+Library images are captures of the actual documentation: `list-docs.png` from `/list/v3/react/examples/chat/`, `state-docs.png` from `/state/`, and `motion-docs.png` from `/motion/v2/usage/overview/`. CSS frames the page content without browser chrome. The framework preview illustrates its layers.
 
 ## Hero prompt
 

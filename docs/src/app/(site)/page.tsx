@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ArrowDown, ArrowUpRight, Blocks } from 'lucide-react';
 import { Navbar } from '@/components/site/navbar';
 import { Footer } from '@/components/site/footer';
-import { LibraryPreview } from '@/components/site/library-preview';
 import { ProjectIcon } from '@/components/site/project-icon';
 import { apps, demos, libraries, type Project } from '@/lib/projects';
 
@@ -29,18 +28,15 @@ const descriptions: Record<string, string> = {
 function ProductCard({ project }: { project: Project }) {
     return (
         <Link href={`/${project.slug}`} className={`showcase-card showcase-${project.slug}`}>
-            <div className="product-image">
-                {project.category === 'library' ? (
-                    <LibraryPreview slug={project.slug} />
-                ) : (
-                    <Image
-                        src={`/assets/showcase/${project.slug}.png`}
-                        alt={`${project.name} interface`}
-                        width={1440}
-                        height={900}
-                        sizes="(max-width: 700px) 100vw, 560px"
-                    />
-                )}
+            <div className={`product-image${project.category === 'library' ? ' docs-image' : ''}`}>
+                <Image
+                    src={`/assets/showcase/${project.category === 'library' ? `${project.slug}-docs` : project.slug === 'music' ? 'music-main' : project.slug}.png`}
+                    alt={project.category === 'library' ? `${project.name} documentation example` : `${project.name} interface`}
+                    width={project.slug === 'music' ? 510 : project.category === 'library' ? 1460 : 1440}
+                    height={project.slug === 'music' ? 679 : project.category === 'library' ? 768 : 900}
+                    sizes="(max-width: 700px) 100vw, 560px"
+                />
+                {project.slug === 'markdown' && <span className="coming-soon-banner">Coming soon</span>}
             </div>
             <div className="product-caption">
                 <ProjectIcon slug={project.slug} size={21} />

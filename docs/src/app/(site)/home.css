@@ -528,3 +528,56 @@
 :where(.legend-site) .motion-preview pre {
     padding-top: 0;
 }
+
+:where(.legend-site) .product-image {
+    position: relative;
+}
+:where(.legend-site) .coming-soon-banner {
+    position: absolute;
+    top: 50%;
+    left: -20%;
+    width: 140%;
+    padding: 18px 0;
+    transform: translateY(-50%) rotate(-16deg);
+    text-align: center;
+    color: #e6f6ff;
+    background: linear-gradient(100deg, #081b3299, #1364a4a6 48%, #081b3299);
+    border-block: 1px solid #91d6ff80;
+    box-shadow: 0 8px 28px #00132640, inset 0 1px 0 #ffffff1a;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    text-shadow: 0 1px 12px #001d42;
+    font-size: clamp(13px, 1.3vw, 17px);
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+:where(.legend-site) .showcase-music .product-image {
+    padding: 16px;
+}
+:where(.legend-site) .showcase-music .product-image img {
+    object-fit: contain;
+    object-position: center;
+    border-radius: 8px;
+    box-shadow: none;
+}
+:where(.legend-site) .docs-image {
+    padding: 0;
+    background: #101113;
+}
+/* Frame the docs content, excluding browser chrome and the sidebar. */
+:where(.legend-site) .docs-image img {
+    position: absolute;
+    width: 174%;
+    max-width: none;
+    height: auto;
+    left: -37%;
+    top: -18%;
+    border-radius: 0;
+}
+
+:where(.legend-site) .showcase-state .docs-image img {
+    width: 166%;
+    left: -31%;
+}
