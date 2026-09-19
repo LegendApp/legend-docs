@@ -27,7 +27,7 @@ The build validates content links, generates per-version LLM documentation, and 
 
 Library documentation and interactive examples stay in their existing locations. App and framework documentation is placeholder content while those projects prepare for release. Kitchen sink is excluded.
 
-The new landing pages live in `docs/src/app/(site)` with components in `docs/src/components/site`. Styles are scoped to `.legend-site` so they do not change library documentation or examples. The homepage uses a custom Legend hero, app screenshots, illustrated library previews, and short product summaries; there are no separate `/apps` or `/libraries` pages.
+The new landing pages live in `docs/src/app/(site)` with components in `docs/src/components/site`. Styles are scoped to `.legend-site` so they do not change library documentation or examples. The homepage uses a custom Legend hero, app screenshots, images from the library documentation, and short product summaries; there are no separate `/apps` or `/libraries` pages.
 
 ## Configuration
 
@@ -41,7 +41,7 @@ Homepage image sources and the hero generation prompt are documented in [showcas
 
 ## Cloudflare Pages
 
-- Production branch: `main`
+- Production branch: `production`
 - Root directory: `docs`
 - Build command: `bun install --frozen-lockfile && bun run build`
 - Output directory: `dist`
@@ -51,4 +51,25 @@ The curated Legend List source listings are checked in under
 `docs/vendor/legend-list`, pinned to an upstream commit. No sibling checkout is
 needed for deployment. See its [refresh instructions](docs/vendor/legend-list/README.md).
 
-Attach `legend.so` as the Pages custom domain. Pushing to `main` triggers the configured Pages deployment.
+Attach `legend.so` as the Pages custom domain. Pushing to `production` triggers the configured Pages deployment.
+
+## Deploy to production
+
+After merging and pushing the desired changes to `main`, run from the repository root:
+
+```sh
+bun run deploy:production --dry-run
+bun run deploy:production
+```
+
+Requires Git and GitHub CLI (`gh`) authenticated as `jmeistrich`, plus Git push
+credentials for the same account. The script promotes the latest remote `main`
+commit to `production` with a normal fast-forward push. It creates `production`
+on the first deployment. Local commits and uncommitted files are not deployed.
+Cloudflare runs the configured install and build command after the push.
+
+GitHub rules restrict creation and updates of `production` to `jmeistrich`.
+A separate rule blocks force pushes and deletion for everyone. These rules apply
+to direct pushes and PR merges; the script's account check is only a convenience.
+Repository administrators can still edit the rules themselves, so administrative
+access must remain trusted. No deployment credentials are stored in this repo.
