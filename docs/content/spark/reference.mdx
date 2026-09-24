@@ -1,0 +1,48 @@
+---
+title: API guide
+description: Public Spark entry points and their responsibilities.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+Import application APIs from `@legendapp/spark/<feature>`. Internal `@legendapp/spark-*` packages supply implementations; applications should prefer the public entry points. Framework contracts can later delegate to compatible Expo or community implementations.
+
+These are capability groups, not a promise of identical support on every target. Check each linked guide's platform and lifecycle restrictions.
+
+| Public entry point | Capability |
+| --- | --- |
+| `/app`, `/windows` | Application context, lifecycle, native windows and displays |
+| `/menus`, `/context-menu`, `/shortcuts`, `/global-shortcuts` | Native menus, focused shortcuts and system-wide hotkeys |
+| `/dialogs`, `/message-dialog` | Native file selection and message dialogs |
+| `/files` | Files/directories, watching, binary and streaming I/O, Trash/Recycle Bin |
+| `/settings`, `/secure-storage` | Settings and secure values |
+| `/clipboard`, `/links` | Clipboard, external URLs and incoming links |
+| `/notifications`, `/tray`, `/system` | OS notifications, tray integration and system capabilities |
+| `/drag-drop` | Files and custom drag payloads |
+| `/processes` | Child processes and managed app-supplied helpers |
+| `/sqlite`, `/webview` | Database and embedded web content integrations |
+| `/audio`, `/auth-session` | Playback/media sessions and browser authentication transport |
+| `/ui`, `/ui/uniwind` | Native controls and optional class-based layout styling |
+| `/updates` | Experimental update integration; distribution acceptance remains outstanding |
+
+## Files and desktop integration
+
+The [SDK guide](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk.md) and [expanded API reference](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-api-expansion.md) describe functions, options, events, and cleanup. [Streaming files and Trash](https://github.com/LegendApp/legend-spark/blob/main/docs/file-streams.md) covers handle lifetime and binary operations.
+
+Desktop resources need lifecycle handling: remove event subscriptions, close file handles, and handle canceled dialogs and rejected OS operations. Kitchen Sink provides runnable usage rather than hiding errors in the console.
+
+## Managed helpers
+
+Spark does not bundle Node. An application may supply a native executable for each target OS/architecture. Spark packages it and manages its process I/O and lifetime. The application owns its protocol, requests, and recovery policy. Helpers require an app-specific runtime and are not persistent background services.
+
+See [managed sidecars](https://github.com/LegendApp/legend-spark/blob/main/docs/sidecars.md) and the [C helper example](https://github.com/LegendApp/legend-spark/tree/main/examples/sidecar).
+
+## Shared application APIs
+
+Clipboard, links, secure storage, UI, and audio have selected mobile/web adapters. Desktop-only behavior should remain in platform modules or explicitly conditional application code. Unsupported features must not be assumed to work because an import resolves.
+
+[Audio](https://github.com/LegendApp/legend-spark/blob/main/docs/audio.md) covers playback and optional system media controls. [Browser authentication](https://github.com/LegendApp/legend-spark/blob/main/docs/auth-session.md) supplies browser/callback transport; provider SDKs and token exchange remain application responsibilities.
+
+WebView and SQLite are integrations with platform-specific limits, not Electron or Node compatibility layers. Check [known Windows issues](https://github.com/LegendApp/legend-spark/blob/main/docs/windows-issues.md) before relying on their Windows implementations.

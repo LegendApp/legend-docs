@@ -1,0 +1,82 @@
+---
+title: Getting started
+description: Prepare a local Spark SDK and create your first application.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+## Prepare the framework checkout
+
+Spark currently uses local SDK archives. Do not start with `bunx @legendapp/spark` or an npm install of the public package: it has not been published.
+
+On an Apple Silicon Mac running macOS 14 or later, install Git, Bun 1.3.14 or newer, full Xcode with its first-launch setup complete, and CocoaPods. Use the repository's pinned Node version (currently 24.19.0).
+
+```sh
+git clone https://github.com/LegendApp/legend-spark.git
+cd legend-spark
+nvm install
+nvm use
+bun install
+bun run spark sdk pack
+bun run spark sdk build-prebuilt
+```
+
+`pack` creates and registers SDK archives and Expo Desktop templates. It downloads pinned upstream inputs on its first run. `build-prebuilt` compiles and registers a reusable native runtime, so this initial setup needs native build tools.
+
+If someone supplies a compatible runtime and you already have the matching SDK archives, register it instead:
+
+```sh
+bun run spark sdk register /absolute/path/to/SparkPrebuilt.app
+```
+
+Registration stores the location; keep the runtime there. There is no automatic hosted runtime download yet.
+
+## Create an app
+
+Run this from the framework checkout, after preparing the SDK:
+
+```sh
+bun run spark create /absolute/path/to/MyApp
+cd /absolute/path/to/MyApp
+bun run macos
+```
+
+Edit the generated application files. JavaScript changes use Fast Refresh. Native dependency or configuration changes can require a new runtime; the development terminal explains incompatibilities and offers a build action.
+
+For a shared Settings application with mobile/web adapters:
+
+```sh
+# From the framework checkout
+bun run spark create /absolute/path/to/MySettings --universal
+```
+
+Use that application's generated platform scripts. Some mobile native dependencies require a development build rather than Expo Go.
+
+## Windows development
+
+Run Windows builds on Windows with Visual Studio's supported C++/Windows SDK tooling installed. Follow the repository's [Windows prerequisites](https://github.com/LegendApp/legend-spark/blob/main/docs/windows-slice.md) before these commands:
+
+```powershell
+# From the framework checkout on Windows
+bun install
+bun run spark sdk pack --platform windows
+bun run spark sdk build-prebuilt --platform windows
+bun run spark create C:\dev\MySparkApp --platform windows
+cd C:\dev\MySparkApp
+bun run windows
+```
+
+Windows targets the machine's native x64 or ARM64 architecture, including ARM64 Windows in Parallels. This is an experimental development workflow; it is not a claim of validated Windows parity or production packaging.
+
+## Build without Metro on macOS
+
+From a generated macOS app:
+
+```sh
+bun run build
+bunx --no-install spark open
+```
+
+The standalone application embeds JavaScript. Signing, notarization, updates, and real distribution acceptance are separate work; see [limitations](/spark/limitations).

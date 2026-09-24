@@ -1,0 +1,45 @@
+---
+title: Overview
+description: Native desktop applications with React Native and Expo Desktop.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+Legend Spark adds desktop application APIs and a managed development workflow to React Native and Expo Desktop. Build interfaces with React Native components, use native windows, menus, dialogs, and files, and edit JavaScript with Fast Refresh.
+
+The public package name is `@legendapp/spark`; the CLI is `spark`. These names describe the source checkout, not a published npm release.
+
+## How the pieces fit
+
+- **React Native** renders the interface with native components. Application JavaScript runs in Hermes.
+- **Expo** supplies mobile/web tooling and libraries where they fit the framework's contracts.
+- **Expo Desktop beta** creates projects from templates and generates native desktop projects.
+- **Spark** supplies desktop capabilities, runtime compatibility checks, prebuilt/custom runtime selection, and application build orchestration. Its development terminal extends Expo CLI.
+
+The goal is one project targeting mobile, web, and desktop. That does not mean every desktop API exists on every platform. Shared screens use platform adapters; native windows and desktop lifecycle remain desktop concerns.
+
+For Electron migrations, plan to replace DOM/CSS screens with React Native screens and browser/main-process integrations with supported APIs. Spark does not embed Node or provide an Electron compatibility layer. An optional WebView can host selected web content, but it is not the application's primary renderer.
+
+## Current platform scope
+
+| Platform | Current scope |
+| --- | --- |
+| macOS | Apple Silicon, macOS 14+, prebuilt/custom development and standalone builds; experimental |
+| Windows | x64/ARM64 development workflows and native implementations; compilation and behavioral acceptance still pending; no production build workflow |
+| iOS / Android / web | Expo workflows and selected shared API/UI adapters; not desktop feature parity |
+| Intel macOS / Linux | Not supported by the current workflow |
+
+The checkout targets Expo SDK 54 / React Native 0.81 and Expo Desktop beta. Historical native test reports do not prove that the renamed Spark binaries have passed acceptance.
+
+## Start exploring
+
+- [Getting started](/spark/getting-started): prepare a local SDK and create an app.
+- [Development and configuration](/spark/development): choose runtimes and add desktop to an Expo app.
+- [API guide](/spark/reference): public imports and desktop capabilities.
+- [Native UI and styling](/spark/ui): controls, Uniwind, and theme behavior.
+- [Examples and validation](/spark/examples): Kitchen Sink and focused sample applications.
+- [Limitations](/spark/limitations): unsupported workflows and acceptance still needed.
+
+Source and detailed engineering guides live in [LegendApp/legend-spark](https://github.com/LegendApp/legend-spark).

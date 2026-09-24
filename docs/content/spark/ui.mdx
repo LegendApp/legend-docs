@@ -1,0 +1,47 @@
+---
+title: Native UI and styling
+description: Small native control contracts with optional Uniwind styling.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+Use ordinary React Native components for screen layout and Spark's native controls where they fit:
+
+```tsx
+import { Button, TextInput, Select } from '@legendapp/spark/ui';
+
+<Button onPress={save} disabled={saving}>Save changes</Button>
+<TextInput defaultValue="" onChangeText={setName} accessibilityLabel="Name" />
+<Select
+  options={[{ label: 'System', value: 'system' }, { label: 'Dark', value: 'dark' }]}
+  value={theme}
+  onValueChange={setTheme}
+  accessibilityLabel="Appearance"
+/>
+```
+
+This fragment assumes application-owned handlers and state. The controls use AppKit on macOS, WinUI on Windows, Expo UI on mobile, and HTML on web. `Button` is a native button rather than a wrapper around React Native `Pressable`.
+
+- `Button` accepts a string label, `onPress`, `disabled`, and supported native variants.
+- `TextInput` is uncontrolled: `defaultValue` initializes it, and `onChangeText` reports edits. Changing `defaultValue` does not overwrite an active editor; remount to reset it. There is no `value` contract yet.
+- `Select` accepts unique string-valued options, a controlled `value`, and `onValueChange`. Native presentation differs by platform.
+
+The current surface is deliberately small. Router integration, declarative window routing, and a broad component catalog are not implemented. Mobile Expo UI dependencies may require a development build. Windows controls have disabled, labeled placeholders if their native implementation cannot initialize; a placeholder does not mean the control works.
+
+## Uniwind
+
+The shared Settings starter and Kitchen Sink demonstrate Uniwind configuration. To apply `className` to Spark controls, use the optional entry:
+
+```tsx
+import { Button } from '@legendapp/spark/ui/uniwind';
+
+<Button className="w-full" onPress={save}>Save changes</Button>
+```
+
+Classes control layout around the native control. They do not promise arbitrary CSS-like styling of native button chrome, fonts, or backgrounds. Ordinary React Native views and text can use Uniwind for the surrounding interface. Explicit `style` takes precedence.
+
+For appearance, use the application's Uniwind theme setting (`system`, `light`, or `dark`) and React Native Appearance integration. Kitchen Sink starts with System and cycles System → Light → Dark. Theme preference persistence is application-owned.
+
+See the detailed [UI contracts](https://github.com/LegendApp/legend-spark/blob/main/docs/ui.md) and [styling setup](https://github.com/LegendApp/legend-spark/blob/main/docs/styling.md).

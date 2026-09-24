@@ -1,0 +1,57 @@
+---
+title: Examples and validation
+description: Run Kitchen Sink and create focused sample applications.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+## Kitchen Sink
+
+Kitchen Sink is a checked-in app. From the framework clone:
+
+```sh
+cd examples/kitchen-sink
+bun install
+bun run macos
+# On Windows: bun run windows
+```
+
+Normal startup installs JavaScript and starts the development session; it does not compile a runtime. A matching registered native runtime is required. If none is available, explicitly build one with the native toolchain:
+
+```sh
+bun run rebuild:macos
+# On Windows: bun run rebuild:windows
+```
+
+Repeat a runtime build after native changes, not ordinary screen edits. The app demonstrates windows, menus, files, native controls, themes, and other capabilities. Actions show progress, results, and errors inline, with detailed events in the log.
+
+The streaming/Trash demo creates and recycles a disposable test file. Review permission prompts and use test data when exploring native APIs.
+
+## Smaller applications
+
+After [preparing the SDK](/spark/getting-started), run these from the framework checkout:
+
+```sh
+bun run spark create /absolute/path/to/MyNotes --example notes-lite
+bun run spark create /absolute/path/to/MyMusic --example music-lite
+bun run spark create /absolute/path/to/MyDiff --example diff-lite
+bun run spark create /absolute/path/to/MyEditor --example document-editor
+```
+
+Notes Lite demonstrates local notes, search, import/export, recovery, and desktop session restoration. Music Lite demonstrates a small playback queue. Diff Lite demonstrates text comparison. Document Editor demonstrates shared file operations and desktop lifecycle. These are focused examples, not the full Legend Apps products.
+
+## Validate the framework
+
+From the framework checkout:
+
+```sh
+bun run typecheck
+bun test tests
+bun run test:templates
+```
+
+These checks do not prove native execution. Follow the [manual Mac and Windows checklist](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-manual-acceptance.md) on actual target machines. The [platform test harness](https://github.com/LegendApp/legend-spark/blob/main/docs/platform-testing.md) records API/UI coverage separately; generation and bundle success are not device acceptance.
+
+Native suites compile applications and need the relevant toolchains. Use disposable projects and check each test's prerequisites before running the complete suite.

@@ -49,13 +49,14 @@ export const projects: Project[] = [
         highlights: ['Declarative animations', 'Springs + gestures', 'React Native + web'],
     },
     {
-        slug: 'framework',
-        name: 'Legend Frame',
+        slug: 'spark',
+        name: 'Legend Spark',
         category: 'framework',
-        status: 'Experimental',
+        status: 'Experimental — not for production',
+        github: 'https://github.com/LegendApp/legend-spark',
         tagline: 'React, meet the desktop.',
         description:
-            'An experimental framework for building native macOS apps with React, Hermes, and Expo Desktop. Windows, menus, files, and the details that make an app feel at home.',
+            'An experimental React Native and Expo Desktop framework with native desktop APIs and prebuilt development runtimes. Not ready for production use.',
         highlights: ['Native windows + menus', 'Hermes runtime', 'Apple silicon macOS'],
     },
     {

@@ -27,6 +27,7 @@ const features = [
 export function FrameworkLanding() {
     return (
         <main id="main" className="framework-landing container">
+            <div className="framework-status" role="note"><p><strong>Experimental — not ready for production use.</strong> APIs and native implementations are evolving. Public packages and hosted runtimes are not available yet.</p></div>
             <header className="collection-header">
                 <div>
                     <div className="eyebrow">
@@ -34,16 +35,14 @@ export function FrameworkLanding() {
                         <span>/</span> FRAMEWORK <span className="status-badge">Experimental</span>
                     </div>
                     <h1>
-                        React, meet
-                        <br />
-                        <span>the desktop.</span>
+                        Legend Spark
                     </h1>
                     <p>
                         Your React skills. A native macOS app.
                         <br />
                         Windows, menus, and files that feel right at home.
                     </p>
-                    <Link href="/framework/getting-started" className="button button-primary">
+                    <Link href="/spark/getting-started" className="button button-primary">
                         Explore the docs <ArrowRight size={15} />
                     </Link>
                 </div>
@@ -61,7 +60,7 @@ export function FrameworkLanding() {
                         <h2>Your React app</h2>
                         <p>React Native + Hermes</p>
                         <div className="runtime-rule" />
-                        <span>LEGEND FRAMEWORK</span>
+                        <span>LEGEND SPARK</span>
                         <div className="runtime-platforms">
                             <span>Windows</span>
                             <span>Menus</span>
@@ -92,14 +91,16 @@ export function FrameworkLanding() {
                     <span className="eyebrow">A FIRST LOOK</span>
                     <h2>Room for the whole desktop.</h2>
                     <p>
-                        The documentation shell is ready. Setup guides and the API reference are coming before launch.
+                        Prepare a local SDK, explore the examples, and check platform limitations before building.
                     </p>
                 </div>
                 <div className="framework-doc-links">
-                    <Link href="/framework/getting-started">
+                    <Link href="/spark/overview">Overview <ArrowRight size={15} /></Link>
+                    <Link href="/spark/limitations">Status and limitations <ArrowRight size={15} /></Link>
+                    <Link href="/spark/getting-started">
                         Getting started <ArrowRight size={15} />
                     </Link>
-                    <Link href="/framework/reference">
+                    <Link href="/spark/reference">
                         API reference <ArrowRight size={15} />
                     </Link>
                 </div>

@@ -36,7 +36,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     const project = getProject(projectSlug);
     const page = source.getPage([projectSlug, ...slug]);
     if (!page || !project) notFound();
-    if (projectSlug === 'framework' && slug.length === 0) return <FrameworkLanding />;
+    if (projectSlug === 'spark' && slug.length === 0) return <FrameworkLanding />;
     const MDX = page.data.body;
 
     return (

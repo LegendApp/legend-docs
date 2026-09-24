@@ -91,11 +91,11 @@ export default function HomePage() {
                     <div className="showcase-section-heading">
                         <h2 id="framework-title">Framework</h2>
                     </div>
-                    <Link href="/framework" className="framework-spotlight">
+                    <Link href="/spark" className="framework-spotlight">
                         <div className="showcase-framework-copy">
                             <Blocks size={28} strokeWidth={1.4} />
-                            <span className="showcase-preview-label">Experimental</span>
-                            <h3>Legend Frame</h3>
+                            <span className="showcase-preview-label">Experimental — not for production</span>
+                            <h3>Legend Spark</h3>
                             <p>
                                 Build native desktop apps with React.
                                 <br />
@@ -108,7 +108,7 @@ export default function HomePage() {
                         <div className="framework-visual" aria-hidden="true">
                             <div className="framework-stack">
                                 <span>React + TypeScript</span>
-                                <span>Legend Frame</span>
+                                <span>Legend Spark</span>
                                 <div>
                                     <span>Windows</span>
                                     <span>Menus</span>

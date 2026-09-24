@@ -1,0 +1,36 @@
+---
+title: Status and limitations
+description: What the experimental framework does not promise yet.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+## Release status
+
+Spark is a source-checkout prototype. The intended public name is `@legendapp/spark`, but npm packages and hosted prebuilt runtime downloads are not available yet. Local packing, registration, and SDK transfer are the current paths.
+
+APIs, configuration, generated native projects, and binary identities may change. The Frame → Spark rename requires rebuilding native runtimes. Old prototype data, credentials, and OS registrations are not automatically migrated.
+
+## Platform acceptance
+
+macOS on Apple Silicon is the primary development target. Earlier native reports cover specific features and older builds, not blanket production readiness or acceptance of every renamed binary.
+
+Windows x64/ARM64 development is implemented, but native compilation and behavior must be verified on Windows. There is no supported Windows production build/distribution workflow yet. Read the [Windows issue tracker document](https://github.com/LegendApp/legend-spark/blob/main/docs/windows-issues.md) for feature-specific gaps; do not infer parity from shared TypeScript APIs.
+
+Mobile/web adapters cover selected contracts. They do not turn desktop windows, tray integration, global shortcuts, or arbitrary native modules into universal APIs. Intel macOS, Linux, and the Mac App Store workflow are outside current support.
+
+## Distribution and updates
+
+Standalone macOS build tooling exists. Real Developer ID signing/notarization acceptance and production update installation/relaunch remain separate release gates. Simulated packaging tests do not establish that an application is ready to distribute.
+
+## Application architecture
+
+- React Native screens replace web-rendered screens when migrating from Electron.
+- Application code runs in Hermes, without Node built-ins or an Electron main process.
+- App-supplied helper executables can perform backend work; Spark does not bundle Node or supervise a persistent service.
+- WebView is optional and has platform-specific limits.
+- Router extensions, declarative window navigation, and a larger UI catalog remain deferred.
+
+Consult the repository's [validation reports and limitations](https://github.com/LegendApp/legend-spark#validation-and-limitations) before choosing a feature for an experiment.

@@ -1,0 +1,14 @@
+{
+  "title": "Legend Spark",
+  "root": true,
+  "pages": [
+    "index",
+    "overview",
+    "getting-started",
+    "development",
+    "reference",
+    "ui",
+    "examples",
+    "limitations"
+  ]
+}

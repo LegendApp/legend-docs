@@ -1,0 +1,50 @@
+---
+title: Development and configuration
+description: Runtime selection, Expo integration, and native changes.
+---
+
+<Callout type="warn" title="Experimental — not ready for production">
+Legend Spark is still experimental and is not ready for production use. APIs, native implementations, and tooling can change. Public npm packages and hosted prebuilt runtimes are not available yet.
+</Callout>
+
+## Three runtime choices
+
+| Runtime | Native code | JavaScript |
+| --- | --- | --- |
+| Prebuilt | Spark's supplied SDK profile | Metro / Fast Refresh |
+| Custom development build | Your application's native dependencies and configuration | Metro / Fast Refresh |
+| Standalone macOS app | Production-selected native modules | Embedded bundle |
+
+A JavaScript-only edit does not need native compilation. Adding or changing native modules, native configuration, or bundled helper executables can require rebuilding. The CLI compares the project's requirements with registered runtimes rather than treating every binary as compatible.
+
+`bun dev`, `bun start`, and the generated desktop scripts enter the managed development session. Expo CLI owns Metro and its terminal; Spark adds desktop launching and runtime selection. Expo Go on mobile is separate from Spark's desktop prebuilt runtime.
+
+From an app, build a custom runtime explicitly with:
+
+```sh
+bunx --no-install spark build --dev --platform macos
+# On Windows:
+bunx --no-install spark build --dev --platform windows
+```
+
+## Configuration
+
+Use Expo configuration for shared/mobile application settings. `desktop.config.json` owns desktop settings such as window defaults and platform-specific native options. Generated wrappers compose the two. Keep those wrappers and the generated Metro configuration when customizing your app.
+
+Switching target should preserve shared configuration and existing generated native projects. Run native generation/build operations sequentially against a checkout. Generated native files are build outputs; keep durable customization in configuration or plugins where possible.
+
+## Add desktop to an existing Expo app
+
+After packing the SDK, run from the framework checkout:
+
+```sh
+bun run spark add desktop --project /absolute/path/to/ExistingExpoApp
+```
+
+The integration preserves the app's entry point, screens, mobile/web scripts, and existing mobile native projects. It checks a pinned Expo/React Native baseline before editing; upgrading an incompatible application is separate work. Existing desktop script names are preserved, with `spark:macos` or `spark:windows` used when necessary.
+
+Review the resulting configuration and run the app's existing mobile/web checks as well as desktop checks. See the [integration details](https://github.com/LegendApp/legend-spark/blob/main/docs/add-desktop.md).
+
+## Share a local SDK
+
+`spark sdk export` and `spark sdk import` support a transferable directory containing package archives and optionally a matching runtime. This is useful for another development machine before npm/hosted distribution exists. See [SDK transfer](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk-distribution.md).

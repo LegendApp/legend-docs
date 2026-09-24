@@ -106,7 +106,7 @@ export function CustomNavbar({
                 title === 'Libraries'
                     ? ['/list', '/state', '/motion']
                     : title === 'Framework'
-                      ? ['/framework']
+                      ? ['/spark']
                       : title === 'Demo Apps'
                         ? ['/code', '/chat-history', '/hello-world']
                         : ['/diff', '/markdown', '/music', '/slides'],
