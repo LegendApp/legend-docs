@@ -1,8 +1,3 @@
----
-title: Examples and validation
-description: Explore Kitchen Sink, generate focused apps, and distinguish source checks from native acceptance.
----
-
 <Callout type="warn" title="Experimental source documentation">
 These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
 </Callout>

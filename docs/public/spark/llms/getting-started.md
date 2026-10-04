@@ -1,8 +1,3 @@
----
-title: Getting started
-description: Try the published preview or prepare the SDK for the current source APIs.
----
-
 <Callout type="warn" title="Experimental source documentation">
 These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
 </Callout>

@@ -1,6 +1,6 @@
 # Legend website and documentation
 
-The community-maintained source for [legend.so](https://legend.so): Legend apps, open-source libraries, and Legend Frame. Issues and pull requests belong in this repository.
+The community-maintained source for [legend.so](https://legend.so): Legend apps, open-source libraries, and Legend Spark. Issues and pull requests belong in this repository.
 
 ## Develop
 
@@ -16,16 +16,17 @@ The Next.js and Fumadocs app serves directly from `/`.
 bun run build
 ```
 
-The build validates content links, generates per-version LLM documentation, and exports the site to `docs/dist/` (the Next.js build cache is `docs/.next/`). Deploy `dist/` using trailing-slash directory indexes and a custom `404.html`. Search is a static index at `/api/search`.
+The build validates content links, generates per-version library and unversioned Spark LLM documentation, and exports the site to `docs/dist/`. Next.js uses `dist/` for its configured build directory too. Deploy the static export using trailing-slash directory indexes and a custom `404.html`. Search is a static index at `/api/search`.
 
 ## Organization
 
 - `/`: a single overview of Legend, apps, open-source libraries, and the framework; navigation links to page sections
 - `/list`, `/state`, `/motion`: existing library entry points and versioned documentation
-- `/framework`, `/diff`, `/markdown`, `/music`, `/slides`, `/code`, `/chat-history`, `/hello-world`: new framework and app pages
+- `/spark`: framework landing page and current-source SDK guides
+- `/diff`, `/markdown`, `/music`, `/slides`, `/code`, `/chat-history`, `/hello-world`: app and demo pages
 - `/blog`: existing articles
 
-Library documentation and interactive examples stay in their existing locations. App and framework documentation is placeholder content while those projects prepare for release. Kitchen sink is excluded.
+Library documentation and interactive examples stay in their existing locations. Spark guides cover source APIs and distinguish them from the published experimental preview. Kitchen Sink is an SDK example, not a separate product landing page.
 
 The new landing pages live in `docs/src/app/(site)` with components in `docs/src/components/site`. Styles are scoped to `.legend-site` so they do not change library documentation or examples. The homepage uses a custom Legend hero, app screenshots, images from the library documentation, and short product summaries; there are no separate `/apps` or `/libraries` pages.
 

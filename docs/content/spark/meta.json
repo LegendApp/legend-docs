@@ -6,9 +6,19 @@
     "overview",
     "getting-started",
     "development",
+    "configuration",
     "reference",
+    "windows",
+    "documents",
+    "files",
+    "settings",
+    "menus",
+    "integrations",
     "ui",
+    "ai",
+    "distribution",
     "examples",
+    "migration",
     "limitations"
   ]
 }

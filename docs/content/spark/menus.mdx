@@ -1,0 +1,67 @@
+---
+title: Menus and shortcuts
+description: Owned native menus, portable accelerators, command routing, and tray items.
+---
+
+<Callout type="warn" title="Experimental source documentation">
+These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
+</Callout>
+
+Spark menu items discriminate `type`, use stable IDs, and share label/disabled/checked semantics. Every surface accepts its own subset; shared types do not imply all native surfaces support submenus, roles, icons, or sliders.
+
+## Application menus
+
+```ts
+import { createMenu } from '@legendapp/spark/menus';
+
+const menu = await createMenu({
+  id: 'editor',
+  items: [{
+    type: 'submenu', id: 'file', label: 'File', target: { menu: 'file' },
+    items: [{ type: 'action', id: 'open', label: 'Open…', shortcut: 'CmdOrCtrl+O' }],
+  }],
+  onAction: event => { console.log(event.itemId); },
+});
+await menu.update({ items: [] });
+await menu.remove();
+```
+
+Top-level items are submenus. Contributions merge by IDs, never translated labels. Later owners take precedence; removal restores earlier contributions/native items. Updates replace the owner's contribution. Native publication is acknowledged before create/update resolves. Failed publication retains the previous state; failed removal retains retryable ownership.
+
+Targets bind native root menus, IDs, or macOS semantic roles. Role items dispatch through native responders; ordinary actions targeting roles dispatch to JavaScript. `useMenu` owns the same lifetime and exposes loading/ready/error state plus cleanup-error callbacks. Keep unchanged item structure stable; callback changes do not require republishing.
+
+## Surface support
+
+| Surface | Supported item shapes | Limits |
+| --- | --- | --- |
+| App menu | Recursive actions, checkboxes, separators, submenus; macOS roles | Windows role/icon requests reject |
+| Context menu | Flat actions, checkboxes, separators | No submenus, roles, icons, shortcuts, or sliders |
+| Tray menu | Actions, checkboxes, separators, recursive submenus | No roles, icons, shortcuts, or sliders |
+| macOS toolbar popup | Actions, checkboxes, separators, numeric sliders | No submenus, roles, or shortcuts |
+| macOS Dock | Recursive actions, checkboxes, separators, submenus | Restricted presentation/targeting fields |
+| Windows taskbar | Flat actions and checkboxes | Disabled entries omitted; restricted fields |
+
+`showContextMenu({ windowId, position, items })` requires an explicit owner. Position is logical top-left **content** coordinates, rather than display/outer-frame coordinates. Cancellation returns `{ canceled: true }`; selection returns `{ canceled: false, itemId }`. A concurrent popup rejects `E_BUSY`.
+
+`createTray` returns a handle with `update` and async `remove`. Images distinguish SF Symbol names from local files; symbol images are macOS-specific. Dock/taskbar menu registrations live in `/system` and have separate native availability.
+
+## Local and global shortcuts
+
+```ts
+import { registerShortcut } from '@legendapp/spark/shortcuts';
+
+const shortcut = await registerShortcut('CmdOrCtrl+S', () => {
+  console.log('Save requested');
+}, { windowId: 'main' });
+await shortcut.remove();
+```
+
+Local and global registration share portable accelerator parsing and async removal. Local options include window ownership and repeat behavior. `registerGlobalShortcut(accelerator, handler, { repeat? })` lives under `/global-shortcuts`. Windows supports repeat; requesting it on macOS rejects `E_UNSUPPORTED_OPTION`. Conflicts are failures, not silently replaced registrations.
+
+## Commands and raw keys
+
+`/shortcuts/commands` includes `createHotkeyRouter`, `createHotkeyStore`, optional React bindings, capture, and settings UI. Routers arbitrate enabled commands by window/application scope and priority. The store owns versioned JSON bindings, keeps portable `CmdOrCtrl` spelling, exposes conflicts, and requires flush/close for persistence. Its `/storage` alias was removed.
+
+`/shortcuts/keyboard` supplies `addKeyboardListener`, key codes, and modifier helpers. Registrations have explicit ownership; callbacks observe native `consumed`/`captured` decisions and cannot consume a key by returning a value. The low-level backend/command router currently requires macOS. Native shortcut matching never waits synchronously for JavaScript.
+
+See [menu details](https://github.com/LegendApp/legend-spark/blob/main/docs/menus.md) and [command routing](https://github.com/LegendApp/legend-spark/blob/main/docs/commands.md).

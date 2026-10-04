@@ -1,0 +1,51 @@
+---
+title: Updating an existing prototype
+description: Move removed imports and resource contracts to the consolidated source API.
+---
+
+<Callout type="warn" title="Experimental source documentation">
+These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
+</Callout>
+
+The source API cleanup makes direct breaking changes. Removed exports have no compatibility aliases. First select a matching current-source SDK, refresh packed dependencies, and rebuild native runtimes whose signatures changed. The old published preview and current source are not interchangeable.
+
+## Import changes
+
+| Removed path | Current path |
+| --- | --- |
+| `/message-dialog` | `/dialogs` |
+| `/windows/react`, `/windows/managed`, `/windows/controls` | `/windows` |
+| `/app/exit` | `/app` |
+| `/app/recent-documents` | `/app/documents` |
+| `/files/scanner`, `/files/watchers`, general `/settings/paths` helpers | `/files` |
+| `/shortcuts/commands/storage` | `/shortcuts/commands` |
+| `/settings/window/options` | `/settings/window` |
+| `/processes/commands` | `/processes` |
+| `/drag-drop/views` | `/drag-drop` |
+| `/ui/select-controls` | `/ui` |
+| `/expo-metro`, `/universal` | `/metro` |
+
+All paths use the `@legendapp/spark` prefix. The singleton `/global-shortcuts/hotkeys` interface was removed; use owned accelerator registrations or explicit keyboard APIs. Application-specific music drag payloads and chrome presets belong in app code.
+
+## Behavior changes to review
+
+- **Windows:** pass explicit IDs; use unified open options/results, display-relative outer-frame geometry, instance-bound listeners/guards, and grouped `macos` chrome. Animate through `setWindowBounds` in `/windows`.
+- **Documents/app:** use typed file/URL requests with bounded replay; quit/close approval belongs in async guards. Save before approving shutdown.
+- **Dialogs/files:** branch on cancellation discriminants; message buttons use IDs and checkbox state is optional. File dialogs use `defaultPath` and extension filters. Copy/move require explicit overwrite; file watches invalidate rather than report an exact change journal.
+- **Settings:** validate persisted values with decoders. Observable factories are async and expose readiness, `value$`, `error$`, flush and close. General paths/IO moved to files.
+- **Clipboard/secure storage:** use selected Expo-shaped methods; duplicate facades were removed. Clipboard string writes return a boolean, secure missing reads return null.
+- **Menus/system/tray:** use typed items appropriate to each surface and owned create/update/remove registrations. Unsupported item shapes reject before publication.
+- **Notifications/updates:** separate content/trigger and pending/delivered operations. Native update checking acknowledges initiation; typed events report later progress.
+- **Processes/audio/auth:** retain owned resource handles, explicit result states, byte IO, cleanup and supported cancellation. Audio hooks return loading/ready/error, not an immediate backend player.
+- **SQLite/WebView:** use Spark-owned database/component/ref types rather than raw OP-SQLite/WebView backend types.
+- **UI:** controlled `TextInput.value` is supported; `value`/`defaultValue` are exclusive. Select/SegmentedControl share controlled values. Split panes are named, Sidebar selection requires its callback, and glass/symbol components have explicit native limits.
+
+A callable operation or resolved import does not prove platform availability. Unknown options reject. Await async cleanup and retain failed handles for retry; a global clear-all operation is not a substitute for ownership.
+
+## Configuration and tooling
+
+The tooling runs on Node 24.19.0+; Bun is optional. Use `npm run spark -- ...` in the framework checkout and `npx --no-install spark ...` in consumers. Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`; old prebuilt/go command spellings are removed. Expo's `dev --go` still means mobile Expo Go.
+
+Author Spark-owned desktop settings in `desktop.config.json`, preserve `projectId`, and compose existing Expo projects through `/expo-config`, `/metro`, and `/native`. Review generated templates/wrappers when updating local consumers. Old Frame native identities/data are not automatically migrated.
+
+See the [export inventory](https://github.com/LegendApp/legend-spark/blob/main/docs/api-export-inventory.json), [final API review](https://github.com/LegendApp/legend-spark/blob/main/docs/api-final-review.md), and [rename guide](https://github.com/LegendApp/legend-spark/blob/main/docs/legend-spark-migration.md).

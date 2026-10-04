@@ -1,8 +1,3 @@
----
-title: Development and runtimes
-description: Use Expo CLI, select Spark Runner or custom binaries, and rebuild native changes.
----
-
 <Callout type="warn" title="Experimental source documentation">
 These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
 </Callout>

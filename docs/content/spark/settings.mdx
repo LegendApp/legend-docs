@@ -1,0 +1,70 @@
+---
+title: Settings and persistence
+description: Project-scoped JSON, validated reads, Legend State files, and secure values.
+---
+
+<Callout type="warn" title="Experimental source documentation">
+These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
+</Callout>
+
+## JSON settings
+
+`@legendapp/spark/settings` exports the default project-scoped `settings` store and `createSettingsStore({ storage })`. Missing reads return `undefined`; stored JSON null stays null. Corrupt data is preserved and reported rather than silently repaired.
+
+```ts
+import { settings } from '@legendapp/spark/settings';
+
+await settings.set('theme', 'dark');
+const theme = await settings.get('theme', {
+  decode(value) {
+    if (value !== 'system' && value !== 'light' && value !== 'dark') {
+      throw new Error('Invalid theme preference');
+    }
+    return value;
+  },
+});
+```
+
+A decoder validates persisted data before returning an application type. Sets snapshot finite JSON values. Operations serialize per key within one store, without cross-process or cross-store locking. An update callback must not await another operation on its own key/store.
+
+Custom `SettingsStorage` adapters implement async `read`, `write`, and `remove`; keys and storage choice are explicit. General directories/path helpers live in `/files`, not `/settings/paths`.
+
+## Observable persistence
+
+`@legendapp/spark/settings/observable` is explicitly a Legend State integration. Legend State owns its observable model and React subscriptions.
+
+```ts
+import { createObservableFile } from '@legendapp/spark/settings/observable';
+import { getDirectory, mkdir } from '@legendapp/spark/files';
+
+const directory = `${await getDirectory('data')}/preferences`;
+await mkdir(directory);
+const preferences = await createObservableFile({
+  path: `${directory}/count.json`,
+  initialValue: 0,
+  decode(value) {
+    if (typeof value !== 'number') throw new Error('Expected a number');
+    return value;
+  },
+  debounceMs: 300,
+});
+preferences.value$.set(1);
+await preferences.flush();
+await preferences.close();
+```
+
+Await the factory for loaded/decoded readiness. Missing files use the initial value; corruption/read/decode errors reject. Parent directories must exist, and the path includes its extension. `saveDefault: true` persists a missing default before readiness.
+
+`flush` snapshots synchronously, including changes made in a Legend State batch, and acknowledges that snapshot behind earlier writes. Later mutations need another save. Automatic failures appear in `error$`; explicit flush/close rejects. Successful saves clear the error; retry policy belongs to the app.
+
+`close` stops observing and flushes a final snapshot. Concurrent closes join; failed closes retry that snapshot. Later observable mutations are valid but no longer persisted. Await close inside a quit guard.
+
+`createObservableSettings({ path, fields, ...options })` uses field defaults and required decoders. Defaults apply only to absent fields, present null reaches the decoder, and unknown fields are omitted. These integrations retain Legend State Date/Map/Set serialization; basic JSON settings do not acquire that larger contract. Multiple handles writing one file can overwrite each other.
+
+## Secure storage
+
+`@legendapp/spark/secure-storage` exposes the selected Expo SecureStore-shaped API, including `getItemAsync`, `setItemAsync`, `deleteItemAsync`, and `isAvailableAsync`. Missing values are null. Supported option/result semantics follow that subset; unsupported options reject.
+
+The duplicate `secureStorage.get/set/remove` facade was removed. Native storage remains project-scoped; it is not an OS sandbox. Web secure storage is explicitly unavailable. Check availability and platform constraints rather than treating ordinary web storage as an equivalent secure backend.
+
+See [settings details](https://github.com/LegendApp/legend-spark/blob/main/docs/settings.md) and [API contracts](https://github.com/LegendApp/legend-spark/blob/main/docs/api-contracts.md).

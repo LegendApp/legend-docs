@@ -1,0 +1,79 @@
+---
+title: Packaging and updates
+description: Standalone macOS binaries, signed archives, native app updates, and SDK transfer.
+---
+
+<Callout type="warn" title="Experimental source documentation">
+These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
+</Callout>
+
+## Build and package a macOS app
+
+From the generated app:
+
+```sh
+npm run build
+npx --no-install spark open
+npm run package
+```
+
+`build` embeds JavaScript and the production-selected native graph in a local ad-hoc-signed `.app`. `package` signs a staging copy with Developer ID, notarizes it with your Keychain profile, and validates the distribution ZIP. It does not publish the application.
+
+Signing requires installed credentials, full Xcode tooling, and a notarization profile. First use can configure credentials. Keep signed archives and submission state until Apple's outcome is known. Resume/recover a pending submission through the documented packaging commands rather than starting a duplicate submission.
+
+Intel targeting uses `SPARK_MACOS_ARCH=x64` for build/package, with matching native dependencies and helper binaries. That tooling does not establish Intel native or signed-distribution acceptance. Windows production/preview builds, signing/MSIX, Linux, and the Mac App Store workflow remain unsupported.
+
+See [packaging details](https://github.com/LegendApp/legend-spark/blob/main/docs/packaging.md).
+
+## Whole-app updates
+
+`@legendapp/spark/updates` supplies native macOS whole-app update integration. It is not Expo-style JavaScript OTA updates. Runner/development/unconfigured hosts report explicit unavailability through `getUpdateStatus()`.
+
+```ts
+import { getUpdateStatus, checkForUpdates, onUpdateEvent } from '@legendapp/spark/updates';
+
+const subscription = onUpdateEvent(event => {
+  if (event.state === 'error') console.error(event.message);
+  else if ('version' in event) console.log(event.state, event.version);
+});
+const status = await getUpdateStatus();
+if (status.available && status.canCheck) {
+  await checkForUpdates({ mode: 'interactive' });
+}
+subscription.remove();
+```
+
+Retain the subscription for the app/UI lifetime; the last line illustrates teardown. Checking resolves when initiated. Progress/completion arrives as typed events: checking/notAvailable, version-bearing available/downloading/downloaded/installing, or error with message.
+
+`startUpdates` starts a configured updater. `configureUpdates({ automaticallyChecks?, checkIntervalSeconds? })` changes preferences; an empty object starts the configured updater without changing preferences. Feed/key configuration belongs to the native app and can require rebuilding.
+
+Update build numbers must increase. The CLI validates a candidate against the feed and earlier local artifact; equal/backward numbers reject. Signed installation/relaunch and downgrade rejection need real release acceptance for the exact app and feed.
+
+See [update configuration](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-integrations.md) and [release gates](/spark/limitations).
+
+## Transfer a local SDK
+
+From the framework checkout:
+
+```sh
+npm run spark -- sdk export /path/to/SparkSDK --runtime /path/to/SparkRunner.app
+```
+
+The transferable directory contains immutable package archives, checksums, an installer, and optional runtimes. `--runtime` can repeat. A Windows export includes the entire product directory with its DLLs. Exports refuse existing destinations and only publish output after validation.
+
+On the recipient, preserve bytes, permissions, and symlinks, then:
+
+```sh
+cd /path/to/SparkSDK
+node install.mjs
+```
+
+Use the installed CLI command printed by the installer. Installation verifies archives before installing/registering the SDK. Network access is still needed for third-party dependencies; checksums detect corruption but are not publisher signatures.
+
+Keep the installed directory/runtime locations stable. Relocate before installation; moving an installed SDK requires reinstalling/refreshing app references. This workflow is useful for current-source testing and does not require public npm publication.
+
+## SDK prereleases
+
+The published package and hosted Runner must match one immutable SDK version. Source packing/registering/exporting does not publish artifacts. Preview assembly validates source/recipe provenance, patched native dependency receipts, checksums, architecture, signature, and notarization before the explicit publish step.
+
+Do not substitute the old published Runner for changed local native signatures. Clean-recipient install/startup, target-specific behavior, signing, and update evidence remain separate release gates. See [SDK transfer](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk-distribution.md) and [release process](https://github.com/LegendApp/legend-spark/blob/main/docs/releases.md).

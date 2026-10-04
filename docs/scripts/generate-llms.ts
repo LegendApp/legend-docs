@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { globSync } from 'glob';
 
-const PACKAGES = ['list', 'motion', 'state'] as const;
+const PACKAGES = ['list', 'motion', 'state', 'spark'] as const;
 const ROOT = path.resolve(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content');
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -12,7 +12,7 @@ const BASE_URL = process.env.LLMS_BASE_URL ?? 'https://legend.so';
 
 function joinUrl(base: string, ...parts: string[]): string {
     const trimmedBase = base.replace(/\/+$/, '');
-    const cleanedParts = parts.map((part) => part.replace(/^\/+|\/+$/g, ''));
+    const cleanedParts = parts.map((part) => part.replace(/^\/+|\/+$/g, '')).filter(Boolean);
     return [trimmedBase, ...cleanedParts].join('/');
 }
 
@@ -53,10 +53,12 @@ async function main() {
         await fs.rm(path.join(PUBLIC_DIR, pkg, 'llms-full.txt'), { force: true });
 
         const versionEntries = await fs.readdir(pkgContentDir, { withFileTypes: true });
-        const versions = versionEntries
-            .filter((entry) => entry.isDirectory())
-            .map((entry) => entry.name)
-            .sort();
+        const versions = pkg === 'spark'
+            ? ['']
+            : versionEntries
+                .filter((entry) => entry.isDirectory())
+                .map((entry) => entry.name)
+                .sort();
 
         for (const version of versions) {
             const versionContentDir = path.join(pkgContentDir, version);
@@ -86,7 +88,9 @@ async function main() {
 
             versionLinks.sort();
             const llmsStr = versionLinks.join('\n') + '\n';
-            const llmsFullStr = versionFullChunks.join('\n');
+            const llmsFullStr = version
+                ? versionFullChunks.join('\n')
+                : `${versionFullChunks.join('\n').trimEnd()}\n`;
             await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms.txt'), llmsStr);
             await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms-full.txt'), llmsFullStr);
             await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms.md'), llmsStr);
@@ -94,7 +98,7 @@ async function main() {
         }
     }
 
-    console.log(`Generated ${totalCount} llms entries across ${PACKAGES.length} packages (per-version only)`);
+    console.log(`Generated ${totalCount} llms entries across ${PACKAGES.length} packages (versioned libraries and Spark)`);
 }
 
 main().catch((err) => {

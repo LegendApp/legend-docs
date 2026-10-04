@@ -1,8 +1,3 @@
----
-title: Native UI and styling
-description: Controlled inputs, native selectors, macOS composition, settings windows, and Uniwind.
----
-
 <Callout type="warn" title="Experimental source documentation">
 These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
 </Callout>

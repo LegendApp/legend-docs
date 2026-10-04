@@ -1,0 +1,103 @@
+<Callout type="warn" title="Experimental source documentation">
+These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
+</Callout>
+
+## Clipboard, links, and drag/drop
+
+`/clipboard` retains selected Expo-shaped `getStringAsync`, `setStringAsync`, and `hasStringAsync` methods. `setStringAsync` returns the actual boolean write result. Rich `readClipboard`/`writeClipboard` use owned payloads; file lists are separate from text/image alternatives. Raw format identifiers come from `getClipboardFormats`.
+
+`/links` supplies `openURL`, `canOpenURL`, `getInitialURL`, and `addEventListener('url', listener)`. Desktop `openPath` opens a native file with its associated application. File/URL launch replay and recent history live under [/app/documents](/spark/documents).
+
+`/drag-drop` handles generic files/text/URLs/custom MIME payloads with consumer-facing events and explicit operations/coordinates. Application-specific music/track models do not belong in the SDK. Use availability and `onError` rather than assuming every import has a native backend.
+
+## Local notifications
+
+```ts
+import { requestNotificationPermission, showNotification } from '@legendapp/spark/notifications';
+
+const permission = await requestNotificationPermission();
+if (permission.granted) {
+  await showNotification({
+    id: 'import-complete',
+    content: {
+      title: 'Import complete',
+      body: 'Your files are ready.',
+      sound: 'message',
+      actions: [{ id: 'view', label: 'View files' }],
+    },
+  });
+}
+```
+
+Request permission from an explicit user action. Windows reads OS settings without an in-app permission prompt. OS acceptance does not guarantee presentation.
+
+`showNotification` is immediate; `scheduleNotification` adds `{ type: 'delay', delaySeconds }`. Content supports silent/default sound or portable `message`, `mail`, `reminder`, `call`, and `error` tones. One to four action buttons report their IDs through responses. macOS banners show the first two; Notification Center can show the rest.
+
+`onNotificationResponse` installs live delivery and drains retained launch responses. Await setup; the returned subscription removes synchronously. Responses identify the notification and `open`, `dismiss`, or a custom action. New subscriptions can replay retained responses.
+
+`cancelNotification`/`cancelAllNotifications` remove pending delivery. `dismissNotification`/`dismissAllNotifications` remove already delivered notifications. List APIs distinguish those sets. These are local notifications, not push tokens or background tasks.
+
+## System integration
+
+`/system` supplies system information, events, login startup, badges, attention, sleep prevention, and explicit Dock/taskbar menu registration. Events are invalidations: query `getSystemInfo()` again for current values. `requestAttention` and `preventSleep` return owned async registrations. Remove them when the application no longer needs the effect. Unsupported options reject; menu trees follow [surface restrictions](/spark/menus).
+
+## Processes and helper executables
+
+```ts
+import { runCommand } from '@legendapp/spark/processes';
+
+const result = await runCommand({
+  target: { type: 'command', name: 'git' },
+  args: ['--version'],
+  timeoutMs: 10_000,
+});
+if (result.exit.type === 'exited' && result.exit.code === 0) {
+  console.log(new TextDecoder().decode(result.stdout));
+}
+```
+
+Targets discriminate PATH commands, absolute executables, and configured helper references. Arguments bypass a shell. Input/output use strings or byte arrays; output callbacks carry `Uint8Array` with arbitrary chunk boundaries. Results retain stdout/stderr, exit/termination, timeout, abort, and truncation. Nonzero exit is a result; an operational failure rejects.
+
+`spawn` returns an owned handle with write, closeInput, terminate, and exited. Await writes for backpressure. Termination joins concurrent calls and waits for the process tree/output streams. It can be retried after native cleanup failure.
+
+Helpers are target-specific executables supplied by the app under `desktop.config.json.helpers`. Spark packages their assets/dependencies but does not compile them or supply Node. Helpers require a custom binary. Keep shared process ownership in an application service, rather than each window. They are not persistent OS services; abrupt macOS app death does not guarantee cleanup. See [helper processes](https://github.com/LegendApp/legend-spark/blob/main/docs/sidecars.md).
+
+## SQLite
+
+```ts
+import { openDatabase } from '@legendapp/spark/sqlite';
+
+const database = await openDatabase('notes.sqlite');
+try {
+  await database.transaction(async tx => {
+    await tx.run('CREATE TABLE IF NOT EXISTS notes (title TEXT NOT NULL)');
+    await tx.run('INSERT INTO notes (title) VALUES (?)', ['Hello']);
+  });
+  const note = await database.getFirst('SELECT title FROM notes LIMIT 1');
+  console.log(note);
+} finally {
+  await database.close();
+}
+```
+
+The project-scoped filename must be a simple `.sqlite` name. Spark owns `Database`, `SqlExecutor`, row/value types, and run results; it does not expose OP-SQLite's raw DB. Use `tx` inside transactions. Success commits, rejection rolls back; direct connection operations during a transaction and nested transactions reject.
+
+Blobs are `Uint8Array`; SQL NULL is null. Default integer mode rejects unsafe integer reads. `{ integers: 'text' }` permits out-of-range values as text, but an already rounded native number cannot recover exact digits. Use SQL `CAST(column AS TEXT)` when exact large integers matter. Close waits for accepted work and blocks new work.
+
+## WebView
+
+`/webview` exports an owned `WebView` component, props, events, and ref subset. Source is a URI with optional headers **or** inline HTML with optional `baseUri`. Normal React Native view props are supported; document content comes from source, not children.
+
+Refs request reload/back/forward, string messaging, or script injection; they do not promise navigation completion. Load/HTTP errors and navigation/message payloads are typed. Navigation interception is synchronous where emitted and is not a network security boundary. Consult platform limits for origins, headers, scripts, cookies, and popup behavior; this is not the whole `react-native-webview` API.
+
+## Audio and browser authentication
+
+`createAudioPlayer(source, options?)` waits for readiness and returns async play/pause/seek/volume/metadata/status commands. Positions use seconds; creation supports timeout/abort. `useAudioPlayer` returns loading/ready/error state, with a player only when ready. Removal owns disposal; hooks handle replacement and late completion.
+
+`createMediaSession` lets desktop/web publish controls for an external engine. One session owns system controls; stale handles cannot clear a newer session. Command callbacks request operations rather than confirming playback. Standalone external-engine sessions are unsupported on mobile, where Expo Audio owns its player controls. Browser playback may require a gesture. See [audio](https://github.com/LegendApp/legend-spark/blob/main/docs/audio.md).
+
+`/auth-session` provides prepared state/redirect sessions, browser callback transport, and explicit dismissal. Success, cancellation, dismissal, and timeout remain distinct outcomes. Provider SDKs, token exchange, and credential policy belong to the app. This is not complete `expo-auth-session` compatibility. See [authentication](https://github.com/LegendApp/legend-spark/blob/main/docs/auth-session.md).
+
+## Independent Hermes runtimes
+
+Use `@react-native-runtimes/core` directly for background work in independent Hermes heaps inside the application process. Serialization, cleanup, native-module limits, and production reachability follow its integration guide. It is not Node or a persistent worker service. See [Runtimes](https://github.com/LegendApp/legend-spark/blob/main/docs/runtimes.md).

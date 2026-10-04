@@ -27,7 +27,7 @@ const features = [
 export function FrameworkLanding() {
     return (
         <main id="main" className="framework-landing container">
-            <div className="framework-status" role="note"><p><strong>Experimental — not ready for production use.</strong> APIs and native implementations are evolving. Public packages and hosted runtimes are not available yet.</p></div>
+            <div className="framework-status" role="note"><p><strong>Experimental — not ready for production use.</strong> A published preview and macOS ARM64 Spark Runner are available. These docs cover newer source APIs; check <Link href="/spark/limitations">release status</Link> before choosing an SDK.</p></div>
             <header className="collection-header">
                 <div>
                     <div className="eyebrow">
@@ -73,8 +73,8 @@ export function FrameworkLanding() {
             <div className="framework-status">
                 <span className="blue-dot" />
                 <p>
-                    An early experiment, starting with Apple silicon macOS. Public packages and app binaries have not
-                    been published yet.
+                    Develop with Fast Refresh in Spark Runner, add native capabilities with a custom build, and
+                    package a standalone macOS app. Intel macOS and Windows native acceptance remain pending.
                 </p>
             </div>
             <section className="framework-features" aria-label="Native desktop capabilities">
@@ -91,7 +91,7 @@ export function FrameworkLanding() {
                     <span className="eyebrow">A FIRST LOOK</span>
                     <h2>Room for the whole desktop.</h2>
                     <p>
-                        Prepare a local SDK, explore the examples, and check platform limitations before building.
+                        Try the published preview or prepare the current source SDK, explore the examples, and check platform limitations.
                     </p>
                 </div>
                 <div className="framework-doc-links">

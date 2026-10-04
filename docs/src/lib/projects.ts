@@ -57,7 +57,7 @@ export const projects: Project[] = [
         tagline: 'React, meet the desktop.',
         description:
             'An experimental React Native and Expo Desktop framework with native desktop APIs and prebuilt development runtimes. Not ready for production use.',
-        highlights: ['Native windows + menus', 'Hermes runtime', 'Apple silicon macOS'],
+        highlights: ['Native windows + menus', 'Hermes runtime', 'Spark Runner + Fast Refresh'],
     },
     {
         slug: 'diff',
