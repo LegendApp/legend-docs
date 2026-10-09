@@ -14,3 +14,12 @@ export function getFirstDocsPath(docType: 'list' | 'list1' | 'list2' | 'state' |
     }
     return '/';
 }
+
+export function getDocumentationRedirect(pathname: string): string | undefined {
+    const redirects: Record<string, Parameters<typeof getFirstDocsPath>[0]> = {
+        '/list': 'list', '/list/v3': 'list', '/list/v2': 'list2', '/list/v1': 'list1',
+        '/state/v3': 'state', '/state/v2': 'state2', '/motion': 'motion', '/motion/v2': 'motion',
+    };
+    const target = redirects[pathname.replace(/\/$/, '')];
+    return target ? getFirstDocsPath(target) : undefined;
+}

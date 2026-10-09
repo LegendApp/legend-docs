@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { glob } from 'glob';
+import { generatedDocumentationPaths } from './documentation-routes';
 
 interface Link {
     text: string;
@@ -32,6 +33,7 @@ class LinkValidator {
     private readonly publicDir: string;
     private readonly verbose: boolean;
     private errors: ValidationError[] = [];
+    private generatedPaths = generatedDocumentationPaths();
 
     constructor(options: { verbose?: boolean } = {}) {
         this.verbose = options.verbose ?? false;
@@ -172,6 +174,9 @@ class LinkValidator {
         // Collection and library landing pages are app routes rather than MDX files.
         const contentDir = path.join(this.rootDir, 'docs/content');
         const relativePath = path.relative(contentDir, targetPath);
+        if (this.generatedPaths.has(relativePath)) {
+            return { exists: true, resolvedPath: path.join(this.rootDir, 'docs/dist', relativePath), type: 'file' };
+        }
         if (!relativePath.startsWith('..')) {
             for (const group of ['', '(site)']) {
                 const route = path.join(this.rootDir, 'docs/src/app', group, relativePath, 'page.tsx');

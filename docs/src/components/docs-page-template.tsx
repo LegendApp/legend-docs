@@ -33,7 +33,7 @@ export default async function DocsPageTemplate({ source, params }: DocsPageTempl
         >
             <DocsTitle>{page.data.title}</DocsTitle>
             <DocsDescription>{page.data.description}</DocsDescription>
-            <DocsBody>
+            <DocsBody data-doc-content>
                 <MDX
                     components={getMDXComponents({
                         pre: (props) => (

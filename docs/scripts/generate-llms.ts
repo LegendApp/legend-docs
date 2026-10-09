@@ -1,107 +1,87 @@
 #!/usr/bin/env bun
 
-import fs from 'fs/promises';
-import path from 'path';
-import { globSync } from 'glob';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { load } from 'cheerio';
+import { convertPage } from './markdown-export';
+import { ROOT, documentationProjects as packages, documentationRoutes } from './documentation-routes';
+import { getDocumentationRedirect } from '../src/lib/getDocsPath';
 
-const PACKAGES = ['list', 'motion', 'state', 'spark'] as const;
-const ROOT = path.resolve(__dirname, '..');
-const CONTENT_DIR = path.join(ROOT, 'content');
-const PUBLIC_DIR = path.join(ROOT, 'public');
-const BASE_URL = process.env.LLMS_BASE_URL ?? 'https://legend.so';
+export const OUTPUT = path.join(ROOT, 'dist');
+export const BASE_URL = process.env.LLMS_BASE_URL ?? 'https://legend.so';
 
-function joinUrl(base: string, ...parts: string[]): string {
-    const trimmedBase = base.replace(/\/+$/, '');
-    const cleanedParts = parts.map((part) => part.replace(/^\/+|\/+$/g, '')).filter(Boolean);
-    return [trimmedBase, ...cleanedParts].join('/');
+export type ExportedPage = {
+    project: string;
+    version: string;
+    title: string;
+    description: string;
+    url: string;
+    htmlUrl: string;
+    markdownUrl: string;
+    legacyUrl: string;
+};
+
+export async function readRenderedPage(route: string) {
+    let url = new URL(getDocumentationRedirect(`/${route}`) ?? `/${route}/`, BASE_URL).href;
+    for (let redirects = 0; redirects < 5; redirects++) {
+        const html = await fs.readFile(path.join(OUTPUT, new URL(url).pathname, 'index.html'), 'utf8');
+        const $ = load(html);
+        const refresh = $('meta[http-equiv="refresh"]').attr('content');
+        if (!refresh) return { html, url };
+        const target = refresh.match(/url=(.+)$/i)?.[1];
+        if (!target || new URL(target, url).origin !== new URL(BASE_URL).origin) throw new Error(`${url}: invalid documentation redirect`);
+        url = new URL(target, url).href;
+    }
+    throw new Error(`${route}: documentation redirect loop`);
 }
 
-function stripFrontmatter(content: string): string {
-    const frontmatter = /^---[\s\S]*?---\s*/;
-    return frontmatter.test(content) ? content.replace(frontmatter, '') : content;
+async function write(relative: string, content: string) {
+    const destination = path.join(OUTPUT, relative);
+    await fs.mkdir(path.dirname(destination), { recursive: true });
+    await fs.writeFile(destination, content);
 }
 
-function stripLlmCallout(content: string): string {
-    // Remove a leading LLM links/downloads callout so the generated files don't include it
-    const llmCallout = /^\s*<Callout[^>]*>[\s\S]*?LLM\s+(links|downloads)[\s\S]*?<\/Callout>\s*/i;
-    return llmCallout.test(content) ? content.replace(llmCallout, '') : content;
-}
-
-function cleanContent(raw: string): string {
-    const withoutFrontmatter = stripFrontmatter(raw);
-    const withoutLlmCallout = stripLlmCallout(withoutFrontmatter);
-    return `${withoutLlmCallout.trim()}\n`;
-}
-
-async function writeFileEnsured(filePath: string, content: string) {
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, content, 'utf8');
-}
-
-async function main() {
-    // Clean legacy global/package outputs from previous runs
-    await fs.rm(path.join(PUBLIC_DIR, 'llms'), { recursive: true, force: true });
-    await fs.rm(path.join(PUBLIC_DIR, 'llms.txt'), { force: true });
-    await fs.rm(path.join(PUBLIC_DIR, 'llms-full.txt'), { force: true });
-
-    let totalCount = 0;
-    for (const pkg of PACKAGES) {
-        const pkgContentDir = path.join(CONTENT_DIR, pkg);
-        // Remove legacy package-level outputs
-        await fs.rm(path.join(PUBLIC_DIR, pkg, 'llms'), { recursive: true, force: true });
-        await fs.rm(path.join(PUBLIC_DIR, pkg, 'llms.txt'), { force: true });
-        await fs.rm(path.join(PUBLIC_DIR, pkg, 'llms-full.txt'), { force: true });
-
-        const versionEntries = await fs.readdir(pkgContentDir, { withFileTypes: true });
-        const versions = pkg === 'spark'
-            ? ['']
-            : versionEntries
-                .filter((entry) => entry.isDirectory())
-                .map((entry) => entry.name)
-                .sort();
-
-        for (const version of versions) {
-            const versionContentDir = path.join(pkgContentDir, version);
-            const versionOutputDir = path.join(PUBLIC_DIR, pkg, version, 'llms');
-
-            await fs.rm(versionOutputDir, { recursive: true, force: true });
-
-            const entries = globSync('**/*.mdx', { cwd: versionContentDir, nodir: true }).sort();
-            const versionLinks: string[] = [];
-            const versionFullChunks: string[] = [];
-
-            for (const entry of entries) {
-                const absolutePath = path.join(versionContentDir, entry);
-                const raw = await fs.readFile(absolutePath, 'utf8');
-                const cleaned = cleanContent(raw);
-
-                const slug = entry.replace(/\.mdx$/, '');
-                const outputPath = path.join(versionOutputDir, `${slug}.md`);
-                await writeFileEnsured(outputPath, cleaned);
-
-                const url = joinUrl(BASE_URL, pkg, version, 'llms', `${slug}.md`);
-                versionLinks.push(url);
-
-                versionFullChunks.push(`## ${slug}\n\n${cleaned}\n`);
-                totalCount += 1;
-            }
-
-            versionLinks.sort();
-            const llmsStr = versionLinks.join('\n') + '\n';
-            const llmsFullStr = version
-                ? versionFullChunks.join('\n')
-                : `${versionFullChunks.join('\n').trimEnd()}\n`;
-            await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms.txt'), llmsStr);
-            await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms-full.txt'), llmsFullStr);
-            await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms.md'), llmsStr);
-            await writeFileEnsured(path.join(PUBLIC_DIR, pkg, version, 'llms-full.md'), llmsFullStr);
-        }
+export async function generate() {
+    const pages: ExportedPage[] = [];
+    for (const { project, route, version, legacy } of documentationRoutes()) {
+        const { html, url } = await readRenderedPage(route);
+        const page = convertPage(html, url);
+        const markdownUrl = new URL(`/${route}.md`, BASE_URL).href;
+        await write(`${route}.md`, page.markdown);
+        await write(`${route}/index.md`, page.markdown);
+        await write(legacy, page.markdown);
+        pages.push({ project: project.slug, version, title: page.title, description: page.description, url,
+            htmlUrl: new URL(`/${route}/`, BASE_URL).href, markdownUrl,
+            legacyUrl: new URL(`/${legacy}`, BASE_URL).href });
     }
 
-    console.log(`Generated ${totalCount} llms entries across ${PACKAGES.length} packages (versioned libraries and Spark)`);
+    const rootIndex = ['# Legend documentation', '', '> Apps, open-source libraries, and Legend Spark.', ''];
+    for (const project of packages) {
+        const projectPages = pages.filter((page) => page.project === project.slug);
+        const versions = [...new Set(projectPages.map((page) => page.version))];
+        const currentVersion = project.currentDocs?.split('/')[2];
+        rootIndex.push(`## ${project.name}`, '', project.description, '');
+        if (project.status) rootIndex.push(`Status: ${project.status}.`, '');
+        for (const version of versions) {
+            const versionPages = projectPages.filter((page) => page.version === version);
+            const label = version ? `${version} — ${version === currentVersion ? 'current documentation' : 'archived documentation'}` : 'current documentation';
+            const prefix = [project.slug, version].filter(Boolean).join('/');
+            const index = [`# ${project.name}${version ? ` ${version}` : ''}`, '', `> ${project.description}`, '', `Documentation: ${label}.`, ''];
+            if (project.status) index.push(`Status: ${project.status}.`, '');
+            index.push('## Pages', '', ...versionPages.map((page) => `- [${page.title}](${page.markdownUrl})${page.description ? `: ${page.description}` : ''}`), '');
+            const full = (await Promise.all(versionPages.map(async (page) => fs.readFile(path.join(OUTPUT, new URL(page.markdownUrl).pathname), 'utf8')))).join('\n\n---\n\n');
+            await write(`${prefix}/llms.txt`, index.join('\n'));
+            await write(`${prefix}/llms.md`, index.join('\n'));
+            await write(`${prefix}/llms-full.txt`, full);
+            await write(`${prefix}/llms-full.md`, full);
+            rootIndex.push(`- [${label}](${new URL(`/${prefix}/llms.txt`, BASE_URL).href})`, '');
+        }
+    }
+    await write('llms.txt', rootIndex.join('\n'));
+    await write('documentation-manifest.json', JSON.stringify(pages, null, 2) + '\n');
+    console.log(`Generated faithful Markdown for ${pages.length} pages across ${packages.length} projects.`);
+    return pages;
 }
 
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await generate();

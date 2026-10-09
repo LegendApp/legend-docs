@@ -17,7 +17,7 @@ const guides = [
 
 export function SlidesLanding() {
     return (
-        <main id="main" className="slides-landing">
+        <main data-doc-content id="main" className="slides-landing">
             <nav className="slides-product-nav container" aria-label="Legend Slides navigation">
                 <Link href="/slides" className="slides-wordmark">
                     <Presentation size={20} /> Legend Slides <span>PREVIEW</span>
@@ -72,7 +72,7 @@ export function SlidesLanding() {
                 <div className="slides-source-grid">
                     <div className="slides-source">
                         <div><FileText size={14} /><span>product-update.mdx</span><span>JUST A FILE</span></div>
-                        <pre><code>
+                        <pre data-language="mdx"><code>
                             <span className="slides-code-muted"># A clear idea</span>{' '}
                             <span className="slides-code-blue">{'{shared=title}'}</span>
                             {'\n\nA little room to think.\n\n'}

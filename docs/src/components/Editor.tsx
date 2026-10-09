@@ -417,18 +417,19 @@ export function Editor({
                 {!hideCode && (
                     <div className={classNames('relative flex-1', classNameEditor)}>
                         <div className="p-4 rounded-lg font-mono text-sm overflow-auto [&_pre]:bg-none! [--color-bg-code-block:transparent]">
-                            <LiveEditor
+                            <div data-doc-exclude><LiveEditor
                                 onChange={(e) => {
                                     setLiveCode(e);
                                 }}
                                 className="liveEditor z-10 relative mr-5! w-auto!"
-                            />
-                            <div className="absolute inset-0 [&_code]:opacity-0">
+                            /></div>
+                            <div aria-hidden="true" data-doc-language="tsx" className="absolute inset-0 [&_code]:opacity-0">
                                 <DynamicCodeBlock lang="tsx" code={liveCode} />
                             </div>
                         </div>
                         {showEditing && (
                             <div
+                                data-doc-exclude
                                 className={classNames(
                                     'absolute top-3 right-12 !mt-0 flex items-center bg-blue-600 text-white px-2 py-1 rounded-md text-xs cursor-default shadow-md',
                                 )}
@@ -441,6 +442,7 @@ export function Editor({
                 )}
                 {!hideDemo && (
                     <div
+                        data-doc-exclude
                         className={classNames(
                             'border rounded-lg bg-white dark:bg-fd-card dark:border-fd-border',
                             inBox && 'p-4',

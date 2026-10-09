@@ -9,11 +9,12 @@
         "start": "next start",
         "serve": "npx serve dist",
         "postinstall": "fumadocs-mdx",
-        "prebuild": "bun run effects:verify && bun ./scripts/validate-links.ts && bun ./scripts/generate-llms.ts",
+        "prebuild": "bun run effects:verify && bun ./scripts/validate-links.ts",
         "generate-llms": "bun ./scripts/generate-llms.ts",
         "validate-links": "bun ./scripts/validate-links.ts",
         "effects:refresh": "bun ./scripts/refresh-slides-effects.ts",
-        "effects:verify": "bun ./scripts/validate-slides-effects.ts"
+        "effects:verify": "bun ./scripts/validate-slides-effects.ts",
+        "postbuild": "bun ./scripts/generate-llms.ts"
     },
     "dependencies": {
         "@legendapp/list": "^3.2.0",
@@ -49,17 +50,23 @@
         "@babel/plugin-proposal-class-properties": "^7.18.6",
         "@babel/plugin-transform-flow-strip-types": "^7.27.1",
         "@tailwindcss/postcss": "^4.1.12",
+        "@types/bun": "^1.4.2",
         "@types/mdx": "^2.0.13",
         "@types/node": "24.3.0",
         "@types/react": "19.2.14",
         "@types/react-dom": "19.2.3",
+        "@types/turndown": "^5.0.6",
+        "cheerio": "^1.2.0",
         "eslint": "9.39.2",
         "eslint-config-next": "16.1.6",
         "glob": "^11.0.3",
         "ignore-loader": "^0.1.2",
         "postcss": "^8.5.6",
         "tailwindcss": "^4.1.12",
-        "typescript": "^5.9.2"
+        "turndown": "^7.2.4",
+        "turndown-plugin-gfm": "^1.0.2",
+        "typescript": "^5.9.2",
+        "wrangler": "^4.149.0"
     },
     "trustedDependencies": [
         "@tailwindcss/oxide",

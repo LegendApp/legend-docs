@@ -53,6 +53,12 @@ export const blogPosts = defineCollections({
 
 export default defineConfig({
     mdxOptions: {
-        // MDX options
+        rehypeCodeOptions: {
+            themes: { light: 'github-light', dark: 'github-dark' },
+            transformers: [{
+                name: 'documentation-code-language',
+                pre(node) { node.properties['data-language'] = this.options.lang; },
+            }],
+        },
     },
 });

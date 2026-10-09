@@ -16,7 +16,7 @@ The Next.js and Fumadocs app serves directly from `/`.
 bun run build
 ```
 
-The build validates content links, generates per-version library and unversioned Spark LLM documentation, and exports the site to `docs/dist/`. Next.js uses `dist/` for its configured build directory too. Deploy the static export using trailing-slash directory indexes and a custom `404.html`. Search is a static index at `/api/search`.
+The build validates content links, exports the site to `docs/dist/`, then generates Markdown from the rendered documentation for versioned libraries, Spark, and Slides. Generated downloads belong to the build output; existing LLM download URLs remain supported. Next.js uses `dist/` for its configured build directory too. Deploy the static export using trailing-slash directory indexes and a custom `404.html`. Search is a static index at `/api/search`.
 
 ## Organization
 

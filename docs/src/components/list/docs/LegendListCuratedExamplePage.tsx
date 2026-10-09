@@ -21,6 +21,7 @@ export async function LegendListCuratedExamplePage({ slug }: { slug: ExampleSlug
         <div className="not-prose mt-8 space-y-8">
             <section className="space-y-3">
                 <div
+                    data-doc-exclude
                     className={
                         example.windowScroll
                             ? 'rounded-2xl border border-fd-border bg-fd-card p-4'
@@ -61,7 +62,7 @@ export async function LegendListCuratedExamplePage({ slug }: { slug: ExampleSlug
                         View source in legend-list
                     </Link>
                 </div>
-                <div className="overflow-hidden rounded-2xl border border-fd-border bg-fd-card">
+                <div data-doc-language="tsx" className="overflow-hidden rounded-2xl border border-fd-border bg-fd-card">
                     <DynamicCodeBlock code={source.trim()} lang="tsx" />
                 </div>
             </section>

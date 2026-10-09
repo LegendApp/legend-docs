@@ -58,7 +58,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             </div>
             <DocsTitle>{page.data.title}</DocsTitle>
             <DocsDescription>{page.data.description}</DocsDescription>
-            <DocsBody>
+            <DocsBody data-doc-content>
                 <MDX components={defaultMdxComponents} />
             </DocsBody>
         </DocsPage>

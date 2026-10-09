@@ -60,7 +60,7 @@ export function EffectDetail({slug}: {slug: string}) {
         </div>
         <p className="text-sm leading-6 text-fd-muted-foreground">Requires a Legend Slides build with effect installation support. Installs the {effect.pack} pack ({pack.latest}, {Math.ceil(release.bytes / 1024)} KB source) and its dependencies. macOS host capabilities: {release.capabilities.join(', ')}. Installed decks work offline.</p>
         <div className="space-y-3"><div className="flex items-center justify-between"><h2 className="text-xl font-semibold">Use it in a deck</h2><button type="button" className={action} onClick={copy}>{copyState}</button></div>
-            <pre className={`${panel} overflow-x-auto p-5 text-sm`}><code>{effect.snippet}</code></pre>
+            <pre data-language="mdx" className={`${panel} overflow-x-auto p-5 text-sm`}><code>{effect.snippet}</code></pre>
         </div>
         <h2 className="text-xl font-semibold">Configure</h2><dl className="space-y-4">{effect.props.map(prop => <div key={prop.name}><dt className="font-mono text-sm font-semibold">{prop.name}</dt><dd className="ml-0 mt-1 text-sm text-fd-muted-foreground">{prop.description}</dd></div>)}</dl>
         <p className="text-sm text-fd-muted-foreground">Only imported effects enter the compiled deck. <Link href="/slides/effects/installation">Installation and versioning →</Link></p>

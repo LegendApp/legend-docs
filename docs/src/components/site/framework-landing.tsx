@@ -26,7 +26,7 @@ const features = [
 
 export function FrameworkLanding() {
     return (
-        <main id="main" className="framework-landing container">
+        <main data-doc-content id="main" className="framework-landing container">
             <div className="framework-status" role="note"><p><strong>Experimental — not ready for production use.</strong> A published preview and macOS ARM64 Spark Runner are available. These docs cover newer source APIs; check <Link href="/spark/limitations">release status</Link> before choosing an SDK.</p></div>
             <header className="collection-header">
                 <div>
