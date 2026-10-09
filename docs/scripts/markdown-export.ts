@@ -24,7 +24,7 @@ export function convertPage(html: string, canonical: string) {
         const text = lines.length ? lines.toArray().map((line) => $(line).text()).join('\n') : (code.length ? code : pre).text();
         const language = pre.closest('[data-language]').attr('data-language') ?? pre.closest('[data-doc-language]').attr('data-doc-language') ??
             code.attr('class')?.match(/language-([\w+-]+)/)?.[1] ?? '';
-        codeBlocks.push({ language, code: text.replace(/\n$/, '') });
+        codeBlocks.push({ language, code: text });
         pre.attr('data-export-code', String(codeBlocks.length - 1));
     });
 
@@ -36,7 +36,7 @@ export function convertPage(html: string, canonical: string) {
             const { language, code } = codeBlocks[Number(node.getAttribute('data-export-code'))];
             const longest = Math.max(0, ...Array.from(code.matchAll(/`+/g), (match) => match[0].length));
             const fence = '`'.repeat(Math.max(3, longest + 1));
-            return `\n\n${fence}${language}\n${code}\n${fence}\n\n`;
+            return `\n\n${fence}${language}\n${code}${code.endsWith('\n') ? '' : '\n'}${fence}\n\n`;
         },
     });
     converter.addRule('definitionTerm', { filter: 'dt', replacement: (content) => `\n\n**${content}**\n\n` });

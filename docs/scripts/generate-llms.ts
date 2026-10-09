@@ -7,6 +7,7 @@ import { load } from 'cheerio';
 import { convertPage } from './markdown-export';
 import { ROOT, documentationProjects as packages, documentationRoutes } from './documentation-routes';
 import { getDocumentationRedirect } from '../src/lib/getDocsPath';
+import { canonicalPath } from '../src/lib/documentation';
 
 export const OUTPUT = path.join(ROOT, 'dist');
 export const BASE_URL = process.env.LLMS_BASE_URL ?? 'https://legend.so';
@@ -23,7 +24,7 @@ export type ExportedPage = {
 };
 
 export async function readRenderedPage(route: string) {
-    let url = new URL(getDocumentationRedirect(`/${route}`) ?? `/${route}/`, BASE_URL).href;
+    let url = new URL(canonicalPath(getDocumentationRedirect(`/${route}`) ?? `/${route}/`), BASE_URL).href;
     for (let redirects = 0; redirects < 5; redirects++) {
         const html = await fs.readFile(path.join(OUTPUT, new URL(url).pathname, 'index.html'), 'utf8');
         const $ = load(html);
@@ -56,13 +57,20 @@ export async function generate() {
             legacyUrl: new URL(`/${legacy}`, BASE_URL).href });
     }
 
-    const rootIndex = ['# Legend documentation', '', '> Apps, open-source libraries, and Legend Spark.', ''];
+    const rootIndex = ['# Legend documentation', '', '> Apps, open-source libraries, and Legend Spark.', '',
+        '## Version guidance', '',
+        'Current means the current documentation version, not necessarily the stable npm release. Select archived documentation when targeting an older API.', '',
+        ...packages.filter((project) => project.currentDocs).map((project) => `- [${project.name} current documentation](${new URL(project.currentDocs!, BASE_URL).href})`), ''];
     for (const project of packages) {
         const projectPages = pages.filter((page) => page.project === project.slug);
-        const versions = [...new Set(projectPages.map((page) => page.version))];
         const currentVersion = project.currentDocs?.split('/')[2];
-        rootIndex.push(`## ${project.name}`, '', project.description, '');
+        const versions = [...new Set(projectPages.map((page) => page.version))].sort((a, b) => a === currentVersion ? -1 : b === currentVersion ? 1 : b.localeCompare(a));
+        const projectIndex = [`# ${project.name}`, '', `> ${project.description}`, ''];
+        rootIndex.push(`## ${project.name}`, '', project.description, '',
+            `- [Documentation index](${new URL(`/${project.slug}/llms.txt`, BASE_URL).href})`, '');
         if (project.status) rootIndex.push(`Status: ${project.status}.`, '');
+        const availability = projectPages.find((page) => /\/(availability|limitations)\.md$/.test(page.markdownUrl));
+        if (availability) rootIndex.push(`- [Availability and release status](${availability.markdownUrl})`, '');
         for (const version of versions) {
             const versionPages = projectPages.filter((page) => page.version === version);
             const label = version ? `${version} — ${version === currentVersion ? 'current documentation' : 'archived documentation'}` : 'current documentation';
@@ -76,7 +84,9 @@ export async function generate() {
             await write(`${prefix}/llms-full.txt`, full);
             await write(`${prefix}/llms-full.md`, full);
             rootIndex.push(`- [${label}](${new URL(`/${prefix}/llms.txt`, BASE_URL).href})`, '');
+            projectIndex.push(`- [${label}](${new URL(`/${prefix}/llms.txt`, BASE_URL).href})`, '');
         }
+        if (project.category === 'library') await write(`${project.slug}/llms.txt`, projectIndex.join('\n'));
     }
     await write('llms.txt', rootIndex.join('\n'));
     await write('documentation-manifest.json', JSON.stringify(pages, null, 2) + '\n');

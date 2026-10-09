@@ -1,0 +1,5 @@
+{
+    "version": 1,
+    "include": ["/*"],
+    "exclude": ["/_next/*", "/assets/*", "/fonts/*", "/slides/effects/packs/*", "/slides/effects/previews/*", "/slides/effects/examples/*"]
+}

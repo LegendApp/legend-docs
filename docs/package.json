@@ -14,7 +14,9 @@
         "validate-links": "bun ./scripts/validate-links.ts",
         "effects:refresh": "bun ./scripts/refresh-slides-effects.ts",
         "effects:verify": "bun ./scripts/validate-slides-effects.ts",
-        "postbuild": "bun ./scripts/generate-llms.ts"
+        "postbuild": "bun ./scripts/generate-llms.ts && bun build ./hosting/entry.ts --target browser --outfile ./dist/_worker.js",
+        "test": "bun test ./scripts ./hosting ./src/lib",
+        "preview:pages": "wrangler pages dev dist --ip 127.0.0.1 --port 3013 --compatibility-date 2026-10-09"
     },
     "dependencies": {
         "@legendapp/list": "^3.2.0",

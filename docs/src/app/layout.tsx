@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { Provider } from './provider';
+import { SiteStructuredData } from '@/components/documentation-details';
 
 const inter = localFont({
     src: '../../public/fonts/InterVariable.woff2',
@@ -26,6 +27,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <html lang="en" className={inter.className} suppressHydrationWarning>
             <body className="flex flex-col min-h-screen">
                 {gtmId && <GoogleAnalytics gaId={gtmId} />}
+                <SiteStructuredData />
                 <Provider>{children}</Provider>
             </body>
         </html>
