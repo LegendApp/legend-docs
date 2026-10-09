@@ -61,12 +61,25 @@ class LinkValidator {
      */
     extractRelativeLinks(content: string, filePath: string): Link[] {
         const links: Link[] = [];
+        let fence: { marker: string; length: number } | undefined;
+        const prose = content.split('\n').map((line) => {
+            const wasFenced = Boolean(fence);
+            const marker = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+            if (marker) {
+                if (!fence) {
+                    fence = { marker: marker[1][0], length: marker[1].length };
+                } else if (marker[1][0] === fence.marker && marker[1].length >= fence.length && !marker[2].trim()) {
+                    fence = undefined;
+                }
+            }
+            return wasFenced || fence ? ' '.repeat(line.length) : line;
+        }).join('\n');
 
         // Match markdown links [text](url)
         const markdownLinkRegex = /\[([^\]]*)\]\(([^)]+)\)/g;
         let match: RegExpExecArray | null;
 
-        while ((match = markdownLinkRegex.exec(content)) !== null) {
+        while ((match = markdownLinkRegex.exec(prose)) !== null) {
             const [fullMatch, text, url] = match;
 
             // Skip absolute URLs, anchors, and mailto links
