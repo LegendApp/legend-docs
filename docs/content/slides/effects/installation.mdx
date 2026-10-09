@@ -1,0 +1,37 @@
+---
+title: Installing effects
+description: Download optional source packs, pin versions and present offline.
+---
+
+Choose an effect in the [gallery](/slides/effects) and click **Install in Slides**.
+Slides shows the requested pack and version before installing it. **Open example
+in Slides** installs the required pack and opens a self-contained sample deck.
+These links require a Slides build with the `legend-slides` URL scheme registered.
+Public app downloads are still in preview.
+
+## Opening an existing deck
+
+When a deck needs effects that are not installed, the presenter offers **Install
+Required Effects**. The installer includes declared dependencies. Failed downloads
+can be retried without activating a partial pack or replacing a deck's versions.
+
+A file named `talk.mdx.effects.lock.json` beside `talk.mdx` records exact versions
+and source checksums. Commit it with the deck. Multiple installed versions coexist;
+updating a pack for a new deck does not update existing lockfiles. Finish installing
+before presenting; compiling and playback make no network requests.
+
+## Source development and the CLI
+
+From a Legend Apps checkout:
+
+```sh
+bun scripts/compile-slides.ts /path/to/talk.mdx --install-effects
+```
+
+`LEGEND_SLIDES_EFFECTS_CATALOG` can point at a local docs server for development.
+`LEGEND_SLIDES_EFFECT_PACKS` changes the installation directory. The default cache
+is `~/Library/Application Support/Legend Slides/effects/`. Local source packs remain
+available for development without downloading; installed decks use their lockfile.
+
+Packs share the native capabilities already in Slides. Installing source does not
+add another native runtime or require rebuilding the app.

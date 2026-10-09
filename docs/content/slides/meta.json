@@ -1,5 +1,10 @@
 {
   "title": "Legend Slides",
   "root": true,
-  "pages": ["index", "availability", "reference"]
+  "pages": [
+    "index",
+    "effects",
+    "availability",
+    "reference"
+  ]
 }
