@@ -1,13 +1,277 @@
 ---
-title: Guides
-description: Legend Slides usage guides.
+title: Authoring and presenting
+description: Create a local MDX deck with native layouts, reveals, React components, and speaker notes, then present it on macOS.
 ---
 
-<Callout title="Documentation preview">
-  This page is a placeholder. Complete documentation will be added before
-  launch.
+Legend Slides turns local `.mdx` files into native presentations. Start with Markdown, add layouts and reveals, and use React Native components when a slide needs custom behavior. The presenter workspace keeps your notes and previews separate from the audience window.
+
+<Callout title="Preview">
+  Legend Slides is in development and public downloads are not available yet.
+  This guide describes the current app. See [Availability](/slides/availability)
+  for release status.
 </Callout>
 
-This section will cover mdx + react, presenter notes, multi-display presenting.
+## Your first deck
+
+Save this as `product-update.mdx`. Use the `.mdx` extension even when a deck contains only Markdown.
+
+```mdx
+---
+title: Product update
+aspectRatio: 16:9
+transition: fade
+theme:
+  backgroundColor: "#111827"
+  color: "#f8fafc"
+presenter:
+  showNext: true
+  showNotes: true
+---
+
+# Product update {shared=title}
+
+A simpler way to work.
+
+<!-- Welcome everyone and introduce the update. -->
+
+---
+
+## Product update {shared=title}
+
+{steps}
+
+- Open your files
+- Make the change
+- Share the result
+
+<!--
+1: Introduce the workflow.
+2: Start with the files people already have.
+3: Show the change.
+4: Explain how to share it.
+-->
+```
+
+Initial YAML frontmatter sets deck defaults. A top-level `---` separates slides; YAML immediately after a separator, followed by another `---`, configures that slide. Close JSX and layout containers before starting the next slide.
+
+The second slide starts with its heading visible. Each advance reveals a list item. The matching `shared=title` attributes move and resize the title between slides. HTML comments become private speaker notes.
+
+### Deck settings
+
+| Setting | Purpose |
+| --- | --- |
+| `title` | Name of the presentation. |
+| `aspectRatio` | Stage proportions, such as `16:9` or `4/3`; defaults to 16:9. |
+| `width`, `height` | Logical stage dimensions. Width defaults to 1920; height follows the aspect ratio unless set explicitly. |
+| `transition` | Default slide transition: `none`, `fade`, `slide`, `reveal-up`, or a focus configuration. The default is `none`. |
+| `theme` | Native Markdown `backgroundColor`, `color`, and `fontFamily`. Fonts must be available on the presenting Mac. |
+| `presenter` | Set `showNext` or `showNotes` to `false` to hide that pane. |
+| `background` | Local image path, or `false` to disable an inherited background. |
+| `template` | Path to a local default-export React component that wraps slide content. |
+
+Slides can override `transition`, `steps`, `background`, and `template`. A slide's `steps` is its total state count, including initial state 0. Use `template: false` to disable the deck's template for one slide. Theme and stage dimensions are deck settings.
+
+Content scales uniformly to fit the display. Dimensions in your deck are logical slide units rather than display pixels.
+
+## Lay out Markdown
+
+Use headings, paragraphs, bold and italic text, links, blockquotes, lists, inline code, and fenced code. The app renders these as native views. Use layout containers to arrange them into columns, cards, or grids.
+
+```mdx
+::::columns{ratio="2:1" gap=48 align=center}
+
+:::group{padding=32 class="bg-slate-800 rounded-3xl"}
+
+## One clear idea
+
+Supporting **Markdown** stays together.
+
+:::
+
+:::stack{gap=24}
+
+### Details
+
+A second column.
+
+:::
+
+::::
+```
+
+| Container | Layout |
+| --- | --- |
+| `group` | Keep several blocks together as a vertical unit. |
+| `stack` | Arrange blocks vertically with consistent spacing. |
+| `columns` | Each direct child becomes a column. Use `ratio="2:1"` for weighted widths. |
+| `grid` | Each direct child becomes a cell. Use `columns=3` to set the column count; the default is 2. |
+
+All containers accept `gap`, `padding`, `width`, `height`, `align`, `justify`, and `class`. Gap defaults to 24 and padding to 0. Width and height also accept percentages. Use `align=start|center|end|stretch` and `justify=start|center|end|between|around|evenly`; give a container extra space for justification to distribute.
+
+Keep the container name and attributes together: `:::group{gap=24}`. Use more colons on an outer fence than on nested fences. Group a heading and its paragraph when they should occupy one column or grid cell. A column ratio must have one positive weight per direct child.
+
+Apply literal Uniwind classes with `class="text-center text-cyan-300"` on a heading or paragraph, or `class` on a container. Explicit layout attributes override classes, and classes override default styles.
+
+The native renderer does not support every Markdown or HTML feature. Ordered lists use bullet markers, and tables, task-list checkboxes, strikethrough, and headings below `###` do not have complete native mappings. Use native layouts or components for those structures. Put browser HTML and CSS inside a `Webview`.
+
+## Reveal content in steps
+
+Put a trailing attribute on a heading, paragraph, or container:
+
+```mdx
+# A steady heading
+
+Visible on the first advance. {step=1}
+
+Visible on the second advance, hidden on the third. {step=2 until=3}
+
+:::group{step=3 reveal=fade-up duration=650}
+
+## The conclusion
+
+These blocks appear together.
+
+:::
+```
+
+Steps are zero-based: state 0 is visible initially. `until` is exclusive and must be greater than `step`; used alone, it hides initially visible content at that state. Matching step numbers reveal blocks together. Hidden content retains its layout space, and backward navigation restores earlier states.
+
+For lists, put `{steps}` on its own line before the list, as in the first deck. Top-level items reveal in sequence; nested items appear with their parent. Navigation counts are inferred from reveals and exits.
+
+Use `reveal=fade|fade-up|zoom|none` to choose a Markdown reveal and `duration` to set its time in milliseconds, from 0 to 10000. The default duration is 450. For custom component state, use a `Steps` render function:
+
+```mdx
+<Steps count={3}>
+  {(step) => (
+    <View>
+      <Text>{step >= 1 ? "Change introduced" : "Before the change"}</Text>
+      {step >= 2 && <Text>Ready to share</Text>}
+    </View>
+  )}
+</Steps>
+```
+
+`count={3}` declares states 0, 1, and 2. The callback receives the slide's global step; multiple `Steps` blocks coordinate and their counts combine by maximum. Declare enough states explicitly because the compiler cannot discover reveal logic inside a callback or custom component.
+
+## Add speaker notes
+
+Write notes inside `<!-- ... -->` anywhere in a slide. They appear in the presenter workspace and stay off the audience screen.
+
+Prefix a section with `1:`, `2:`, and so on to highlight it for a particular state. Notes and presenter counters are one-based: note `1:` belongs to initial state 0, and `2:` belongs to the first advance. `1.` and `1)` also work. Notes before the first numbered section apply throughout the slide.
+
+Numbered notes highlight existing states; they do not create new steps. Keep supporting explanations here so the audience can focus on the slide.
+
+## Move between slides
+
+### Shared elements
+
+Repeat `shared=title` on headings or paragraphs to animate their position and size between slides, as in the first deck. Put the attribute at the end of the whole block. IDs must be unique within a slide.
+
+For arbitrary React content, wrap it in `<SharedElement id="diagram">...</SharedElement>`. Both slide copies remain live and crossfade during the move; component state is owned separately by each slide. Keep moving elements outside clipping or scroll containers.
+
+### Focus transitions
+
+Mark an overview region, then configure the destination slide to zoom toward it:
+
+```mdx
+:::group{focus=workflow}
+
+## The workflow {shared=title}
+
+Open, edit, share.
+
+:::
+
+---
+transition:
+  type: focus
+  from: workflow
+  duration: 850
+---
+
+# Inside the workflow {shared=title}
+
+One step at a time.
+```
+
+The focus camera zooms to cover the stage, so a region with a different aspect ratio may crop. Going back to the immediate predecessor reverses the move. A distant jump or an unavailable region falls back to a fade. Matching shared elements still move between their layouts.
+
+## Use images and React components
+
+Keep the deck and its local assets in one directory. For a full-window image, set `background: ./images/photo.png` in deck or slide frontmatter. Backgrounds use cover sizing and may crop at the edges. Set `background: false` on a slide to suppress an inherited or template background.
+
+For an image inside the slide, import it and give the native `Image` explicit dimensions:
+
+```mdx
+import photo from "./images/photo.png"
+
+<Image
+  source={{ uri: photo }}
+  style={{ width: 960, height: 540 }}
+  resizeMode="contain"
+/>
+```
+
+PNG, JPEG, GIF, and WebP are supported for local backgrounds. Asset paths must stay inside the deck directory, including resolved symlinks.
+
+MDX provides host components such as `View`, `Text`, `Image`, `Step`, `Steps`, `SharedElement`, `FocusRegion`, `Effect`, and `LiquidGlass`. Import your own components from local `.tsx` or `.ts` files. Local TSX must import its own React Native components; the MDX host names are not globals in imported files.
+
+The compiler supports a fixed set of host packages, including React, React Native, Reanimated, Legend State, Legend Motion, Skia, and the presentation helpers in `@legend-apps/presentation`. A deck does not install arbitrary npm dependencies. External filesystem imports, network imports, and symlink escapes are rejected.
+
+For animation, use the shared presentation playback controller and GPU, native, or Reanimated UI-thread work. Keep presenter previews static, pause preparing or inactive content, and release resources when components unmount. Deck-local worklet functions require an explicit `"worklet";` directive.
+
+Deck code runs inside the app with its permissions. Open decks from sources you trust.
+
+### Visual effects
+
+Apply a built-in effect to a block with `{effect=liquid}`, `{effect=ripple}`, `{effect=glitch}`, or `{effect=pixelate}`. Use the `Effect` component to set parameters:
+
+```mdx
+<Effect preset="liquid" strength={14} speed={0.8} padding={24}>
+
+# Liquid typography
+
+</Effect>
+```
+
+Effects capture static native content and are non-interactive. If capture or shader compilation is unavailable, the original content stays visible.
+
+## Edit and present
+
+With the audience window closed, choose **Edit Source** to open the native editor alongside a slide preview. Moving the caret selects the corresponding slide. Drafts compile after a short pause; a failed compile keeps the last successful preview and reports the error. Edits autosave, and **⌘S** saves immediately. Toggle **Edit Source** again to return to the presenter workspace.
+
+In the presenter toolbar, choose **Rehearsal** for a windowed audience preview or **Presentation** for presenting. With multiple displays, use **Assign display roles** to choose **Use for Audience** and, optionally, **Use for Notes**. **Identify Displays** helps you match physical screens to the menu. Start with **Start Rehearsal** or **Start Presentation**, and use **Stop** when finished.
+
+Opening the audience window locks live deck updates. Saves still compile, but new code and styles wait for **Apply Update Now**. Applying an update or stopping the audience does not remove the lock. **Unlock Live Updates** resumes automatic updates for subsequent saves; an already queued build still needs to be applied explicitly.
+
+If the audience display disconnects, its output closes. Reconnect it, select its role, and start presenting again to resume at the same slide.
+
+Before a talk, rehearse forward and backward through every step on the actual display. Check speaker notes, next-slide previews, fonts, images, shared-element motion, and any GPU or Webview content. A successful compilation does not establish visual correctness.
+
+## Author with an AI agent
+
+The Legend Slides authoring skill supplies syntax references, a starter deck, and a compiler validation helper. From a configured Legend Apps source checkout, install it with:
+
+```sh
+npx skills add ./skills/legend-slides
+```
+
+Then ask your agent: “Use $legend-slides to create a five-slide product update with speaker notes.” Installing the skill supplies authoring guidance; the app and its development dependencies need their own setup.
+
+From the checkout root, validate a deck against the real compiler:
+
+```sh
+bun skills/legend-slides/scripts/validate-deck.ts /absolute/path/to/product-update.mdx .
+```
+
+The helper reports slide count, errors, and warnings as JSON and exits nonzero for compilation or setup failures. Review warnings and rehearse in the native app after compilation.
+
+For contributors with a configured macOS development environment, open the deck from the checkout root:
+
+```sh
+bun run slides run macos -- /absolute/path/to/product-update.mdx
+```
+
+This builds and runs the development app. Keep local components, images, and effect-pack dependencies beside the deck when moving it to another machine. In **Settings → Transitions**, use **Copy into Deck** for any personal transition files the deck depends on.
 
 [Back to Legend Slides](/slides)
