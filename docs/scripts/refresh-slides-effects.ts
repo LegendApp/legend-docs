@@ -85,5 +85,5 @@ try {
 catalog.effects = effects;
 validateCatalog(catalog);
 fs.writeFileSync(catalogFile, JSON.stringify(catalog, null, 2) + '\n');
-fs.writeFileSync(path.join(root, 'content/slides/effects/meta.json'), JSON.stringify({title: 'Effects', pages: ['index', 'installation', ...effects.map(effect => effect.slug)]}, null, 2) + '\n');
+fs.writeFileSync(path.join(root, 'content/slides/effects/meta.json'), JSON.stringify({title: 'Effects', pages: ['index', 'installation', 'publishing', ...effects.map(effect => effect.slug)]}, null, 2) + '\n');
 console.log(`Published ${Object.keys(catalog.packs).length} pack snapshots and ${effects.length} compiled examples locally. No deployment performed.`);

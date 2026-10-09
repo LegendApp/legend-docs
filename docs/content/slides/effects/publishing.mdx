@@ -1,0 +1,116 @@
+---
+title: Publishing effect packs
+description: Develop optional effects, publish immutable source packs, and maintain their gallery pages.
+---
+
+Effects live in the `legend-apps` repository and download separately from the
+Slides app. Related effects share small family packs. The `legend-docs` repository
+hosts their source archives, examples, previews, and [gallery](/slides/effects).
+A deck includes only the effects it imports.
+
+## Develop an effect
+
+1. Add or update the effect in `legend-apps/packages/slides-effects/packs` and
+   declare its exports in `pack.json`. Packs use native capabilities already
+   available in Slides; downloading source cannot add a native dependency.
+2. Bump the pack's version when published runtime source changes. Keep dependency
+   versions exact and compatible. Released versions are immutable, so existing
+   decks can retain their pinned source and checksums.
+3. Add a complete MDX example under
+   `packages/slides-effects/examples/<slug>/example.mdx`. Update the corresponding
+   entry in `packages/slides-effects/catalog.json`, including its matching snippet,
+   description, props, and pack export.
+4. Verify the effect and its reveal steps in the native Slides app.
+
+## Generate the gallery and downloads
+
+From `legend-docs/docs`, run:
+
+```sh
+bun run effects:refresh
+```
+
+The script finds a sibling `legend-apps` checkout by default. Set `LEGEND_APPS_PATH`
+to use another checkout. It creates versioned source archives under
+`public/slides/effects/packs`, compiles each example against those exact archived
+sources and dependencies, and updates the catalog and effect pages. It refuses
+to overwrite a released version with different source.
+
+To update examples and pages against existing releases without publishing local
+pack changes, run:
+
+```sh
+bun run effects:refresh --examples-only
+```
+
+Keep old archives available for pinned decks. Source archives contain UTF-8
+TypeScript and JSON files; installation requires no native binaries or
+package-manager installs.
+
+## Add native previews
+
+Capture the example running in the native app, including its reveal states. Put
+the poster and optional video under `public/slides/effects/`, then add `preview`
+metadata to the effect's entry in `public/slides/effects/catalog.json`:
+
+```json
+{
+  "poster": "/slides/effects/previews/example.webp",
+  "video": "/slides/effects/previews/example.mp4",
+  "renderer": "Legend Slides for macOS (development build)",
+  "exampleSha256": "<example source checksum>",
+  "packSha256": "<primary pack archive checksum>"
+}
+```
+
+Describe the actual app and build used in `renderer`. Use the example and primary
+pack checksums from the generated catalog. Refresh
+preserves previews only while both match. Check playback at normal speed before
+publishing a video; use a still when a clip has unresolved motion problems.
+Browser approximations cannot verify native Skia or WebGPU effects.
+
+## Test installation and offline playback
+
+Start the docs server from `legend-docs/docs`:
+
+```sh
+bun run dev --port 3010
+```
+
+In another terminal, install a deck's effects into an isolated test directory:
+
+```sh
+LEGEND_SLIDES_EFFECTS_CATALOG=http://127.0.0.1:3010/slides/effects/catalog.json \
+LEGEND_SLIDES_EFFECT_PACKS=/path/to/test-effects \
+bun /path/to/legend-apps/scripts/compile-slides.ts /path/to/talk.mdx --install-effects
+```
+
+Keep `talk.mdx.effects.lock.json` beside the deck. Stop the docs server and compile
+again without `--install-effects` to verify offline resolution. Rehearse the deck
+in the native app. A new pack version installs alongside an existing one, and
+existing deck pins stay unchanged. Failed downloads must leave no active partial
+pack.
+
+Test **Install in Slides** and **Open example in Slides** from the gallery with a
+rebuilt macOS app that registers the `legend-slides` URL scheme. Also open a deck
+with missing packs to check the presenter's installation and retry actions.
+Installation is disabled during presentation. See [Installing effects](/slides/effects/installation)
+for the deck author's workflow.
+
+## Publish a release
+
+1. From `legend-docs/docs`, run `bun run effects:verify` and `bun run build`.
+   The docs build validates artifact checksums and links. It does not need a
+   Legend Apps checkout.
+2. Commit the effect source and metadata in `legend-apps`, and the generated
+   catalog, pages, examples, previews, and immutable archives in `legend-docs`.
+3. Deploy the docs through the site's existing release workflow. The static export
+   serves the catalog at `https://legend.so/slides/effects/catalog.json`.
+   Refreshing the catalog does not deploy it.
+4. Release a Slides app containing the installer and URL-scheme registration.
+   Production install links require both the deployed catalog and a compatible
+   app release.
+
+After deployment, test a gallery install and example link with the released app,
+then reopen the example offline. Preserve previous archives when updating the
+catalog's latest version.
