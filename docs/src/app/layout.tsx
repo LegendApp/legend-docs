@@ -1,14 +1,15 @@
 import '@/app/global.css';
-import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { Provider } from './provider';
 
-const inter = Inter({
-    subsets: ['latin'],
-    weight: ['400', '500', '600', '700'],
+const inter = localFont({
+    src: '../../public/fonts/InterVariable.woff2',
+    weight: '100 900',
+    display: 'swap',
 });
 
 export const metadata: Metadata = {
