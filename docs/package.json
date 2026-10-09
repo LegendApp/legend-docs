@@ -14,8 +14,10 @@
         "validate-links": "bun ./scripts/validate-links.ts",
         "effects:refresh": "bun ./scripts/refresh-slides-effects.ts",
         "effects:verify": "bun ./scripts/validate-slides-effects.ts",
-        "postbuild": "bun ./scripts/generate-llms.ts && bun build ./hosting/entry.ts --target browser --outfile ./dist/_worker.js",
+        "postbuild": "bun ./scripts/generate-llms.ts && bun build ./hosting/entry.ts --target browser --outfile ./dist/_worker.js && bun ./scripts/validate-exports.ts",
         "test": "bun test ./scripts ./hosting ./src/lib",
+        "validate-exports": "bun ./scripts/validate-exports.ts",
+        "test:hosting": "bun ./scripts/test-hosting.ts",
         "preview:pages": "wrangler pages dev dist --ip 127.0.0.1 --port 3013 --compatibility-date 2026-10-09"
     },
     "dependencies": {

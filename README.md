@@ -47,6 +47,41 @@ For corrections and documentation improvements, edit `docs/content` and open a p
 
 Homepage image sources and the hero generation prompt are documented in [showcase assets](docs/design/showcase-assets.md).
 
+## AI-readable documentation
+
+`/llms.txt` links to product indexes and labels current versus archived library
+versions. Each documentation page advertises its Markdown counterpart through a
+`text/markdown` alternate link and a **View Markdown** action. Direct URLs such as
+`/slides/getting-started.md` and existing `/slides/llms/getting-started.md` downloads
+contain the rendered prose, configuration, and examples.
+
+The postbuild generator covers every product in `docs/src/lib/projects.ts`.
+Shared page metadata supplies canonical URLs, publisher identity, breadcrumbs,
+and technical-article data. Unknown modification dates are omitted. Correction
+links use this repository's issue workflow; the existing robots policy is retained.
+
+```sh
+cd docs
+bun test
+bun run build
+bun run test:hosting
+bun run preview:pages
+```
+
+The build checks export coverage, discovery links, metadata, and canonical List
+and Slides examples. The hosting check runs the actual local Cloudflare Pages
+runtime and checks direct downloads, Accept negotiation, cache variants, HEAD,
+404s, search, and robots. It needs no Cloudflare account.
+
+`docs/hosting/worker.ts` is bundled into `dist/_worker.js`. It serves Markdown
+when explicitly preferred via `Accept: text/markdown`, respects quality values,
+and falls back to HTML when no Markdown exists. Negotiated documentation uses
+`Vary: Accept` and `Cache-Control: private, no-store` to prevent variant mixing;
+static assets remain cacheable. `_routes.json` bypasses the worker for asset paths.
+
+Before production rollout, also verify these responses on a remote Pages preview;
+local runtime results do not certify account-specific edge configuration.
+
 ## Cloudflare Pages
 
 - Production branch: `production`
