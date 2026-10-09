@@ -1,0 +1,121 @@
+---
+title: Layouts
+description: "Compose native Markdown with groups, columns, grids, and stacks."
+---
+
+Each direct child of a layout is one item. A heading and paragraph are two items unless you group them.
+
+## Weighted columns
+
+Use headings, paragraphs, bold and italic text, links, blockquotes, lists, inline code, and fenced code. The app renders these as native views. Use layout containers to arrange them into columns, cards, or grids.
+
+```mdx
+::::columns{ratio="2:1" gap=48 align=center}
+
+:::group{padding=32 class="bg-slate-800 rounded-3xl"}
+
+## One clear idea
+
+Supporting **Markdown** stays together.
+
+:::
+
+:::stack{gap=24}
+
+### Details
+
+A second column.
+
+:::
+
+::::
+```
+
+| Container | Layout |
+| --- | --- |
+| `group` | Keep several blocks together as a vertical unit. |
+| `stack` | Arrange blocks vertically with consistent spacing. |
+| `columns` | Each direct child becomes a column. Use `ratio="2:1"` for weighted widths. |
+| `grid` | Each direct child becomes a cell. Use `columns=3` to set the column count; the default is 2. |
+
+All containers accept `gap`, `padding`, `width`, `height`, `align`, `justify`, and `class`. Gap defaults to 24 and padding to 0. Width and height also accept percentages. Use `align=start|center|end|stretch` and `justify=start|center|end|between|around|evenly`; give a container extra space for justification to distribute.
+
+Keep the container name and attributes together: `:::group{gap=24}`. Use more colons on an outer fence than on nested fences. Group a heading and its paragraph when they should occupy one column or grid cell. A column ratio must have one positive weight per direct child.
+
+Apply literal Uniwind classes with `class="text-center text-cyan-300"` on a heading or paragraph, or `class` on a container. Explicit layout attributes override classes, and classes override default styles.
+
+## A grid of cards
+
+```mdx
+::::grid{columns=3 gap=24}
+
+:::group{height=280 padding=32 class="bg-slate-800 rounded-3xl"}
+
+### Write
+
+Your local file.
+
+:::
+
+:::group{height=280 padding=32 class="bg-slate-800 rounded-3xl"}
+
+### Compose
+
+Your native layout.
+
+:::
+
+:::group{height=280 padding=32 class="bg-slate-800 rounded-3xl"}
+
+### Present
+
+Your audience screen.
+
+:::
+
+::::
+```
+
+Grid column counts range from 1 to 12. An incomplete last row preserves equal widths. Cell heights follow content; set heights when matching cards matter.
+
+## Vertical rhythm
+
+Give a stack spare height to make `justify=between` meaningful:
+
+```mdx
+:::stack{height=700 justify=between}
+
+## The opening
+
+The middle of the story.
+
+A final thought.
+
+:::
+```
+
+Columns have a horizontal main axis; groups and stacks have a vertical one. `justify` acts along that axis and `align` across it. Numeric dimensions, padding, and gaps use logical slide units. Width and height also accept percentages.
+
+## Animate a group
+
+```mdx
+:::group{shared=takeaway step=1 reveal=zoom duration=700 surface=glow padding=24}
+
+## The takeaway
+
+One supporting line.
+
+:::
+```
+
+`surface=glow` adds a cyan shadow. `surface=translucent` adds a light fill and border. These surfaces add 24 points of their own padding; container padding is additional. They are visual treatments rather than live backdrop blur.
+
+## Avoid overflow
+
+The built-in content frame has 120 horizontal and 80 vertical points of padding; templates choose their own padding. Leave room for text margins and layout gaps.
+
+The source editor and next-slide preview warn when measured layout containers extend beyond the stage. Audience output hides these warnings. This does not detect every text overflow, so check the actual audience display.
+
+For compiler errors, check ratio counts, fence pairing, and attribute placement. Put no space before a container's attributes and close layouts before a slide separator.
+
+See [Steps and notes](/slides/steps-and-notes) or [Transitions](/slides/transitions).

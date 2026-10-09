@@ -1,0 +1,122 @@
+---
+title: Transitions and shared elements
+description: "Move slides, match live content, focus on regions, and author local transitions."
+---
+
+Set a transition in deck frontmatter and override it per slide. Built-in choices are `none`, `fade`, `slide`, and `reveal-up`.
+
+```mdx
+---
+transition: fade
+---
+
+# An opening
+
+---
+transition:
+  name: reveal-up
+  duration: 800
+  options:
+    distance: 40
+---
+
+# The next idea
+```
+
+The host owns timing, cancellation, and cleanup. Presenter previews show the destination layout without running its transition.
+
+### Shared elements
+
+Repeat `shared=title` on headings or paragraphs to animate their position and size between slides, as in the first deck. Put the attribute at the end of the whole block. IDs must be unique within a slide.
+
+For arbitrary React content, wrap it in `<SharedElement id="diagram">...</SharedElement>`. Both slide copies remain live and crossfade during the move; component state is owned separately by each slide. Keep moving elements outside clipping or scroll containers.
+
+### Focus transitions
+
+Mark an overview region, then configure the destination slide to zoom toward it:
+
+```mdx
+:::group{focus=workflow}
+
+## The workflow {shared=title}
+
+Open, edit, share.
+
+:::
+
+---
+transition:
+  type: focus
+  from: workflow
+  duration: 850
+---
+
+# Inside the workflow {shared=title}
+
+One step at a time.
+```
+
+The focus camera zooms to cover the stage, so a region with a different aspect ratio may crop. Going back to the immediate predecessor reverses the move. A distant jump or an unavailable region falls back to a fade. Matching shared elements still move between their layouts.
+
+## Shared size and identity
+
+Use `{shared=title shared-resize=preserve}` to move text without stretching it; `stretch` is the default size interpolation. Shared matches work forward, backward, and across jumps, including with `transition: none`. Unmatched content follows the slide transition.
+
+Shared movement defaults to 320 ms. Focus uses its configured duration, with 320 ms for shared motion if that duration is zero. Duplicate IDs within a slide are excluded. Nested shared elements travel with their outer shared element.
+
+Each slide owns its React state. Changed text and styles crossfade between live copies; a component instance is not transferred between slides. Put decorative transforms on children of moving wrappers and avoid clipping or scroll ancestors.
+
+## Personal transitions
+
+Open **Settings → Transitions → Open Folder**. Slides installs editable `fade.ts`, `slide.ts`, and `reveal-up.ts` files in its app-data directory. Duplicate a file and select it by filename without `.ts`.
+
+Untouched built-ins receive updates; edited files are preserved. **Restore** saves the previous version as a copy before restoring the current built-in.
+
+## A deck-local transition
+
+Save `transitions/soft-reveal.ts` beside your deck:
+
+```ts
+import { defineTransition } from "@legend-apps/presentation";
+
+export default defineTransition({
+  duration: 650,
+  easing: "ease-out-cubic",
+  sharedElements: "independent",
+  styles({ progress, hasBackground }) {
+    return {
+      incoming: {
+        opacity: progress,
+        transform: [{ translateY: (1 - progress) * 28 }],
+      },
+      outgoing: { opacity: hasBackground ? 1 - progress : 1 },
+    };
+  },
+});
+```
+
+```mdx
+---
+transition:
+  source: ./transitions/soft-reveal.ts
+---
+
+# A softer entrance
+```
+
+| Field | Meaning |
+| --- | --- |
+| `duration` | Milliseconds from 0 to 10000. |
+| `easing` | `linear`, `ease-out-cubic`, or `ease-in-out`. |
+| `sharedElements` | `independent` gives matches their own geometry; `slide` moves everything together. |
+| `styles(context)` | Returns native `incoming` and `outgoing` View styles. |
+
+Context supplies eased `progress` (0–1), `direction`, logical `width` and `height`, `options`, and `hasBackground`. Keep `styles` pure and fast. Shared backgrounds remain outside the effect.
+
+Only referenced transitions compile. Local library helpers are supported and watched. Compile errors preserve the last working deck; runtime errors settle to visible content and appear in the app's errors.
+
+## Copy into a deck
+
+Choose **Copy into Deck** in transition settings before sharing a deck using a personal transition. Slides bundles its source and helpers into a local file and rewrites references to `source: ./filename.ts`. A locked audience holds rebuilt transitions until you choose to apply them.
+
+See [Presenting](/slides/presenting) for live-update locking.

@@ -1,0 +1,167 @@
+---
+title: Components and assets
+description: "Use local native React components, images, templates, and presentation playback."
+---
+
+Compose local React Native components alongside Markdown. Keep deck-specific code and assets below the deck directory.
+
+## Images and local files
+
+Keep the deck and its local assets in one directory. For a full-window image, set `background: ./images/photo.png` in deck or slide frontmatter. Backgrounds use cover sizing and may crop at the edges. Set `background: false` on a slide to suppress an inherited or template background.
+
+For an image inside the slide, import it and give the native `Image` explicit dimensions:
+
+```mdx
+import photo from "./images/photo.png"
+
+<Image
+  source={{ uri: photo }}
+  style={{ width: 960, height: 540 }}
+  resizeMode="contain"
+/>
+```
+
+PNG, JPEG, GIF, and WebP are supported for local backgrounds. Asset paths must stay inside the deck directory, including resolved symlinks.
+
+MDX provides host components such as `View`, `Text`, `Image`, `Step`, `Steps`, `SharedElement`, `FocusRegion`, `Effect`, and `LiquidGlass`. Import your own components from local `.tsx` or `.ts` files. Local TSX must import its own React Native components; the MDX host names are not globals in imported files.
+
+The compiler supports a fixed set of host packages, including React, React Native, Reanimated, Legend State, Legend Motion, Skia, and the presentation helpers in `@legend-apps/presentation`. A deck does not install arbitrary npm dependencies. External filesystem imports, network imports, and symlink escapes are rejected.
+
+For animation, use the shared presentation playback controller and GPU, native, or Reanimated UI-thread work. Keep presenter previews static, pause preparing or inactive content, and release resources when components unmount. Deck-local worklet functions require an explicit `"worklet";` directive.
+
+Deck code runs inside the app with its permissions. Open decks from sources you trust.
+
+Markdown images also work:
+
+```md
+![A product screenshot](./images/photo.png)
+```
+
+They use contain sizing and their loaded aspect ratio. Imported SVGs resolve as asset URLs, but a native `Image` does not guarantee SVG rendering; use a raster asset or a supported SVG renderer.
+
+## A reusable component
+
+Create `components/StatusCard.tsx`:
+
+```tsx
+import { Text, View } from "react-native";
+
+export default function StatusCard({ title, detail }: {
+  title: string;
+  detail: string;
+}) {
+  return (
+    <View className="rounded-3xl bg-slate-800 p-8" style={{ width: 720 }}>
+      <Text className="text-5xl text-cyan-300">{title}</Text>
+      <Text className="mt-4 text-3xl text-white">{detail}</Text>
+    </View>
+  );
+}
+```
+
+```mdx
+import StatusCard from "./components/StatusCard"
+
+# A useful detail
+
+<StatusCard title="Ready" detail="The whole deck stays in one directory." />
+```
+
+Strings belong inside native `Text` in local TSX. MDX's `View` and `Pressable` adapters can wrap literal strings; imported components must handle their own text. Use native styles and events instead of DOM properties.
+
+## A slide template
+
+Create `templates/Frame.tsx`:
+
+```tsx
+import type { PresentationTemplateProps } from "@legend-apps/presentation";
+import { Text, View } from "react-native";
+
+export default function Frame({ children, deck }: PresentationTemplateProps) {
+  return (
+    <View style={{ flex: 1, padding: 80 }}>
+      <Text style={{ color: "#7dd3fc", fontSize: 24 }}>{deck.title}</Text>
+      <View style={{ flex: 1, justifyContent: "center" }}>{children}</View>
+    </View>
+  );
+}
+```
+
+```mdx
+---
+title: Design review
+template: ./templates/Frame.tsx
+---
+
+# A consistent frame
+
+---
+template: false
+---
+
+# An unframed slide
+```
+
+Templates receive `children`, `deck`, and `slide`, and own padding and positioning. Additional slide metadata is available through `slide` if the template wants to render it.
+
+## Host imports
+
+Supported native package paths are:
+
+- `react`, `react/compiler-runtime`, `react/jsx-runtime`, `react/jsx-dev-runtime`, `react-native`
+- `react-native-reanimated`, `react-native-worklets`
+- `@legendapp/state`, `@legendapp/state/react`, `@legendapp/state/sync`, `@legendapp/motion`
+- `@legend-apps/presentation`
+- `@shopify/react-native-skia`, `number-flow-react-native/skia`, `lottie-react-native`
+- `react-native-webgpu`, `react-native-webview`
+- `typegpu`, `typegpu/common`, `typegpu/data`, `typegpu/std`, `@typegpu/noise`, `@typegpu/react`
+
+These are exact paths, not permission for arbitrary subpaths. Local TS, TSX, JS, JSX, JSON, and supported assets bundle with the deck. macOS/native file variants resolve before generic files.
+
+`Background`, `SharedElement`, `FocusRegion`, `SceneMotionView`, and playback helpers are package exports. Host MDX components such as `Effect`, `LiquidGlass`, `Step`, and `Webview` are not exports of `@legend-apps/presentation`; compose them in MDX or pass content to a local component.
+
+## A native entrance
+
+Create `components/Entrance.tsx`:
+
+```tsx
+import { SceneMotionView } from "@legend-apps/presentation";
+import { Text } from "react-native";
+
+export default function Entrance() {
+  return (
+    <SceneMotionView
+      initialPose={{ y: 32, opacity: 0 }}
+      pose={{ y: 0, opacity: 1 }}
+      duration={650}
+    >
+      <Text style={{ fontSize: 72, color: "#f8fafc" }}>A clear entrance</Text>
+    </SceneMotionView>
+  );
+}
+```
+
+```mdx
+import Entrance from "./components/Entrance"
+
+<Entrance />
+```
+
+`SceneMotionView` handles native poses on the presentation timeline. Use `PlaybackKeyframeView` for trajectories and `useAnimatedShaderUniforms` for Skia uniforms.
+
+## Playback lifecycle
+
+| Phase | Behavior |
+| --- | --- |
+| Preparing | Initial frame, time zero, no playback. |
+| Preview | A deterministic sample. |
+| Playing | Shared slide and step clocks advance on the UI runtime. |
+| Outgoing / paused | Last live frame held. |
+
+Nearby slides mount before becoming visible. Mounting is not activation. Avoid side effects assuming a component is already on screen, and release listeners and resources on inactivity or unmount.
+
+For custom UI worklets, use `usePlayback()` outside a Skia Canvas and `samplePlayback` for the appropriate slide or step clock. Do not create independent clocks or read a running UI clock on JS. Deck-local worklet callbacks need an explicit `"worklet";` directive.
+
+Subscribe narrowly with `usePresentationValue("stepIndex")` or `useSlideLifecycle()` when those fields suffice. With Legend State, retain the caller-owned observable rather than mirroring changing React props into another observable.
+
+See the [runtime API](/slides/runtime-api), [Backgrounds and effects](/slides/backgrounds-and-effects), and [Webviews](/slides/webviews).

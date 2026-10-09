@@ -30,6 +30,13 @@ Library documentation and interactive examples stay in their existing locations.
 
 The new landing pages live in `docs/src/app/(site)` with components in `docs/src/components/site`. Styles are scoped to `.legend-site` so they do not change library documentation or examples. The homepage uses a custom Legend hero, app screenshots, images from the library documentation, and short product summaries; there are no separate `/apps` or `/libraries` pages.
 
+Legend Slides has a dedicated product homepage at `/slides`, with an interactive
+deck illustration, native captures, and selected effects from the checked-in
+catalog. `/slides/reference` is the documentation hub; the focused guides live in
+`docs/content/slides`, and the downloadable starter is
+`docs/public/slides/examples/first-deck.mdx`. The illustration is a browser demo,
+while the app screenshots and effect previews come from native macOS builds.
+
 ## Configuration
 
 Set `GTM_ID` only if analytics should be enabled. `LLMS_BASE_URL` can override the default `https://legend.so` when generating documentation links.

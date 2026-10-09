@@ -1,0 +1,103 @@
+---
+title: Presentation runtime API
+description: Read navigation state and use the native presentation clock in local components.
+---
+
+Local components import runtime helpers from `@legend-apps/presentation`. Slides supplies the context and playback controller for each rendered surface; ordinary decks consume them rather than creating another provider.
+
+## Subscribe to navigation
+
+| Hook | Use |
+| --- | --- |
+| `usePresentationValue(key)` | Subscribe to one runtime field. |
+| `useSlideLifecycle()` | Read activity, preview/preparation, slide/step indices, counts, and navigation epochs. |
+| `usePresentation$()` | Access the existing runtime observable for narrow selectors or imperative commands. |
+| `usePresentation()` | Subscribe to the complete runtime; use when a component needs that breadth. |
+| `useStep(at)` | Read whether a state was reached, whether it is current, and its elapsed playback value. |
+
+For example, save `components/StepLabel.tsx`:
+
+```tsx
+import { usePresentationValue } from "@legend-apps/presentation";
+import { Text } from "react-native";
+
+export default function StepLabel() {
+  const step = usePresentationValue("stepIndex");
+  return <Text style={{ fontSize: 48, color: "#f8fafc" }}>State {step}</Text>;
+}
+```
+
+```mdx
+import StepLabel from "./components/StepLabel"
+
+<Steps count={3}>
+  {(step) => (
+    <View>
+      <StepLabel />
+      <Text>{step >= 1 ? "A new detail" : "The opening"}</Text>
+    </View>
+  )}
+</Steps>
+```
+
+The explicit count declares the navigation states. The host does not inspect arbitrary component implementations to discover state-dependent logic.
+
+## Runtime fields
+
+| Field | Meaning |
+| --- | --- |
+| `currentSlide`, `currentStep` | Live navigation position, zero-based. Previews use their requested target. |
+| `slideIndex`, `stepIndex` | This rendered surface's slide and resolved state. |
+| `slideCount`, `stepCount` | Number of slides and states. State counts include initial state 0. |
+| `isActive` | Whether the surface is active. |
+| `isPreview` | A deterministic presenter preview. |
+| `isPreparing` | A nearby audience surface preparing offscreen. |
+| `playbackPhase` | Explicit `preparing`, `preview`, `playing`, `paused`, or `outgoing` phase. |
+| `direction` | `forward` or `backward` navigation. |
+| `startedAt`, `stepStartedAt`, `stepEpochs` | Shared navigation epochs in milliseconds; use playback helpers for animation sampling. |
+
+`goTo(index)`, `next()`, and `previous()` are navigation commands. `goTo` takes a zero-based slide index. To invoke a command imperatively through the observable, use `runtime$.next.peek()()` rather than subscribing a component to every runtime field.
+
+## Step-specific state
+
+`useStep(at)` returns:
+
+| Value | Meaning |
+| --- | --- |
+| `reached` | Current state is at or after `at`. |
+| `isCurrent` | Current state equals `at`. |
+| `elapsed` | A Reanimated shared value of elapsed seconds since the state was reached. Previews return zero. |
+| `startedAt` | The state's navigation epoch, when available. |
+| `direction` | Navigation direction, defaulting to `forward`. |
+
+Elapsed timing continues over later states and resets after reversing before the selected state. Consume the shared value on the UI runtime; do not turn it into a JavaScript per-frame subscription.
+
+## Playback clock
+
+`usePlayback()` returns the surface's shared playback state. In a UI worklet, call `samplePlayback(state, previewTime, clock)` to sample seconds:
+
+- `clock="slide"` measures from the slide's activation.
+- `clock="step"` measures from the current step's activation.
+- A numeric clock measures from reaching that particular step.
+
+Preparation samples zero. Previews sample the supplied deterministic time. Active playback begins at zero; outgoing and paused surfaces freeze the last live frame. Keep slide and step timing separate, and obtain Hooks outside a Skia Canvas before passing derived values into it.
+
+Use `useAnimatedShaderUniforms(uniforms, previewTime, options)` for Skia shader values. Its options include a slide, step, or numeric `clock` and `active` playback control. The host owns frame advancement and lifecycle; a custom shader does not need an independent clock.
+
+## Native animation helpers
+
+| Helper | Contract |
+| --- | --- |
+| `SceneMotionView` | Animate `pose` fields `x`, `y`, `scaleX`, `scaleY`, and `opacity`; supports `initialPose`, duration, and delay in milliseconds. |
+| `PlaybackKeyframeView` | Sample native `{time, x, y, opacity}` keyframes. Time, delay, and repeat duration are milliseconds; preview time is seconds. Supply a nonempty ordered keyframe list. |
+| `GPUShader` | Render a host-supported WGSL program with dimensions, image/particle options, preview time, a slide/step clock, and optional fallback. |
+
+See [Components and assets](/slides/components) for a complete native entrance and [Backgrounds and visual effects](/slides/backgrounds-and-effects) for shader composition.
+
+## Ownership and cleanup
+
+Slides may keep the current audience slide and up to two neighbors on each side mounted, plus a retained outgoing surface. Mounting is not activation. Pause inactive work, keep previews static, and release native resources and listeners when their lifecycle ends.
+
+`PresentationProvider` and `PresentationObservableProvider` accept an existing `Observable<PresentationRuntime>` as `value`, not a plain snapshot. A normal authored deck already has that provider. Keep canonical state in its owner and avoid mirroring it into a second observable during render.
+
+Deck-local Reanimated callbacks require an explicit `"worklet";` directive. JavaScript can choose a target or trigger navigation; per-frame native animation work belongs on the UI runtime or GPU.

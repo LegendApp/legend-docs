@@ -1,0 +1,58 @@
+---
+title: Author with AI
+description: "Brief an agent, install the authoring skill, and validate its output."
+---
+
+An agent can draft a deck using the Markdown and native components you write by hand. Keep control of the story, sources, and local files.
+
+## Install the skill
+
+The Legend Slides authoring skill supplies syntax references, a starter deck, and a compiler validation helper. From a configured Legend Apps source checkout, install it with:
+
+```sh
+npx skills add ./skills/legend-slides
+```
+
+Then ask your agent: “Use $legend-slides to create a five-slide product update with speaker notes.” Installing the skill supplies authoring guidance; the app and its development dependencies need their own setup.
+
+Use `--global` for a user-wide installation or `--agent codex` to target Codex. The local checkout command does not require separate publication of the skill.
+
+## Brief the agent
+
+Include audience, goal, time budget or slide count, source material, style, and destination:
+
+```text
+Use $legend-slides to create a six-slide product update for engineers.
+Save it as ./product-update/product-update.mdx.
+Use native Markdown layouts and a restrained dark theme.
+Include speaker notes, one progressive reveal, and a shared title.
+Use the supplied release notes as the source of facts.
+Put supporting explanation in the notes and validate with the compiler.
+```
+
+For an existing deck:
+
+```text
+Use $legend-slides to revise slides 3–5 in ./talk/talk.mdx.
+Keep the current template and local components.
+Turn the comparison into two columns with one takeaway per step.
+Update numbered speaker notes to match.
+```
+
+Choose a complete [gallery example](/slides/effects) when requesting an effect. Package names and exports must match the catalog; a plausible-sounding component name is not an API.
+
+## Compile and review
+
+From a configured Legend Apps checkout:
+
+```sh
+bun skills/legend-slides/scripts/validate-deck.ts /absolute/path/to/product-update.mdx .
+```
+
+The helper reports real compiler results, warnings, and slide count. If the compiler is unavailable, the agent can still deliver an unvalidated draft. Ask it to state which checks ran and what still needs rehearsal.
+
+Review facts, sources, and density. Rehearse forward/backward steps, notes, layout, fonts, and GPU content. Nearby slides can mount before activation, so custom animation must use the presentation lifecycle rather than an arbitrary frame loop.
+
+Keep the delivered directory intact, retain effect lockfiles, install pinned packs, and copy personal transitions into the deck. Installing a skill installs guidance, not the app, Bun, or native dependencies. Review unfamiliar executable components before opening the deck.
+
+See [Getting started](/slides/getting-started) and [Troubleshooting](/slides/troubleshooting).

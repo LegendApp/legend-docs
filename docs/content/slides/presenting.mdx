@@ -1,0 +1,79 @@
+---
+title: Editing, rehearsal, and presenting
+description: "Use the native workspace, assign displays, and apply deck updates deliberately."
+---
+
+The presenter workspace separates current-slide and next-slide previews, speaker notes, build output, and display controls from the audience window.
+
+## Edit the source
+
+With the audience window closed, choose **Edit Source** to open the native editor alongside a slide preview. Moving the caret selects the corresponding slide. Drafts compile after a short pause; a failed compile keeps the last successful preview and reports the error. Edits autosave, and **⌘S** saves immediately. Toggle **Edit Source** again to return to the presenter workspace.
+
+Leaving the editor, closing the window, or quitting finishes pending saves. A save refuses to overwrite external changes. If it fails, the draft remains available unless you explicitly discard it. Presentation controls and shortcuts are inactive in source-editing mode.
+
+## Displays and rehearsal
+
+In the presenter toolbar, choose **Rehearsal** for a windowed audience preview or **Presentation** for presenting. With multiple displays, use **Assign display roles** to choose **Use for Audience** and, optionally, **Use for Notes**. **Identify Displays** helps you match physical screens to the menu. Start with **Start Rehearsal** or **Start Presentation**, and use **Stop** when finished.
+
+With one display, the presentation-windows menu offers **Open Audience Window** and **Preview Notes Screen**. With multiple displays, assign audience, notes, or unused roles. Your laptop can retain the presenter while another display shows the audience output.
+
+## Navigation and timer
+
+| Action | Default shortcut |
+| --- | --- |
+| Advance a step or slide | Right, Down, Space, or Page Down. |
+| Go backward | Left, Up, or Page Up. |
+| First / last slide | Home / End. |
+| Jump to a slide | Type its number, then Enter. |
+| Close the audience | Escape while audience output is open. |
+| Save in the source editor | ⌘S. |
+
+Arrow, Space, and numeric navigation is suspended while editing notes. Page Up and Page Down still navigate outside source-editing mode. Shortcuts are scoped to the presenter window.
+
+The elapsed-time menu offers **Pause Timer**, **Resume Timer**, and **Restart Timer**. Presentation settings control whether timing starts on the second slide and whether rehearsal timing pauses while editing.
+
+## Lock and apply updates
+
+Opening the audience window locks live deck updates. Saves still compile, but new code and styles wait for **Apply Update Now**. Applying an update or stopping the audience does not remove the lock. **Unlock Live Updates** resumes automatic updates for subsequent saves; an already queued build still needs to be applied explicitly.
+
+Opening another deck while locked also queues it. A failed rebuild leaves the last successful deck visible and reports the error. Check which build applied before rehearsing new content.
+
+## Display changes and blackout
+
+If an audience display disconnects, output closes. Reconnect it, assign the audience role, and start again to resume at the same slide. The talk does not automatically move onto another screen. Resolution and position changes resize active presentation output; windowed rehearsal is left alone.
+
+Choose **Presentation → Blackout Audience** to hide the audience deliberately, then toggle the same menu item to restore it. Window or render errors do not enable blackout automatically.
+
+## Slide errors
+
+Slide-render failures leave presenter controls available. **Slide errors** shows details while the audience gets a neutral fallback. **Retry Slide Content**, navigating away and back, or applying a corrected build retries the content.
+
+TypeGPU setup/render/device-loss and cleanup failures are caught by the host. Arbitrary event handlers, timers, infinite loops, and native crashes in trusted deck code are outside React error boundaries. See [Troubleshooting](/slides/troubleshooting).
+
+## Present without Metro
+
+For contributors preparing a release app on a configured Mac, run from the Legend Apps root:
+
+```sh
+bun install --frozen-lockfile
+bun run slides build macos
+bun run slides open macos --release -- /absolute/path/to/talk.mdx
+```
+
+The macOS release embeds application JavaScript and a portable compiler with Bun and dependencies. It does not use Metro or need a checkout on the presenting machine. Quit any existing Slides process before opening it.
+
+Build compiler resources on a Mac matching the target architecture and use the repository's Apple Development signing identity. Prepare before the venue rather than rebuilding or installing there.
+
+Keep local deck files together, copy personal transitions into the deck, and install effect packs before going offline. Confirm the actual release opens the actual deck with Metro stopped. Native build success alone is not a passing rehearsal.
+
+## Rehearsal checklist
+
+- Open the saved deck in the build you will present from.
+- Check initial states, reveals, exits, and backward moves.
+- Verify fonts, images, captures, GPU effects, and Webview content.
+- Check notes and next-slide previews at every state.
+- Select the real audience/notes displays and test blackout.
+- Confirm the latest build applied and understand the live-update lock.
+- For release presenting, rehearse offline with required packs installed and Metro stopped.
+
+See [Availability](/slides/availability) for release status.

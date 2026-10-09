@@ -3,8 +3,20 @@
   "root": true,
   "pages": [
     "index",
+    "reference",
+    "getting-started",
+    "deck-format",
+    "layouts",
+    "steps-and-notes",
+    "transitions",
+    "components",
+    "runtime-api",
+    "backgrounds-and-effects",
+    "webviews",
     "effects",
-    "availability",
-    "reference"
+    "presenting",
+    "ai-authoring",
+    "troubleshooting",
+    "availability"
   ]
 }

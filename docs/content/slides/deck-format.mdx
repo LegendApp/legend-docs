@@ -1,0 +1,114 @@
+---
+title: Deck format
+description: "Frontmatter, native Markdown, styling attributes, and local file boundaries."
+---
+
+A deck is a local `.mdx` document. Initial frontmatter configures it, top-level separators divide slides, and MDX allows native React components alongside Markdown.
+
+## Deck settings
+
+| Setting | Purpose |
+| --- | --- |
+| `title` | Name of the presentation. |
+| `aspectRatio` | Stage proportions, such as `16:9` or `4/3`; defaults to 16:9. |
+| `width`, `height` | Logical stage dimensions. Width defaults to 1920; height follows the aspect ratio unless set explicitly. |
+| `transition` | Default slide transition: `none`, `fade`, `slide`, `reveal-up`, or a focus configuration. The default is `none`. |
+| `theme` | Native Markdown `backgroundColor`, `color`, and `fontFamily`. Fonts must be available on the presenting Mac. |
+| `presenter` | Set `showNext` or `showNotes` to `false` to hide that pane. |
+| `background` | Local image path, or `false` to disable an inherited background. |
+| `template` | Path to a local default-export React component that wraps slide content. |
+
+Slides can override `transition`, `steps`, `background`, and `template`. A slide's `steps` is its total state count, including initial state 0. Use `template: false` to disable the deck's template for one slide. Theme and stage dimensions are deck settings.
+
+Content scales uniformly to fit the display. Dimensions in your deck are logical slide units rather than display pixels.
+
+## Slide settings
+
+Place YAML immediately after a slide separator and close it with another `---`:
+
+```mdx
+---
+title: Design review
+transition: fade
+width: 1920
+height: 1080
+---
+
+# The overview
+
+---
+transition: reveal-up
+steps: 3
+---
+
+# A closer look
+
+First detail. {step=1}
+
+Second detail. {step=2}
+```
+
+Imports and exports are document-level even if placed between slides. Metadata beyond `transition`, `steps`, `background`, and `template` is passed to the template; it does not create visible content automatically.
+
+Top-level thematic breaks such as `---`, `***`, and `___` separate slides. Breaks inside code fences and JSX stay inside their containing slide. A dash separator starts a slide even directly after text: use `## Heading` instead of a setext underline for a heading.
+
+## Native Markdown
+
+| Syntax | Behavior |
+| --- | --- |
+| Headings `#` through `######` | Native text; levels 4–6 use the level-3 visual style. |
+| Bold, italic, strikethrough, inline code | Native text styling. |
+| Links | Open through native link handling. |
+| Ordered and unordered lists | Numbered or bullet markers. |
+| GFM task lists | Display checkboxes reflecting the document, rather than editable controls. |
+| GFM tables | Native rows with equal-width cells and text alignment. |
+| Markdown images | Watched local assets, rendered with contain sizing. |
+| Fenced code | Native code viewer; recognized language names enable syntax highlighting. |
+| Blockquotes | A native quote container. |
+| HTML comments | Private speaker notes. |
+
+```md
+### Ship checklist
+
+- [x] Draft the deck
+- [ ] Rehearse
+
+| Part | Purpose |
+| --- | --- |
+| Markdown | Tell the story |
+| Notes | Keep your cues |
+
+~~Earlier wording~~ **A clearer idea**
+```
+
+Browser `div`, `span`, and `iframe` elements are not native primitives. Put HTML and CSS in a [Webview](/slides/webviews). Mermaid and LaTeX rendering are not built in.
+
+## Trailing attributes
+
+```mdx
+## One idea {shared=idea step=1 class="text-cyan-300"}
+
+A short-lived thought. {step=2 until=4 reveal=fade-up duration=650}
+```
+
+| Attribute | Meaning |
+| --- | --- |
+| `class="..."` | Literal Uniwind native text classes. |
+| `step=N` / `until=N` | Show at state N / hide when state N starts. |
+| `reveal=fade|fade-up|zoom|none` | Reveal style; requires `step` or `until`. |
+| `duration=N` | Reveal milliseconds, 0–10000; requires `step` or `until`. |
+| `shared=id` | Match a whole block across slides. |
+| `shared-resize=preserve|stretch` | Move without stretching text, or interpolate size; requires `shared`. |
+| `focus=id` | Name this block's bounds as a camera target. |
+| `effect=liquid|ripple|glitch|pixelate` | Built-in captured-content effect. |
+| `surface=translucent|glow` | Rounded native surface. |
+
+Use one brace block at the end of the heading or paragraph. IDs allow letters, numbers, underscores, dots, and hyphens; quoted IDs work. Attributes target whole blocks or layout containers, not individual inline words or list items. Code and escaped braces stay literal.
+
+Uniwind scans the deck directory for complete class strings. Write `className="bg-cyan-950"` in TSX instead of constructing a class name dynamically.
+
+## Portability
+
+Keep imported source and assets inside the deck directory, including symlinks. A deck has no npm installation of its own. Share the whole directory and its effects lockfile, and copy personal transitions into the deck.
+
+Continue with [Layouts](/slides/layouts), [Components](/slides/components), or [Transitions](/slides/transitions).

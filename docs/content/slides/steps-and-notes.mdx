@@ -1,0 +1,90 @@
+---
+title: Steps and speaker notes
+description: "Coordinate reveals, component state, and private presenter cues."
+---
+
+A slide's initial state is 0. Advancing consumes its remaining states before moving to the next slide. Reveals and exits contribute to the total state count.
+
+## Markdown reveals
+
+Put a trailing attribute on a heading, paragraph, or container:
+
+```mdx
+# A steady heading
+
+Visible on the first advance. {step=1}
+
+Visible on the second advance, hidden on the third. {step=2 until=3}
+
+:::group{step=3 reveal=fade-up duration=650}
+
+## The conclusion
+
+These blocks appear together.
+
+:::
+```
+
+Steps are zero-based: state 0 is visible initially. `until` is exclusive and must be greater than `step`; used alone, it hides initially visible content at that state. Matching step numbers reveal blocks together. Hidden content retains its layout space, and backward navigation restores earlier states.
+
+For lists, put `{steps}` on its own line before the list, as in the first deck. Top-level items reveal in sequence; nested items appear with their parent. Navigation counts are inferred from reveals and exits.
+
+Use `reveal=fade|fade-up|zoom|none` to choose a Markdown reveal and `duration` to set its time in milliseconds, from 0 to 10000. The default duration is 450. For custom component state, use a `Steps` render function:
+
+```mdx
+<Steps count={3}>
+  {(step) => (
+    <View>
+      <Text>{step >= 1 ? "Change introduced" : "Before the change"}</Text>
+      {step >= 2 && <Text>Ready to share</Text>}
+    </View>
+  )}
+</Steps>
+```
+
+`count={3}` declares states 0, 1, and 2. The callback receives the slide's global step; multiple `Steps` blocks coordinate and their counts combine by maximum. Declare enough states explicitly because the compiler cannot discover reveal logic inside a callback or custom component.
+
+## Reveal React content
+
+```mdx
+<Step at={1} until={3} reveal="fade-up" duration={500}>
+  <View style={{ padding: 32, backgroundColor: "#164e63" }}>
+    <Text>Visible at states 1 and 2.</Text>
+  </View>
+</Step>
+```
+
+`reveal` uses the native reveal path with `fade`, `fade-up`, `zoom`, or `none`. A `Step` without an explicit `at` is allocated in document order. Explicit state numbers make coordinated compositions easier to read.
+
+Callbacks and custom components hide their internal logic from state discovery. Supply enough `Steps count` or slide `steps` for the entire path. Two callbacks with `count={3}` share three states; they do not create six. Components own their prop changes and reversal behavior.
+
+## Presenter notes
+
+Write notes inside `<!-- ... -->` anywhere in a slide. They appear in the presenter workspace and stay off the audience screen.
+
+Prefix a section with `1:`, `2:`, and so on to highlight it for a particular state. Notes and presenter counters are one-based: note `1:` belongs to initial state 0, and `2:` belongs to the first advance. `1.` and `1)` also work. Notes before the first numbered section apply throughout the slide.
+
+Numbered notes highlight existing states; they do not create new steps. Keep supporting explanations here so the audience can focus on the slide.
+
+```md
+<!--
+A reminder for the whole slide.
+
+1: Introduce the original state.
+
+2: Reveal the change and pause.
+Continue this cue on a second line.
+
+3: Explain the takeaway.
+-->
+```
+
+A numbered section continues until the next prefix. Separate comments are collected into one slide's notes. Timestamps such as `8:10` and numbered lines inside fenced code are not step markers.
+
+The viewer emphasizes the current cue and dims other numbered sections. Editing shows the original notes in full. **Settings → Presentation** controls notes width, font size, and current/inactive text colors.
+
+## Verify the pacing
+
+Rehearse initial state, all reveals and exits, and backward navigation. Nested list items appear with their parent. If a state is missing, inspect `count` and `steps`; adding a numbered note does not create it.
+
+Continue with [Transitions](/slides/transitions) or [Presenting](/slides/presenting).

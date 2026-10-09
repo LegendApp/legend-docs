@@ -1,12 +1,32 @@
 ---
 title: Availability
-description: Legend Slides platforms and release status.
+description: "Development status, macOS support, and contributor-build requirements."
 ---
 
-<Callout title="Preview">Public downloads are not available yet.</Callout>
+<Callout title="Development preview">Public application downloads are not available yet.</Callout>
 
-The app is currently focused on macOS.
+## Platforms
 
-Platform requirements and installation instructions will be added alongside a public release.
+The current app targets macOS, with native source editing, slide/notes previews, audience output, multi-display roles, and native/GPU content. iOS, Android, Windows, and a standalone web presenter are not supported app targets.
 
-[Back to Legend Slides](/slides)
+The homepage's interactive illustration demonstrates a deck's structure; presentations run in the native app. Gallery imagery comes from macOS development builds.
+
+## Author now
+
+Write and share local `.mdx` files with the [deck format](/slides/deck-format), [starter](/slides/examples/first-deck.mdx), or [authoring skill](/slides/ai-authoring). Viewing them needs an app build. Installing the skill does not install the application or dependencies.
+
+## Contributor builds
+
+The Legend Apps checkout uses Bun and a configured macOS native toolchain. Development builds use the checkout compiler and local Bun. Release builds embed application JavaScript and a portable compiler runtime, with correct architecture, native dependencies, and Apple signing required when building.
+
+See [Getting started](/slides/getting-started) for development commands and [Presenting](/slides/presenting#present-without-metro) for release rehearsal. These are contributor workflows rather than a public installation channel.
+
+## Effects and offline use
+
+Install links in the [gallery](/slides/effects) require a Slides build with the `legend-slides` URL scheme registered. Install packs before presenting and retain the deck's version lockfile. Installed compilation and playback work offline; remote Webview content may still require network.
+
+## Before a talk
+
+Compile and rehearse in the actual build and display setup. Native captures, GPU effects, Webviews, fonts, and files need checks beyond compilation. PowerPoint or PDF export is not part of the workflow described here.
+
+[Explore documentation](/slides/reference) or [return to Slides](/slides).

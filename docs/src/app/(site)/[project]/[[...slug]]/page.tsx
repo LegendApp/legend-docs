@@ -6,6 +6,7 @@ import { source } from '@/lib/source';
 import { getProject } from '@/lib/projects';
 import { ProjectIcon } from '@/components/site/project-icon';
 import { FrameworkLanding } from '@/components/site/framework-landing';
+import { SlidesLanding } from '@/components/site/slides-landing';
 
 type Params = { project: string; slug?: string[] };
 export const dynamicParams = false;
@@ -37,6 +38,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     const page = source.getPage([projectSlug, ...slug]);
     if (!page || !project) notFound();
     if (projectSlug === 'spark' && slug.length === 0) return <FrameworkLanding />;
+    if (projectSlug === 'slides' && slug.length === 0) return <SlidesLanding />;
     const MDX = page.data.body;
 
     return (

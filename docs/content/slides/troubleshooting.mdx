@@ -1,0 +1,78 @@
+---
+title: Troubleshooting
+description: "Diagnose compilation, imports, states, effects, updates, and display issues."
+---
+
+Start with the error in the presenter or source editor. A failed compile preserves the last working deck; a visible slide is not proof the new source loaded.
+
+## Compilation fails
+
+| Symptom | Check |
+| --- | --- |
+| A layout is unclosed | Match colon fences, use longer outer fences, and close them before a separator. |
+| A ratio fails | Use one positive weight per direct column. Group related blocks. |
+| An attribute fails | Check allowed values, spelling, and placement at the end of a block. |
+| `until` is rejected | It must be a non-negative integer greater than `step`. |
+| A package import fails | Use an exact [host path](/slides/components#host-imports), installed effect export, or local file. |
+| An asset is missing | Resolve it relative to the deck and keep it below that directory, including symlinks. |
+| HTML is unsupported | Use native components or a [Webview](/slides/webviews). |
+| TypeGPU reports migration guidance | Replace retired JS scene callbacks with a current WGSL shader example. |
+
+From a configured Legend Apps checkout:
+
+```sh
+bun skills/legend-slides/scripts/validate-deck.ts /absolute/path/to/talk.mdx .
+```
+
+Read errors and warnings. The lower-level `bun scripts/compile-slides.ts` emits a gzip/base64 JSON envelope; process exit alone does not establish compiler success. The validator reports the decoded status.
+
+## New source does not appear
+
+1. Check compile errors and confirm a successful build exists.
+2. Check whether audience output locked live updates.
+3. Press **Apply Update Now** for the queued build.
+4. Choose **Unlock Live Updates** if future saves should apply automatically.
+
+Unlocking does not apply an already queued build. Stopping output or opening another deck does not remove the lock.
+
+If the editor refuses a save after an external change, compare your draft with the file on disk. This avoids overwriting external work; the draft remains available unless discarded.
+
+## Steps or notes are off by one
+
+Code steps are zero-based; note labels and counters are one-based. `count={3}` declares states 0, 1, and 2. Note `2:` belongs to state 1. Notes do not create steps.
+
+Callbacks and custom components hide internal reveal logic from discovery. Supply a sufficient `Steps count` or slide `steps`. Counts share a global slide state and combine by maximum, not addition.
+
+## Layout or movement looks wrong
+
+Check aspect ratio, padding, text margins, and media dimensions. Group blocks meant to share a cell. Avoid clipping/scroll ancestors around shared elements and put decorative transforms on their children.
+
+Shared IDs must be unique within a slide. A focus target must exist and be measurable on the source slide. Missing regions and distant jumps fade; a focus zoom covers the stage and may crop aspect-ratio mismatches.
+
+Preview overflow warnings cover measured containers, not all possible text or native-surface issues. Check the audience display.
+
+## Effects are missing or static
+
+Install required packs and dependencies before compiling; retain the deck's lockfile. New installed versions do not change an existing deck's pins.
+
+`Effect` captures static content, not a live interactive filter. Give its children intrinsic or explicit bounds. Capture/shader failures show ordinary native content. Previews are intentionally static; preparing and outgoing surfaces do not play as active slides.
+
+Use the shared native playback helpers. JavaScript frame loops, per-frame observable updates, or a standalone clock do not follow the presentation lifecycle.
+
+## Audience output disappeared
+
+A disconnected audience display closes output. Reconnect it, assign its role, and start again; slide position is retained. The app does not move a talk to another screen automatically.
+
+Check **Presentation → Blackout Audience** for a deliberately blank output. Window errors do not enable it automatically.
+
+## Release compilation or file access fails
+
+A native build can succeed while runtime deck compilation fails on file access. Inspect the actual error and macOS prompt, especially for decks in Documents. Compare with standalone compilation rather than granting broad access as a blanket workaround.
+
+Prepare release compiler resources for the correct architecture and repository signing identity. Rehearse the saved deck with Metro stopped before relying on it.
+
+## A slide crashes
+
+Inspect **Slide errors**, then use **Retry Slide Content**, navigate away and back, or apply a corrected build. Caught render failures preserve presenter controls. Arbitrary timers, event handlers, infinite loops, and native crashes need a fix to that trusted code rather than a React boundary.
+
+See [Presenting](/slides/presenting) and [Availability](/slides/availability).

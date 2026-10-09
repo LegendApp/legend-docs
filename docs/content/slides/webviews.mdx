@@ -1,0 +1,80 @@
+---
+title: Webviews
+description: "Embed local HTML or browser React components within native slides."
+---
+
+Use `Webview` for browser interaction, existing HTML, or DOM and CSS that do not belong in a native view tree.
+
+## Inline HTML
+
+```mdx
+<Webview
+  html="<html><body style='background:#082f49;color:white;font:48px system-ui'><h1>Hello from the web</h1></body></html>"
+  style={{ width: 1200, height: 600 }}
+/>
+```
+
+Give the surface dimensions. Native `Step` and `SharedElement` wrappers operate on its whole rectangle, not on individual DOM elements.
+
+## Local HTML
+
+Save `web/demo.html` below the deck directory:
+
+```html
+<!doctype html>
+<html>
+  <head><meta charset="utf-8" /></head>
+  <body style="margin:0;background:#082f49;color:white;font:48px system-ui">
+    <h1>A local browser demo</h1>
+    <button onclick="this.textContent='It works'">Try it</button>
+  </body>
+</html>
+```
+
+```mdx
+<Webview src="./web/demo.html" style={{ width: 1200, height: 600 }} />
+```
+
+The compiler sets the deck file URL as the browser base/read-access URL. Keep local HTML and assets together. A remote `src` can load a page, but then your talk depends on network availability.
+
+## A browser React component
+
+Create `web/Demo.tsx` with a default export:
+
+```tsx
+import { useState } from "react";
+
+export default function Demo({ label }: { label: string }) {
+  const [count, setCount] = useState(0);
+  return (
+    <main style={{ padding: 48, background: "#082f49", color: "white", height: "100%" }}>
+      <h1>{label}</h1>
+      <button onClick={() => setCount((value) => value + 1)}>
+        Clicks: {count}
+      </button>
+    </main>
+  );
+}
+```
+
+```mdx
+<Webview
+  component="./web/Demo.tsx"
+  props={{ label: "An interactive browser component" }}
+  style={{ width: 1200, height: 600 }}
+/>
+```
+
+`component` is a compiler-only literal local path. The host bundles React DOM, the component, local source, and local CSS into a separate browser runtime. Props must be JSON-serializable.
+
+Browser-component imports support React and JSX runtimes, `react-dom`, `react-dom/client`, and the supported Legend State entry points. React Native and arbitrary npm dependencies are not available. Local imports and symlinks must stay under the deck directory.
+
+## Runtime boundaries
+
+Native and browser components have different JavaScript runtimes. Their observables and React contexts are not shared. Pass serializable initial data rather than assuming a native observable can be consumed in a Webview.
+
+The host pauses recognized CSS/Web Animations and audio/video for preparing, previewing, outgoing, and paused surfaces. Previews sample at `previewTime` (default 1.25 seconds); preparation samples zero. Playback starts at zero after preparation or preview. Arbitrary timers, JavaScript simulations, and every third-party player are not automatically paused.
+
+Keep custom browser behavior event-driven and rehearse loading, forward/backward navigation, preview sampling, and media pause/resume in the native app.
+
+See [Components and assets](/slides/components) for native content and [Presenting](/slides/presenting) for rehearsal.

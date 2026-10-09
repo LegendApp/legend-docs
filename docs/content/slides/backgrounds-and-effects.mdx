@@ -1,0 +1,132 @@
+---
+title: Backgrounds and visual effects
+description: "Full-window backgrounds, capture shaders, glass, and optional effect packs."
+---
+
+Add visual treatments where they support the story. Full-window backgrounds live outside the aspect-constrained content stage and slide transitions.
+
+## Image backgrounds
+
+```mdx
+---
+background: ./images/default.png
+---
+
+# A default background
+
+---
+background: ./images/detail.jpg
+---
+
+# A different background
+
+---
+background: false
+---
+
+# Base color only
+```
+
+Use local PNG, JPEG, GIF, or WebP assets. Backgrounds use cover sizing and may crop. Omit a slide's background to inherit the deck setting. `false` also suppresses template backgrounds. Keep paths below the deck directory, including resolved symlinks.
+
+## Native backgrounds
+
+```mdx
+<Background>
+  <View style={{ flex: 1, backgroundColor: "#082f49" }} />
+</Background>
+
+# The content stays on top
+```
+
+`Background` accepts children and numeric `priority` (default 0). Use -1 for template defaults and 0 for slide overrides. Frontmatter uses 0. An empty `Background` suppresses lower priorities; declare only one per priority on a slide.
+
+Local background components can read `useBackgroundSize()` for full-window dimensions and `useBackgroundIntensity()` for the presenter's intensity setting. Window and stage dimensions differ. Matching background content can retain state across slides; the host supplies a background playback scope.
+
+## Built-in capture effects
+
+Apply a built-in effect to a block with `{effect=liquid}`, `{effect=ripple}`, `{effect=glitch}`, or `{effect=pixelate}`. Use the `Effect` component to set parameters:
+
+```mdx
+<Effect preset="liquid" strength={14} speed={0.8} padding={24}>
+
+# Liquid typography
+
+</Effect>
+```
+
+Effects capture static native content and are non-interactive. If capture or shader compilation is unavailable, the original content stays visible.
+
+| Prop | Default | Purpose |
+| --- | --- | --- |
+| `preset` | `liquid` | Also `ripple`, `glitch`, and `pixelate`. |
+| `strength` | 12 | Distortion in logical pixels. |
+| `speed` | 1 | Playback multiplier; 0 holds time at zero. |
+| `padding` | 0 | Extra logical capture space. |
+| `previewTime` | 1.25 | Deterministic preview seconds. |
+| `active` | `true` | Starts the clock when activated; resets when deactivated. |
+| `shader` | — | Custom SkSL, overriding the preset. |
+| `uniforms` | — | Additional shader values. |
+| `blur` | 0 | Blur applied to the capture. |
+
+Give children intrinsic or explicit dimensions. The capture does not continuously update for independently animated child content. If capture or shader compilation fails, ordinary native content remains visible.
+
+## Custom SkSL
+
+Custom shaders receive `image`, `resolution`, `time`, and `strength` from the host:
+
+```mdx
+export const invert = `
+  uniform shader image;
+  half4 main(float2 position) {
+    half4 color = image.eval(position);
+    return half4(color.a - color.rgb, color.a);
+  }
+`
+
+<Effect shader={invert}>
+  <Text>Another way to see it</Text>
+</Effect>
+```
+
+The host owns timing and deterministic preview sampling. Keep presentation Hooks outside the Skia Canvas renderer when building your own shader components.
+
+## LiquidGlass
+
+```mdx
+<Steps count={2}>
+  {(step) => (
+    <LiquidGlass
+      active={step >= 1}
+      blur={24}
+      refraction={8}
+      duration={700}
+      overlay={<Text style={{ fontSize: 64 }}>The takeaway</Text>}
+    >
+      <View style={{ width: 1000, height: 500, backgroundColor: "#164e63" }}>
+        <Text style={{ fontSize: 48 }}>The detailed comparison</Text>
+      </View>
+    </LiquidGlass>
+  )}
+</Steps>
+```
+
+`active` defaults to false; blur and refraction are logical pixels. Duration is milliseconds. `variant="frosted"` is the default; `variant="liquid"` adds a stronger ripple. The overlay remains sharp while fading in. Backward navigation clears the glass, and reversal starts from its current amount.
+
+This captures children rather than applying an operating-system material or a live blur over interactive controls.
+
+## Optional effect packs
+
+The [effects gallery](/slides/effects) includes backgrounds, typography, particles, charts, diagrams, materials, media, and presenting tools. Each effect page supplies its exact import and props, a native preview, and a downloadable deck.
+
+**Install in Slides** downloads the selected version; **Open example in Slides** installs the required pack and opens a sample. Existing decks can use **Install Required Effects**. Keep the `.mdx.effects.lock.json` file with the deck so pinned versions and checksums travel with it.
+
+Finish installing before presenting. Compilation and playback of installed packs work offline. Only imported effects enter the compiled deck; installing source does not add a native runtime. See [Installing effects](/slides/effects/installation).
+
+## GPU programs
+
+`TypeGPUShader` in MDX and `GPUShader` from `@legend-apps/presentation` accept WGSL programs driven by the host's UI-thread playback controller. These are low-level APIs; start from a complete gallery example rather than creating a JavaScript frame loop.
+
+The older `<TypeGPU scene={...} />` callback API is retired and reports migration guidance. A shader does not make a JS-driven per-frame uniform loop acceptable. Use the shared playback clock and a native fallback where the GPU capability is unavailable.
+
+Rehearse captures, GPU playback, and scaling in the native audience window. Compiler success does not establish visual quality.

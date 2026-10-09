@@ -1,0 +1,100 @@
+---
+title: Getting started
+description: "Create, validate, and open your first local MDX deck."
+---
+
+Legend Slides is a native macOS app for local MDX presentations. Start with Markdown, then add native layouts, steps, and React components as you need them.
+
+<Callout title="Development preview">Public downloads are not available yet. Authoring a file does not require the app, but viewing it needs a configured development build. See [Availability](/slides/availability).</Callout>
+
+## Your first file
+
+Save this as `product-update.mdx`. Use the `.mdx` extension even when a deck contains only Markdown.
+
+```mdx
+---
+title: Product update
+aspectRatio: 16:9
+transition: fade
+theme:
+  backgroundColor: "#111827"
+  color: "#f8fafc"
+presenter:
+  showNext: true
+  showNotes: true
+---
+
+# Product update {shared=title}
+
+A simpler way to work.
+
+<!-- Welcome everyone and introduce the update. -->
+
+---
+
+## Product update {shared=title}
+
+{steps}
+
+- Open your files
+- Make the change
+- Share the result
+
+<!--
+1: Introduce the workflow.
+2: Start with the files people already have.
+3: Show the change.
+4: Explain how to share it.
+-->
+```
+
+Initial YAML frontmatter sets deck defaults. A top-level `---` separates slides; YAML immediately after a separator, followed by another `---`, configures that slide. Close JSX and layout containers before starting the next slide.
+
+The second slide starts with its heading visible. Each advance reveals a list item. The matching `shared=title` attributes move and resize the title between slides. HTML comments become private speaker notes.
+
+## Download a starter
+
+[Download first-deck.mdx](/slides/examples/first-deck.mdx) for a complete two-slide deck with a shared title, three native cards, progressive reveals, and numbered notes. It requires no effect packs or local imports.
+
+Keep each deck in its own directory:
+
+```text
+product-update/
+  product-update.mdx
+  images/
+  components/
+  web/
+```
+
+Only the `.mdx` file is required. Add the other directories as the deck grows. Local components and imported assets must remain beneath the deck directory.
+
+## Open it in Slides
+
+Choose **File → Open…** in an existing app build and select your deck. Slides compiles on opening and watches the deck directory for changes. Use **Edit Source** for the native editor and slide preview, or keep using your preferred editor.
+
+For contributors with a configured Legend Apps checkout, run from its root:
+
+```sh
+bun run slides run macos -- /absolute/path/to/product-update.mdx
+```
+
+This builds and opens the development app. It requires the repository's macOS tooling, dependencies, and signing setup; it is not a public installer.
+
+## Compile before rehearsing
+
+From the same checkout:
+
+```sh
+bun skills/legend-slides/scripts/validate-deck.ts /absolute/path/to/product-update.mdx .
+```
+
+The helper reports errors, warnings, and slide count as JSON. Exit 0 means success, exit 1 means compilation failed, and exit 2 means usage or setup failed. Compilation does not verify the native appearance.
+
+Rehearse every reveal forward and backward. Check notes, fonts, and assets. A failed rebuild preserves the last successful deck, so confirm the latest build actually applied.
+
+## Next steps
+
+- [Deck format](/slides/deck-format): frontmatter, boundaries, and Markdown.
+- [Layouts](/slides/layouts): put ideas side by side.
+- [Steps and notes](/slides/steps-and-notes): control the pace.
+- [Presenting](/slides/presenting): choose displays and manage updates.
