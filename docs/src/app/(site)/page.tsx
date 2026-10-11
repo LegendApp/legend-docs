@@ -89,7 +89,7 @@ export default function HomePage() {
 
                 <section id="framework" className="showcase-section" aria-labelledby="framework-title">
                     <div className="showcase-section-heading">
-                        <h2 id="framework-title">Framework</h2>
+                        <h2 id="framework-title">Spark</h2>
                     </div>
                     <Link href="/spark" className="framework-spotlight">
                         <div className="showcase-framework-copy">
