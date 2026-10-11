@@ -17,7 +17,7 @@ Write and share local `.mdx` files with the [deck format](/slides/deck-format), 
 
 ## Contributor builds
 
-The Legend Apps checkout uses Bun and a configured macOS native toolchain. Development builds use the checkout compiler and local Bun. Release builds embed application JavaScript and a portable compiler runtime, with correct architecture, native dependencies, and Apple signing required when building.
+The Legend Apps checkout uses Bun and a configured macOS native toolchain. Development builds use the checkout compiler and local Bun. Release builds embed application JavaScript and the deck compiler, with correct architecture, native dependencies, and Apple signing required when building. The compiler needs Bun 1.3+ or Node 22+; Slides detects an installed runtime or offers to download a checksum-verified Bun.
 
 See [Getting started](/slides/getting-started) for development commands and [Presenting](/slides/presenting#present-without-metro) for release rehearsal. These are contributor workflows rather than a public installation channel.
 

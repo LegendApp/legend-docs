@@ -41,7 +41,7 @@ Use local PNG, JPEG, GIF, or WebP assets. Backgrounds use cover sizing and may c
 
 `Background` accepts children and numeric `priority` (default 0). Use -1 for template defaults and 0 for slide overrides. Frontmatter uses 0. An empty `Background` suppresses lower priorities; declare only one per priority on a slide.
 
-Local background components can read `useBackgroundSize()` for full-window dimensions and `useBackgroundIntensity()` for the presenter's intensity setting. Window and stage dimensions differ. Matching background content can retain state across slides; the host supplies a background playback scope.
+Local background components can read `useBackgroundSize()` for full-window dimensions and `useBackgroundIntensity()` for the presenter's intensity setting, adjusted with **Appearance → Background intensity** in the presenter toolbar. `useHasBackground()` reports whether a background is selected; the host then makes the stage's theme color transparent. Window and stage dimensions differ. Matching background content can retain state across slides; the host supplies a background playback scope.
 
 ## Built-in capture effects
 
@@ -67,7 +67,8 @@ Effects capture static native content and are non-interactive. If capture or sha
 | `active` | `true` | Starts the clock when activated; resets when deactivated. |
 | `shader` | — | Custom SkSL, overriding the preset. |
 | `uniforms` | — | Additional shader values. |
-| `blur` | 0 | Blur applied to the capture. |
+| `blur` | 0 | Blur applied to the capture; accepts a number, observable, function, or Reanimated shared value. |
+| `style` | — | Native View style for the effect container. |
 
 Give children intrinsic or explicit dimensions. The capture does not continuously update for independently animated child content. If capture or shader compilation fails, ordinary native content remains visible.
 

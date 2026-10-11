@@ -70,6 +70,8 @@ Each slide owns its React state. Changed text and styles crossfade between live 
 
 Open **Settings → Transitions → Open Folder**. Slides installs editable `fade.ts`, `slide.ts`, and `reveal-up.ts` files in its app-data directory. Duplicate a file and select it by filename without `.ts`.
 
+Those sources are exported as `builtinTransitionSources` from `@legend-apps/presentation`. **Settings → Transitions → Title Animation Speed** adjusts animated title entrances from 0.25× to 3×.
+
 Untouched built-ins receive updates; edited files are preserved. **Restore** saves the previous version as a copy before restoring the current built-in.
 
 ## A deck-local transition

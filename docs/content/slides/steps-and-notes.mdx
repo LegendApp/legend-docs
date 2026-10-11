@@ -42,7 +42,7 @@ Use `reveal=fade|fade-up|zoom|none` to choose a Markdown reveal and `duration` t
 </Steps>
 ```
 
-`count={3}` declares states 0, 1, and 2. The callback receives the slide's global step; multiple `Steps` blocks coordinate and their counts combine by maximum. Declare enough states explicitly because the compiler cannot discover reveal logic inside a callback or custom component.
+`count={3}` declares states 0, 1, and 2. Without `count`, a render-function `Steps` declares two states. The callback receives the slide's global step; multiple `Steps` blocks coordinate and their counts combine by maximum. Declare enough states explicitly because the compiler cannot discover reveal logic inside a callback or custom component.
 
 ## Reveal React content
 
@@ -81,7 +81,9 @@ Continue this cue on a second line.
 
 A numbered section continues until the next prefix. Separate comments are collected into one slide's notes. Timestamps such as `8:10` and numbered lines inside fenced code are not step markers.
 
-The viewer emphasizes the current cue and dims other numbered sections. Editing shows the original notes in full. **Settings → Presentation** controls notes width, font size, and current/inactive text colors.
+The viewer emphasizes the current cue and dims other numbered sections. Editing shows the original notes in full. **Settings → Appearance** controls notes width, font size, and current/inactive text colors.
+
+For editor integrations, `@legend-apps/presentation` exports `getDeckSourceStructure` and `slideAtSourceOffset` for source navigation, and `getSpeakerNotesTargets`, `updateSlideSpeakerNotes`, and `persistSlideSpeakerNotesWithFileAccess` for note editing. `SpeakerNotesConflictError` reports conflicting saved notes.
 
 ## Verify the pacing
 

@@ -14,6 +14,7 @@ Local components import runtime helpers from `@legend-apps/presentation`. Slides
 | `usePresentation$()` | Access the existing runtime observable for narrow selectors or imperative commands. |
 | `usePresentation()` | Subscribe to the complete runtime; use when a component needs that breadth. |
 | `useStep(at)` | Read whether a state was reached, whether it is current, and its elapsed playback value. |
+| `useAdvanceAfterStep(step, seconds)` | Advance once the selected step has played for the given seconds on the shared UI clock; duplicate surface events are ignored. |
 
 For example, save `components/StepLabel.tsx`:
 
@@ -89,8 +90,19 @@ Use `useAnimatedShaderUniforms(uniforms, previewTime, options)` for Skia shader 
 | Helper | Contract |
 | --- | --- |
 | `SceneMotionView` | Animate `pose` fields `x`, `y`, `scaleX`, `scaleY`, and `opacity`; supports `initialPose`, duration, and delay in milliseconds. |
+| `ScenePositionView` | Animate `y` while exposing destination geometry to shared-element measurement; duration is milliseconds. |
 | `PlaybackKeyframeView` | Sample native `{time, x, y, opacity}` keyframes. Time, delay, and repeat duration are milliseconds; preview time is seconds. Supply a nonempty ordered keyframe list. |
-| `GPUShader` | Render a host-supported WGSL program with dimensions, image/particle options, preview time, a slide/step clock, and optional fallback. |
+| `usePlaybackTween(target, duration, initial, easing, delay)` | Tween numeric targets on the shared playback clock, continuing interrupted changes from the displayed values. Duration and delay are milliseconds; easing is `cubic` or `smoothstep`. |
+| `useSharedElementEntrance(id)` | Return whether an entrance should play, suppressing it for a matched shared element. |
+| `NavigationExitView` | Animate outgoing content using the host's navigation progress. |
+| `GPUShader` | Render a host-supported WGSL program with dimensions, image/particle options, preview time, and a slide/step clock. |
+| `useGPUShaderData(uniforms, fields)` | Pack selected scalar and array fields from a shared uniform value into `GPUShader` frame data. |
+| `useNativeVideo(source, playing, position, looping)` | Decode Skia video frames; macOS stops polling after retaining a paused frame. Optional `position` is a shared value in milliseconds. |
+| `NativeVideoView` | Render decoded video with a poster; supply `source`, `poster`, and `playing`, with optional `position` and `looping` (default `true`). |
+
+Slides supplies `GPUShaderProvider` with its renderer. Outside the host, install that provider before rendering `GPUShader`.
+
+For native transition styles, `createTransitionProgress` creates a shared progress value; `interpolateTransition`, `subtractTransition`, and `divideTransition` compose values. `sampleTransitionValue` samples them in a worklet, and `useTransitionStyle` resolves them into an animated View style.
 
 See [Components and assets](/slides/components) for a complete native entrance and [Backgrounds and visual effects](/slides/backgrounds-and-effects) for shader composition.
 
