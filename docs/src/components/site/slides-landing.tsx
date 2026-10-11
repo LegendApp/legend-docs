@@ -117,7 +117,7 @@ export function SlidesLanding() {
                     <div className="slides-effect-strip">
                         {effects.map((effect) => (
                             <Link key={effect.slug} href={`/slides/effects/${effect.slug}`} className="slides-featured-effect">
-                                {effect.preview && (
+                                {effect.preview?.poster && (
                                     <div>
                                         <Image
                                             src={effect.preview.poster}

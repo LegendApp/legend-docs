@@ -5,7 +5,7 @@ import { useState } from 'react';
 import rawCatalog from '../../../public/slides/effects/catalog.json';
 
 type Effect = { slug: string; title: string; description: string; pack: string; entry: string; tags: string[];
-    snippet: string; props: {name: string; description: string}[]; example: {url: string}; preview?: {poster: string; video?: string; renderer: string} };
+    snippet: string; props: {name: string; description: string}[]; example: {url: string}; preview?: {poster?: string; video?: string; renderer?: string} };
 type Catalog = { packs: Record<string, {latest: string; versions: Record<string, {bytes: number; capabilities: string[]}>}>; effects: Effect[] };
 const catalog = rawCatalog as Catalog;
 const families = Object.keys(catalog.packs).sort();
@@ -17,7 +17,7 @@ function installURL(effect: Effect) {
 }
 function Preview({effect, play = false}: {effect: Effect; play?: boolean}) {
     if (play && effect.preview?.video) return <video className="w-full rounded-xl" controls playsInline preload="none" poster={effect.preview.poster} src={effect.preview.video} aria-label={`${effect.title} preview`} />;
-    if (effect.preview) return <img className="aspect-video w-full rounded-xl object-contain" src={effect.preview.poster} alt={`${effect.title} in Legend Slides`} loading="lazy" />;
+    if (effect.preview?.poster) return <img className="aspect-video w-full rounded-xl object-contain" src={effect.preview.poster} alt={`${effect.title} in Legend Slides`} loading="lazy" />;
     return <div className="flex aspect-video items-center justify-center rounded-xl bg-gradient-to-br from-cyan-950 via-slate-950 to-violet-950 p-6 text-center">
         <div><span className="text-xs uppercase tracking-widest text-cyan-300">{effect.pack}</span><p className="my-3 text-2xl font-semibold text-white">{effect.title}</p><span className="text-sm text-slate-300">Try the native example in Slides ↗</span></div>
     </div>;
@@ -52,7 +52,7 @@ export function EffectDetail({slug}: {slug: string}) {
     return <div className="not-prose space-y-6">
         <Link href="/slides/effects" className="text-sm text-fd-muted-foreground">← All effects</Link>
         <Preview effect={effect} play />
-        {effect.preview && <p className="text-xs text-fd-muted-foreground">{effect.preview.video ? 'Video recorded in' : 'Still captured in'} {effect.preview.renderer}.</p>}
+        {effect.preview?.renderer && <p className="text-xs text-fd-muted-foreground">{effect.preview.video ? 'Video recorded in' : 'Still captured in'} {effect.preview.renderer}.</p>}
         <div className="flex flex-wrap gap-3">
             <a href={installURL(effect)} className={`${action} bg-fd-primary text-fd-primary-foreground`}>Install in Slides</a>
             <a href={`legend-slides://effects/example?effect=${encodeURIComponent(effect.slug)}`} className={action}>Open example in Slides</a>
