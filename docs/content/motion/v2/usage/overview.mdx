@@ -163,7 +163,7 @@ Legend-Motion supports two kinds of transitions, `spring` or `timing`. They pass
 
 Transitions with durations are called `timing` in React Native's Animated and `tween` in Framer Motion, so Legend-Motion has transition types of both names that do the same thing, to make it easy to match props with the rest of your codebase.
 
-Set `transition.loop` to the number of times to repeat a tween or spring transition. Set `transition.delay` on tween/timing transitions to delay the start in milliseconds; `configureMotion({ timing: 's' })` changes `duration` units only.
+Set `transition.loop` to the total number of times to run a tween or spring transition: `loop: 2` runs twice, and `loop: -1` loops forever. Set `transition.delay` on tween/timing transitions to delay the start in milliseconds; `configureMotion({ timing: 's' })` changes `duration` units only.
 
 The `onAnimationComplete` callback receives the property name when that property's animation ends, including when it is stopped.
 
