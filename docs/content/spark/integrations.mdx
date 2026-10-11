@@ -3,10 +3,6 @@ title: Desktop and shared integrations
 description: Clipboard, notifications, system APIs, processes, databases, WebView, audio, and auth.
 ---
 
-<Callout type="warn" title="Experimental source documentation">
-These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
-</Callout>
-
 ## Clipboard, links, and drag/drop
 
 `/clipboard` retains selected Expo-shaped `getStringAsync`, `setStringAsync`, and `hasStringAsync` methods. `setStringAsync` returns the actual boolean write result. Rich `readClipboard`/`writeClipboard` use owned payloads; file lists are separate from text/image alternatives. Raw format identifiers come from `getClipboardFormats`.
@@ -34,7 +30,7 @@ if (permission.granted) {
 }
 ```
 
-Request permission from an explicit user action. Windows reads OS settings without an in-app permission prompt. OS acceptance does not guarantee presentation.
+Request permission from an explicit user action. Windows reads OS settings without an in-app permission prompt. The OS may accept a notification without displaying it.
 
 `showNotification` is immediate; `scheduleNotification` adds `{ type: 'delay', delaySeconds }`. Content supports silent/default sound or portable `message`, `mail`, `reminder`, `call`, and `error` tones. One to four action buttons report their IDs through responses. macOS banners show the first two; Notification Center can show the rest.
 

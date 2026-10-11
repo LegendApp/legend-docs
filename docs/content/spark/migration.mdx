@@ -3,11 +3,7 @@ title: Updating an existing prototype
 description: Move removed imports and resource contracts to the consolidated source API.
 ---
 
-<Callout type="warn" title="Experimental source documentation">
-These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
-</Callout>
-
-The source API cleanup makes direct breaking changes. Removed exports have no compatibility aliases. First select a matching current-source SDK, refresh packed dependencies, and rebuild native runtimes whose signatures changed. The old published preview and current source are not interchangeable.
+Updating an older prototype to the current source API requires import and contract changes. Removed exports have no compatibility aliases. First select a matching current-source SDK, refresh packed dependencies, and rebuild native runtimes whose signatures changed. The old published preview and current source are not interchangeable.
 
 ## Import changes
 
@@ -40,12 +36,12 @@ All paths use the `@legendapp/spark` prefix. The singleton `/global-shortcuts/ho
 - **SQLite/WebView:** use Spark-owned database/component/ref types rather than raw OP-SQLite/WebView backend types.
 - **UI:** controlled `TextInput.value` is supported; `value`/`defaultValue` are exclusive. Select/SegmentedControl share controlled values. Split panes are named, Sidebar selection requires its callback, and glass/symbol components have explicit native limits.
 
-A callable operation or resolved import does not prove platform availability. Unknown options reject. Await async cleanup and retain failed handles for retry; a global clear-all operation is not a substitute for ownership.
+Check feature availability on each target platform. Unknown options reject. Await async cleanup and retain failed handles for retry; a global clear-all operation is not a substitute for ownership.
 
 ## Configuration and tooling
 
-The tooling runs on Node 24.19.0+; Bun is optional. Use `npm run spark -- ...` in the framework checkout and `npx --no-install spark ...` in consumers. Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`; old prebuilt/go command spellings are removed. Expo's `dev --go` still means mobile Expo Go.
+The tooling runs on Node 24.19.0+; Bun is optional for app consumers. The framework checkout requires the pinned Bun version; see [source prerequisites](/spark/getting-started#prerequisites). Use `npm run spark -- ...` in the framework checkout and `npx --no-install spark ...` in consumers. Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`; old prebuilt/go command spellings are removed. Expo's `dev --go` still means mobile Expo Go.
 
 Author Spark-owned desktop settings in `desktop.config.json`, preserve `projectId`, and compose existing Expo projects through `/expo-config`, `/metro`, and `/native`. Review generated templates/wrappers when updating local consumers. Old Frame native identities/data are not automatically migrated.
 
-See the [export inventory](https://github.com/LegendApp/legend-spark/blob/main/docs/api-export-inventory.json), [final API review](https://github.com/LegendApp/legend-spark/blob/main/docs/api-final-review.md), and [rename guide](https://github.com/LegendApp/legend-spark/blob/main/docs/legend-spark-migration.md).
+See the [rename guide](https://github.com/LegendApp/legend-spark/blob/main/docs/legend-spark-migration.md) for more migration details.

@@ -3,10 +3,6 @@ title: Packaging and updates
 description: Standalone macOS binaries, signed archives, native app updates, and SDK transfer.
 ---
 
-<Callout type="warn" title="Experimental source documentation">
-These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
-</Callout>
-
 ## Build and package a macOS app
 
 From the generated app:
@@ -21,7 +17,7 @@ npm run package
 
 Signing requires installed credentials, full Xcode tooling, and a notarization profile. First use can configure credentials. Keep signed archives and submission state until Apple's outcome is known. Resume/recover a pending submission through the documented packaging commands rather than starting a duplicate submission.
 
-Intel targeting uses `SPARK_MACOS_ARCH=x64` for build/package, with matching native dependencies and helper binaries. That tooling does not establish Intel native or signed-distribution acceptance. Windows production/preview builds, signing/MSIX, Linux, and the Mac App Store workflow remain unsupported.
+Intel targeting uses `SPARK_MACOS_ARCH=x64` for build/package, with matching native dependencies and helper binaries. Intel native builds, runtime behavior, and signed distribution still need validation. Windows production/preview builds, signing/MSIX, Linux, and the Mac App Store workflow remain unsupported.
 
 See [packaging details](https://github.com/LegendApp/legend-spark/blob/main/docs/packaging.md).
 
@@ -47,9 +43,9 @@ Retain the subscription for the app/UI lifetime; the last line illustrates teard
 
 `startUpdates` starts a configured updater. `configureUpdates({ automaticallyChecks?, checkIntervalSeconds? })` changes preferences; an empty object starts the configured updater without changing preferences. Feed/key configuration belongs to the native app and can require rebuilding.
 
-Update build numbers must increase. The CLI validates a candidate against the feed and earlier local artifact; equal/backward numbers reject. Signed installation/relaunch and downgrade rejection need real release acceptance for the exact app and feed.
+Update build numbers must increase. The CLI validates a new build against the feed and earlier local artifact; equal or lower numbers reject. Test signed installation, relaunch, and rejection of older builds with your app and feed.
 
-See [update configuration](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-integrations.md) and [release gates](/spark/limitations).
+See [update configuration](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-integrations.md) and [status and limitations](/spark/limitations).
 
 ## Transfer a local SDK
 
@@ -72,8 +68,6 @@ Use the installed CLI command printed by the installer. Installation verifies ar
 
 Keep the installed directory/runtime locations stable. Relocate before installation; moving an installed SDK requires reinstalling/refreshing app references. This workflow is useful for current-source testing and does not require public npm publication.
 
-## SDK prereleases
+## Matching SDK runtimes
 
-The published package and hosted Runner must match one immutable SDK version. Source packing/registering/exporting does not publish artifacts. Preview assembly validates source/recipe provenance, patched native dependency receipts, checksums, architecture, signature, and notarization before the explicit publish step.
-
-Do not substitute the old published Runner for changed local native signatures. Clean-recipient install/startup, target-specific behavior, signing, and update evidence remain separate release gates. See [SDK transfer](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk-distribution.md) and [release process](https://github.com/LegendApp/legend-spark/blob/main/docs/releases.md).
+Use a Runner that matches your SDK and native dependencies. Rebuild or register a matching local Runner after native changes; the published preview's Runner may be incompatible. Source packing, registration, and export do not publish artifacts. See [SDK transfer](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk-distribution.md).

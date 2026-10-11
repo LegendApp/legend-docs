@@ -1,17 +1,13 @@
 ---
 title: Legend Spark
-description: Native applications with React Native, Expo Desktop, and Spark Runner.
+description: React Native, meet the desktop.
 ---
 
-<Callout type="warn" title="Experimental source documentation">
-These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
-</Callout>
+Legend Spark is an experimental desktop framework that gives React Native apps native windows, menus, dialogs, and files on the Mac. Use Spark Runner with Fast Refresh, add an app-specific development build when you need native changes, and build a standalone `.app` with embedded JavaScript.
 
-Legend Spark combines native desktop capabilities with an Expo-style workflow. Start in Spark Runner, switch to an app-specific development build for native changes, and build a standalone macOS application with embedded JavaScript.
+The public package is `@legendapp/spark`. Screens use React Native's renderer and JavaScript runs in Hermes; Node runs the development tooling. Expo Desktop generates the native host, and Expo CLI runs the development session.
 
-The single public package is `@legendapp/spark`. Applications use React Native's renderer and Hermes; Node runs the development tooling. npm, pnpm, Yarn, and Bun are supported package-manager choices.
-
-The published experimental preview includes a macOS ARM64 Runner. Current source also includes Intel macOS build targeting, local Windows development, consolidated API contracts, document/window coordination, native UI composition, and AI/Codex execution. These additions have different platform acceptance gates and are newer than the published preview.
+Spark is not ready for production. macOS 14+ on Apple Silicon is the primary target. [Use the current source SDK](/spark/getting-started#use-spark-from-source) to follow these guides; the published `0.0.1-next.2` preview predates their APIs.
 
 - [Overview](/spark/overview)
 - [Getting started](/spark/getting-started)

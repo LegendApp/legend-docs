@@ -1,11 +1,7 @@
 ---
 title: Examples and validation
-description: Explore Kitchen Sink, generate focused apps, and distinguish source checks from native acceptance.
+description: Explore Kitchen Sink, generate focused apps, and run source and platform checks.
 ---
-
-<Callout type="warn" title="Experimental source documentation">
-These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
-</Callout>
 
 ## Kitchen Sink
 
@@ -72,6 +68,6 @@ Native suites need their toolchains and disposable consumer projects. Read prere
 | `npm run test:universal` / `test:universal:dev` | Universal generation/bundles and shared sessions |
 | `npm run test:add-desktop` | Existing Expo app preservation/composition |
 
-Successful generation, TypeScript, native fixture compilation, or bundling is not interactive device acceptance. Historical tests do not validate a changed source revision or renamed/rebuilt binary.
+Run your app on each target OS and architecture to check native behavior as well as generation and bundling.
 
-Use the [platform harness](https://github.com/LegendApp/legend-spark/blob/main/docs/platform-testing.md), [manual acceptance checklist](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-manual-acceptance.md), and [release support matrix](https://github.com/LegendApp/legend-spark/blob/main/docs/release-support-matrix.md) to record exact source/artifacts, platform/architecture, and behavior. See [remaining release gates](/spark/limitations).
+See the [platform testing guide](https://github.com/LegendApp/legend-spark/blob/main/docs/platform-testing.md), [manual testing checklist](https://github.com/LegendApp/legend-spark/blob/main/docs/desktop-manual-acceptance.md), and [platform limits](/spark/limitations).

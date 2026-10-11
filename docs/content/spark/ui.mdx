@@ -3,10 +3,6 @@ title: Native UI and styling
 description: Controlled inputs, native selectors, macOS composition, settings windows, and Uniwind.
 ---
 
-<Callout type="warn" title="Experimental source documentation">
-These guides describe the current source checkout. The published preview predates the recent API changes. See [release status](/spark/limitations) before choosing an SDK.
-</Callout>
-
 ## Common controls
 
 Import `Button`, `TextInput`, `Select`, and `SegmentedControl` from `@legendapp/spark/ui`:
@@ -53,7 +49,7 @@ Select and SegmentedControl share unique string-valued options and controlled `v
 
 `getControlAvailability` is synchronous. Missing/unsupported native controls report through `onError` (default console logging) and render a disabled fallback with current label/text. Invalid props throw during render. A fallback is not a functioning native control.
 
-Mobile Button/Select use optional `@expo/ui@0.2.0-beta.9` with Expo 54; Compose requires a development build. Windows UI/native acceptance remains pending.
+Mobile Button/Select use optional `@expo/ui@0.2.0-beta.9` with Expo 54; Compose requires a development build. Windows native controls still need validation.
 
 ## Specialized macOS views
 
