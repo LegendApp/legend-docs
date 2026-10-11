@@ -5,7 +5,9 @@ import rawCatalog from '../../../public/slides/effects/catalog.json';
 import { SlidesPreview } from './slides-preview';
 
 const featured = ['ambientaurora', 'glass-panels', 'constellation'];
-const effects = featured.map((slug) => rawCatalog.effects.find((effect) => effect.slug === slug)!);
+const effects = featured
+    .map((slug) => rawCatalog.effects.find((effect) => effect.slug === slug))
+    .filter((effect) => effect !== undefined);
 const guides = [
     { number: '01', title: 'Your first deck', href: 'getting-started', text: 'A file, a few headings, a presentation.' },
     { number: '02', title: 'Find your layout', href: 'layouts', text: 'Columns, grids, and room for each idea.' },
@@ -115,14 +117,16 @@ export function SlidesLanding() {
                     <div className="slides-effect-strip">
                         {effects.map((effect) => (
                             <Link key={effect.slug} href={`/slides/effects/${effect.slug}`} className="slides-featured-effect">
-                                <div>
-                                    <Image
-                                        src={effect.preview!.poster}
-                                        width={960}
-                                        height={540}
-                                        alt={`${effect.title} captured in Legend Slides for macOS`}
-                                    />
-                                </div>
+                                {effect.preview && (
+                                    <div>
+                                        <Image
+                                            src={effect.preview.poster}
+                                            width={960}
+                                            height={540}
+                                            alt={`${effect.title} captured in Legend Slides for macOS`}
+                                        />
+                                    </div>
+                                )}
                                 <span>{effect.pack.toUpperCase()} <MoveUpRight size={15} /></span>
                                 <h3>{effect.title}</h3><p>{effect.description}</p>
                             </Link>
