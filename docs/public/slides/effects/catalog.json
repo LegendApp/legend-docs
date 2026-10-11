@@ -1097,17 +1097,18 @@
           "description": "Control the spotlight cutout and dimming."
         }
       ],
-      "snippet": "---\ntitle: Spotlight and callouts\n---\n\nimport { View, Text } from \"react-native\";\nimport { AttentionStage } from \"slides:presenting/Attention\";\nimport { AttentionTarget, Spotlight, Callout } from \"slides:presenting/Attention\";\n\n\n# Spotlight and callouts\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <AttentionStage style={{width: 1696,height: 580}}><AttentionTarget id=\"idea\" style={{position: \"absolute\",left: 150,top: 160}}><Text style={{color: \"white\",fontSize: 90}}>The idea</Text></AttentionTarget><AttentionTarget id=\"detail\" style={{position: \"absolute\",left: 950,top: 300}}><Text style={{color: \"white\",fontSize: 90}}>The detail</Text></AttentionTarget><Spotlight target={step ? \"detail\" : \"idea\"} /><Callout target={step ? \"detail\" : \"idea\"}>Look here</Callout></AttentionStage>}</Steps>\n</View>\n",
-      "example": {
-        "url": "/slides/effects/examples/spotlight/6d9cace04eb23bdef91a9b65800b4fe421858bd5084d3e96d7f57e401d5a1915.mdx",
-        "sha256": "6d9cace04eb23bdef91a9b65800b4fe421858bd5084d3e96d7f57e401d5a1915",
-        "bytes": 831
+      "snippet": "---\ntitle: Spotlight and callouts\n---\n\nimport { View, Text } from \"react-native\";\nimport { AttentionStage, AttentionTarget, Spotlight, Callout } from \"slides:presenting/Attention\";\nimport { useMotion } from \"slides:presenting/Motion\";\n\nexport function MovingIdea({ step }) {\n  const position = useMotion(step === 1 ? [950, 300] : [150, 160], 1200);\n  return <AttentionTarget id=\"idea\" style={{ position: \"absolute\" }} frameStyle={() => { \"worklet\"; return { transform: [{ translateX: position.value[0] }, { translateY: position.value[1] }] }; }}><Text style={{ color: \"white\", fontSize: 90 }}>The idea</Text></AttentionTarget>;\n}\n\n# Spotlight and callouts\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <AttentionStage style={{ width: 1696, height: 580 }}><MovingIdea step={step} /><Spotlight target=\"idea\" /><Callout target=\"idea\">Follow the idea</Callout></AttentionStage>}</Steps>\n</View>\n",
+      "recording": {
+        "seconds": 8,
+        "motion": [
+          "1.8:2.5",
+          "4.3:5"
+        ]
       },
-      "preview": {
-        "poster": "/slides/effects/previews/spotlight/14de924545f82e168573391172156829080e11ffc17d3aa08c307f5578e3b2cc.png",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "6d9cace04eb23bdef91a9b65800b4fe421858bd5084d3e96d7f57e401d5a1915",
-        "packSha256": "20039f3fdca7714fe8eccc02466be0fe571a428f490543619cf0f4df5831702e"
+      "example": {
+        "url": "/slides/effects/examples/spotlight/2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb.mdx",
+        "sha256": "2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb",
+        "bytes": 916
       }
     },
     {
