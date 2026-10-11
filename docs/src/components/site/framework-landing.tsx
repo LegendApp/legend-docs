@@ -80,7 +80,7 @@ export function FrameworkLanding() {
                         </span>
                     </div>
                     <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.05]">
-                        React, meet the desktop.
+                        React Native, meet the desktop.
                     </h1>
                     <p className="mt-6 text-lg text-white/70 max-w-xl">
                         Legend Spark turns a React Native app into a real macOS app, with native windows, menus, and
