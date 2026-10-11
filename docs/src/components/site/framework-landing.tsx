@@ -1,173 +1,249 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
-const heroCode = `import { openWindow } from '@legendapp/spark/windows'
-import { createMenu } from '@legendapp/spark/menus'
+const heroCode = `import { createMenu } from '@legendapp/spark/menus'
+import { openWindow } from '@legendapp/spark/windows'
 
-// A real native window, rendered by React Native
-await openWindow({
-  id: 'inspector',
-  component: 'Inspector',
-  title: 'Inspector',
-  size: { width: 480, height: 640 },
-})
-
-// A real menu bar, with real shortcuts
 await createMenu({
   id: 'editor',
   items: [{
-    type: 'submenu', id: 'file', label: 'File',
-    items: [{ type: 'action', id: 'open',
-              label: 'Open…', shortcut: 'CmdOrCtrl+O' }],
+    type: 'submenu', id: 'view', label: 'View',
+    items: [{ type: 'action', id: 'inspector',
+              label: 'Show Inspector', shortcut: 'CmdOrCtrl+I' }],
   }],
-  onAction: ({ itemId }) => runCommand(itemId),
+  onAction: ({ itemId }) => {
+    if (itemId === 'inspector') {
+      // A second native window, rendering a React Native root
+      openWindow({
+        id: 'inspector',
+        component: 'Inspector',
+        title: 'Inspector',
+        size: { width: 480, height: 640 },
+      })
+    }
+  },
 })`;
 
-const badges = [
-    { title: '🪟  Windows', subtitle: 'Native, multi-window' },
-    { title: '📋  Menus', subtitle: 'Menu bar + shortcuts' },
-    { title: '📁  Files', subtitle: 'Dialogs, IO, watching' },
-    { title: '⚡️  Fast Refresh', subtitle: 'In Spark Runner' },
-    { title: '📦  Ships', subtitle: 'Standalone .app' },
+const capabilities = [
+    { path: '/windows', title: 'Windows', text: 'Named windows, displays, geometry, close guards, and native macOS chrome.' },
+    { path: '/menus', title: 'Menus', text: 'The app menu bar, context menus, tray items, and Dock menus.' },
+    { path: '/shortcuts', title: 'Shortcuts', text: 'Local and global accelerators, with command routing.' },
+    { path: '/files', title: 'Files and dialogs', text: 'Open and save panels, atomic writes, streams, watching, and Trash.' },
+    { path: '/settings', title: 'Settings', text: 'JSON settings, Legend State persistence, and secure storage.' },
+    { path: '/updates', title: 'Updates', text: 'Native whole-app updates for the apps you ship.' },
 ];
 
-const steps = [
+const runtimes = [
     {
-        title: 'Start in Spark Runner',
-        text: 'A prebuilt development app. Create a project and edit App.tsx with Fast Refresh, no Xcode required.',
+        label: 'Spark Runner',
+        title: 'Start without Xcode',
+        text: 'A prebuilt development app. Create a project, run it, and edit App.tsx with Fast Refresh.',
         code: 'npx @legendapp/spark@next create MyApp\ncd MyApp\nnpm run macos',
     },
     {
+        label: 'Custom development build',
         title: 'Add native when you need it',
-        text: 'Adding native modules or helper executables switches you to an app-specific development build. JavaScript changes never need a rebuild.',
-        code: '# custom development build\nnpm run macos',
+        text: 'Extra native modules or helper executables need an app-specific build. JavaScript changes still use Fast Refresh.',
+        code: 'npx --no-install spark build --dev --platform macos',
     },
     {
+        label: 'Standalone app',
         title: 'Ship a real Mac app',
-        text: 'Build a standalone .app with embedded JavaScript, then sign and notarize it with your own credentials.',
-        code: 'npm run build\nnpx --no-install spark open',
+        text: 'Build a .app with embedded JavaScript, then sign and notarize it with your own Developer ID.',
+        code: 'npm run build\nnpm run package',
     },
 ];
 
-function CodeWindow({ code, title }: { code: string; title?: string }) {
+const docs = [
+    { label: 'Overview', href: '/spark/overview', text: 'How the pieces fit' },
+    { label: 'Getting started', href: '/spark/getting-started', text: 'Preview and source setup' },
+    { label: 'Development', href: '/spark/development', text: 'Runtimes and native changes' },
+    { label: 'API guide', href: '/spark/reference', text: 'Every capability' },
+    { label: 'Examples', href: '/spark/examples', text: 'Kitchen Sink and small apps' },
+];
+
+function highlight(code: string) {
+    return code.split(/('[^']*'|\/\/.*|\b(?:import|from|await|if)\b)/g).map((part, i) =>
+        part.startsWith("'") ? (
+            <span key={i} className="text-[#9fd3a8]">{part}</span>
+        ) : part.startsWith('//') ? (
+            <span key={i} className="text-white/35">{part}</span>
+        ) : /^(import|from|await|if)$/.test(part) ? (
+            <span key={i} className="text-[#b3a1cb]">{part}</span>
+        ) : (
+            part
+        ),
+    );
+}
+
+function Terminal({ code }: { code: string }) {
     return (
-        <div className="rounded-xl border border-white/10 bg-zinc-900/90 shadow-2xl overflow-hidden text-left">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
-                <span className="size-3 rounded-full bg-[#ff5f57]" />
-                <span className="size-3 rounded-full bg-[#febc2e]" />
-                <span className="size-3 rounded-full bg-[#28c840]" />
-                {title && <span className="ml-3 text-xs text-white/40 font-mono">{title}</span>}
-            </div>
-            <pre className="!m-0 !bg-transparent p-5 text-[13px] leading-relaxed overflow-x-auto text-white/85">
-                <code>{code}</code>
-            </pre>
-        </div>
+        <pre className="!m-0 rounded-lg border border-[#29313a] bg-[#11171e] px-4 py-3.5 text-[12.5px] leading-relaxed text-[#a4b4c5] overflow-x-auto">
+            <code>
+                {code.split('\n').map((line) => (
+                    <div key={line}>
+                        <span className="select-none text-white/25">$ </span>
+                        {line}
+                    </div>
+                ))}
+            </code>
+        </pre>
     );
 }
 
 export function FrameworkLanding() {
     return (
-        <main data-doc-content id="main" className="relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-x-0 -top-40 h-[640px] bg-gradient-to-br from-blue-600/25 via-indigo-600/10 to-amber-400/10 blur-3xl" />
-
+        <main data-doc-content id="main" className="pb-24">
             {/* Hero */}
-            <section className="relative max-w-6xl mx-auto px-6 pt-20 pb-16 lg:grid lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:items-center">
+            <section className="container pt-20 sm:pt-24 lg:grid lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:items-center">
                 <div>
-                    <div className="flex items-center gap-3 mb-6">
-                        <img src="/assets/legend-spark.png" alt="" width={44} height={44} className="rounded-xl" />
-                        <span className="text-xs font-semibold tracking-wide uppercase rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 px-3 py-1">
-                            Experimental preview
-                        </span>
+                    <div className="flex items-center gap-3 mb-7">
+                        <img src="/assets/legend-spark.png" alt="" width={40} height={40} className="rounded-[10px]" />
+                        <span className="text-white/90 font-medium">Legend Spark</span>
+                        <span className="status-badge">Experimental</span>
                     </div>
-                    <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.05]">
+                    <h1 className="text-[44px] sm:text-[58px] font-medium tracking-[-0.045em] leading-[1.05] text-white">
                         React Native, meet the desktop.
                     </h1>
-                    <p className="mt-6 text-lg text-white/70 max-w-xl">
-                        Legend Spark turns a React Native app into a real macOS app, with native windows, menus, and
-                        files. Develop with Fast Refresh, then ship a standalone <code>.app</code>.
+                    <p className="mt-6 text-[17px] leading-relaxed text-[#a4adb6] max-w-[480px]">
+                        Spark gives React Native apps real windows, menus, dialogs, and files on the Mac. Start in a
+                        prebuilt runner with Fast Refresh, then ship a standalone <code className="text-white/85">.app</code>.
                     </p>
-                    <div className="mt-8 flex flex-wrap gap-4">
-                        <Link
-                            href="/spark/getting-started"
-                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-3 font-semibold text-white shadow-lg shadow-blue-600/25 no-underline"
-                        >
-                            Get started <ArrowRight size={16} />
+                    <div className="mt-9 flex flex-wrap items-center gap-3">
+                        <Link href="/spark/getting-started" className="button button-primary">
+                            Get started <ArrowRight size={15} />
                         </Link>
-                        <a
-                            href="https://github.com/LegendApp/legend-spark"
-                            className="inline-flex items-center gap-2 rounded-lg border border-white/15 hover:border-white/30 px-5 py-3 font-semibold text-white/90 no-underline"
-                        >
-                            View on GitHub
+                        <a href="https://github.com/LegendApp/legend-spark" className="button button-outline text-[#d1d6df]">
+                            GitHub <ArrowUpRight size={15} />
                         </a>
                     </div>
                 </div>
-                <div className="mt-12 lg:mt-0">
-                    <CodeWindow code={heroCode} title="App.tsx" />
+                <figure className="mt-14 lg:mt-0 min-w-0">
+                    <div className="rounded-xl border border-[#29313a] bg-[#11171e] shadow-[0_24px_60px_#0008] overflow-hidden">
+                        <div className="flex items-center gap-2 px-4 py-3 border-b border-[#232b33]">
+                            <span className="size-2.5 rounded-full bg-white/15" />
+                            <span className="size-2.5 rounded-full bg-white/15" />
+                            <span className="size-2.5 rounded-full bg-white/15" />
+                            <span className="ml-3 text-[11px] text-white/40 font-mono">App.tsx</span>
+                        </div>
+                        <pre className="!m-0 !bg-transparent px-5 py-4 text-[12.5px] leading-[1.7] text-[#c9d3dd] overflow-x-auto">
+                            <code>{highlight(heroCode)}</code>
+                        </pre>
+                    </div>
+                    <figcaption className="mt-3 text-xs text-[#787c85]">
+                        Current source API ·{' '}
+                        <Link href="/spark/getting-started" className="text-[#91c7e9] hover:text-white">
+                            see Getting started
+                        </Link>
+                    </figcaption>
+                </figure>
+            </section>
+
+            {/* Capabilities */}
+            <section className="container pt-28 sm:pt-32">
+                <div className="lg:grid lg:grid-cols-[1fr_2fr] lg:gap-14">
+                    <div className="mb-8 lg:mb-0">
+                        <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">One package, the whole desktop.</h2>
+                        <p className="mt-4 text-[15px] leading-relaxed text-[#929da8] max-w-sm">
+                            Import each capability from <code className="text-white/80">@legendapp/spark</code>. Typed and
+                            async, with explicit ownership and cleanup.
+                        </p>
+                        <Link
+                            href="/spark/reference"
+                            className="mt-5 inline-flex items-center gap-2 text-[13px] text-[#91c7e9] hover:text-white"
+                        >
+                            All capabilities <ArrowRight size={14} />
+                        </Link>
+                    </div>
+                    <dl className="grid sm:grid-cols-2 border-t border-[#29313a]">
+                        {capabilities.map(({ path, title, text }) => (
+                            <div key={path} className="py-5 border-b border-[#29313a] sm:odd:pr-8 sm:even:pl-8 sm:even:border-l">
+                                <dt className="flex items-baseline justify-between gap-4">
+                                    <span className="text-white font-medium">{title}</span>
+                                    <code className="text-[11px] text-[#6d8498]">{path}</code>
+                                </dt>
+                                <dd className="mt-1.5 text-[13.5px] leading-relaxed text-[#929da8]">{text}</dd>
+                            </div>
+                        ))}
+                    </dl>
                 </div>
             </section>
 
-            {/* Badges */}
-            <section className="relative max-w-5xl mx-auto px-6 text-center">
-                <h2 className="text-3xl font-bold text-white">Everything a desktop app needs</h2>
-                <p className="mt-3 text-white/60 max-w-xl mx-auto">
-                    One package, <code>@legendapp/spark</code>, with typed APIs for the parts of the desktop React Native
-                    doesn&apos;t cover.
+            {/* Runtimes */}
+            <section className="container pt-28 sm:pt-32">
+                <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">One project, three ways to run it.</h2>
+                <p className="mt-4 text-[15px] leading-relaxed text-[#929da8] max-w-xl">
+                    Move from a shared runner to your own build only when the project needs it. Spark checks native
+                    requirements before loading JavaScript.
                 </p>
-                <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border border-tBorder bg-tBg rounded-lg">
-                    {badges.map(({ title, subtitle }) => (
-                        <div key={title} className="px-4 py-4">
-                            <div className="text-white font-bold whitespace-pre">{title}</div>
-                            <div className="text-sm text-white/60 pt-1">{subtitle}</div>
-                        </div>
+                <ol className="mt-10 grid gap-x-8 gap-y-12 lg:grid-cols-3">
+                    {runtimes.map(({ label, title, text, code }, i) => (
+                        <li key={label} className="flex flex-col border-t border-[#29313a] pt-5">
+                            <span className="font-mono text-[11px] tracking-wide text-[#6d8498]">
+                                0{i + 1} / {label.toUpperCase()}
+                            </span>
+                            <h3 className="mt-3 text-lg font-medium text-white">{title}</h3>
+                            <p className="mt-2 mb-5 flex-1 text-[13.5px] leading-relaxed text-[#929da8]">{text}</p>
+                            <Terminal code={code} />
+                        </li>
                     ))}
-                </div>
+                </ol>
             </section>
 
-            {/* Workflow */}
-            <section className="relative max-w-6xl mx-auto px-6 pt-28">
-                <h2 className="text-3xl font-bold text-white text-center">From first line to shipped app</h2>
-                <div className="mt-10 grid gap-6 lg:grid-cols-3">
-                    {steps.map(({ title, text, code }, i) => (
-                        <div key={title} className="flex flex-col">
-                            <div className="text-sm font-mono text-blue-400">0{i + 1}</div>
-                            <h3 className="mt-1 text-xl font-bold text-white">{title}</h3>
-                            <p className="mt-2 mb-4 text-white/60 flex-1">{text}</p>
-                            <CodeWindow code={code} />
-                        </div>
-                    ))}
+            {/* Architecture */}
+            <section className="container pt-28 sm:pt-32">
+                <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-14 border-y border-[#29313a] py-12">
+                    <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">No browser inside.</h2>
+                    <div className="grid gap-8 sm:grid-cols-2 text-[14px] leading-relaxed text-[#929da8]">
+                        <p>
+                            <span className="block text-white font-medium mb-1.5">React Native all the way down</span>
+                            Screens are React Native views and your JavaScript runs in Hermes. Node runs the tooling and
+                            is never bundled into the app.
+                        </p>
+                        <p>
+                            <span className="block text-white font-medium mb-1.5">The Expo workflow you know</span>
+                            Expo Desktop generates the native host and Expo CLI owns Metro, logs, and reload. Spark adds
+                            desktop APIs and runtime selection.
+                        </p>
+                    </div>
                 </div>
             </section>
 
             {/* Status + docs */}
-            <section className="relative max-w-6xl mx-auto px-6 pt-28 pb-24 grid gap-10 lg:grid-cols-2">
+            <section className="container pt-28 sm:pt-32 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-14">
                 <div>
-                    <h2 className="text-3xl font-bold text-white">Honest about where it is</h2>
-                    <p className="mt-4 text-white/60">
-                        Spark is experimental and not ready for production. macOS on Apple Silicon is the primary target;
-                        Intel and Windows builds are in progress. The docs track the current source, which is newer than
-                        the published preview.
-                    </p>
-                    <Link href="/spark/limitations" className="mt-4 inline-flex items-center gap-2 text-blue-400 no-underline">
-                        Status and limitations <ArrowRight size={15} />
+                    <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">Where it stands</h2>
+                    <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-[#929da8] max-w-lg">
+                        <p>
+                            Spark is experimental and not ready for production; APIs can still change. macOS 14+ on
+                            Apple Silicon is the primary target. Intel Mac builds and Windows development exist in
+                            source, with native acceptance pending.
+                        </p>
+                        <p>
+                            The published <code className="text-white/80">@next</code> preview predates the APIs on this
+                            page and in the guides. Use the current source SDK to try them.
+                        </p>
+                    </div>
+                    <Link
+                        href="/spark/limitations"
+                        className="mt-5 inline-flex items-center gap-2 text-[13px] text-[#91c7e9] hover:text-white"
+                    >
+                        Status and limitations <ArrowRight size={14} />
                     </Link>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                    {[
-                        ['Overview', '/spark/overview', 'How the pieces fit'],
-                        ['Getting started', '/spark/getting-started', 'Create your first app'],
-                        ['API guide', '/spark/reference', 'Every capability'],
-                        ['Examples', '/spark/examples', 'Learn from real apps'],
-                    ].map(([label, href, sub]) => (
+                <nav aria-label="Spark documentation" className="grid content-start border-t border-[#29313a]">
+                    {docs.map(({ label, href, text }) => (
                         <Link
                             key={href}
                             href={href}
-                            className="rounded-lg border border-white/10 bg-white/[0.02] hover:border-white/25 p-4 no-underline"
+                            className="group flex items-center gap-4 border-b border-[#29313a] py-4 text-[#929da8] hover:text-white"
                         >
-                            <div className="font-semibold text-white">{label}</div>
-                            <div className="text-sm text-white/50">{sub}</div>
+                            <span className="text-white font-medium w-36 shrink-0">{label}</span>
+                            <span className="text-[13.5px] flex-1">{text}</span>
+                            <ArrowRight size={15} className="text-[#697b88] group-hover:text-white transition-colors" />
                         </Link>
                     ))}
-                </div>
+                </nav>
             </section>
         </main>
     );
