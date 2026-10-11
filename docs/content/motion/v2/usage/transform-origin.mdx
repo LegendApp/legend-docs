@@ -58,6 +58,6 @@ You can see in the following example the difference between scaling from the top
 ```
 
 
-Possible values are a number of pixels or a percentage, and it defaults to `50%` as usual in React Native.
+Possible values are a number of pixels, a `px` string, or a percentage, and it defaults to `50%` as usual in React Native. Numbers and `px` values measure from the element's left/top edge, while percentages are relative to its measured width/height. So `{ x: 0, y: 0 }` is the top-left corner and `{ x: '50%', y: '50%' }` is the center.
 
 **Note**: Using `transformOrigin` adds a hook, so setting `transformOrigin` conditionally would cause crashes.

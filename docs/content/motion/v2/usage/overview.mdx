@@ -4,6 +4,8 @@ title: Overview
 
 Legend-Motion provides a set of components wrapping React Native Views.
 
+The `Motion` namespace includes `View`, `Text`, `Image`, `ScrollView`, `FlatList`, `SectionList`, and `Pressable`.
+
 ```js
 import { Motion } from "@legendapp/motion"
 ```
@@ -44,6 +46,8 @@ We can simply set values on the `animate` prop.
 ```
 
 When any value in `animate` changes, it will automatically animate to the new values.
+
+Supported transform keys are `x`, `y`, `scale`, `scaleX`, `scaleY`, `skewX`, `skewY`, `perspective`, `rotate`, `rotateX`, `rotateY`, `rotateZ`, and `matrix`.
 
 ## Transitions
 
@@ -159,6 +163,10 @@ Legend-Motion supports two kinds of transitions, `spring` or `timing`. They pass
 
 Transitions with durations are called `timing` in React Native's Animated and `tween` in Framer Motion, so Legend-Motion has transition types of both names that do the same thing, to make it easy to match props with the rest of your codebase.
 
+Set `transition.loop` to the number of times to repeat a tween or spring transition. Set `transition.delay` on tween/timing transitions to delay the start in milliseconds; `configureMotion({ timing: 's' })` changes `duration` units only.
+
+The `onAnimationComplete` callback receives the property name when that property's animation ends, including when it is stopped.
+
 ## Animate on mount
 
 When a component mounts, it will automatically be set to the `animate` value. But you want to animate it into position on mount, set `initial` as a starting point.
@@ -266,6 +274,8 @@ React Native and Framer Motion use different naming, so Legend-Motion supports e
 
 It accepts the same easing functions as React Native's `Animated` along with some named functions to match usage of Framer Motion.
 
+Easing applies only to tween/timing transitions and is ignored by spring transitions. If you pass both `ease` and `easing`, React Native uses `easing`.
+
 The supported values match most of Framer Motion's options:
 
 `linear`, `easeIn`, `easeOut`, `easeInOut`, `circIn`, `circOut`, `circInOut`, `backIn`, `backOut`, `backInOut`
@@ -308,7 +318,7 @@ See the [React Native docs](https://reactnative.dev/docs/easing) for more detail
         transition={{
           type: 'timing',
           duration: 600,
-          easing: Easing.easing,
+          easing: Easing.easeInOut,
         }}
       />
     </View>

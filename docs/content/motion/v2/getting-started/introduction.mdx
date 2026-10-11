@@ -26,7 +26,7 @@ Legend-Motion is a declarative animations library for React Native, to make it e
 - ✨ Supports transformOrigin
 - ✨ whileHover and whileTap for easy animations on touch
 - ✨ AnimatePresence for exit animations
-- ✨ 0 dependencies using the built-in Animated
+- ✨ Minimal dependencies — only `@legendapp/tools`, using the built-in Animated
 - ✨ Built for maximum performance
 - ✨ Strongly typed with TypeScript
 
@@ -44,6 +44,8 @@ npm install @legendapp/motion
 
 ```js
 import { Motion } from "@legendapp/motion"
+import { MotionSvg } from "@legendapp/motion/svg"
+import { MotionLinearGradient } from "@legendapp/motion/linear-gradient"
 ```
 
 ### Usage
@@ -93,7 +95,7 @@ To keep the code small and performance high, we tried to design this as simply a
 
 When a prop passed into `animate` changes, the `Motion` component starts an `Animated.spring` or `Animated.timing` animation with the new prop. If the prop is a string or array, it needs to be interpolated, so it bounces the value of an `AnimatedInterpolation` between 0 and 1, interpolating between the previous prop and the new prop.
 
-For SVG animations, `legend-animations` provides Motion wrappers around all of the `react-native-svg` components, which itself supports passing Animated values into its props.
+For SVG animations, `@legendapp/motion/svg` provides Motion wrappers around supported `react-native-svg` components, which itself supports passing Animated values into its props.
 
 Linear Gradient animations were inspired by [react-native-animated-linear-gradient](https://github.com/heineiuo/react-native-animated-linear-gradient) (see it for a great description of how it works) and Legend-Motion additionally includes support for multiple color stops and animating `start` and `end`.
 
