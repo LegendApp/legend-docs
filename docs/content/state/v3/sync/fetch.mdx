@@ -8,9 +8,9 @@ title: Fetch plugin
 - `set`: The URL to set
 - `getInit`: The `init` parameter to pass to `fetch` when getting
 - `setInit`: The `init` parameter to pass to `fetch` when setting. Defaults to `{ method: 'POST' }`
-- `valueType`: The function to call on the Response set. Defaults to `json`.
+- `valueType`: The function to call on the Response from get. Defaults to `json`.
 - `onSavedValueType`: The function to call on the Response from set. Defaults to the `valueType` option or `json`.
-- `onSaved`: Given the return value from set, return a value to save back into the observable.
+- `onSaved`: Receives `{ saved, input, currentValue, props }`. Return a value to save back into the observable; `saved` is the parsed, transformed response from set.
 
 Example:
 
@@ -21,9 +21,9 @@ import { observable } from '@legendapp/state';
 const state$ = observable(syncedFetch({
     get: 'https://url.to.get',
     set: 'https://url.to.set',
-    onSaved: (value) => {
+    onSaved: ({ saved }) => {
         return {
-            updatedAt: value.updatedAt
+            updatedAt: saved.updatedAt
         }
     }
 }))

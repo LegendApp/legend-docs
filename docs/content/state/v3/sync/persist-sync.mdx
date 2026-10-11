@@ -73,19 +73,21 @@ Alternatively we can setup the persistence in the constructor with `synced`. Thi
 ```ts
 import { observable } from "@legendapp/state"
 import { synced } from "@legendapp/state/sync"
+import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv"
 
-// Create an observable with "todos" persisted
+// Create a persisted todos array
 const store$ = observable(
     synced({
         initial: [],
         persist: {
             name: 'persistKey',
+            plugin: ObservablePersistMMKV,
         }
     })
 )
 
 // Any changes will be persisted
-store$.todos.push({ id: 0 })
+store$.push({ id: 0 })
 ```
 
 <Callout>
@@ -220,7 +222,8 @@ Sync plugins have a lot of options so you'll likely want to set some defaults. Y
 
 ```ts
 import { observable } from "@legendapp/state"
-import { configureSynced, syncedCrud } from "@legendapp/state/sync"
+import { configureSynced } from "@legendapp/state/sync"
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud"
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 
 // Configure the base `synced`
@@ -231,7 +234,7 @@ const syncPlugin = configureSynced({
 })
 
 // Or configure options derived from another plugin
-const syncPlugin = configureSynced(syncedCrud, {
+const crudSyncPlugin = configureSynced(syncedCrud, {
     persist: {
         plugin: ObservablePersistLocalStorage
     }
@@ -247,7 +250,9 @@ const state$ = observable(syncPlugin({
 
 ### synced
 
-The easiest way to create a synced observable is to use `synced` when creating an observable to bind it to remote data and/or persist it locally. To simply set up persistence, just create `get` and `set` functions along with a `persist` option.
+The easiest way to create a synced observable is to use `synced` when creating an observable to bind it to remote data and/or persist it locally. To simply set up persistence, provide a `persist` option; `get` and `set` are only needed for remote sync.
+
+Examples that specify only `persist.name` assume a plugin configured globally with `configureObservableSync({ persist: { plugin } })`, imported from `@legendapp/state/sync`. Otherwise set `persist.plugin` on each observable.
 
 `synced` creates a lazy computed function which will not activate until you `get()` it. So you can set up your observables' sync/persist options and they will only activate on demand.
 
@@ -263,7 +268,7 @@ const state$ = observable(synced({
     get: () =>
         fetch('https://url.to.get').then((res) => res.json()),
     set: ({ value }) =>
-        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) }),
+        fetch('https://url.to.set', { method: 'POST', body: JSON.stringify(value) }),
     persist: {
         name: 'test',
     },
@@ -286,8 +291,8 @@ const state$ = observable(synced({
     },
     set: ({ value }) => {
         // set is run when the observable changes, debounced by the debounceSet option
-        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) })
-    }
+        return fetch('https://url.to.set', { method: 'POST', body: JSON.stringify(value) })
+    },
     persist: {
         // The name to be saved in the local persistence
         name: 'test',
@@ -306,13 +311,13 @@ const state$ = observable(synced({
     },
     // How to update the initial value when the remote data comes in.
     // defaults to "set"
-    mode: 'set' | 'assign' | 'merge' | 'append' | 'prepend',
-    // The subscribe function is called once to give you an opportunity to
-    // subscribe to another service to trigger refresh
+    mode: 'set', // Or 'assign', 'merge', 'append', 'prepend'
+    // Subscribe before get to receive live updates. The subscription can
+    // restart when the observable is observed again.
     subscribe: ({ refresh, update }) => {
         const unsubscribe = pusher.subscribe({ /*...*/ }, (data) => {
             // Either update with the received data
-            update(data)
+            update({ value: data })
             // Or trigger a refresh of the get function
             refresh()
         })
@@ -331,9 +336,13 @@ const state$ = observable(synced({
 }))
 ```
 
+`syncMode` defaults to `'auto'`; `'manual'` waits for `syncState(state$).sync()` to start remote loading. `onBeforeGet` and `onBeforeSet` can cancel operations; `onAfterSet` runs after saving; `onError` receives the error and operation context. `persist.readonly` loads persisted data without writing changes.
+
+Retry `delay` and `maxDelay` are milliseconds, defaulting to `1000` and `30000`. Backoff defaults to exponential; use `'constant'` to keep the delay fixed. `times` defaults to 3 total attempts; `infinite` removes that limit.
+
 ### syncObservable
 
-If you prefer to set up sync/persistence after the observable is already created, you can use `syncObservable` with the same options as `synced`. It's effectively the same as using `synced` with an initial value. You can also pass any of the plugins as the second option.
+If you prefer to set up sync/persistence after the observable is already created, you can use `syncObservable` with the same options as `synced`. It's effectively the same as using `synced` with an initial value. You can also pass any of the plugins as the second option. It returns the `syncState` observable.
 
 ```js
 import { observable } from '@legendapp/state'
@@ -345,7 +354,7 @@ syncObservable(state$, {
     get: () =>
         fetch('https://url.to.get').then((res) => res.json()),
     set: ({ value }) =>
-        fetch('https://url.to.set', { method: 'POST', data: JSON.stringify(value) }),
+        fetch('https://url.to.set', { method: 'POST', body: JSON.stringify(value) }),
     persist: {
         name: 'test'
     }
@@ -398,12 +407,18 @@ The `isLoaded` and `error` properties are accessible when using `syncState` on a
 - `isPersistEnabled: boolean`: Enable/disable the local persistence
 - `isLoaded: boolean`: Whether the get function has returned
 - `isSyncEnabled: boolean`: Enable/disable remote sync
-- `lastSync: number`: Timestamp of the latest sync
-- `syncCount: number`: Number of times it's synced
+- `lastSync: number | undefined`: Timestamp of the latest sync
+- `syncCount: number | undefined`: Number of times it's synced
 - `clearPersist: () => Promise<void>`: Clear the local persistence
 - `sync: () => Promise<void>`: Re-run the get function
-- `getPendingChanges: () => Record<string, object>`: Get all unsaved changed
-- `error: Error`: The latest error
+- `getPendingChanges: () => Record<string, { p: any; v?: any }> | undefined`: Get all unsaved changes
+- `error: Error | undefined`: The latest error
+- `isGetting`, `isSetting`: Whether remote operations are active
+- `numPendingGets`, `numPendingSets`: Number of pending remote operations
+- `resetPersistence: () => Promise<void>`: Clear persisted data and metadata
+- `reset: () => Promise<void>`: Also restore the configured initial value and reset sync state
+
+Use `sync({ resetLastSync: true })` to request a fresh sync without the previous timestamp.
 
 ### useObservable + synced
 
@@ -415,7 +430,7 @@ import { useObservable } from '@legendapp/state/react'
 
 function Component() {
     const user$ = useObservable(synced({
-        get: fetch('https://url.to.get').then((res) => res.json()),
+        get: () => fetch('https://url.to.get').then((res) => res.json()),
         persist: {
             name: 'test'
         }
@@ -462,7 +477,7 @@ const state$ = observable(synced({
 
 ```ts
 import { observable } from "@legendapp/state";
-import { combineTransforms, transformStringifyDates, transformStringifyKeys } from '@legendapp/state/sync'
+import { synced, combineTransforms, transformStringifyDates, transformStringifyKeys } from '@legendapp/state/sync'
 const state$ = observable(synced({
     get: () => {/* ... */},
     transform: combineTransforms(
@@ -589,6 +604,8 @@ npm install react-native-mmkv
 
 Then configure it as the persist plugin.
 
+Use `observablePersistMMKV(configuration)` from the same module to create a plugin with custom MMKV options. `persist.mmkv` overrides that configuration for an individual observable.
+
 ```js
 import { syncObservable } from '@legendapp/state/sync'
 import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv'
@@ -674,7 +691,7 @@ syncObservable(
 
 Once you're syncing multiple observables in the same way you'll likely want to create a plugin that encapsulates the specifics of your backend. The plugin just needs to return a [synced](#synced). If your backend is CRUD based (it has create, read, update, delete functions) then you may want to build on top of [syncedCrud](../crud) which encapsulates a lot of logic for those specifics for you.
 
-It may be easiest to look at [the source of the built-in sync plugins](https://github.com/LegendApp/legend-state/tree/main/src/persist-plugins) to see what they look like.
+It may be easiest to look at [the source of the built-in sync plugins](https://github.com/LegendApp/legend-state/tree/main/src/sync-plugins) to see what they look like.
 
 This is a simple contrived example to show what that could look like.
 
@@ -712,6 +729,6 @@ const customSynced = ({ name }) => {
 }
 
 const store$ = observable({
-    users: customSynced('user')
+    users: customSynced({ name: 'user' })
 })
 ```

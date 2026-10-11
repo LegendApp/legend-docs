@@ -23,7 +23,7 @@ observe(() => {
 `get()` is the primary way to access observables and track for changes, but there are actually a few ways:
 
 1. Call `get()` on an observable: `settings.get()`
-2. Array looping functions (shallow listener): `arr.map(settings.accounts, () => ...)`
+2. Array looping functions (shallow listener): `settings.accounts.map(() => ...)`
 3. Accessing array length (shallow listener): `if (arr.length > 0) ...`
 4. Object.keys (shallow listener): `Object.keys(settings)`
 4. Object.values (shallow listener): `Object.values(settings)`
@@ -76,9 +76,13 @@ when(
 );
 ```
 
+`when` and `whenReady` also accept an array of selectors and wait until every selector passes their check.
+
 ### onChange
 
 `onChange` listens to an observable for any changes anywhere within it. Use this as specifically as possible because it will fire notifications for every change recursively up the tree.
+
+It returns a disposer. Its callback receives `value`, `getPrevious`, `changes`, `isFromSync`, and `isFromPersist`. Options include `initial` (call immediately), `immediate` (bypass batching), and `trackingType: true` (shallow tracking).
 
 ```js
 import { observable } from "@legendapp/state";

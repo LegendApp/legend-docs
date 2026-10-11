@@ -265,11 +265,11 @@ function App() {
 
 ## List of messages
 
-This example uses the [syncedFetch](../../sync/fetch) helper to get data from a server as an observable, [useComputed](../react-api#usecomputed) to create a computed observable, and [For](../fine-grained-reactivity#for) to display the array of messages in a high-performance way.
+This example uses the [syncedFetch](../../sync/fetch) helper to get data from a server as an observable, [useObservable](../react-api#useobservable) to create a computed observable, and [For](../fine-grained-reactivity#for) to display the array of messages in a high-performance way.
 
 <Editor
   code={`
-import { For, Show, useObservable, useObservable } from "@legendapp/state/react"
+import { For, Show, useObservable } from "@legendapp/state/react"
 import { $React } from "@legendapp/state/react-web"
 import { syncedFetch } from "@legendapp/state/sync-plugins/fetch"
 
@@ -352,7 +352,7 @@ function App() {
 
 This example uses [reactive](../fine-grained-reactivity#reactive) to make a version of `motion.div` with [reactive props](../fine-grained-reactivity#reactive-components) that can animate using observable values. Animating with reactive props is faster than re-rendering the whole component because when the tracked observable changes it triggers a render of only the `motion.div`, so it doesn't need to re-render the parent or children.
 
-This example also creates a [computed observable](../../usage/observable#computed-observables) text value from the boolean and renders it directly in JSX, which (under the hood) creates a reactive text element that re-renders itself when it changes.
+This example also creates a [computed observable](../../usage/observable#computed-observables) text value from the boolean and renders it in `Memo`, which creates a reactive text element that re-renders itself when it changes.
 
 <Editor
   code={`
@@ -473,7 +473,7 @@ function Modal({ show }) {
         <div className="modalButtons">
           <MotionButton
             className="pageButton"
-            animate={() => ({ opacity: page$.get() === 0 ? 0.5 : 1 })}
+            $animate={() => ({ opacity: page$.get() === 0 ? 0.5 : 1 })}
             $disabled={() => page$.get() === 0}
             onClick={() => page$.set(p => p - 1)}
             transition={{ duration: 0.15 }}
@@ -482,7 +482,7 @@ function Modal({ show }) {
           </MotionButton>
           <MotionButton
             className="pageButton"
-            animate={() => ({ opacity: page$.get() === 2 ? 0.5 : 1 })}
+            $animate={() => ({ opacity: page$.get() === 2 ? 0.5 : 1 })}
             $disabled={() => page$.get() === 2}
             onClick={() => page$.set(p => p + 1)}
             transition={{ duration: 0.15 }}

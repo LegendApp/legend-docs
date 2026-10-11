@@ -43,6 +43,8 @@ export const uiState$ = observable({
 You can use `useObservable` to create state objects within React components, then pass them down to children through either props or Context.
 
 ```js
+import { Memo } from "@legendapp/state/react";
+
 function App() {
   const store$ = useObservable({
     profile: { name: "hi" },
@@ -56,6 +58,6 @@ function App() {
 }
 
 function Profile({ profile }) {
-  return <div>{profile.name}</div>;
+  return <div><Memo>{profile.name}</Memo></div>;
 }
 ```

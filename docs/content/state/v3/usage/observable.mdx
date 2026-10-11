@@ -259,7 +259,7 @@ const selectedAll$ = observable(linked({
   get: () => selected$.every((val$) => val$.get()),
 
   // setting selectedAll sets the value of every element
-  set: (value) => selected$.forEach((val$) => val$.set(value))
+  set: ({ value }) => selected$.forEach((val$) => val$.set(value))
 }))
 
 selectedAll$.set(true)
@@ -269,12 +269,12 @@ selectedAll$.set(true)
 Or it could be used to automatically deserialize/serialize a string value.
 
 ```js
-import { observable } from "@legendapp/state";
+import { linked, observable } from "@legendapp/state";
 
 const str$ = observable('[1,2,3]')
 const arr$ = observable(linked({
-  get: () => JSON.parse(str$.get())
-  set: (value) => str$.set(JSON.stringify(value))
+  get: () => JSON.parse(str$.get()),
+  set: ({ value }) => str$.set(JSON.stringify(value))
 }))
 ```
 
@@ -385,10 +385,7 @@ import { event } from "@legendapp/state"
 
 const onClosed$ = event()
 
-// Simply pass a callback to the `onChange` function
-onClosed$.onChange(() => { ... })
-
-// Or use 'on' which is an alias of `onChange`
+// Simply pass a callback to the `on` function
 onClosed$.on(() => { ... })
 
 // Dispatch the event to call listeners
@@ -475,16 +472,15 @@ state$.user.profile.name.set("Annyong")
 
 Observable arrays have all of the normal array functions as you'd expect, but some are modified for observables.
 
-All looping functions set up [shallow tracking](../reactivity#shallow-tracking) automatically, as well as provide the observable in the callback. This includes:
+These callback methods set up [shallow tracking](../reactivity#shallow-tracking) automatically and provide the observable item in the callback:
 
 - every
 - filter
 - find
 - findIndex
 - forEach
-- includes
-- join
 - map
+- reduce
 - some
 
 Additionally, `filter` returns an array of observables and `find` returns an observable (or undefined).

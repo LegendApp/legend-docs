@@ -49,12 +49,14 @@ mergeIntoObservable(state$, newValue);
 
 // text changed to "hi"
 
-state$.store === newValue.store; // ✅ true
+state$.store.get().text === newValue.store.text; // ✅ true
 ```
 
 ## trackHistory
 
 `trackHistory` creates an observable that tracks all changes in the target observable, with the previous value at the time it was changed.
+
+It accepts an optional target observable for the history and ignores changes loaded from persistence or sync.
 
 ```js
 import { observable } from '@legendapp/state'
@@ -82,6 +84,8 @@ state$.profile.name.set('Annyong')
 
 `undoRedo` is similar to [trackHistory](#trackhistory) in that it tracks changes to an observable. However, `undoRedo` also provides helpers for undo / redo (as the name suggests) and does the tracking for you.
 
+It also returns `undos$` and `redos$`, observables containing the available counts. With no `limit`, history is unlimited.
+
 ```js
 import { observable } from "@legendapp/state";
 import { undoRedo } from "@legendapp/state/helpers/undoRedo";
@@ -99,3 +103,7 @@ undo();
 redo();
 // todos is restored to ["Get milk", "Pick up bread"]
 ```
+
+## numberAsString
+
+`numberAsString`, imported from `@legendapp/state/as/numberAsString`, creates a two-way linked string view: `observable(numberAsString(number$))`. It stringifies reads and converts writes to numbers with unary `+`.

@@ -71,7 +71,7 @@ function Component() {
                 {() => (
                     <div>{state$.age.get() > 5 ? <Kid /> : <Baby />}</div>
                 )}
-            />
+            </$React.div>
             {/* Two-way bind to inputs */}
             <$React.textarea $value={state$.name} />
             <$React.select $value={state$.age}>...</$React.select>
@@ -134,8 +134,8 @@ function Component() {
     <Computed>
       {() =>
         state$.messages.map((message) => (
-          <div key={message.id}>
-            {message.text} {localVar}
+          <div key={message.id.peek()}>
+            {message.text.get()} {localVar}
           </div>
         ))
       }
@@ -156,8 +156,8 @@ function Component() {
     <Memo>
       {() =>
         state.messages.map((message) => (
-          <div key={message.id}>
-            {message.text} {localVar}
+          <div key={message.id.peek()}>
+            {message.text.get()} {localVar}
           </div>
         ))
       }
@@ -165,6 +165,8 @@ function Component() {
   );
 }
 ```
+
+With `scoped`, `Memo` also re-renders when its `children` prop changes identity; by default it ignores parent renders.
 
 ### Show
 
@@ -238,10 +240,10 @@ An `optimized` prop adds additional optimizations, but in an unusual way by re-u
 Props:
 
 - `each`: An observable (array, object, or Map)
-- `item`: A render function which receives the item id, and item observable or undefined
+- `item`: A component receiving `{ item$, id }`, where `item$` is the item observable
 - `itemProps`: Extra props to pass down to each item
 - `sortValues`: If the `each` parameter is an object or Map, this is a sort function for how to sort the elements. `(A: T, B: T, AKey: string, BKey: string) => number`
-- `children`: A render function or, you can pass a render function as children instead of in the `item` prop if you prefer.
+- `children`: A render function receiving `(item$, id)`, as an alternative to the `item` component
 
 ```jsx
 import { observable } from "@legendapp/state"
@@ -259,7 +261,7 @@ function List() {
 
     // 2. Use the For component with a render function as the child
     return (
-        <For each={list} optimized>
+        <For each={state$.arr} optimized>
             {item$ => (
                 <div>
                     {item$.text.get()}
@@ -281,7 +283,7 @@ The Babel plugin can make the syntax for Computed, Memo, and Show less verbose. 
 <Show if={state$.visible}><Modal /></Show>
 
 // Babel transforms it to
-<Computed>{() => <div>Count: {state.count.get()}</div>}</Computed>
+<Computed>{() => <div>Count: {state$.count.get()}</div>}</Computed>
 <Memo>{() => <div>Count: {state$.count.get()}</div>}</Memo>
 <Show if={state$.visible}>{() => <Modal />}</Show>
 ```
@@ -348,6 +350,8 @@ function Component() {
   );
 }
 ```
+
+`reactive(Component, keys, bindKeys)` can treat selected existing prop names as reactive. Pass `undefined` for `keys` to keep the `$` prefix convention. `bindKeys` configures two-way bindings with `handler`, `getValue`, and `defaultValue`.
 
 ### reactiveObserver
 

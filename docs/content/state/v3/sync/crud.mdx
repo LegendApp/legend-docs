@@ -52,7 +52,7 @@ profiles$.get() // => Record<string, Profile>
 
 The `list` function expects an array of rows to be returned from your API.
 
-The shape of the observable object returned from a `list` can be changed with the `as` parameter, which supports three options:
+The shape of the observable object returned from a `list` can be changed with the `as` parameter, which supports four options:
 
 1. `object`: The default, an object keyed by the row's `id` field.
 2. `array`: Treat the result of a query as an array
@@ -71,7 +71,7 @@ import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
 
 const profile$ = observable(syncedCrud({
     // ...
-    create: (value, options) => {
+    create: async (value, options) => {
         const { data, error } = await serverCreateProfile(value);
         if (error) {
             // Handle error, throw an Error to trigger a retry
@@ -95,7 +95,7 @@ import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
 
 const profile$ = observable(syncedCrud({
     // ...
-    update: (value, options) => {
+    update: async (value, options) => {
         const { data, error } = await serverUpdateProfile(value);
         if (error) {
             // Handle error, throw an Error to trigger a retry
@@ -110,7 +110,7 @@ const profile$ = observable(syncedCrud({
 
 ## delete
 
-When an element is deleted from the observable, it will call the `delete` function with the `id` of the deleted element.
+When an element is deleted from the observable, it will call the `delete` function with the previous row value, including its `id`.
 
 ```ts
 import { observable } from "@legendapp/state";
@@ -118,7 +118,7 @@ import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
 
 const profile$ = observable(syncedCrud({
     // ...
-    delete: ({ id }, options) => {
+    delete: async ({ id }, options) => {
         const { data, error } = await serverDeleteProfile(id);
         if (error) {
             // Handle error, throw an Error to trigger a retry
@@ -144,20 +144,9 @@ const profile$ = observable(syncedCrud({
 
 ## onSaved
 
-When a value is saved to the server you may want it to apply changes back into the local observable. There are two ways to do that.
+Rows returned by `create` and `update` are automatically merged into the local observable, excluding fields changed locally while the save was in flight.
 
-1. **onSavedUpdate: 'createdUpdatedAt'**: This will save any fields ending in `["createdAt", "updatedAt", "created_at", "updated_at"]` back to the observable. This can be useful if your backend updates these values on the server. It also works if you have updated times for specific fields like "noteUpdatedAt".
-
-```ts
-const profile$ = observable(syncedCrud({
-    // ...
-    create: () => {/* ... */},
-    update: () => {/* ... */},
-    onSavedUpdate: 'createdUpdatedAt';
-}))
-```
-
-2. **onSaved**: If you want more control over what fields are updated in your object you can do it manually with `onSaved`. Just return an object with the fields you want merged into the observable. Note that you can also just use this for side effects and not return anything.
+If you want more control over what fields are updated in your object you can use `onSaved`. Return an object with the fields you want merged into the observable. Returning nothing preserves the automatic merge, so you can also use this for side effects.
 
 ```ts
 const profile$ = observable(syncedCrud({
@@ -174,7 +163,7 @@ const profile$ = observable(syncedCrud({
 
 ## subscribe
 
-If your backend has a realtime feature, or if you want to poll periodically for changes, use `subscribe` to set that up. This will be called only once after the first `get`.
+If your backend has a realtime feature, or if you want to poll periodically for changes, use `subscribe` to set that up. It starts before the first `get` and may restart when the observable is observed again.
 
 This can be used in two ways depending on how your backend works, updating with incoming data or simply triggering a refresh.
 
@@ -187,7 +176,7 @@ const profile$ = observable(syncedCrud({
     subscribe: ({ refresh, update }) => {
         const unsubscribe = pusher.subscribe({ /*...*/ }, (data) => {
             // Either update with the received data
-            update(data)
+            update({ value: data })
             // Or trigger a refresh of the get function
             refresh()
         })
@@ -202,7 +191,7 @@ const profile$ = observable(syncedCrud({
 An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce bandwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
 
 1. Save the maximum updatedAt to the local persistence
-2. In subsequent syncs or after refresh it will list by `updatedAt: lastSync + 1` to get only recent changes
+2. In subsequent syncs or after refresh, your `list({ lastSync })` function uses that timestamp to query only recent changes
 3. The new changes will be merged into the observable
 
 This has a few requirements to work correctly:
@@ -218,10 +207,11 @@ This has a few requirements to work correctly:
 - `update`: Update a single value on the backend
 - `delete`: Delete a single value on the backend
 - `onSaved`: Update local value with remote data
-- `onSavedUpdate`: Automatically update local value with created and updated times
+- `fieldId`: Row identifier field, defaults to `id`
 - `fieldCreatedAt`: Set the field your backend uses for created times
 - `fieldUpdatedAt`: Set the field your backend uses for updated times
 - `fieldDeleted`: Set the field your backend uses for soft deletes
+- `fieldDeletedList`: Recognize a separate deletion marker in list results without enabling soft-delete writes
 - `updatePartial`: Send only changed fields into update function
 - `changesSince`: 'all' | 'last-sync'. Defaults to 'all'. 'last-sync' syncs only diffs
 - `generateId`: Provide a function for creating row ids.

@@ -53,7 +53,7 @@ import { useValue } from "@legendapp/state/react"
 
 // Observables can be primitives or deep objects
 const settings$ = observable({
-    theme: 'dark'
+    theme: 'dark',
     // Computed observables with just a function
     isDark: () => settings$.theme.get() === 'dark'
 })
@@ -69,9 +69,9 @@ observe(() => {
 })
 
 function Component() {
-    const theme = useValue(state$.settings.theme)
+    const theme = useValue(settings$.theme)
     // useValue tracks get() calls to automatically re-render on changes
-    const isDark = useValue(() => state$.settings.theme.get() === 'dark')
+    const isDark = useValue(() => settings$.theme.get() === 'dark')
 
     return <div>Theme: {theme}</div>
 }
@@ -184,7 +184,7 @@ Legend-State includes a powerful [persistence and sync engine](../../sync/persis
 Local persistence plugins for the browser and React Native are included, with sync plugins for [Keel](https://www.keel.so), [Supabase](https://www.supabase.com), [TanStack Query](https://tanstack.com/query), and `fetch`.
 
 ```js
-const state$ = observable(
+const state$ = observable({
     users: syncedKeel({
         list: queries.getUsers,
         create: mutations.createUsers,
@@ -199,16 +199,16 @@ const state$ = observable(
     }),
     // direct link to my user within the users observable
     me: () => state$.users['myuid']
-)
+})
 
 observe(() => {
     // get() activates through to state$.users and starts syncing.
     // it updates itself and re-runs observers when name changes
-    const name = me$.name.get()
+    const name = state$.me.name.get()
 })
 
 // Setting a value goes through to state$.users and saves update to server
-me$.name.set('Annyong')
+state$.me.name.set('Annyong')
 ```
 
 [Read more](../../sync/persist-sync)

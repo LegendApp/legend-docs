@@ -12,6 +12,7 @@ We'll start with a full example to see what a full setup looks like, then go int
 import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 import { observable } from '@legendapp/state'
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 import { configureSyncedSupabase, syncedSupabase } from '@legendapp/state/sync-plugins/supabase'
 import { v4 as uuidv4 } from "uuid"
 
@@ -28,8 +29,8 @@ const messages$ = observable(syncedSupabase({
     supabase,
     collection: 'messages',
     // Optional:
-    // Select only id and text fields
-    select: (from) => from.select('id,text'),
+    // Select id, text, and the timestamps used for sync
+    select: (from) => from.select('id,text,created_at,updated_at'),
     // Filter by the current user
     filter: (select) => select.eq('user_id', uid),
     // Don't allow delete
@@ -37,9 +38,11 @@ const messages$ = observable(syncedSupabase({
     // Realtime filter by user_id
     realtime: { filter: `user_id=eq.${uid}` },
     // Persist data and pending changes locally
-    persist: { name: 'messages', retrySync: true },
+    persist: { name: 'messages', plugin: ObservablePersistLocalStorage, retrySync: true },
     // Sync only diffs
-    changesSince: 'last-sync'
+    changesSince: 'last-sync',
+    fieldCreatedAt: 'created_at',
+    fieldUpdatedAt: 'updated_at'
 }))
 
 // get() activates and starts syncing
@@ -103,7 +106,7 @@ const messages$ = observable(syncedSupabase({
     // Select only id and text fields
     select: (from) => from.select('id,text'),
     // Or select and filter together
-    select: (from) => from.select('id,text').eq('user_id', 'uid')
+    // select: (from) => from.select('id,text').eq('user_id', 'uid')
 }))
 ```
 
@@ -122,13 +125,12 @@ const messages$ = observable(syncedSupabase({
 
 ## as
 
-The shape of the observable object can be changed with the `as` parameter, which supports three options:
+The shape of the observable object can be changed with the `as` parameter, which supports four options:
 
 1. `object`: The default, an object keyed by the row's `id` field.
 2. `Map`: A Map, which can be more efficient for accessing rows by key
 3. `value`: Treat the result of a query as a single value like a `get`
-
-Note that `array` is not an option because arrays make it hard to to efficiently and correctly add, update, and remove elements by id.
+4. `array`: Treat the result of a query as an array
 
 ```ts
 const messages$ = observable(syncedSupabase({
@@ -154,7 +156,7 @@ const messages$ = observable(syncedSupabase({
     // Simply enable it
     realtime: true,
     // Or set options
-    realtime: { schema: 'public', filter: `user_id=eq.${uid}`},
+    // realtime: { schema: 'public', filter: `user_id=eq.${uid}`},
 }))
 ```
 
@@ -175,7 +177,7 @@ const messages$ = observable(syncedSupabase({
     // Use an rpc function for creating
     create: (input) => supabase.rpc("create_country", input),
     // Or use functions
-    list: () => supabase.functions.invoke("list_messages"),
+    // list: () => supabase.functions.invoke("list_messages"),
 }))
 ```
 
@@ -184,7 +186,7 @@ const messages$ = observable(syncedSupabase({
 An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce bandwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
 
 1. Save the maximum updatedAt to the local persistence
-2. In subsequent syncs or after refresh it will list by `updated_at: lastSync + 1` to get only recent changes
+2. In subsequent syncs or after refresh it will list rows with `updated_at` strictly newer than `lastSync`
 3. The new changes will be merged into the observable
 
 Enabling this on the Supabase side requires adding `created_at` and `updated_at` columns and a trigger to your table. You can run this snippet to set it up, just replace the two instances of YOUR_TABLE_NAME.

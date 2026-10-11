@@ -55,12 +55,12 @@ const Component = () => {
 }
 ```
 
-- ✅ observer is an optimization to merge all `useValue` calls into a single hook, useful for large components
+- ✅ observer shares one tracking hook for `useValue` calls with observable arguments and without suspense, useful for large components. Function selectors still use their own hook.
 
 ```jsx
 const state$ = observable({ value1: 10, /* ... */ })
 const Component = observer(() => {
-    // Observer makes this run only a single hook
+    // These observable arguments share the observer's tracking hook
     const value1 = useValue(state$.value1)
     const value2 = useValue(state$.value2)
     const value3 = useValue(state$.value3)
@@ -222,7 +222,7 @@ Global configuration was confusing and restricting, so instead of a global `conf
 ```ts
 import { syncState } from "@legendapp/state"
 import { configureObservablePersistence, persistObservable } from "@legendapp/state/persist"
-import { ObservablePersistLocalStorage } from "@legendapp/state/local-storage"
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage"
 import { configureSynced, syncObservable } from "@legendapp/state/sync"
 // Change
 configureObservablePersistence({

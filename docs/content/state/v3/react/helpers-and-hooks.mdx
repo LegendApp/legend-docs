@@ -14,7 +14,7 @@ Legend-State includes some helpful observables and hooks for common tasks. These
 import { currentDay } from "@legendapp/state/helpers/time"
 
 observe(() => {
-    console.log('Today is': currentDay.get())
+    console.log('Today is', currentDay.get())
 })
 ```
 
@@ -26,13 +26,13 @@ observe(() => {
 import { currentTime } from "@legendapp/state/helpers/time"
 
 observe(() => {
-    console.log('The time is is': currentTime.get())
+    console.log('The time is', currentTime.get())
 })
 ```
 
 ### pageHash (web)
 
-`pageHash` is an observable that updates with the page hash, and changes the page hash when the observable is changed. Use `configurePageHash` to control how it sets the page hash, with `pushState | replaceState | location.hash`
+`pageHash` is an observable that updates with the page hash, and changes the page hash when the observable is changed. Use `configurePageHash` to control how it sets the page hash, with `setter: 'pushState' | 'replaceState' | 'hash'`. The default is `'hash'`.
 
 ```jsx
 import { pageHash, configurePageHash } from '@legendapp/state/helpers/pageHash'
@@ -40,7 +40,7 @@ import { pageHash, configurePageHash } from '@legendapp/state/helpers/pageHash'
 configurePageHash({ setter: 'pushState' })
 
 observe(() => {
-    console.log('hash changed to': pageHash.get())
+    console.log('hash changed to', pageHash.get())
 })
 
 pageHash.set('value=test')
@@ -49,13 +49,13 @@ pageHash.set('value=test')
 
 ### pageHashParams (web)
 
-`pageHashParams` is an observable that updates with the page hash, and changes the page hash when the observable is changed. Use `configurePageHashParams` to control how it sets the page hash, with `pushState | replaceState | location.hash`
+`pageHashParams` is an observable that updates with the page hash, and changes the page hash when the observable is changed. Use `configurePageHashParams` to control how it sets the page hash, with `setter: 'pushState' | 'replaceState' | 'hash'`. The default is `'hash'`.
 
 ```jsx
-import { pageHashParams, configurePageHash } from '@legendapp/state/helpers/pageHashParams'
+import { pageHashParams, configurePageHashParams } from '@legendapp/state/helpers/pageHashParams'
 
 observe(() => {
-    console.log('userid param changed to': pageHashParams.userid.get())
+    console.log('userid param changed to', pageHashParams.userid.get())
 })
 
 pageHashParams.userid.set('newuser')
@@ -115,6 +115,7 @@ function Component() {
 `useMeasure` returns an observable whose value is the size (`{ width: number, height: number }`) of the target element. It starts with undefined values that get set after initial mount, and whenever the element resizes.
 
 ```jsx
+import { Memo } from "@legendapp/state/react";
 import { useMeasure } from "@legendapp/state/react-hooks/useMeasure";
 import { useRef } from "react";
 
@@ -124,7 +125,7 @@ function Component() {
 
   return (
     <div ref={ref}>
-      Width: {width}, Height: {height}
+      Width: <Memo>{width}</Memo>, Height: <Memo>{height}</Memo>
     </div>
   );
 }

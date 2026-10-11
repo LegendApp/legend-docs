@@ -75,12 +75,12 @@ An `optimized` prop adds additional optimizations, but in an unusual way by re-u
 
 ```jsx
 import { observable } from "@legendapp/state"
-import { For } from "@legendapp/state/react"
+import { For, Memo } from "@legendapp/state/react"
 
 const state$ = observable({ arr: [{ id: 1, text: 'hi' }]})
 
-function Row({ item }) {
-    return <div>{item.text}</div>
+function Row({ item$ }) {
+    return <div><Memo>{item$.text}</Memo></div>
 }
 function List() {
     // 1. Use the For component with an item prop
@@ -88,10 +88,10 @@ function List() {
 
     // 2. Use the For component with a render function as the child
     return (
-        <For each={list}>
-            {item => (
+        <For each={state$.arr}>
+            {item$ => (
                 <div>
-                    {item.text}
+                    {item$.text.get()}
                 </div>
             )}
         </For>
@@ -111,16 +111,17 @@ Make sure that you don't access any observable properties while mapping, like ac
 
 ```jsx
 import { observable } from "@legendapp/state";
-import { For } from "@legendapp/state/react";
+import { Memo, useValue } from "@legendapp/state/react";
 
 const state$ = observable({ arr: [{ id: 1, text: "hi" }] });
 
 function Row({ item }) {
-  return <div>{item.text}</div>;
+  return <div><Memo>{item.text}</Memo></div>;
 }
 function List() {
-  // Be sure to use peek() to make sure you don't track any observable fields here
-  return state$.arr.map((item) => <Row key={item.peek().id} item={item} />);
+  // Track array structure without tracking each item's fields
+  const items = useValue(state$.arr, { shallow: true });
+  return items.map((item, index) => <Row key={item.id} item={state$.arr[index]} />);
 }
 ```
 
