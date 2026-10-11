@@ -308,7 +308,8 @@
         "bytes": 397
       },
       "preview": {
-        "poster": "/slides/effects/previews/droplets/cc9e020742d2babc11f29dafa115182ccc9246a98acbc6774102ed0a7a36eaa6.png",
+        "poster": "/slides/effects/previews/droplets/a916ce7e0199f9a15d4ea99d6d99d9b78af4e7d2c10ceab938ed4bd3db7a3a2c.png",
+        "video": "/slides/effects/previews/droplets/22d8ab5ffd0a00b2111be8bc609d24f9e5dbb68a5a2c59876cddbbe33a3c5fe7.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "2c4bea7941e78879ee841c375786ee007f353832bf5a2c68bd73e1f35db11732",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
