@@ -12,7 +12,7 @@ export type Project = {
     homepage?: {
         download?: string;
         image?: string;
-        features: { title: string; text: string }[];
+        details: { label: string; text: string }[];
     };
 };
 
@@ -71,15 +71,17 @@ export const projects: Project[] = [
         status: 'Preview',
         tagline: 'See what changed. Find what matters.',
         description:
-            'A native macOS home for reviewing repositories, files, patches, and pull requests. Clear diffs, quick navigation, and tools for resolving conflicts.',
+            'A native macOS diff viewer for Git working trees, files, patches, and GitHub pull requests, with merge conflict resolution built in.',
         highlights: ['Git + GitHub comparisons', 'Unified + block views', 'Merge conflict resolution'],
         homepage: {
             download: 'https://github.com/LegendApp/legend-apps/releases/tag/diff-v0.0.4',
             image: '/assets/showcase/diff.png',
-            features: [
-                { title: 'Every change, in one place.', text: 'Review a Git working tree, compare branches and refs, or open two files side by side. Load patches, GitHub pull requests, and commits directly into the viewer.' },
-                { title: 'Find your way through the diff.', text: 'Browse changed files in the sidebar, switch between unified and block views, and search across the whole diff. Syntax highlighting and full-file context help you see the bigger picture.' },
-                { title: 'Resolve conflicts with confidence.', text: 'Choose ours, theirs, or both for each merge conflict. Keep drafts as you work, then save the resolved files. Open comparisons from your terminal with the ldiff command.' },
+            details: [
+                { label: 'Opens', text: 'A Git working tree against any branch, tag, or commit. Two files (⌘⌥O). .diff and .patch files. GitHub pull request and commit URLs (⌘L), or a supported path or URL from the clipboard (⌘⇧O).' },
+                { label: 'Reading', text: 'Changed files in a sidebar. Unified (⌘1) or side-by-side (⌘2) views. Jump between hunks with ⌘[ and ⌘], or search the whole diff with ⌘F.' },
+                { label: 'Conflicts', text: 'Pick ours, theirs, or both for each conflict. Drafts are kept until you save the resolved file.' },
+                { label: 'Terminal', text: 'Install the ldiff command from Settings to open git diff arguments in the app.' },
+                { label: 'Requires', text: 'macOS 14 or later. Local repository comparisons need Git.' },
             ],
         },
     },
@@ -94,10 +96,12 @@ export const projects: Project[] = [
         highlights: ['Plain Markdown files', 'Block editing', 'Customizable typography'],
         homepage: {
             image: '/assets/showcase/markdown.png',
-            features: [
-                { title: 'Your writing. Your files.', text: 'Create a document or open your existing Markdown files. Save, Save As, and optional autosave keep your words in ordinary files, ready to use wherever you need them.' },
-                { title: 'Write in the document.', text: 'Read rendered blocks and edit them directly. Format headings, links, lists, quotes, and code with native menus and a toolbar you can arrange around your workflow.' },
-                { title: 'Make space for your words.', text: 'Choose your fonts, line height, content width, and document density. Customize themes, toolbar contents, and editor hotkeys to make the writing space your own.' },
+            details: [
+                { label: 'Files', text: 'Opens .md, .markdown, .mdown, .mkd, and .mdx. Save, Save As, and optional autosave write straight back to the file.' },
+                { label: 'Editing', text: 'Blocks render until you click into one, then edit in place as Markdown. Undo, redo, and keyboard navigation between blocks.' },
+                { label: 'Formatting', text: 'Headings, bold, italic, strikethrough, links (⌘K), lists, quotes, and code from the Format menu or a toolbar above the selection, at the top, at the bottom, or hidden.' },
+                { label: 'Typography', text: 'Font, size, line height, content width, and density. Load your own theme files and rebind editor hotkeys.' },
+                { label: 'Safety', text: 'Asks before discarding unsaved changes, and reloads a clean file when it changes on disk.' },
             ],
         },
     },
@@ -108,13 +112,15 @@ export const projects: Project[] = [
         status: 'Preview',
         tagline: 'Your library. Your listening room.',
         description:
-            'A local music player built around the albums, playlists, and audio files you own. A focused listening experience, starting on macOS.',
+            'A local music player for macOS, built around the folders, audio files, and .m3u playlists you already have.',
         highlights: ['Your own audio files', 'Playlists + queue', 'Native media controls'],
         homepage: {
-            features: [
-                { title: 'A home for the music you own.', text: 'Add your library folders and browse by album, artist, or track. Local artwork and metadata bring your collection together, with support for MP3, WAV, M4A, AAC, FLAC, AIFF, and CAF files.' },
-                { title: 'Set the mood. Keep it playing.', text: 'Build a queue, shuffle, repeat, and pick up your playback state across launches. Create and edit local M3U playlists, or import and export the ones you already have.' },
-                { title: 'Keep your music close.', text: 'Control playback with native media keys and configurable hotkeys. Choose a current-song overlay, adjust the visible playback controls, and personalize themes and translucent backgrounds.' },
+            details: [
+                { label: 'Library', text: 'Scans one or more folders and caches track metadata and artwork. Browse and search by album, artist, or playlist.' },
+                { label: 'Formats', text: 'MP3, WAV, M4A, AAC, FLAC, AIFF, and CAF.' },
+                { label: 'Playback', text: 'A queue with shuffle, repeat, volume, and seeking. The queue and playback state are restored on the next launch.' },
+                { label: 'Playlists', text: 'Create, rename, edit, import, and export plain .m3u files.' },
+                { label: 'Controls', text: 'Media keys, global hotkeys, and an optional current-song overlay. Themes, translucent backgrounds, and a choice of which playback controls to show.' },
             ],
         },
     },
@@ -129,10 +135,11 @@ export const projects: Project[] = [
         highlights: ['Local folders + Apple Photos albums', 'Fullscreen viewing + filmstrip', 'Ratings + flags'],
         homepage: {
             download: 'https://github.com/LegendApp/legend-photos/releases',
-            features: [
-                { title: 'Bring your collection into view.', text: 'Browse photos from local folders and your Apple Photos albums in a photo grid. Keep the files and library you already use at the center of your workflow.' },
-                { title: 'Give each photo the whole screen.', text: 'Open a photo fullscreen for a closer look. Use the filmstrip to move through your collection without losing your place.' },
-                { title: 'Keep track of your favorites.', text: 'Use ratings and flags to mark your selections as you browse. Your choices stay in local metadata, ready for your next pass through the collection.' },
+            details: [
+                { label: 'Sources', text: 'Local folders and your Apple Photos albums.' },
+                { label: 'Browsing', text: 'A photo grid you navigate with the arrow keys; - and = change the column count. Return opens a photo fullscreen, and F shows the filmstrip.' },
+                { label: 'Culling', text: 'Rate with 1–5, flag with Space or P, reject with X. Your choices are kept in local metadata.' },
+                { label: 'Hotkeys', text: 'Every shortcut can be rebound in Settings. Press / to see them all.' },
             ],
         },
     },
@@ -153,15 +160,16 @@ export const projects: Project[] = [
         status: 'Demo',
         tagline: 'A closer look at your code.',
         description:
-            'A full native code editor for any text file on macOS. Edit source, configuration, and plain text with syntax highlighting, familiar editing commands, and native file handling.',
+            'A full native code editor for any text file on macOS, with syntax highlighting, line editing commands, and Save and Save As.',
         highlights: ['Any text file', 'Syntax highlighting', 'Save + editing commands'],
         homepage: {
             download: 'https://github.com/LegendApp/legend-apps/releases/tag/code-v0.0.1',
             image: '/assets/showcase/code.png',
-            features: [
-                { title: 'Any text file. Ready to edit.', text: 'Open source code, configuration, dotfiles, and extensionless text files from Finder, the Open dialog, or recent documents. Edit and save your work with native Save and Save As commands.' },
-                { title: 'Keep your hands on the keyboard.', text: 'Find text, jump to a line, indent, toggle comments, and duplicate or move lines. Automatic bracket and quote pairs help you keep writing.' },
-                { title: 'See your code clearly.', text: 'Incremental syntax highlighting and virtualized lines keep the editor focused on what is in view. Choose your font, font size, and syntax theme; unrecognized formats open as plain text.' },
+            details: [
+                { label: 'Files', text: 'Any UTF-8 text file: source, config, dotfiles, files with no extension. Open from Finder, ⌘O, or recent documents. Save with ⌘S or ⌘⇧S.' },
+                { label: 'Editing', text: 'Go to line (⌘L), indent and outdent (⌘] ⌘[), toggle line comments (⌘/), duplicate lines (⌘⇧D), move lines (⌥↑ ⌥↓). Brackets and quotes pair automatically.' },
+                { label: 'Highlighting', text: 'Only visible lines are rendered while the rest of the file is highlighted in the background. Unrecognized formats open as plain text.' },
+                { label: 'Settings', text: 'Font, font size, and syntax theme, or turn highlighting off.' },
             ],
         },
     },
@@ -177,27 +185,11 @@ export const projects: Project[] = [
         homepage: {
             download: 'https://github.com/LegendApp/legend-apps/releases/tag/chat-history-v0.0.2',
             image: '/assets/showcase/chat-history.png',
-            features: [
-                { title: 'Your conversations, together.', text: 'Browse local Codex and Claude transcripts in one Mac app. A sidebar groups conversations by provider and puts recent chats within reach.' },
-                { title: 'Read the whole thread.', text: 'Move through long conversations in a virtualized transcript view. Messages, code, and images stay together so you can revisit the context behind your work.' },
-                { title: 'Return to where you left off.', text: 'The app remembers your selected conversation and window position across launches. Its demo composer simulates responses locally, without sending a message to a model.' },
-            ],
-        },
-    },
-    {
-        slug: 'hello-world',
-        name: 'Legend Hello World',
-        category: 'demo',
-        status: 'Demo',
-        tagline: 'Start small.',
-        description:
-            'The minimal macOS app in the Legend Apps collection. A small baseline for exploring the shared native shell.',
-        highlights: ['Minimal example', 'Shared native shell', 'macOS'],
-        homepage: {
-            features: [
-                { title: 'One small hello.', text: 'A white window. Centered text. Hello, world! The smallest app in the collection gives you a clear starting point.' },
-                { title: 'Start with the shared shell.', text: 'Hello World uses the same native macOS host as the other Legend Apps, with manifest-based app selection and the shared styling and runtime infrastructure.' },
-                { title: 'A baseline you can build on.', text: 'The release manifest selects no app-specific native modules. Use this minimal example to explore the shell before adding the features your own app needs.' },
+            details: [
+                { label: 'Sources', text: 'Finds recent Codex and Claude sessions on your Mac and groups them by provider in the sidebar.' },
+                { label: 'Transcript', text: 'A virtualized view for long threads, with Markdown, highlighted code blocks, and local images sized before they load.' },
+                { label: 'Relaunch', text: 'Reopens to the last chat, with the window frame and sidebar restored.' },
+                { label: 'Composer', text: 'A demo only. It streams a simulated reply in memory, sends nothing to a model, and saves nothing.' },
             ],
         },
     },

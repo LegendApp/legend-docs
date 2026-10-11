@@ -4,7 +4,7 @@ import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layo
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { source } from '@/lib/source';
 import { appHomepages, getProject } from '@/lib/projects';
-import { getAppHomepageRedirect } from '@/lib/getDocsPath';
+import { getAppHomepageRedirect, removedAppSlugs } from '@/lib/getDocsPath';
 import { AppLanding } from '@/components/site/app-landing';
 import { ProjectIcon } from '@/components/site/project-icon';
 import { FrameworkLanding } from '@/components/site/framework-landing';
@@ -23,13 +23,14 @@ export function generateStaticParams(): Params[] {
             return project && project.category !== 'library' && !project.homepage;
         })
         .map((page) => ({ project: page.slugs[0], slug: page.slugs.slice(1) }));
-    return [...docs, ...appHomepages.flatMap((project) =>
-        [[], ['availability'], ['reference']].map((slug) => ({ project: project.slug, slug }))
+    return [...docs, ...[...appHomepages.map((project) => project.slug), ...removedAppSlugs].flatMap((project) =>
+        [[], ['availability'], ['reference']].map((slug) => ({ project, slug }))
     )];
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
     const { project, slug = [] } = await params;
+    if (removedAppSlugs.includes(project)) return {};
     const app = getProject(project);
     if (app?.homepage) {
         return {
@@ -45,16 +46,24 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function ProjectPage({ params }: { params: Promise<Params> }) {
     const { project: projectSlug, slug = [] } = await params;
-    const project = getProject(projectSlug);
-    if (!project) notFound();
     const redirect = getAppHomepageRedirect(`/${projectSlug}/${slug.join('/')}`);
     if (redirect) permanentRedirect(redirect);
+    const project = getProject(projectSlug);
+    if (!project) notFound();
     if (project.homepage && slug.length === 0) return <AppLanding project={project} />;
     const page = source.getPage([projectSlug, ...slug]);
     if (!page) notFound();
     const details = { title: page.data.title, description: page.data.description, url: page.url };
     if (projectSlug === 'spark' && slug.length === 0) return <><DocumentationStructuredData page={details} /><FrameworkLanding /></>;
-    if (projectSlug === 'slides' && slug.length === 0) return <><DocumentationStructuredData page={details} /><SlidesLanding /></>;
+    if (projectSlug === 'slides' && slug.length === 0) return <>
+        <DocumentationStructuredData page={details} />
+        <div className="container pt-6">
+            <span className="rounded-md border border-amber-300/40 bg-amber-300/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-200">
+                Early MVP
+            </span>
+        </div>
+        <SlidesLanding />
+    </>;
     const ancestors: DocumentDetails[] = [];
     for (let count = 1; count < slug.length; count++) {
         const parent = source.getPage([projectSlug, ...slug.slice(0, count)]);

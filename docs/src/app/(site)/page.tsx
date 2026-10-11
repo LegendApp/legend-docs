@@ -160,11 +160,9 @@ export default function HomePage() {
                         <h2 id="demos-title">Demo Apps</h2>
                     </div>
                     <div className="showcase-grid">
-                        {demos
-                            .filter((project) => project.slug === 'code' || project.slug === 'chat-history')
-                            .map((project) => (
-                                <ProductCard key={project.slug} project={project} />
-                            ))}
+                        {demos.map((project) => (
+                            <ProductCard key={project.slug} project={project} />
+                        ))}
                     </div>
                 </section>
             </main>

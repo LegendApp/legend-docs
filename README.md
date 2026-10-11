@@ -23,7 +23,7 @@ The build validates content links, exports the site to `docs/dist/`, then genera
 - `/`: a single overview of Legend, apps, open-source libraries, and the framework; navigation links to page sections
 - `/list`, `/state`, `/motion`: existing library entry points and versioned documentation
 - `/spark`: framework landing page and current-source SDK guides
-- `/diff`, `/markdown`, `/music`, `/slides`, `/code`, `/chat-history`, `/hello-world`: app and demo pages
+- `/diff`, `/markdown`, `/music`, `/slides`, `/code`, `/chat-history`: app and demo pages
 - `/blog`: existing articles
 
 Library documentation and interactive examples stay in their existing locations. Spark guides cover source APIs and distinguish them from the published experimental preview. Kitchen Sink is an SDK example, not a separate product landing page.

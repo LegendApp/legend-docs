@@ -15,6 +15,15 @@ test('old app subpages permanently redirect to marketing homepages', async () =>
     }
 });
 
+test('removed Hello World pages permanently redirect home', async () => {
+    const env = { ASSETS: { async fetch() { throw new Error('Redirects must not fetch assets'); } } };
+    for (const path of ['hello-world', 'hello-world/', 'hello-world/availability/', 'hello-world/reference']) {
+        const response = await worker.fetch(new Request(`https://legend.so/${path}?from=old`), env);
+        expect(response.status).toBe(308);
+        expect(response.headers.get('Location')).toBe('https://legend.so/?from=old');
+    }
+});
+
 test('negotiation requires an explicit, acceptable Markdown preference', () => {
     expect(prefersMarkdown('text/markdown')).toBe(true);
     expect(prefersMarkdown('text/markdown;q=0, */*')).toBe(false);

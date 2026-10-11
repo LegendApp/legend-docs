@@ -26,8 +26,12 @@ export function getDocumentationRedirect(pathname: string): string | undefined {
     return target ? getFirstDocsPath(target) : undefined;
 }
 
+// Removed app pages, including their old subpages, redirect to the site homepage.
+export const removedAppSlugs = ['hello-world'];
+
 export function getAppHomepageRedirect(pathname: string): string | undefined {
     const [project, page, ...rest] = pathname.replace(/\/$/, '').split('/').slice(1);
+    if (removedAppSlugs.includes(project)) return '/';
     if (rest.length === 0 && (page === 'availability' || page === 'reference') && appHomepages.some((app) => app.slug === project)) {
         return `/${project}/`;
     }

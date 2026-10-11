@@ -8,6 +8,7 @@ import { Navbar, SearchButton } from '@/components/site/navbar';
 import { ProjectIcon } from '@/components/site/project-icon';
 import { Footer } from '@/components/site/footer';
 import { navigation } from '@/lib/navigation';
+import { removedAppSlugs } from '@/lib/getDocsPath';
 
 function SidebarFooter() {
     return (
@@ -26,6 +27,7 @@ export default async function ProjectLayout({
     params: Promise<{ project: string; slug?: string[] }>;
 }) {
     const { project: slug, slug: pageSlug = [] } = await params;
+    if (removedAppSlugs.includes(slug)) return children;
     const project = getProject(slug);
     if (!project) notFound();
 

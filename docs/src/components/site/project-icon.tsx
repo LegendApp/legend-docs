@@ -7,7 +7,6 @@ import {
     Images,
     List,
     MessageSquare,
-    Monitor,
     Presentation,
     Radio,
     Sparkles,
@@ -26,7 +25,6 @@ const icons: Record<string, LucideIcon> = {
     slides: Presentation,
     code: Code2,
     'chat-history': MessageSquare,
-    'hello-world': Monitor,
 };
 
 export function ProjectIcon({ slug, size = 22 }: { slug: string; size?: number }) {

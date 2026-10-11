@@ -4,7 +4,7 @@ import { appHomepages } from '../src/lib/projects';
 import { getAppHomepageRedirect } from '../src/lib/getDocsPath';
 
 test('app homepages replace documentation and Markdown exports', () => {
-    expect(appHomepages.map((app) => app.slug).sort()).toEqual(['chat-history', 'code', 'diff', 'hello-world', 'markdown', 'music', 'photos']);
+    expect(appHomepages.map((app) => app.slug).sort()).toEqual(['chat-history', 'code', 'diff', 'markdown', 'music', 'photos']);
     const routes = documentationRoutes();
     const generated = generatedDocumentationPaths();
     for (const app of appHomepages) {
@@ -18,4 +18,7 @@ test('app homepages replace documentation and Markdown exports', () => {
     }
     expect(getAppHomepageRedirect('/spark/reference/')).toBeUndefined();
     expect(getAppHomepageRedirect('/unknown/availability/')).toBeUndefined();
+    for (const path of ['/hello-world', '/hello-world/', '/hello-world/availability/', '/hello-world/reference/unknown']) {
+        expect(getAppHomepageRedirect(path)).toBe('/');
+    }
 });
