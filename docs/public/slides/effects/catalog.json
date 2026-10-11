@@ -481,13 +481,20 @@
         }
       ],
       "snippet": "---\ntitle: Wireframe\n---\n\nimport { View, Text } from \"react-native\";\nimport { Wireframe } from \"slides:backgrounds/Wireframe\";\nimport { Background } from \"@legend-apps/presentation\";\n\n\n# Wireframe\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Wireframe /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
+      "recording": {
+        "motion": [
+          "1:6"
+        ],
+        "noiseDb": -80
+      },
       "example": {
         "url": "/slides/effects/examples/wireframe/96be1c7b976330533f084c294f6c7e4b313b96c9befb38b32fc723275bf10c7b.mdx",
         "sha256": "96be1c7b976330533f084c294f6c7e4b313b96c9befb38b32fc723275bf10c7b",
         "bytes": 402
       },
       "preview": {
-        "poster": "/slides/effects/previews/wireframe/7bf1d01e9167f1e5ab8ddc08b77ce05285d9f46044f0522eed23f621f282f3b7.png",
+        "poster": "/slides/effects/previews/wireframe/0602ad3d0347d3f4a3c3a6bf1f1880a16dc115b5e4aaf71bc2cbc3e5c8c0e83d.png",
+        "video": "/slides/effects/previews/wireframe/5ff8723ef07eaff1f988f97eb47b6e55b4b979a450c656bd49283cf22bae6167.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "96be1c7b976330533f084c294f6c7e4b313b96c9befb38b32fc723275bf10c7b",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
@@ -510,13 +517,21 @@
         }
       ],
       "snippet": "---\ntitle: Glass atmosphere\n---\n\nimport { View, Text } from \"react-native\";\nimport { GlassAtmosphere } from \"slides:backgrounds/GlassAtmosphere\";\nimport { Background } from \"@legend-apps/presentation\";\n\n\n# Glass atmosphere\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><GlassAtmosphere /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
+      "recording": {
+        "motion": [
+          "2:7"
+        ],
+        "noiseDb": -80,
+        "freezeMs": 300
+      },
       "example": {
         "url": "/slides/effects/examples/glassatmosphere/df828c951a1decd0f8a873c9d7f63728d8695dbcfa89a6b3a3786f1a0c2f7af1.mdx",
         "sha256": "df828c951a1decd0f8a873c9d7f63728d8695dbcfa89a6b3a3786f1a0c2f7af1",
         "bytes": 434
       },
       "preview": {
-        "poster": "/slides/effects/previews/glassatmosphere/08859dc8f3bae69b59c09635d657847dfc21faf811e132312fe54aed894adaea.png",
+        "poster": "/slides/effects/previews/glassatmosphere/b028983a7736fa324d5de94642155444e32b6e8ddbea307490d3d1d0d5b1cbca.png",
+        "video": "/slides/effects/previews/glassatmosphere/4c243b94202b90562c64a640c68487229234868512b1eaae9cf84923f5b28c59.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "df828c951a1decd0f8a873c9d7f63728d8695dbcfa89a6b3a3786f1a0c2f7af1",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
@@ -539,13 +554,20 @@
         }
       ],
       "snippet": "---\ntitle: Interactive glass\n---\n\nimport { View, Text } from \"react-native\";\nimport { TypeGPUGlassBackground } from \"slides:backgrounds/TypeGPUGlassBackground\";\n\nexport function GlassExample({renderer}) { return <TypeGPUGlassBackground>{renderer}</TypeGPUGlassBackground>; }\n\n# Interactive glass\n\n<View style={{ width: 1696, height: 650 }}>\n<GlassExample renderer={<TypeGPUShader />} />\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
+      "recording": {
+        "motion": [
+          "2:7"
+        ],
+        "noiseDb": -70
+      },
       "example": {
         "url": "/slides/effects/examples/interactive-glass/0015893eb6948aaf2a0b3163cffebe109768d21107168d58d43eb5c9a205b7b5.mdx",
         "sha256": "0015893eb6948aaf2a0b3163cffebe109768d21107168d58d43eb5c9a205b7b5",
         "bytes": 508
       },
       "preview": {
-        "poster": "/slides/effects/previews/interactive-glass/13daa8a36deae8aa583790928507c04ed7600055535e350e3cb5fba3a2261981.png",
+        "poster": "/slides/effects/previews/interactive-glass/3bf1733b024d133161f149fe2ee50a2a90a466b81ca932dec9568c6a33fa7e9f.png",
+        "video": "/slides/effects/previews/interactive-glass/dfa662902a462619d6fc6953cf5234917311c643801b5999518dffe2a1acda20.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "0015893eb6948aaf2a0b3163cffebe109768d21107168d58d43eb5c9a205b7b5",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
@@ -572,10 +594,24 @@
         }
       ],
       "snippet": "---\ntitle: Glass panels\n---\n\nimport { View, Text } from \"react-native\";\nimport { GlassPanels } from \"slides:materials/GlassPanels\";\n\n\n# Glass panels\n\n<View style={{ width: 1696, height: 650 }}>\n<GlassPanels width={1696} height={650} panels={[{x: 240,y: 180,width: 500,height: 280,radius: 40},{x: 900,y: 220,width: 480,height: 240,radius: 40}]} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "2:7"
+        ],
+        "noiseDb": -80,
+        "freezeMs": 300
+      },
       "example": {
         "url": "/slides/effects/examples/glass-panels/99404fea8950968156958b72541f2ead3d5f0dd57eeca576c6c0e9d7090cd231.mdx",
         "sha256": "99404fea8950968156958b72541f2ead3d5f0dd57eeca576c6c0e9d7090cd231",
         "bytes": 355
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/glass-panels/1696c41ea8162afb1ab9a8f762c4120ab1dcdcf42ff71bff13a32d83e10505c5.png",
+        "video": "/slides/effects/previews/glass-panels/4e869bacfd3777b5948de07eb46399d28e55126e659c52c9d84c5bda34c67853.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "99404fea8950968156958b72541f2ead3d5f0dd57eeca576c6c0e9d7090cd231",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -607,6 +643,13 @@
         "url": "/slides/effects/examples/glass-strike/10451e120460935a335878e7ece604339f6d079082aa96df711787d269ed74d5.mdx",
         "sha256": "10451e120460935a335878e7ece604339f6d079082aa96df711787d269ed74d5",
         "bytes": 349
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/glass-strike/84423f577ccb377a884608385b70386ea0f6bf10097949548a3e5035b3628604.png",
+        "video": "/slides/effects/previews/glass-strike/c264baedd4e6055dc64c0bf054ebfd7d0694168232b62c3de0d23f0bed79d0ec.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "10451e120460935a335878e7ece604339f6d079082aa96df711787d269ed74d5",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -630,10 +673,22 @@
         }
       ],
       "snippet": "---\ntitle: Upward flames\n---\n\nimport { View, Text } from \"react-native\";\nimport { Flames } from \"slides:materials/Fire\";\n\n\n# Upward flames\n\n<View style={{ width: 1696, height: 650 }}>\n<Flames width={600} barHeight={30} x={548} y={410} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "3.5:7"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/upward-flames/9915be26e18a9bcb75b9b9996eb932d7204c2c24d0d9a71f6d8c5440b3420ebe.mdx",
         "sha256": "9915be26e18a9bcb75b9b9996eb932d7204c2c24d0d9a71f6d8c5440b3420ebe",
         "bytes": 246
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/upward-flames/2b5ee8190239367cbc5c789e5269fedd934aa9d93641e2f66481d927cd69360e.png",
+        "video": "/slides/effects/previews/upward-flames/b7cd6334f8c3d9bcad695f9ad8297b1ba6900da575a3499ee87883809ecdfcca.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "9915be26e18a9bcb75b9b9996eb932d7204c2c24d0d9a71f6d8c5440b3420ebe",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -657,10 +712,22 @@
         }
       ],
       "snippet": "---\ntitle: Falling sprites\n---\n\nimport { View, Text } from \"react-native\";\nimport { FallingSprites } from \"slides:materials/Fire\";\n\n\n# Falling sprites\n\n<View style={{ width: 1696, height: 650 }}>\n<FallingSprites width={600} barHeight={30} x={548} y={300} sprite={\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAACgCAIAAABseyVrAAADvElEQVR4nO3ZsY3cMBCG0evAoXtwBa7LHRhw6HouO8BFOVgYF7iA1UqUOENSmAd88ehn8CK9ffn6TSrb2/QF0sQAUOkAUOkAUOkAUOkAUOkAUOkAUOkAUOkAUOkAUOkAUOm6AHz/eEypZ/PP348p9Wz+8+tzSj2b//54nxIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBxj3+f+y0I4HDzggAONy8I4HDzvQEcPu8sgwEATm1eBMCpzYsAOLX5lgBOvbDRQDaAC5unA7iweTqAC5vvBODC8xoZ5AHo3DwFQOfmKQA6N98AQOcL9w0kAQjZPBhAyObBAEI2AwAAAKsCCHnhjoEMAIGbhwEI3DwMQODmRQEEvvCVgXAA4ZsHAAjfPABA+GYAAABgJQDhL9w0EAsgaXMqgKTNqQCSNgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAJoAMA8+fiAWQYeD5E7EAMgw8fyIWQIaB508AAAAAUwHEGti8Hw4g1sDm/XAAsQY274cDiDWweX8JAFEGXh3PABBl4NXxDABRBl4dzwAQZeDVcQAAAGABAP0Gdi4nAeg3sHM5CUC/gZ3LSQD6DexcXgjAZQaHN/MAXGZweDMPwGUGhzfzAFxmcHhzOQBnDbQczAZw1kDLwWwAZw20HMwGcNZAy8EVATQyaD81AEAjg/ZTAwA0Mmg/NQBAI4P2U+sCCGwYgMCGAQhsGIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoDkO4eACodACodACodACodACodACodACodACqdP8H+BPsTDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUBiDdPQBUOgBUOgBUOgBUOgBUOgBUOv8B/AfwHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADghgCkuweASgeASgeASgeASgeASgeASgeASgeASgeASgeASgeASvcfT6aDDVH/LJsAAAAASUVORK5CYII=\"} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "2:7"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/falling-sprites/8db532ecef29d66fa77178555cb1f74445dcb109b0b28da16e2e03b5330b2402.mdx",
         "sha256": "8db532ecef29d66fa77178555cb1f74445dcb109b0b28da16e2e03b5330b2402",
         "bytes": 1652
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/falling-sprites/6be6b67400ba206172b3107f9e32199f3dfcbc8ddcab8768627296a7749850f3.png",
+        "video": "/slides/effects/previews/falling-sprites/81c064bdf50dd97c5dcc59af6dbfc5aedd78e57b60d8b3f1789e2ef4c7249e95.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "8db532ecef29d66fa77178555cb1f74445dcb109b0b28da16e2e03b5330b2402",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -692,6 +759,13 @@
         "url": "/slides/effects/examples/image-shatter/15cff3df3e7c428c6d8f907f40b35429f2c9acb32341ca3185819d63e7790c5b.mdx",
         "sha256": "15cff3df3e7c428c6d8f907f40b35429f2c9acb32341ca3185819d63e7790c5b",
         "bytes": 1768
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/image-shatter/45a64a83eb792c2038e55cd1811c22262035535b8f3e7e7c3f8fa540881118f6.png",
+        "video": "/slides/effects/previews/image-shatter/2cc5bf09eb18cfa39d10236b80e45a7cc17f6548224971f824c71e6efd4c55e5.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "15cff3df3e7c428c6d8f907f40b35429f2c9acb32341ca3185819d63e7790c5b",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -715,10 +789,24 @@
         }
       ],
       "snippet": "---\ntitle: Prismatic tear\n---\n\nimport { View, Text } from \"react-native\";\nimport { prismaticTear } from \"slides:materials/Distortion\";\n\n\n# Prismatic tear\n\n<View style={{ width: 1696, height: 650 }}>\n<Effect shader={prismaticTear} uniforms={{delaySeconds: 1,durationSeconds: 0.36,intervalSeconds: 4}} style={{width: 1696,height: 600}}>\n<View style={{width: 1696,height: 600,backgroundColor: \"#164e63\",alignItems: \"center\",justifyContent: \"center\"}}><Text style={{color: \"white\",fontSize: 100}}>A change in perspective</Text></View>\n</Effect>\n</View>\n",
+      "recording": {
+        "motion": [
+          "1.1:1.4",
+          "5.1:5.4"
+        ],
+        "noiseDb": -70
+      },
       "example": {
         "url": "/slides/effects/examples/prismatic-tear/7067e335b43c7919b03f1446ee3193de10e7ccf7029a3add71834af308df18b9.mdx",
         "sha256": "7067e335b43c7919b03f1446ee3193de10e7ccf7029a3add71834af308df18b9",
         "bytes": 549
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/prismatic-tear/b0c9c9c19b623b4541f4f3d6e1cb3a8b34b91b597659c5335168fd67127cce72.png",
+        "video": "/slides/effects/previews/prismatic-tear/2abe1f2f204d657c0a7065cf12b4cfd47b7a57d6aa0afdf88e0a385d280a92f9.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "7067e335b43c7919b03f1446ee3193de10e7ccf7029a3add71834af308df18b9",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -746,6 +834,13 @@
         "url": "/slides/effects/examples/soft-ripple/bb5408bc6cd1939b102ec7ca236d71ad3e86d718894694f3d01a794f92a87388.mdx",
         "sha256": "bb5408bc6cd1939b102ec7ca236d71ad3e86d718894694f3d01a794f92a87388",
         "bytes": 537
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/soft-ripple/5f4303afcba1a36c4070b3077cb23389ae2dbaa97a019a4e8e51c1cc3b4c8d93.png",
+        "video": "/slides/effects/previews/soft-ripple/3719c0878d25cd0f9cf867810f1c05c53ef6d5436e7aba568a78c273efbf97e6.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "bb5408bc6cd1939b102ec7ca236d71ad3e86d718894694f3d01a794f92a87388",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -777,6 +872,13 @@
         "url": "/slides/effects/examples/refraction/48c1a29d8826e9d5163a25adec965466e2234e153ea1a4b2e803ee2705a13b5e.mdx",
         "sha256": "48c1a29d8826e9d5163a25adec965466e2234e153ea1a4b2e803ee2705a13b5e",
         "bytes": 585
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/refraction/401b4dab159ab5fdaeb15890fd7544a99ef2602237889fe03669a7a782f91782.png",
+        "video": "/slides/effects/previews/refraction/11450cb9bc510f92656bc78cffb13b1f9a2de923729256815da14b6c39f06346.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "48c1a29d8826e9d5163a25adec965466e2234e153ea1a4b2e803ee2705a13b5e",
+        "packSha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25"
       }
     },
     {
@@ -804,6 +906,13 @@
         "url": "/slides/effects/examples/glow-field/5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c.mdx",
         "sha256": "5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c",
         "bytes": 372
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/glow-field/5edf2923e0951e0be081bdf3fdcf567ea9334b0f8f07b83877a8a9466cafe317.png",
+        "video": "/slides/effects/previews/glow-field/f1bc7641bf141f7c176d4e23622fd9d750159d4bff5d3ea7253f7183c690257f.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c",
+        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
       }
     },
     {
@@ -831,6 +940,13 @@
         "url": "/slides/effects/examples/window-storm/c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b.mdx",
         "sha256": "c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b",
         "bytes": 381
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/window-storm/a79813b3ea1ae6838e2032ee62ac2a1a6b5f35efe49ff5c5fb9822bc5be011cc.png",
+        "video": "/slides/effects/previews/window-storm/196825713101a7661fb2a241347c4fd277c04845bb03a7d1991618c28642ffc3.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b",
+        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
       }
     },
     {
@@ -858,6 +974,13 @@
         "url": "/slides/effects/examples/constellation/e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e.mdx",
         "sha256": "e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e",
         "bytes": 398
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/constellation/e544e13ada8f010af600c1371200ee701891c29c77d244c731d15461881d4693.png",
+        "video": "/slides/effects/previews/constellation/560195dea0774628d7ab2b713cc7acae8e7510a4048bcb16732c768e453dc2c0.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e",
+        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
       }
     },
     {
@@ -885,6 +1008,13 @@
         "url": "/slides/effects/examples/interface-reveal/65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4.mdx",
         "sha256": "65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4",
         "bytes": 414
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/interface-reveal/b1935cff751049e3cf7c195b1c2509973f4703d596b83080e9d75b9792d9c954.png",
+        "video": "/slides/effects/previews/interface-reveal/1fb361254b3c657bbf1e4edec4a2954237088b7c23f9b25b0b4775479ad3867c.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4",
+        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
       }
     },
     {
@@ -912,10 +1042,22 @@
         }
       ],
       "snippet": "---\ntitle: Trajectory emitter\n---\n\nimport { View, Text } from \"react-native\";\nimport { TrajectoryEmitter } from \"slides:particles/TrajectoryEmitter\";\n\nexport const paths = [0,1,2].map(index => [{time: 0,x: 200,y: 200,opacity: 0},{time: 300,x: 600,y: 200 + index * 100,opacity: 1},{time: 1800,x: 1400,y: 200 + index * 100,opacity: 0}]);\n\n# Trajectory emitter\n\n<View style={{ width: 1696, height: 650 }}>\n<TrajectoryEmitter trajectories={paths} interval={800} renderParticle={() => <View style={{width: 36,height: 36,borderRadius: 18,backgroundColor: \"#67e8f9\"}} />} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "1:7"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/trajectory-emitter/09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba.mdx",
         "sha256": "09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba",
         "bytes": 576
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/trajectory-emitter/263be6f977a57c1754b7ea90ff143442f190fa8721efcb33ee297fd45746a7a1.png",
+        "video": "/slides/effects/previews/trajectory-emitter/8ce753545cc35d179b39c94803a771c2189628727ba2041df2a16346ae20f414.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba",
+        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
       }
     },
     {
@@ -939,10 +1081,23 @@
         }
       ],
       "snippet": "---\ntitle: Branch fan\n---\n\nimport { View, Text } from \"react-native\";\nimport { BranchFan } from \"slides:diagrams/BranchFan\";\n\n\n# Branch fan\n\n<View style={{ width: 1696, height: 650 }}>\n<BranchFan width={1696} height={650} geometry={{root: {x: 848,y: 60},ends: [{x: 250,y: 550},{x: 848,y: 550},{x: 1446,y: 550}]}} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "1:7"
+        ],
+        "noiseDb": -70
+      },
       "example": {
         "url": "/slides/effects/examples/branch-fan/49e46cba4126d63f3fe012738f5a6760e1154a7101b9cc5d90094165fa687433.mdx",
         "sha256": "49e46cba4126d63f3fe012738f5a6760e1154a7101b9cc5d90094165fa687433",
         "bytes": 324
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/branch-fan/a4866c27a24307f7198ef7fde81883e83e7e2dc165eef62fe31735888f28ae7c.png",
+        "video": "/slides/effects/previews/branch-fan/20a0c986bbf0c0248bbc64fa02cc6049c87778595ec70fffe6a52db3db699304.mp4",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "49e46cba4126d63f3fe012738f5a6760e1154a7101b9cc5d90094165fa687433",
+        "packSha256": "f18dabbecdda8a95d41975001f71ccf722b99208608aff5b8a161d7a278f47ab"
       }
     },
     {
@@ -1109,6 +1264,12 @@
         "url": "/slides/effects/examples/spotlight/2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb.mdx",
         "sha256": "2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb",
         "bytes": 916
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/spotlight/e1846868efd7bba1231d32c31fd4fcb76623f5afd9edc54ec714768aac08a50d.png",
+        "renderer": "Legend Slides for macOS (development build)",
+        "exampleSha256": "2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb",
+        "packSha256": "20039f3fdca7714fe8eccc02466be0fe571a428f490543619cf0f4df5831702e"
       }
     },
     {
@@ -1303,7 +1464,8 @@
         "bytes": 606
       },
       "preview": {
-        "poster": "/slides/effects/previews/app-carousel/38e37f9377f59c9bcbac02a6276a2846652578cd57a69609626d2046537dfe27.png",
+        "poster": "/slides/effects/previews/app-carousel/67cf07368b72761a45d0cb7696e24dcddd5476c1f0dca53ebef0dbe9c62ffd32.png",
+        "video": "/slides/effects/previews/app-carousel/c6d3f139dc8de6f188688f3673c5c7ba08d8552a72b24e79cdce8c5f87ac86e0.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "55ca5c66ecec0992d25be7da8484d698b03e0a21d7d6d7226e8a3ebe497f6e96",
         "packSha256": "de60da36c4267fbea32295bea107f0b1753fb8f4d71d7939f16ae256c4e76e85"
