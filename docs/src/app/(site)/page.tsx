@@ -97,9 +97,7 @@ export default function HomePage() {
                             <span className="showcase-preview-label">Experimental — not for production</span>
                             <h3>Legend Spark</h3>
                             <p>
-                                Build native desktop apps with React.
-                                <br />
-                                Starting on macOS.
+                                React Native, meet the desktop.
                             </p>
                             <span className="showcase-text-link">
                                 Explore the framework <ArrowUpRight size={16} />
