@@ -3,11 +3,47 @@ title: Guides
 description: Legend Code usage guides.
 ---
 
-<Callout title="Documentation preview">
-  This page is a placeholder. Complete documentation will be added before
-  launch.
-</Callout>
+## Files and highlighting
 
-This section will cover text and source files, native parsing, and in-memory editing.
+Open any UTF-8 text file through Finder, File → Open, Open Recent, or launch arguments. Files can have any extension or no extension, including dotfiles such as `.gitignore`.
+
+The editor detects syntax languages from filenames, extensions, and supported shebangs. Use the syntax language selector to choose a language explicitly or switch to Plain text. Unknown formats remain editable as plain text. Syntax grammars download on demand when needed; editing does not require a grammar.
+
+Files load progressively, and the editor renders visible lines while syntax highlighting continues in the background.
+
+## Editing and saving
+
+Use Save to write changes to the current file or Save As to choose another path. The editor prompts you to save unsaved changes before opening another file, closing the window, or quitting. If the file changes externally, Save reports the conflict and preserves your edits; use Save As to save a separate copy.
+
+Find and Replace supports regular expressions, Match case, Whole word, previous and next matches, Replace, and Replace All.
+
+The Editor menu provides indentation, line duplication, line movement, and line comments for supported languages. Automatic Bracket and Quote Pairs can be toggled there.
+
+## Settings
+
+Open Legend Code → Settings → Appearance to choose:
+
+- Font: Menlo, SF Mono, Monaco, Courier New, or Courier.
+- Font size: 8–16 points; the default is 13.
+- Syntax theme.
+- Syntax highlighting on or off.
+
+Appearance settings persist between launches. Changing them preserves your edits and undo history.
+
+## Shortcuts
+
+| Action | Shortcut |
+| --- | --- |
+| Open file | `Cmd+O` |
+| Save | `Cmd+S` |
+| Save As | `Cmd+Shift+S` |
+| Undo / redo | `Cmd+Z` / `Cmd+Shift+Z` |
+| Select all | `Cmd+A` |
+| Cut / copy / paste | `Cmd+X` / `Cmd+C` / `Cmd+V` |
+| Go to line | `Cmd+L` |
+| Indent / outdent lines | `Cmd+]` / `Cmd+[` |
+| Toggle line comments | `Cmd+/` |
+| Duplicate lines | `Cmd+Shift+D` |
+| Move lines up / down | `Option+Up` / `Option+Down` |
 
 [Back to Legend Code](/code)
