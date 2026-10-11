@@ -17,19 +17,25 @@ const guides = [
     { number: '06', title: 'Take the stage', href: 'presenting', text: 'Rehearse, choose displays, and present.' },
 ];
 
+export function SlidesProductNav() {
+    return (
+        <nav className="slides-product-nav container" aria-label="Legend Slides navigation">
+            <Link href="/slides" className="slides-wordmark">
+                <Presentation size={20} /> Legend Slides <span>PREVIEW</span>
+            </Link>
+            <div>
+                <Link href="/slides/reference">Docs</Link>
+                <Link href="/slides/effects">Effects</Link>
+                <Link href="/slides/availability">Availability</Link>
+            </div>
+        </nav>
+    );
+}
+
 export function SlidesLanding() {
     return (
         <main data-doc-content id="main" className="slides-landing">
-            <nav className="slides-product-nav container" aria-label="Legend Slides navigation">
-                <Link href="/slides" className="slides-wordmark">
-                    <Presentation size={20} /> Legend Slides <span>PREVIEW</span>
-                </Link>
-                <div>
-                    <Link href="/slides/reference">Docs</Link>
-                    <Link href="/slides/effects">Effects</Link>
-                    <Link href="/slides/availability">Availability</Link>
-                </div>
-            </nav>
+            <SlidesProductNav />
             <section className="slides-hero container" aria-labelledby="slides-hero-title">
                 <div className="slides-hero-copy">
                     <div className="eyebrow">

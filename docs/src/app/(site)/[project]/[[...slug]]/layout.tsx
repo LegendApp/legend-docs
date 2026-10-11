@@ -31,7 +31,7 @@ export default async function ProjectLayout({
     const project = getProject(slug);
     if (!project) notFound();
 
-    if (project.homepage || ((slug === 'spark' || slug === 'slides') && pageSlug.length === 0)) {
+    if (project.homepage || ((slug === 'spark' || slug === 'slides') && pageSlug.length === 0) || (slug === 'slides' && pageSlug.join('/') === 'effects')) {
         return (
             <>
                 <Navbar />

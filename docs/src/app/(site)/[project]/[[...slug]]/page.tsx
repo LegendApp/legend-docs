@@ -9,6 +9,7 @@ import { AppLanding } from '@/components/site/app-landing';
 import { ProjectIcon } from '@/components/site/project-icon';
 import { FrameworkLanding } from '@/components/site/framework-landing';
 import { SlidesLanding } from '@/components/site/slides-landing';
+import { SlidesEffectsLanding } from '@/components/site/slides-effects-landing';
 import { DocumentationStructuredData, DocumentationContext, DocumentationLinks } from '@/components/documentation-details';
 import { documentationMetadata, type DocumentDetails } from '@/lib/documentation';
 
@@ -64,6 +65,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </div>
         <SlidesLanding />
     </>;
+    if (projectSlug === 'slides' && slug.join('/') === 'effects') return <><DocumentationStructuredData page={details} /><SlidesEffectsLanding /></>;
     const ancestors: DocumentDetails[] = [];
     for (let count = 1; count < slug.length; count++) {
         const parent = source.getPage([projectSlug, ...slug.slice(0, count)]);
