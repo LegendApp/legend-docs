@@ -19,7 +19,7 @@ describe('rendered documentation export', () => {
         const result = convertPage(`<title>Code</title><div data-doc-content><p>A code example</p>
             <div data-doc-language="tsx"><pre><code><span class="line">const x = {</span><span class="line">  text: '~~~',</span><span class="line">};</span></code></pre></div>
             <div data-doc-exclude><pre>duplicate</pre></div>
-            <pre data-language="md"><code>\`\`\`js\nconsole.log(1)\n\`\`\`</code></pre></div>`, 'https://legend.so/code/');
+            <pre data-language="md"><code>\`\`\`js\nconsole.log(1)\n\`\`\`</code></pre></div>`, 'https://legend.so/slides/');
         expect(result.markdown).toContain("```tsx\nconst x = {\n  text: '~~~',\n};\n```");
         expect(result.markdown).toContain('````md\n```js\nconsole.log(1)\n```\n````');
         expect(result.codeBlocks).toHaveLength(2);

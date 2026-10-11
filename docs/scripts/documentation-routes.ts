@@ -3,7 +3,7 @@ import { globSync } from 'glob';
 import { projects } from '../src/lib/projects';
 
 export const ROOT = path.resolve(import.meta.dirname, '..');
-export const documentationProjects = projects;
+export const documentationProjects = projects.filter((project) => !project.homepage);
 
 export function documentationRoutes() {
     return documentationProjects.flatMap((project) =>

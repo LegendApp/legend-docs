@@ -1,4 +1,4 @@
-import { getDocumentationRedirect } from '../src/lib/getDocsPath';
+import { getAppHomepageRedirect, getDocumentationRedirect } from '../src/lib/getDocsPath';
 
 type Assets = { fetch(request: Request): Promise<Response> };
 
@@ -30,6 +30,8 @@ export default {
     async fetch(request: Request, env: { ASSETS: Assets }) {
         if (!['GET', 'HEAD'].includes(request.method)) return env.ASSETS.fetch(request);
         const url = new URL(request.url);
+        const redirect = getAppHomepageRedirect(url.pathname);
+        if (redirect) return Response.redirect(new URL(redirect + url.search, url), 308);
         if (url.pathname.endsWith('.md')) {
             const response = await env.ASSETS.fetch(request);
             return responseWithHeaders(response, response.ok || response.status === 304, false);

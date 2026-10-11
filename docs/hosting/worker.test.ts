@@ -1,5 +1,19 @@
 import { expect, test } from 'bun:test';
 import worker, { prefersMarkdown } from './worker';
+import { appHomepages } from '../src/lib/projects';
+
+test('old app subpages permanently redirect to marketing homepages', async () => {
+    const env = { ASSETS: { async fetch() { throw new Error('Redirects must not fetch assets'); } } };
+    for (const app of appHomepages) {
+        for (const page of ['availability', 'reference']) {
+            for (const slash of ['', '/']) {
+                const response = await worker.fetch(new Request(`https://legend.so/${app.slug}/${page}${slash}?from=old`, { headers: { Accept: 'text/markdown' } }), env);
+                expect(response.status).toBe(308);
+                expect(response.headers.get('Location')).toBe(`https://legend.so/${app.slug}/?from=old`);
+            }
+        }
+    }
+});
 
 test('negotiation requires an explicit, acceptable Markdown preference', () => {
     expect(prefersMarkdown('text/markdown')).toBe(true);

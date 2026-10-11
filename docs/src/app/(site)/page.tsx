@@ -22,7 +22,7 @@ const descriptions: Record<string, string> = {
     list: 'Fast, flexible lists for React and React Native.',
     state: 'Reactive state, persistence, and sync.',
     motion: 'Simple animations for React Native.',
-    code: 'A native code editor prototype.',
+    code: 'A full code editor for any text file.',
     'chat-history': 'Browse your local AI conversations.',
 };
 
@@ -30,20 +30,20 @@ function ProductCard({ project }: { project: Project }) {
     return (
         <Link href={`/${project.slug}`} className={`showcase-card showcase-${project.slug}`}>
             <div className={`product-image${project.category === 'library' ? ' docs-image' : ''}`}>
-                {project.slug === 'photos' ? (
+                {project.slug === 'photos' || project.slug === 'music' ? (
                     <div className="flex h-full items-center justify-center">
                         <ProjectIcon slug={project.slug} size={96} />
                     </div>
                 ) : (
                     <Image
-                        src={`/assets/showcase/${project.category === 'library' ? `${project.slug}-docs` : project.slug === 'music' ? 'music-main' : project.slug}.png`}
+                        src={`/assets/showcase/${project.category === 'library' ? `${project.slug}-docs` : project.slug}.png`}
                         alt={project.category === 'library' ? `${project.name} documentation example` : `${project.name} interface`}
-                        width={project.slug === 'music' ? 510 : project.category === 'library' ? 1460 : 1440}
-                        height={project.slug === 'music' ? 679 : project.category === 'library' ? 768 : 900}
+                        width={project.category === 'library' ? 1460 : 1440}
+                        height={project.category === 'library' ? 768 : 900}
                         sizes="(max-width: 700px) 100vw, 560px"
                     />
                 )}
-                {(project.slug === 'markdown' || project.slug === 'photos') && <span className="coming-soon-banner">Coming soon</span>}
+                {project.homepage && !project.homepage.download && <span className="coming-soon-banner">Coming soon</span>}
             </div>
             <div className="product-caption">
                 <ProjectIcon slug={project.slug} size={21} />

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/notebook/page';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { source } from '@/lib/source';
-import { getProject } from '@/lib/projects';
+import { appHomepages, getProject } from '@/lib/projects';
+import { getAppHomepageRedirect } from '@/lib/getDocsPath';
+import { AppLanding } from '@/components/site/app-landing';
 import { ProjectIcon } from '@/components/site/project-icon';
 import { FrameworkLanding } from '@/components/site/framework-landing';
 import { SlidesLanding } from '@/components/site/slides-landing';
@@ -14,17 +16,28 @@ type Params = { project: string; slug?: string[] };
 export const dynamicParams = false;
 
 export function generateStaticParams(): Params[] {
-    return source
+    const docs = source
         .getPages()
         .filter((page) => {
             const project = getProject(page.slugs[0]);
-            return project && project.category !== 'library';
+            return project && project.category !== 'library' && !project.homepage;
         })
         .map((page) => ({ project: page.slugs[0], slug: page.slugs.slice(1) }));
+    return [...docs, ...appHomepages.flatMap((project) =>
+        [[], ['availability'], ['reference']].map((slug) => ({ project: project.slug, slug }))
+    )];
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
     const { project, slug = [] } = await params;
+    const app = getProject(project);
+    if (app?.homepage) {
+        return {
+            title: app.name,
+            description: app.description,
+            alternates: { canonical: `/${project}/` },
+        };
+    }
     const page = source.getPage([project, ...slug]);
     if (!page) notFound();
     return documentationMetadata({ title: page.data.title, description: page.data.description, url: page.url });
@@ -33,8 +46,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 export default async function ProjectPage({ params }: { params: Promise<Params> }) {
     const { project: projectSlug, slug = [] } = await params;
     const project = getProject(projectSlug);
+    if (!project) notFound();
+    const redirect = getAppHomepageRedirect(`/${projectSlug}/${slug.join('/')}`);
+    if (redirect) permanentRedirect(redirect);
+    if (project.homepage && slug.length === 0) return <AppLanding project={project} />;
     const page = source.getPage([projectSlug, ...slug]);
-    if (!page || !project) notFound();
+    if (!page) notFound();
     const details = { title: page.data.title, description: page.data.description, url: page.url };
     if (projectSlug === 'spark' && slug.length === 0) return <><DocumentationStructuredData page={details} /><FrameworkLanding /></>;
     if (projectSlug === 'slides' && slug.length === 0) return <><DocumentationStructuredData page={details} /><SlidesLanding /></>;

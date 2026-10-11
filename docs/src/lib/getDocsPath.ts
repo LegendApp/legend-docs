@@ -1,3 +1,5 @@
+import { appHomepages } from './projects';
+
 export function getFirstDocsPath(docType: 'list' | 'list1' | 'list2' | 'state' | 'motion' | 'state2'): string {
     if (docType === 'list') {
         return '/list/v3/overview';
@@ -22,4 +24,11 @@ export function getDocumentationRedirect(pathname: string): string | undefined {
     };
     const target = redirects[pathname.replace(/\/$/, '')];
     return target ? getFirstDocsPath(target) : undefined;
+}
+
+export function getAppHomepageRedirect(pathname: string): string | undefined {
+    const [project, page, ...rest] = pathname.replace(/\/$/, '').split('/').slice(1);
+    if (rest.length === 0 && (page === 'availability' || page === 'reference') && appHomepages.some((app) => app.slug === project)) {
+        return `/${project}/`;
+    }
 }

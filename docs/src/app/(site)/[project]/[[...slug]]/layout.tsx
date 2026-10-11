@@ -29,7 +29,7 @@ export default async function ProjectLayout({
     const project = getProject(slug);
     if (!project) notFound();
 
-    if ((slug === 'spark' || slug === 'slides') && pageSlug.length === 0) {
+    if (project.homepage || ((slug === 'spark' || slug === 'slides') && pageSlug.length === 0)) {
         return (
             <>
                 <Navbar />
@@ -67,7 +67,7 @@ export default async function ProjectLayout({
                 defaultOpenLevel: 1,
                 banner: <SearchButton expanded />,
                 tabs: projects
-                    .filter((item) => item.category !== 'library')
+                    .filter((item) => item.category !== 'library' && !item.homepage)
                     .map((item) => ({
                         title: item.name,
                         description: item.category === 'library' ? 'Open-source library' : item.status,
