@@ -75,7 +75,7 @@ export const projects: Project[] = [
         highlights: ['Git + GitHub comparisons', 'Unified + block views', 'Merge conflict resolution'],
         homepage: {
             download: 'https://github.com/LegendApp/legend-apps/releases/tag/diff-v0.0.4',
-            image: '/assets/showcase/diff.png',
+            image: '/assets/apps/diff-window.jpg',
             details: [
                 { label: 'Opens', text: 'A Git working tree against any branch, tag, or commit. Two files (⌘⌥O). .diff and .patch files. GitHub pull request and commit URLs (⌘L), or a supported path or URL from the clipboard (⌘⇧O).' },
                 { label: 'Reading', text: 'Changed files in a sidebar. Unified (⌘1) or side-by-side (⌘2) views. Jump between hunks with ⌘[ and ⌘], or search the whole diff with ⌘F.' },
@@ -95,7 +95,7 @@ export const projects: Project[] = [
             'A local-first Markdown editor for macOS. Write directly in your files, with rendered blocks that become an editor when you need them.',
         highlights: ['Plain Markdown files', 'Block editing', 'Customizable typography'],
         homepage: {
-            image: '/assets/showcase/markdown.png',
+            image: '/assets/apps/markdown-window.jpg',
             details: [
                 { label: 'Files', text: 'Opens .md, .markdown, .mdown, .mkd, and .mdx. Save, Save As, and optional autosave write straight back to the file.' },
                 { label: 'Editing', text: 'Blocks render until you click into one, then edit in place as Markdown. Undo, redo, and keyboard navigation between blocks.' },
@@ -164,7 +164,7 @@ export const projects: Project[] = [
         highlights: ['Any text file', 'Syntax highlighting', 'Save + editing commands'],
         homepage: {
             download: 'https://github.com/LegendApp/legend-apps/releases/tag/code-v0.0.1',
-            image: '/assets/showcase/code.png',
+            image: '/assets/apps/code-window.jpg',
             details: [
                 { label: 'Files', text: 'Any UTF-8 text file: source, config, dotfiles, files with no extension. Open from Finder, ⌘O, or recent documents. Save with ⌘S or ⌘⇧S.' },
                 { label: 'Editing', text: 'Go to line (⌘L), indent and outdent (⌘] ⌘[), toggle line comments (⌘/), duplicate lines (⌘⇧D), move lines (⌥↑ ⌥↓). Brackets and quotes pair automatically.' },
@@ -184,7 +184,7 @@ export const projects: Project[] = [
         highlights: ['Local transcripts', 'Virtualized conversations', 'Simulated composer'],
         homepage: {
             download: 'https://github.com/LegendApp/legend-apps/releases/tag/chat-history-v0.0.2',
-            image: '/assets/showcase/chat-history.png',
+            image: '/assets/apps/chat-history-window.jpg',
             details: [
                 { label: 'Sources', text: 'Finds recent Codex and Claude sessions on your Mac and groups them by provider in the sidebar.' },
                 { label: 'Transcript', text: 'A virtualized view for long threads, with Markdown, highlighted code blocks, and local images sized before they load.' },
