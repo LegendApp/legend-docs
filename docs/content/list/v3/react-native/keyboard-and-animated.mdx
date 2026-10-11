@@ -214,7 +214,8 @@ The hook:
 - measures `composerRef` once on mount
 - returns `onComposerLayout`, which updates the measured height when the composer layout changes
 - writes the measured height to `contentInsetEndAdjustment`
-- reports `{ bottom: height }` to the list with `listRef.current?.reportContentInset(...)`
+
+`KeyboardAwareLegendList` reports the combined keyboard and composer inset through its scroll component.
 
 Pass `contentInsetEndAdjustment` to `KeyboardAwareLegendList`, then attach `ref` and `onLayout` to the composer container.
 

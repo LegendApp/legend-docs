@@ -72,7 +72,7 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
      - `scrollToIndex`
      - `scrollToItem`
      - `scrollToOffset`
-   - If you run logic after a programmatic scroll, `await` the call.
+   - If you run logic after a programmatic scroll, `await` the call. The promise also resolves if the scroll is cancelled or superseded, so resolution does not guarantee arrival at the target.
 
 8) **`getState()` shape changed for advanced integrations**
    - `state.positions` is no longer part of the public `getState()` return value.
@@ -98,7 +98,7 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 - If you still need the previous keyboard-avoiding integration, import `KeyboardAvoidingLegendList` from `@legendapp/list/keyboard-legacy`
 - Wrap hook-using item components in a `renderItem` callback instead of passing them directly
 - For floating composers, replace content padding workarounds with `contentInsetEndAdjustment` on web or `useKeyboardChatComposerInset` with `KeyboardAwareLegendList` on React Native
-- `await` imperative scroll calls if your code depends on post-scroll timing
+- `await` imperative scroll calls to wait for completion or cancellation
 - Update advanced `getState()` consumers to use `positionAtIndex` / `positionByKey` instead of `positions`
 
 ## Install

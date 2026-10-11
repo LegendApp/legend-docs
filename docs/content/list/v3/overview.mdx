@@ -78,9 +78,9 @@ See [Guides](../guides#chat-interfaces) and [Keyboard & Animated](../react-nativ
 
 - **React Native** → import from `@legendapp/list/react-native` and start with [Getting Started (React Native)](../react-native/getting-started).
 - **React (Web)** → import from `@legendapp/list/react` and start with [Getting Started (Web)](../react/getting-started).
-- **React Native Web** → use the React Native entrypoint so your app keeps React Native component semantics.
+- **React Native Web** → the React Native entrypoint resolves to the DOM renderer in browser builds.
 
-All of these imports run the same JS engine, the separate import paths are just for platform-specific types.
+These entrypoints share the virtualization core and select platform-specific types and rendering adapters.
 
 ## Advanced List Features
 

@@ -35,9 +35,16 @@ Use declarative initial scroll props when the first viewport should start at a s
 
 ```ts
 initialScrollAtEnd?: boolean;
-initialScrollIndex?: number | { index: number; viewOffset?: number; viewPosition?: number };
+initialScrollIndex?: number | {
+  index: number;
+  viewOffset?: number;
+  viewPosition?: number;
+  viewPositionFallback?: "start" | "end";
+};
 initialScrollOffset?: number;
 ```
+
+`viewPositionFallback` chooses start/end alignment only when the target item exceeds the available viewport. Omit it to preserve `viewPosition`.
 
 ```tsx
 <LegendList
@@ -135,7 +142,7 @@ experimental_adaptiveRender?: {
   enterVelocity?: number;
   exitVelocity?: number;
   exitDelay?: number;
-  onChange?: (mode: "normal" | "light") => void;
+  onChange?: (mode: "normal" | "light", reason: "initial" | "ready" | "scroll") => void;
 };
 ```
 
@@ -289,7 +296,7 @@ maintainVisibleContentPosition?:
   | {
       data?: boolean;
       size?: boolean;
-      shouldRestorePosition?: (item: ItemT, index: number, data: ItemT[]) => boolean;
+      shouldRestorePosition?: (item: ItemT, index: number, data: readonly ItemT[]) => boolean;
     };
 ```
 

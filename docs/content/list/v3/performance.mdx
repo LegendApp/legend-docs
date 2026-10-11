@@ -110,7 +110,7 @@ experimental_adaptiveRender?: {
   enterVelocity?: number;
   exitVelocity?: number;
   exitDelay?: number;
-  onChange?: (mode: "normal" | "light") => void;
+  onChange?: (mode: "normal" | "light", reason: "initial" | "ready" | "scroll") => void;
 };
 ```
 

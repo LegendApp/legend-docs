@@ -49,7 +49,7 @@ Render list items directly as children in children mode (instead of `data`/`rend
 ### data
 
 ```ts
-data: ItemT[];
+data: readonly ItemT[];
 ```
 
 An array of the items to render in data mode. This can also be an array of keys if you want to get the item by key in [renderItem](#renderitem).
@@ -57,10 +57,10 @@ An array of the items to render in data mode. This can also be an array of keys 
 ### renderItem
 
 ```ts
-renderItem: (props: { item: ItemT; index: number; extraData: any; type?: string; data: readonly ItemT[] }) => ReactNode;
+renderItem: (props: { item: ItemT; index: number; extraData: any; type: string | undefined; data: readonly ItemT[] }) => ReactNode;
 ```
 
-Takes an item from data and renders it into the list in data mode. The `type` parameter is available when using `getItemType`.
+Takes an item from data and renders it into the list in data mode. The `type` parameter comes from `getItemType`, or is an empty string when no type is resolved.
 
 `renderItem` is called as a render callback. If your row uses hooks, return a component from the callback rather than passing the component function directly:
 
@@ -92,7 +92,7 @@ Strongly recommended. The `keyExtractor` prop lets Legend List save item layouts
 
 Return a stable unique key for each logical item. Reusing a key for different items, or using the item index in a list that can reorder or prepend items, will attach cached measurements and recycled state to the wrong row. Index keys are only reasonable for static or append-only lists where earlier item positions never change. See [Use key extractor](../performance#use-keyextractor).
 
-If LegendList detects duplicate keys, it will log a warning.
+If LegendList detects duplicate keys in development, it will log an error.
 
 ### recycleItems (React Native)
 
@@ -145,22 +145,24 @@ Keeps a chosen item visually anchored to the start by adding trailing space when
 
 - `anchorIndex`: required index of the item to keep anchored.
 - `anchorOffset`: subtracts pixels from the computed blank space. Useful when the anchored row should stop short of the edge.
-- `anchorMaxSize`: caps the amount of inserted blank space.
+- `anchorMaxSize`: caps the anchor item's size contribution when calculating trailing space.
 - `onReady`: called when LegendList has authoritative anchored-tail sizing for the current anchor. Use this when an integration needs to wait until the inserted tail space is known before running follow-up scroll work.
 - `onSizeChanged`: called whenever the inserted blank space changes.
 
 Platform notes:
 
 - Web: available on `LegendList` from `@legendapp/list/react`.
-- React Native: use `KeyboardAwareLegendList` from `@legendapp/list/keyboard` for this lower-level integration.
+- React Native: available on `LegendList` from `@legendapp/list/react-native`. Use `KeyboardAwareLegendList` for keyboard-driven insets.
+
+`anchoredEndSpace` supports single-column lists (`numColumns={1}`).
 
 ### columnWrapperStyle
 
 ```ts
-columnWrapperStyle?: StyleProp<ViewStyle>;
+columnWrapperStyle?: { gap?: number; rowGap?: number; columnGap?: number };
 ```
 
-Style applied to each column's wrapper view.
+Sets spacing between rows and columns.
 
 ### contentContainerClassName
 
@@ -216,6 +218,14 @@ const { contentInsetEndAdjustment, onComposerLayout } =
 ```
 
 Use this for floating composers, input bars, or other UI that visually covers the end of the list while remaining outside normal list content flow.
+
+### dataKey
+
+```ts
+dataKey?: Key;
+```
+
+Identity token for the logical dataset. Change it when replacing the list with a different dataset so initial positioning can restart. Use `dataVersion` for updates within the same dataset.
 
 ### dataVersion
 
@@ -287,7 +297,7 @@ experimental_adaptiveRender?: {
   enterVelocity?: number; // default: 3 native, 6 web
   exitVelocity?: number; // default: 1 native, 3 web
   exitDelay?: number; // default: 250
-  onChange?: (mode: AdaptiveRender) => void;
+  onChange?: (mode: AdaptiveRender, reason: "initial" | "ready" | "scroll") => void;
 };
 ```
 
@@ -296,6 +306,8 @@ Enables an adaptive render signal for expensive item content. This is a performa
 When scroll velocity crosses `enterVelocity`, LegendList switches the signal to `"light"` so rows can render a cheaper version while the list is moving quickly. After velocity drops below `exitVelocity` for `exitDelay` milliseconds, it returns to `"normal"`. This reduces JS/render work during fast scrolls and lets full content come back when the user slows down or stops.
 
 Use `initialMode` when rows should start in `"light"` mode before the list is ready, for example when you prefer a very cheap first pass before expensive media or charts render.
+
+The `onChange` reason identifies initialization/reset (`"initial"`), list readiness (`"ready"`), or scrolling (`"scroll"`).
 
 Good uses for light mode include:
 
@@ -323,6 +335,14 @@ There are two main ways to use adaptive rendering:
 Use adaptive rendering for the expensive part of a row, not as a replacement for basic row memoization or stable `renderItem` patterns. Simple text rows usually do not need it.
 
 The light version should keep the same rendered size as the normal version. If switching modes changes an item's height or width, the list has to correct measured positions while scrolling, which can cause visible layout shifts.
+
+### experimental_hideItemsUntilMeasured
+
+```ts
+experimental_hideItemsUntilMeasured?: boolean; // default: false
+```
+
+On React Native's new architecture, keeps dynamic rows invisible until measured to avoid flashing at estimated positions. This adds render/native commit work. Rows with known fixed or measured sizes render immediately, and sticky headers are excluded.
 
 ### getFixedItemSize
 
@@ -361,10 +381,17 @@ This is designed for chat/feed screens and works with dynamic item measurement, 
 ### initialScrollIndex
 
 ```ts
-initialScrollIndex?: number | { index: number; viewOffset?: number; viewPosition?: number };
+initialScrollIndex?: number | {
+  index: number;
+  viewOffset?: number;
+  viewPosition?: number;
+  viewPositionFallback?: "start" | "end";
+};
 ```
 
 Start scrolled with this item at the top (or at the provided `viewPosition`). If item sizes are dynamic, the list will adjust after measurement using the default scroll‑stabilization behavior.
+
+`viewPositionFallback` chooses start/end alignment only when the target item exceeds the available viewport. Omit it to preserve `viewPosition`.
 
 For large lists, LegendList can seed the initial render near the target index instead of scanning from the beginning when it has enough sizing information. If data arrives after mount, the initial target is re-armed and applied when items are available.
 
@@ -458,7 +485,7 @@ maintainScrollAtEnd?: boolean | {
 
 If enabled, LegendList keeps the view pinned to end when you are near the bottom.
 
-- `true`: enables end-maintenance for layout, item-layout, and data updates.
+- `true`: enables end-maintenance for layout, footer-layout, item-layout, and data updates.
 - `animated`: whether the automatic scroll-to-end should animate. Defaults to `false`.
 - If `on` is omitted, the object form enables all triggers.
 - If `on` is provided, only the keys set to `true` are enabled.
@@ -482,7 +509,7 @@ See [Chat interfaces](../guides#chat-interfaces) for more.
 maintainVisibleContentPosition?: boolean | {
   data?: boolean;
   size?: boolean;
-  shouldRestorePosition?: (item: ItemT, index: number, data: ItemT[]) => boolean;
+  shouldRestorePosition?: (item: ItemT, index: number, data: readonly ItemT[]) => boolean;
 };
 ```
 
@@ -494,7 +521,7 @@ Controls how the list stabilizes scroll position when items above the viewport c
 
 Passing `true` enables both `size` and `data`. Passing `false` disables both.
 
-React Native note: when `data` anchoring is enabled, LegendList uses ScrollView’s [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) under the hood. Android requires React Native 0.72+ for that prop.
+React Native note: when either `size` or `data` stabilization is enabled, LegendList sets ScrollView’s [maintainVisibleContentPosition](https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition) under the hood. Android requires React Native 0.72+ for that prop.
 
 ### numColumns
 
@@ -510,7 +537,7 @@ Multiple columns will zig-zag like a flexWrap layout. Rows will take the maximum
 onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
 ```
 
-A callback that's called only once when scroll is within `onEndReachedThreshold` of the bottom of the list. It resets when scroll goes above the threshold and then will be called again when scrolling back into the threshold.
+Called when the list enters the `onEndReachedThreshold` range near the bottom. Repeated callbacks are gated to avoid duplicate loads after data/layout changes. Moving beyond the range uses hysteresis before resetting; a new user scroll gesture can re-arm the callback.
 
 ### onEndReachedThreshold
 
@@ -554,6 +581,14 @@ onLoad?: (info: { elapsedTimeInMs: number }) => void;
 
 Called after the list is ready to render. Useful for measuring first render readiness.
 
+### onReady
+
+```ts
+onReady?: () => void;
+```
+
+Called after layout and initial scrolling complete, including a new placement cycle after a `dataKey` reset. Unlike `onLoad`, it can run more than once.
+
 ### onMetricsChange
 
 ```ts
@@ -584,7 +619,7 @@ Called on scroll events with platform-specific scroll data.
 onStartReached?: ((info: { distanceFromStart: number }) => void) | null | undefined;
 ```
 
-A callback that's called only once when scroll is within `onStartReachedThreshold` of the top of the list. It resets when scroll goes above the threshold and then will be called again when scrolling back into the threshold.
+Called when the list enters the `onStartReachedThreshold` range near the top. Repeated callbacks are gated to avoid duplicate loads after data/layout changes. Moving beyond the range uses hysteresis before resetting; a new user scroll gesture can re-arm the callback.
 
 ### onStartReachedThreshold
 
@@ -605,10 +640,12 @@ Called when the active sticky header changes.
 ### onViewableItemsChanged
 
 ```ts
-onViewableItemsChanged?: OnViewableItemsChanged | undefined;
+onViewableItemsChanged?: OnViewableItemsChanged<ItemT> | undefined;
 ```
 
 Called when the viewability of rows changes, as defined by the `viewabilityConfig` prop.
+
+The callback receives `viewableItems`, `changed`, and the visible/buffered index ranges: `start`, `end`, `startBuffered`, `endBuffered`.
 
 See [React Native Docs](https://reactnative.dev/docs/flatlist#onviewableitemschanged).
 
@@ -638,7 +675,7 @@ React Native only. Offset in pixels for the refresh indicator.
 ### ref
 
 ```ts
-ref?: LegendListRef;
+ref?: React.Ref<LegendListRef>;
 ```
 
 Used to call `scrollTo` [methods](#ref-methods).
@@ -670,29 +707,23 @@ renderScrollComponent?: (props: ScrollViewProps) => ReactElement | null
 Render a custom scroll component. On React Native this is typically a `ScrollView`; on web this is the underlying DOM scroll element wrapper.
 On React Native, when using `stickyHeaderIndices`, provide an Animated-capable scroll component.
 
-Note that passing `renderScrollComponent` as an inline function might cause you to lose scroll position if the list is rerendered.
-
-```tsx
-renderScrollComponent={(props) => <BottomSheetScrollView {...props} />}
-```
-
-Instead, it's better to extract it as a custom component.
-
-```tsx
-const CustomScrollView = (props: ScrollViewProps) => {
-  return <BottomSheetScrollView {...props} />;
-};
-```
-
 ### rtl
 
 ```ts
 rtl?: boolean;
 ```
 
-Forces right-to-left layout behavior for this list instance. When omitted, LegendList uses the platform/global RTL setting, such as React Native's `I18nManager.isRTL`.
+Forces right-to-left layout behavior for this list instance. When omitted, React Native uses `I18nManager.isRTL`; the DOM renderer defaults to `false`.
 
 This is mainly useful for horizontal lists when you need one list to override the app-level RTL direction.
+
+### scrollElement
+
+```ts
+scrollElement?: HTMLElement | null;
+```
+
+Web only. Uses an ancestor element's scrollbar. Pass a state-backed callback ref value; `null` waits for the element to mount and `undefined` uses the list's own scrollbar. Takes precedence over `useWindowScroll` and cannot be combined with `renderScrollComponent`.
 
 ### snapToIndices
 
@@ -745,6 +776,8 @@ useWindowScroll?: boolean; // default: false
 
 Web only. When true, LegendList listens to window/body scrolling instead of rendering its own scrollable container.
 
+`useWindowScroll` cannot be combined with `renderScrollComponent`.
+
 ### viewabilityConfig
 
 ```ts
@@ -758,7 +791,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#viewabilityconfig)
 ### viewabilityConfigCallbackPairs
 
 ```ts
-viewabilityConfigCallbackPairs?: ViewabilityConfigCallbackPairs | undefined;
+viewabilityConfigCallbackPairs?: ViewabilityConfigCallbackPairs<ItemT> | undefined;
 ```
 
 List of `ViewabilityConfig`/`onViewableItemsChanged` pairs. A specific `onViewableItemsChanged` will be called when its corresponding `ViewabilityConfig`'s conditions are met.
@@ -769,7 +802,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#viewabilityconfigc
 
 ## SectionList
 
-Legend List ships a SectionList-compatible component built on the same virtualization core.
+Legend List ships a SectionList-compatible component built on the same virtualization core. This entrypoint depends on React Native.
 
 ```tsx
 import { SectionList } from "@legendapp/list/section-list";
@@ -837,9 +870,12 @@ Notes:
 - `stickySectionHeadersEnabled` defaults to the React Native platform behavior. It is enabled by default on iOS and disabled by default on other platforms.
 - `getFixedItemSize` can return exact sizes for section items, headers, footers, item separators, and section separators. Return `undefined` for row types that should stay dynamically measured.
 - `onViewableItemsChanged` receives item tokens mapped back to `{ item, index, key, isViewable, section }`, so callbacks do not need to understand the internal flattened section rows.
-- Section and item separators receive React Native-style separator helpers (`highlight`, `unhighlight`, `updateProps`) plus section/item context.
+- Section and item separators receive section/item context. The `separators` helpers passed to `renderItem` (`highlight`, `unhighlight`, `updateProps`) are currently no-ops.
+- Sections may override `renderItem`, `keyExtractor`, and `ItemSeparatorComponent`; stable section `key` values keep flattened keys stable.
 
 ### scrollToLocation
+
+Returns `void`. Set `itemIndex: -1` to target the section header, falling back to its first item or footer. It also accepts `viewPositionFallback` for oversized items, as described under [initialScrollIndex](#initialscrollindex).
 
 ```ts
 ref.current?.scrollToLocation({
@@ -885,6 +921,14 @@ flashScrollIndicators(): void;
 
 Asks the underlying scroll component to briefly show its scroll indicators.
 
+### getAnimatableRef
+
+```ts
+getAnimatableRef(): any;
+```
+
+Returns the underlying animatable scroll reference (platform-specific type).
+
 ### getNativeScrollRef
 
 ```ts
@@ -915,7 +959,7 @@ Returns the platform scroll responder object for advanced integrations.
 getState(): LegendListState;
 ```
 
-Returns a live snapshot API for advanced integrations. See [getState()](#getstate-details) for the full type, fields, listener channels, caveats, and examples.
+Returns a state snapshot for advanced integrations. See [getState()](#getstate-details) for the full type, fields, listener channels, caveats, and examples.
 
 ### reportContentInset
 
@@ -966,6 +1010,8 @@ export function ScrollExample() {
 
 Scrolls the item into view. If the item is above the viewable range it will be scrolled to the top of the screen, and if it's below the viewable range it will be scrolled to the bottom of the screen.
 
+Pass the same item reference that is present in `data`.
+
 ```ts
 scrollItemIntoView(params: {
   animated?: boolean | undefined;
@@ -980,11 +1026,12 @@ import { LegendList } from "@legendapp/list/react-native";
 
 export function ScrollToItemExample() {
   const listRef = useRef(null);
-  const targetItem = { id: "item-5", text: "Target Item" };
+  const targetItem = data.find((item) => item.id === "item-5");
 
   const scrollToSpecificItem = () => {
-    // Scroll to the item that matches targetItem
-    listRef.current?.scrollItemIntoView({ item: targetItem });
+    if (targetItem) {
+      listRef.current?.scrollItemIntoView({ item: targetItem });
+    }
   };
 
   return (
@@ -1023,11 +1070,12 @@ scrollToIndex(params: {
   animated?: boolean;
   viewOffset?: number;
   viewPosition?: number;
+  viewPositionFallback?: "start" | "end";
 }): Promise<void>;
 ```
 
 Scrolls to the item at the specified index. For the most accurate initial offset, use [getFixedItemSize](#getfixeditemsize) for truly fixed-size rows. Dynamic rows stabilize through measurement; `estimatedItemSize` is only an initial hint and is most useful when rows differ significantly from the default `100px`.
-Returns a promise that resolves when the imperative scroll finishes (or immediately if no scroll was needed).
+Returns a promise that resolves when the imperative scroll finishes, is cancelled or superseded, or no scroll is needed. `viewPositionFallback` handles oversized items as described under [initialScrollIndex](#initialscrollindex).
 
 ### scrollToItem
 
@@ -1037,10 +1085,13 @@ scrollToItem(params: {
   item: Item,
   viewOffset?: number;
   viewPosition?: number;
+  viewPositionFallback?: "start" | "end";
 }): Promise<void>;
 ```
 
 Requires linear scan through data - use [scrollToIndex](#scrolltoindex) instead if possible. Provided for compatibility with FlatList only.
+
+Pass the same item reference that is present in `data`. `viewPositionFallback` handles oversized items as described under [initialScrollIndex](#initialscrollindex).
 
 Valid parameters:
 
@@ -1061,7 +1112,7 @@ Scroll to a specific content pixel offset in the list.
 Valid parameters:
 
 - *offset* (number) - The offset to scroll to. In case of horizontal being true, the offset is the x-value, in any other case the offset is the y-value. Required.
-- *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
+- *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to false.
 
 ### setItemSize
 
@@ -1241,6 +1292,8 @@ useViewability: (callback: (viewToken: ViewToken) => void, configId?: string) =>
 
 A hook that provides callbacks when an item's viewability changes. This hook registers a callback that will be invoked whenever the item's visibility status changes, providing detailed information about the item through the ViewToken interface. It is similar to [onViewableItemsChanged](#onviewableitemschanged) but runs for only the rendering item. If you defined multiple viewability configs using [viewabilityConfigCallbackPairs](#viewabilityconfigcallbackpairs) then provide the id of the one you're interested in with `configId`.
 
+Configure `viewabilityConfig` with a visibility threshold on the owning list. For `useViewability(callback, "main")`, set `viewabilityConfig.id` to `"main"`.
+
 ```tsx
 import { useState } from "react";
 import { View, Text } from "react-native";
@@ -1296,6 +1349,8 @@ useViewabilityAmount: (callback: (viewAmountToken: ViewAmountToken) => void) => 
 
 A hook that provides detailed metrics about how much of an item is visible in the viewport. The callback receives a ViewAmountToken with information like the pixel measurements (sizeVisible, size), percentage visible, and more.
 
+Configure `viewabilityConfig` with a visibility threshold on the owning list. Percentage fields use 0–100 for visible items.
+
 ```tsx
 import { useState } from "react";
 import { Animated, Text } from "react-native";
@@ -1306,7 +1361,7 @@ export function ItemComponent({ item }) {
 
     useViewabilityAmount((viewAmountToken) => {
         // Get detailed visibility information
-        setOpacity(viewAmountToken.percentVisible);
+        setOpacity(Math.max(0, Math.min(1, viewAmountToken.percentVisible / 100)));
 
         // Additional metrics available:
         // viewAmountToken.sizeVisible - pixels of item visible in viewport
@@ -1349,6 +1404,7 @@ type LegendListState = {
   isNearStart: boolean;
   isStartReached: boolean;
   isWithinMaintainScrollAtEndThreshold: boolean;
+  indexByKey: (key: string) => number | undefined;
   listen: <T extends LegendListListenerType>(
     listenerType: T,
     callback: (value: ListenerTypeValueMap[T]) => void
@@ -1378,6 +1434,7 @@ type LegendListAverageItemSize = {
 - `data`: current data array reference used by the list
 - `elementAtIndex(index)`: rendered native element for an index (if currently mapped to a container)
 - `getAverageItemSizes()`: measured average item sizes grouped by item type. Use this to inspect real sizing data when deciding whether `estimatedItemSize` is worth setting for unusually sized rows.
+- `indexByKey(key)`: cached index for a key, or `undefined` if unknown
 - `isAtStart` / `isAtEnd`: threshold-based booleans for edge-of-list state
 - `isNearStart` / `isNearEnd`: proximity booleans based on the configured start/end thresholds
 - `isStartReached` / `isEndReached`: whether the one-shot threshold callbacks are currently latched
@@ -1399,6 +1456,7 @@ type LegendListAverageItemSize = {
 `listen` supports these channel names:
 
 - `activeStickyIndex` (`number`)
+- `adaptiveRender` (`"normal" | "light"`)
 - `anchoredEndSpaceSize` (`number`)
 - `footerSize` (`number`)
 - `headerSize` (`number`)
@@ -1418,6 +1476,7 @@ type LegendListAverageItemSize = {
 
 ### Caveats
 
+- Scalar fields are snapshots at the time of the call. Call `getState()` again to refresh them; accessor methods and `sizes` read live state.
 - `positionAtIndex` and `sizeAtIndex` assume the item has been measured; for unmeasured items values may be unavailable.
 - `positionByKey` can return `undefined` if a key is unknown or not measured yet.
 - `elementAtIndex` can return `null`/`undefined` when the item is not currently rendered.
