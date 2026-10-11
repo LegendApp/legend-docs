@@ -109,7 +109,7 @@ export function CustomNavbar({
                       ? ['/spark']
                       : title === 'Demo Apps'
                         ? ['/code', '/chat-history', '/hello-world']
-                        : ['/diff', '/markdown', '/music', '/slides'],
+                        : ['/diff', '/markdown', '/music', '/photos', '/slides'],
         })),
         { label: 'Blog', href: '/blog', matches: ['/blog'] },
     ];

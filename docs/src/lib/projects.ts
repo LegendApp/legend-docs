@@ -90,6 +90,16 @@ export const projects: Project[] = [
         highlights: ['Your own audio files', 'Playlists + queue', 'Native media controls'],
     },
     {
+        slug: 'photos',
+        name: 'Legend Photos',
+        category: 'app',
+        status: 'Preview',
+        tagline: 'Your photos. A clearer view.',
+        description:
+            'A macOS photo browser for local folders and your Apple Photos library. Browse a photo grid, open fullscreen views, and mark your selections with ratings and flags.',
+        highlights: ['Local folders + Apple Photos albums', 'Fullscreen viewing + filmstrip', 'Ratings + flags'],
+    },
+    {
         slug: 'slides',
         name: 'Legend Slides',
         category: 'app',

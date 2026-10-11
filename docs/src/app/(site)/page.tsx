@@ -17,6 +17,7 @@ const descriptions: Record<string, string> = {
     diff: 'Review code and resolve conflicts.',
     markdown: 'Your words, in plain Markdown files.',
     music: 'A home for the music you own.',
+    photos: 'Browse folders and Apple Photos albums.',
     slides: 'Turn Markdown and React into presentations.',
     list: 'Fast, flexible lists for React and React Native.',
     state: 'Reactive state, persistence, and sync.',
@@ -29,14 +30,20 @@ function ProductCard({ project }: { project: Project }) {
     return (
         <Link href={`/${project.slug}`} className={`showcase-card showcase-${project.slug}`}>
             <div className={`product-image${project.category === 'library' ? ' docs-image' : ''}`}>
-                <Image
-                    src={`/assets/showcase/${project.category === 'library' ? `${project.slug}-docs` : project.slug === 'music' ? 'music-main' : project.slug}.png`}
-                    alt={project.category === 'library' ? `${project.name} documentation example` : `${project.name} interface`}
-                    width={project.slug === 'music' ? 510 : project.category === 'library' ? 1460 : 1440}
-                    height={project.slug === 'music' ? 679 : project.category === 'library' ? 768 : 900}
-                    sizes="(max-width: 700px) 100vw, 560px"
-                />
-                {project.slug === 'markdown' && <span className="coming-soon-banner">Coming soon</span>}
+                {project.slug === 'photos' ? (
+                    <div className="flex h-full items-center justify-center">
+                        <ProjectIcon slug={project.slug} size={96} />
+                    </div>
+                ) : (
+                    <Image
+                        src={`/assets/showcase/${project.category === 'library' ? `${project.slug}-docs` : project.slug === 'music' ? 'music-main' : project.slug}.png`}
+                        alt={project.category === 'library' ? `${project.name} documentation example` : `${project.name} interface`}
+                        width={project.slug === 'music' ? 510 : project.category === 'library' ? 1460 : 1440}
+                        height={project.slug === 'music' ? 679 : project.category === 'library' ? 768 : 900}
+                        sizes="(max-width: 700px) 100vw, 560px"
+                    />
+                )}
+                {(project.slug === 'markdown' || project.slug === 'photos') && <span className="coming-soon-banner">Coming soon</span>}
             </div>
             <div className="product-caption">
                 <ProjectIcon slug={project.slug} size={21} />
