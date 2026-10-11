@@ -8,34 +8,43 @@ description: Explore Kitchen Sink, generate focused apps, and run source and pla
 From the current source checkout:
 
 ```sh
-npm run kitchen-sink
+bun run kitchen-sink
 ```
 
 After installing/preparing the source SDK, normal development starts the managed session; it does not compile a native runtime. A matching registered Runner is required. If needed, build from the checked-in app:
 
 ```sh
 cd examples/kitchen-sink
-npm run rebuild:macos
-npm run macos
+bun run rebuild:macos
+bun run macos
 # On Windows:
-# npm run rebuild:windows
-# npm run windows
+# bun run rebuild:windows
+# bun run windows
 ```
 
 Kitchen Sink demonstrates windows/geometry, menus/shortcuts, files/dialogs, streaming/Trash, settings, clipboard, notifications/system APIs, audio, and native controls. Progress, results, and errors appear inline with detailed logs. Disposable filesystem demos create/recycle test data.
 
-`npm run kitchen-sink:prepare -- /absolute/path/to/KitchenSinkCheck` packs the SDK and creates a separate copied consumer for integration testing. It preserves that consumer's generated identity/configuration rather than changing the checked-in app.
+`bun run kitchen-sink:prepare /absolute/path/to/KitchenSinkCheck` packs the SDK and creates a separate copied consumer for integration testing. It preserves that consumer's generated identity/configuration rather than changing the checked-in app.
 
 ## Smaller applications
 
-After [preparing the source SDK](/spark/getting-started), run from its checkout:
+Create a focused app with npm:
 
 ```sh
-npm run spark -- create /absolute/path/to/MyNotes --example notes-lite
-npm run spark -- create /absolute/path/to/MyMusic --example music-lite
-npm run spark -- create /absolute/path/to/MyDiff --example diff-lite
-npm run spark -- create /absolute/path/to/MyEditor --example document-editor
+npm create @legendapp/spark@latest MyNotes -- --example notes-lite
+npm create @legendapp/spark@latest MyMusic -- --example music-lite
+npm create @legendapp/spark@latest MyDiff -- --example diff-lite
+npm create @legendapp/spark@latest MyEditor -- --example document-editor
 ```
+
+Then run the generated app, for example:
+
+```sh
+cd MyNotes
+npm run macos
+```
+
+For local SDK development, [prepare the source SDK](/spark/getting-started#contributing-build-spark-from-source) and run `bun run spark create /absolute/path/to/MyNotes --example notes-lite` from its checkout.
 
 Notes Lite covers local notes, search, import/export, recovery, and session restoration. Music Lite covers playback/queue ownership. Diff Lite covers text comparison. Document Editor covers file operations, menus, document requests, and desktop lifecycle. These examples are distinct from the full Legend Apps products.
 
@@ -46,12 +55,12 @@ The [helper example](https://github.com/LegendApp/legend-spark/tree/main/example
 From the SDK checkout:
 
 ```sh
-npm run typecheck
-npm test
-npm run test:templates
+bun run typecheck
+bun run test
+bun run test:templates
 ```
 
-`npm test` uses Vitest, not Bun's test runner. Source checks validate contract behavior, export policy, lifecycle transitions, and tooling; template checks create real consumers. Packed consumer checks separately validate the archive's dependency graph and declarations.
+`bun run test` uses Vitest, not Bun's test runner. Source checks validate contract behavior, export policy, lifecycle transitions, and tooling; template checks create real consumers. Packed consumer checks separately validate the archive's dependency graph and declarations.
 
 ## Native and platform checks
 
@@ -59,14 +68,14 @@ Native suites need their toolchains and disposable consumer projects. Read prere
 
 | Command | Purpose |
 | --- | --- |
-| `npm run test:native` | Native API probes |
-| `npm run test:ui` | Packed native UI consumer |
-| `npm run test:platform -- --platform <target>` | Shared contract catalog on a target |
-| `npm run test:windows` | Windows Runner → Fast Refresh → added module → custom build |
-| `npm run test:windows:prepare` | Generation/bundles without Windows native execution |
-| `npm run test:runtimes:all` | Runner/dev/release background runtimes and pruning |
-| `npm run test:universal` / `test:universal:dev` | Universal generation/bundles and shared sessions |
-| `npm run test:add-desktop` | Existing Expo app preservation/composition |
+| `bun run test:native` | Native API probes |
+| `bun run test:ui` | Packed native UI consumer |
+| `bun run test:platform --platform <target>` | Shared contract catalog on a target |
+| `bun run test:windows` | Windows Runner → Fast Refresh → added module → custom build |
+| `bun run test:windows:prepare` | Generation/bundles without Windows native execution |
+| `bun run test:runtimes:all` | Runner/dev/release background runtimes and pruning |
+| `bun run test:universal` / `bun run test:universal:dev` | Universal generation/bundles and shared sessions |
+| `bun run test:add-desktop` | Existing Expo app preservation/composition |
 
 Run your app on each target OS and architecture to check native behavior as well as generation and bundling.
 

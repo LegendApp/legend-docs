@@ -52,7 +52,7 @@ See [update configuration](https://github.com/LegendApp/legend-spark/blob/main/d
 From the framework checkout:
 
 ```sh
-npm run spark -- sdk export /path/to/SparkSDK --runtime /path/to/SparkRunner.app
+bun run spark sdk export /path/to/SparkSDK --runtime /path/to/SparkRunner.app
 ```
 
 The transferable directory contains immutable package archives, checksums, an installer, and optional runtimes. `--runtime` can repeat. A Windows export includes the entire product directory with its DLLs. Exports refuse existing destinations and only publish output after validation.
@@ -70,4 +70,4 @@ Keep the installed directory/runtime locations stable. Relocate before installat
 
 ## Matching SDK runtimes
 
-Use a Runner that matches your SDK and native dependencies. Rebuild or register a matching local Runner after native changes; the published preview's Runner may be incompatible. Source packing, registration, and export do not publish artifacts. See [SDK transfer](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk-distribution.md).
+Use a Runner that matches your SDK and native dependencies. Rebuild or register a matching local Runner after SDK/native changes. Source packing, registration, and export do not publish artifacts. See [SDK transfer](https://github.com/LegendApp/legend-spark/blob/main/docs/sdk-distribution.md).

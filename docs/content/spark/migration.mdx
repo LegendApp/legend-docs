@@ -1,9 +1,9 @@
 ---
 title: Updating an existing prototype
-description: Move removed imports and resource contracts to the consolidated source API.
+description: Move removed imports and resource contracts to the consolidated API.
 ---
 
-Updating an older prototype to the current source API requires import and contract changes. Removed exports have no compatibility aliases. First select a matching current-source SDK, refresh packed dependencies, and rebuild native runtimes whose signatures changed. The old published preview and current source are not interchangeable.
+Updating an older prototype requires import and contract changes. Removed exports have no compatibility aliases. Update the SDK and rebuild native runtimes whose signatures changed. For local source development, refresh the packed dependencies as well.
 
 ## Import changes
 
@@ -40,7 +40,7 @@ Check feature availability on each target platform. Unknown options reject. Awai
 
 ## Configuration and tooling
 
-The tooling runs on Node 24.19.0+; Bun is optional for app consumers. The framework checkout requires the pinned Bun version; see [source prerequisites](/spark/getting-started#prerequisites). Use `npm run spark -- ...` in the framework checkout and `npx --no-install spark ...` in consumers. Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`; old prebuilt/go command spellings are removed. Expo's `dev --go` still means mobile Expo Go.
+The tooling runs on Node 24.19.0+; Bun is optional for app consumers. The framework checkout requires the pinned Bun version; see [source setup](/spark/getting-started#contributing-build-spark-from-source). Use `bun run spark ...` in the framework checkout and `npx --no-install spark ...` in consumers. Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`; old prebuilt/go command spellings are removed. Expo's `dev --go` still means mobile Expo Go.
 
 Author Spark-owned desktop settings in `desktop.config.json`, preserve `projectId`, and compose existing Expo projects through `/expo-config`, `/metro`, and `/native`. Review generated templates/wrappers when updating local consumers. Old Frame native identities/data are not automatically migrated.
 

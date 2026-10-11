@@ -57,7 +57,8 @@ Mobile Button/Select use optional `@expo/ui@0.2.0-beta.9` with Expo 54; Compose 
 | --- | --- |
 | `/ui/search` | `TextInputSearch`, controlled/default input, explicit appearance, focus/blur/measurement ref |
 | `/ui/sidebar` | Controlled nullable `selectedId`, required `onSelectionChange`, item-array or `SidebarItem` composition, typed context-menu coordinates |
-| `/ui/split-view` | `SidebarSplitView` with named `sidebar`/`content` panes, grouped title-bar options and provisional/ready layout events |
+| `/ui/split-view` | `SidebarSplitView` with named `sidebar`/`content` panes, an optional `list` column, grouped title-bar options and provisional/ready layout events |
+| `/ui/swipe` | `SwipeActions` with `leadingActions`/`trailingActions`, required `onAction`, and `getSwipeActionsAvailability`; `SwipeAction`/`SwipeActionsProps` types |
 | `/ui/glass` | `GlassView`, regular/clear styles and RN color tint; native effect requires macOS 26 |
 | `/ui/symbol` | `SFSymbol`, Apple-specific symbol names, layout/accessibility props and missing-symbol errors |
 
@@ -69,10 +70,27 @@ import { View, Text } from 'react-native';
 
 <SidebarSplitView
   sidebar={<View><Text>Navigation</Text></View>}
+  list={<View><Text>Documents</Text></View>}
   content={<View><Text>Editor</Text></View>}
   titleBar={{ content: { height: 52, material: 'glass' } }}
   onResize={event => console.log(event.phase, event.contentX)}
 />
+```
+
+`SidebarSplitView.list` adds a content-list column between the sidebar and detail content. Omit it for a two-pane layout.
+
+`SwipeActions` wraps a row with trackpad actions. Each `SwipeAction` has a unique `id`, `title`, SF Symbol `symbol`, and `color` (`#RRGGBB` or `#RRGGBBAA`). Swipe right to reveal `leadingActions` or left for `trailingActions`; a full swipe runs the first action. `onAction` receives its ID. In recycling lists, key the view by the logical row ID. Optional `dismisses` slides the row away; remove or remount it to recover after failure or undo.
+
+```tsx
+import { SwipeActions } from '@legendapp/spark/ui/swipe';
+import { Text } from 'react-native';
+
+<SwipeActions
+  trailingActions={[{ id: 'archive', title: 'Archive', symbol: 'archivebox', color: '#007AFF' }]}
+  onAction={id => console.log(id)}
+>
+  <Text>Project notes</Text>
+</SwipeActions>
 ```
 
 ## Settings windows

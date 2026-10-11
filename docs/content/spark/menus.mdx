@@ -14,7 +14,7 @@ const menu = await createMenu({
   id: 'editor',
   items: [{
     type: 'submenu', id: 'file', label: 'File', target: { menu: 'file' },
-    items: [{ type: 'action', id: 'open', label: 'Open…', shortcut: 'CmdOrCtrl+O' }],
+    items: [{ type: 'action', id: 'open', label: 'Open...', shortcut: 'CmdOrCtrl+O' }],
   }],
   onAction: event => { console.log(event.itemId); },
 });

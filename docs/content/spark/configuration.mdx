@@ -34,7 +34,7 @@ Spark owns identity, windows, document associations, update signing, helper bund
 From a prepared local SDK checkout:
 
 ```sh
-npm run spark -- add desktop --project /absolute/path/to/ExistingExpoApp
+bun run spark add desktop --project /absolute/path/to/ExistingExpoApp
 ```
 
 The integration checks the installed Expo `54.0.37`, React Native `0.81.6`, and React `19.1.4` baseline before editing. Upgrading an incompatible app is separate work. It preserves the entry point, source, existing mobile/web scripts, and mobile native projects. Existing desktop script names are preserved, using `spark:macos`/`spark:windows` when needed.
