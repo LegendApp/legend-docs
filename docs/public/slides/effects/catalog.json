@@ -303,13 +303,19 @@
         }
       ],
       "snippet": "---\ntitle: Animated title\n---\n\nimport { View, Text } from \"react-native\";\nimport { AnimatedTitle } from \"slides:typography/AnimatedTitle\";\n\n\n# Animated title\n\n<View style={{ width: 1696, height: 650 }}>\n<AnimatedTitle effect=\"word-lift\" width={1696} fontSize={104}>Make an entrance</AnimatedTitle>\n</View>\n",
+      "recording": {
+        "motion": [
+          "0.1:0.5"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/animated-title/2f6264c7a307cdfad2859954064bcde2ece7c887b56a1375584fc56b9fe4a223.mdx",
         "sha256": "2f6264c7a307cdfad2859954064bcde2ece7c887b56a1375584fc56b9fe4a223",
         "bytes": 306
       },
       "preview": {
-        "poster": "/slides/effects/previews/animated-title/804a8930c1de64f3cc5e884850e4445c563af9c5991e02c63b6e503ed879b351.png",
+        "poster": "/slides/effects/previews/animated-title/9adc9fbbff8fa98d45017a910b7f2daddc200cd537517386d77dc5b1d2c2ecaa.png",
+        "video": "/slides/effects/previews/animated-title/e7e9674da0b5bd95273cdca775edb2db5935abf12d2752ee09f007dc5d83bf1e.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "2f6264c7a307cdfad2859954064bcde2ece7c887b56a1375584fc56b9fe4a223",
         "packSha256": "d036806e9f57adc6a544861036dddd68cd54a293e16ffa1ab6a76f14b0196535"
@@ -332,13 +338,22 @@
         }
       ],
       "snippet": "---\ntitle: Ambient aurora\n---\n\nimport { View, Text } from \"react-native\";\nimport { AmbientAurora } from \"slides:backgrounds/AmbientAurora\";\nimport { Background } from \"@legend-apps/presentation\";\n\n\n# Ambient aurora\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><AmbientAurora /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
+      "recording": {
+        "seconds": 16,
+        "motion": [
+          "2:14"
+        ],
+        "noiseDb": -80,
+        "freezeMs": 400
+      },
       "example": {
         "url": "/slides/effects/examples/ambientaurora/534860c59d615b56b31f074f299df8bf69e03721322d0321e0f0b0e5ba022f6e.mdx",
         "sha256": "534860c59d615b56b31f074f299df8bf69e03721322d0321e0f0b0e5ba022f6e",
         "bytes": 424
       },
       "preview": {
-        "poster": "/slides/effects/previews/ambientaurora/03bde1c22588785b73a05985499f473f13ed34ece15e37622d7f47720d50d58a.png",
+        "poster": "/slides/effects/previews/ambientaurora/0b70ab4687ab80570f7327bb014273d9c70303c2ce20b3db5c2d2d69a9a4a3ca.png",
+        "video": "/slides/effects/previews/ambientaurora/2d94e4be2ad7e1bef8f7313bfd0b25373966113f5271a299e05df5153d9fcd59.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "534860c59d615b56b31f074f299df8bf69e03721322d0321e0f0b0e5ba022f6e",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
@@ -391,13 +406,21 @@
         }
       ],
       "snippet": "---\ntitle: Fluid\n---\n\nimport { View, Text } from \"react-native\";\nimport { Fluid } from \"slides:backgrounds/Fluid\";\nimport { Background } from \"@legend-apps/presentation\";\n\n\n# Fluid\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Fluid /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
+      "recording": {
+        "seconds": 12,
+        "motion": [
+          "1:10"
+        ],
+        "noiseDb": -80
+      },
       "example": {
         "url": "/slides/effects/examples/fluid/5cece03b9a747e4d9714af4b44ce30385eba7a634a58a060d900efe931ede46f.mdx",
         "sha256": "5cece03b9a747e4d9714af4b44ce30385eba7a634a58a060d900efe931ede46f",
         "bytes": 382
       },
       "preview": {
-        "poster": "/slides/effects/previews/fluid/d663f46a694261a8f70c9ef54e4590e5ae053a8254202ec41649a69c61ce5506.png",
+        "poster": "/slides/effects/previews/fluid/b0a8ece14a9f6fa1938f55e7d196df5591ef7f27d802a062aa8e868698c67576.png",
+        "video": "/slides/effects/previews/fluid/8859e1e7ddaef47c0f09742cc1f38b73849deeb89227a4eec074316849ecfa95.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "5cece03b9a747e4d9714af4b44ce30385eba7a634a58a060d900efe931ede46f",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
@@ -420,13 +443,22 @@
         }
       ],
       "snippet": "---\ntitle: Smoke\n---\n\nimport { View, Text } from \"react-native\";\nimport { Smoke } from \"slides:backgrounds/Smoke\";\nimport { Background } from \"@legend-apps/presentation\";\n\n\n# Smoke\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Smoke /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
+      "recording": {
+        "seconds": 12,
+        "motion": [
+          "2:10"
+        ],
+        "noiseDb": -80,
+        "freezeMs": 300
+      },
       "example": {
         "url": "/slides/effects/examples/smoke/54a677330b19ad45e322a3f169e434c00c621b1d3c4ef2731afa30b04ac83893.mdx",
         "sha256": "54a677330b19ad45e322a3f169e434c00c621b1d3c4ef2731afa30b04ac83893",
         "bytes": 382
       },
       "preview": {
-        "poster": "/slides/effects/previews/smoke/c58dcb728a2507ec0f9f1faf70759e4a27ab836a072a221421150b03ee1e6e6d.png",
+        "poster": "/slides/effects/previews/smoke/c9fe6690253446a65d0996d51ce95d0af90167affe79d015ab32f9ac45923228.png",
+        "video": "/slides/effects/previews/smoke/5eefd2631f5a1d0cbc10c02ea31ca5ff3b178bca1a77ee04f54058e0df4139f4.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "54a677330b19ad45e322a3f169e434c00c621b1d3c4ef2731afa30b04ac83893",
         "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
@@ -1140,13 +1172,19 @@
         }
       ],
       "snippet": "---\ntitle: Freeze and annotate\n---\n\nimport { View, Text } from \"react-native\";\nimport { FreezeFrame } from \"slides:presenting/FreezeFrame\";\nimport Animated, { useAnimatedStyle } from \"react-native-reanimated\";\n\nexport function Orbit({time}) { const style = useAnimatedStyle(() => ({transform: [{translateX: 600 + Math.sin(time.value) * 300},{translateY: 220 + Math.cos(time.value) * 100}]})); return <View style={{width: 1696,height: 650}}><Animated.View style={[{width: 100,height: 100,borderRadius: 50,backgroundColor: \"#67e8f9\"},style]} /></View>; }\n\n# Freeze and annotate\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={2}>{step => <FreezeFrame paused={step > 0} annotation={<Text style={{color: \"white\",fontSize: 48}}>Pause to explain this frame</Text>}>{time => <Orbit time={time} />}</FreezeFrame>}</Steps>\n</View>\n",
+      "recording": {
+        "motion": [
+          "0.5:1.2"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/freeze-frame/71f6818d9446d73214f9f803f0a37b155def5e42c96114805c312232071e0b4c.mdx",
         "sha256": "71f6818d9446d73214f9f803f0a37b155def5e42c96114805c312232071e0b4c",
         "bytes": 833
       },
       "preview": {
-        "poster": "/slides/effects/previews/freeze-frame/7dfc21d8344fb240e6ffa97886be6b5f7f5ebfbfef9b8838345fad355b519418.png",
+        "poster": "/slides/effects/previews/freeze-frame/ac629802915b3e02f7becba915cacd699a78913aa21243efdeba4811e099273d.png",
+        "video": "/slides/effects/previews/freeze-frame/69101e4898265cd7bc948cc613e8b3a2e161f834d3c2d838a04fe86beb303476.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "71f6818d9446d73214f9f803f0a37b155def5e42c96114805c312232071e0b4c",
         "packSha256": "20039f3fdca7714fe8eccc02466be0fe571a428f490543619cf0f4df5831702e"
@@ -1177,13 +1215,19 @@
         }
       ],
       "snippet": "---\ntitle: Chart bar\n---\n\nimport { View, Text } from \"react-native\";\nimport { ChartBar } from \"slides:charts/ChartBar\";\n\n\n# Chart bar\n\n<View style={{ width: 1696, height: 650 }}>\n<ChartBar luminous highlighted rounded style={{width: 1400,height: 80,marginTop: 250}} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "0.1:0.5"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/chart-bar/d997bca1aad956e05020dae1d97513c3d6ac643b43645df548f2b35d75159ba2.mdx",
         "sha256": "d997bca1aad956e05020dae1d97513c3d6ac643b43645df548f2b35d75159ba2",
         "bytes": 277
       },
       "preview": {
-        "poster": "/slides/effects/previews/chart-bar/5aee19146f08fe754d71abec5db7069224fbc586626e4bed0ad5340525491b85.png",
+        "poster": "/slides/effects/previews/chart-bar/a12e32e8b538b681deb4c5dd581f9e6dd85ef5bcf30a484e3f9ddb02aa7b03cd.png",
+        "video": "/slides/effects/previews/chart-bar/9be29c5b37d91e6254534186aaeab5c6e7f25cfc39f6298931ba50e5b9767a8d.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "d997bca1aad956e05020dae1d97513c3d6ac643b43645df548f2b35d75159ba2",
         "packSha256": "3a06b9422c2737a41db7a3cdcf8ac41f2173aa99c8f31de8899320083fc6ce7c"
@@ -1220,7 +1264,8 @@
         "bytes": 371
       },
       "preview": {
-        "poster": "/slides/effects/previews/bar-row/2c5b171a79ed2430561f76a2b14f6a23138bbca92d0341ac9f70f0abb152b29a.png",
+        "poster": "/slides/effects/previews/bar-row/4dca8c1ed4a3c2c007f85eae251fb933395db4fee6eb6b1396961156d70e19e6.png",
+        "video": "/slides/effects/previews/bar-row/0b01cedc06d81123843f65e0b81f73b7b263f8a3e256f51e54919d08984e01af.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "aa7f9f707f4e738b0ffd2e316488cdef7b3c972fefebf6bae5b2e10bb5e639d7",
         "packSha256": "3a06b9422c2737a41db7a3cdcf8ac41f2173aa99c8f31de8899320083fc6ce7c"
@@ -1288,13 +1333,21 @@
         }
       ],
       "snippet": "---\ntitle: Lottie animation\n---\n\nimport { View, Text } from \"react-native\";\nimport { LottiePlayer } from \"slides:animation/LottiePlayer\";\n\nexport const animation = {\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":400,\"h\":400,\"nm\":\"Orbit\",\"ddd\":0,\"assets\":[],\"layers\":[{\"ddd\":0,\"ind\":1,\"ty\":4,\"nm\":\"Disc\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100},\"r\":{\"a\":0,\"k\":0},\"p\":{\"a\":0,\"k\":[200,200,0]},\"a\":{\"a\":0,\"k\":[0,0,0]},\"s\":{\"a\":1,\"k\":[{\"t\":0,\"s\":[40,40,100],\"e\":[100,100,100],\"i\":{\"x\":[0.5],\"y\":[1]},\"o\":{\"x\":[0.5],\"y\":[0]}},{\"t\":45,\"s\":[100,100,100],\"e\":[40,40,100],\"i\":{\"x\":[0.5],\"y\":[1]},\"o\":{\"x\":[0.5],\"y\":[0]}},{\"t\":90,\"s\":[40,40,100]}]}},\"shapes\":[{\"ty\":\"el\",\"p\":{\"a\":0,\"k\":[0,0]},\"s\":{\"a\":0,\"k\":[220,220]},\"nm\":\"Circle\"},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.4,0.9,1,1]},\"o\":{\"a\":0,\"k\":100},\"r\":1}],\"ip\":0,\"op\":90,\"st\":0,\"bm\":0}]};\n\n# Lottie animation\n\n<View style={{ width: 1696, height: 650 }}>\n<LottiePlayer source={animation} durationSeconds={3} style={{width: 600,height: 600,alignSelf: \"center\"}} />\n</View>\n",
+      "recording": {
+        "motion": [
+          "0.6:1.2",
+          "2:2.5",
+          "3.6:4.2"
+        ]
+      },
       "example": {
         "url": "/slides/effects/examples/lottie-player/b75d0bf97db20a2ba1e3ec267a743eb8a2e005b2d50cfa5f2156a21677a0bfda.mdx",
         "sha256": "b75d0bf97db20a2ba1e3ec267a743eb8a2e005b2d50cfa5f2156a21677a0bfda",
         "bytes": 991
       },
       "preview": {
-        "poster": "/slides/effects/previews/lottie-player/f684369e6cbbe3686473dbdc4c489fdca7f35ec770b75dac4c0453972404bf79.png",
+        "poster": "/slides/effects/previews/lottie-player/5dd7fa945a6916f483c5cf8f70bc4f17c87ee4dd8f201ce8eaddedea54d14ea5.png",
+        "video": "/slides/effects/previews/lottie-player/b16fabff7b95190d44f8b134d20e7499647a03bb81afe2308c25cd00c444aa6e.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "b75d0bf97db20a2ba1e3ec267a743eb8a2e005b2d50cfa5f2156a21677a0bfda",
         "packSha256": "327ae2c1f29b7eb49c991e790d1faf6229057c6ea4b3d0802e1152bb545f3fcd"
