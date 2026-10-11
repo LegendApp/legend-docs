@@ -75,7 +75,7 @@
       }
     },
     "diagrams": {
-      "latest": "1.0.0",
+      "latest": "1.0.1",
       "versions": {
         "1.0.0": {
           "version": "1.0.0",
@@ -93,11 +93,28 @@
           "exports": {
             "BranchFan": "./BranchFan.tsx"
           }
+        },
+        "1.0.1": {
+          "version": "1.0.1",
+          "sha256": "f18dabbecdda8a95d41975001f71ccf722b99208608aff5b8a161d7a278f47ab",
+          "bytes": 4155,
+          "url": "/slides/effects/packs/diagrams/1.0.1/f18dabbecdda8a95d41975001f71ccf722b99208608aff5b8a161d7a278f47ab.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "skia"
+          ],
+          "dependencies": {
+            "materials": "1.0.1"
+          },
+          "exports": {
+            "BranchFan": "./BranchFan.tsx"
+          }
         }
       }
     },
     "materials": {
-      "latest": "1.0.0",
+      "latest": "1.0.1",
       "versions": {
         "1.0.0": {
           "version": "1.0.0",
@@ -112,6 +129,29 @@
           ],
           "dependencies": {},
           "exports": {
+            "GlassPanels": "./GlassPanels.tsx",
+            "BranchMaterial": "./BranchMaterial.ts",
+            "GlassStrike": "./GlassStrike.tsx",
+            "ImageShatter": "./ImageShatter.tsx",
+            "Fire": "./Fire.tsx",
+            "Distortion": "./Distortion.ts",
+            "Refraction": "./Refraction.ts"
+          }
+        },
+        "1.0.1": {
+          "version": "1.0.1",
+          "sha256": "f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25",
+          "bytes": 40148,
+          "url": "/slides/effects/packs/materials/1.0.1/f67cced6a54b3f176ae64b50f29edf0f99e6d887f29c9e254a3680225a768b25.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "skia",
+            "webgpu"
+          ],
+          "dependencies": {},
+          "exports": {
+            "GPU": "./GPU.ts",
             "GlassPanels": "./GlassPanels.tsx",
             "BranchMaterial": "./BranchMaterial.ts",
             "GlassStrike": "./GlassStrike.tsx",
@@ -150,13 +190,32 @@
       }
     },
     "particles": {
-      "latest": "1.0.0",
+      "latest": "1.0.1",
       "versions": {
         "1.0.0": {
           "version": "1.0.0",
           "sha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22",
           "bytes": 14594,
           "url": "/slides/effects/packs/particles/1.0.0/5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "webgpu"
+          ],
+          "dependencies": {},
+          "exports": {
+            "GlowField": "./GlowField.ts",
+            "WindowStorm": "./WindowStorm.ts",
+            "Constellation": "./Constellation.ts",
+            "InterfaceReveal": "./InterfaceReveal.ts",
+            "TrajectoryEmitter": "./TrajectoryEmitter.tsx"
+          }
+        },
+        "1.0.1": {
+          "version": "1.0.1",
+          "sha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d",
+          "bytes": 14547,
+          "url": "/slides/effects/packs/particles/1.0.1/fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d.json",
           "hostApiVersion": 1,
           "capabilities": [
             "reanimated",
@@ -485,12 +544,6 @@
         "url": "/slides/effects/examples/glass-panels/99404fea8950968156958b72541f2ead3d5f0dd57eeca576c6c0e9d7090cd231.mdx",
         "sha256": "99404fea8950968156958b72541f2ead3d5f0dd57eeca576c6c0e9d7090cd231",
         "bytes": 355
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/glass-panels/9d52a16e3b654a2ed5d44bcb900985ade0d734eedc896292c9c6c36eae098fce.png",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "99404fea8950968156958b72541f2ead3d5f0dd57eeca576c6c0e9d7090cd231",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -522,13 +575,6 @@
         "url": "/slides/effects/examples/glass-strike/10451e120460935a335878e7ece604339f6d079082aa96df711787d269ed74d5.mdx",
         "sha256": "10451e120460935a335878e7ece604339f6d079082aa96df711787d269ed74d5",
         "bytes": 349
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/glass-strike/f0cd62883ef9e917859962eefdbaad639886d13aba7422daaa31bdba4a9f0ad9.png",
-        "video": "/slides/effects/previews/glass-strike/f5d3411a237cda2844144096a35f594d7ab9f77b53a0bdd9ee9947f562865487.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "10451e120460935a335878e7ece604339f6d079082aa96df711787d269ed74d5",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -556,12 +602,6 @@
         "url": "/slides/effects/examples/upward-flames/9915be26e18a9bcb75b9b9996eb932d7204c2c24d0d9a71f6d8c5440b3420ebe.mdx",
         "sha256": "9915be26e18a9bcb75b9b9996eb932d7204c2c24d0d9a71f6d8c5440b3420ebe",
         "bytes": 246
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/upward-flames/30d01266fdef24dea85df9afd39a8ad9d1edc99c680d1671e11b5b22b416693a.png",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "9915be26e18a9bcb75b9b9996eb932d7204c2c24d0d9a71f6d8c5440b3420ebe",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -589,12 +629,6 @@
         "url": "/slides/effects/examples/falling-sprites/8db532ecef29d66fa77178555cb1f74445dcb109b0b28da16e2e03b5330b2402.mdx",
         "sha256": "8db532ecef29d66fa77178555cb1f74445dcb109b0b28da16e2e03b5330b2402",
         "bytes": 1652
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/falling-sprites/980d47afd350b5bb99819fffd0e1452bfd0f74ace6c9b243dc0aeb26fcf2b79e.png",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "8db532ecef29d66fa77178555cb1f74445dcb109b0b28da16e2e03b5330b2402",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -626,13 +660,6 @@
         "url": "/slides/effects/examples/image-shatter/15cff3df3e7c428c6d8f907f40b35429f2c9acb32341ca3185819d63e7790c5b.mdx",
         "sha256": "15cff3df3e7c428c6d8f907f40b35429f2c9acb32341ca3185819d63e7790c5b",
         "bytes": 1768
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/image-shatter/5dc42b11d21b9e2c285f2ac6a99b642b54bea09205acefcc38fdf73f931d6b1e.png",
-        "video": "/slides/effects/previews/image-shatter/612a8c489c0f9e24160df82bd3bb13869059e8795332db67418a85b222f882b6.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "15cff3df3e7c428c6d8f907f40b35429f2c9acb32341ca3185819d63e7790c5b",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -660,13 +687,6 @@
         "url": "/slides/effects/examples/prismatic-tear/7067e335b43c7919b03f1446ee3193de10e7ccf7029a3add71834af308df18b9.mdx",
         "sha256": "7067e335b43c7919b03f1446ee3193de10e7ccf7029a3add71834af308df18b9",
         "bytes": 549
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/prismatic-tear/90e68d2e476ed434d02fe0b44a370f7bfe0f182c7822614e584f1d119e9aa626.png",
-        "video": "/slides/effects/previews/prismatic-tear/99d29f9b067094fd5064c9c0c095dd33f6039453e828db71b5e0b0eb121ca4cd.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "7067e335b43c7919b03f1446ee3193de10e7ccf7029a3add71834af308df18b9",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -694,13 +714,6 @@
         "url": "/slides/effects/examples/soft-ripple/bb5408bc6cd1939b102ec7ca236d71ad3e86d718894694f3d01a794f92a87388.mdx",
         "sha256": "bb5408bc6cd1939b102ec7ca236d71ad3e86d718894694f3d01a794f92a87388",
         "bytes": 537
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/soft-ripple/b86fbadfd97b03cde1ea521814929f7f4f15ef2ec4c515f84671a9cb96edbfe8.png",
-        "video": "/slides/effects/previews/soft-ripple/81a91c14676b00d94b51302c8fab3f323e1989326c17ffd5ec153ea5255cb254.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "bb5408bc6cd1939b102ec7ca236d71ad3e86d718894694f3d01a794f92a87388",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -732,13 +745,6 @@
         "url": "/slides/effects/examples/refraction/48c1a29d8826e9d5163a25adec965466e2234e153ea1a4b2e803ee2705a13b5e.mdx",
         "sha256": "48c1a29d8826e9d5163a25adec965466e2234e153ea1a4b2e803ee2705a13b5e",
         "bytes": 585
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/refraction/b68ffed936d0cde73a8bbde4a551c7a89ad31b2369bce44c548d5cdb5b09b494.png",
-        "video": "/slides/effects/previews/refraction/73a8f6e1c66c31ba1e2bb98d4a0877d10228e2090de01d66f6fc62a7b35aec25.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "48c1a29d8826e9d5163a25adec965466e2234e153ea1a4b2e803ee2705a13b5e",
-        "packSha256": "ceb771032255f30d01ee4d5b252d9298061de1b9e2cb19bf3af157e78a762546"
       }
     },
     {
@@ -766,13 +772,6 @@
         "url": "/slides/effects/examples/glow-field/5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c.mdx",
         "sha256": "5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c",
         "bytes": 372
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/glow-field/7055f3538c4fbb4254e7b2cec4af95bad39ba8954cd2f6bdeb99b69d334dca99.png",
-        "video": "/slides/effects/previews/glow-field/43f35d03e9138282100f0560b1466dc9659da908ed74dae2eb2d982ee1d74761.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c",
-        "packSha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22"
       }
     },
     {
@@ -800,13 +799,6 @@
         "url": "/slides/effects/examples/window-storm/c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b.mdx",
         "sha256": "c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b",
         "bytes": 381
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/window-storm/d80bba3c64b19eabe679146c23dc935b0a96659b78488b839eebf8203632ec56.png",
-        "video": "/slides/effects/previews/window-storm/7ee325e68734265105336eb27543daa7bb01f31ae5d21d54dcea32ca5f26c7c6.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b",
-        "packSha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22"
       }
     },
     {
@@ -834,13 +826,6 @@
         "url": "/slides/effects/examples/constellation/e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e.mdx",
         "sha256": "e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e",
         "bytes": 398
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/constellation/729ab603c534b41d6fba7fdf799721f056090620af445022c8a8f7f1086536e7.png",
-        "video": "/slides/effects/previews/constellation/232ac21dfb731b3361eef1d7e45dee3d8a1d1bef068b04ebbf19197120c1ee71.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e",
-        "packSha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22"
       }
     },
     {
@@ -868,13 +853,6 @@
         "url": "/slides/effects/examples/interface-reveal/65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4.mdx",
         "sha256": "65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4",
         "bytes": 414
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/interface-reveal/bd7610f915c0d6c4a0c4c8aee897defb3e0459365581c1851be11da51353bf07.png",
-        "video": "/slides/effects/previews/interface-reveal/8f6d8694a191459148360ad63fa787e32c7dae6bd1d4571fe73dd3339dc0f86b.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4",
-        "packSha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22"
       }
     },
     {
@@ -906,12 +884,6 @@
         "url": "/slides/effects/examples/trajectory-emitter/09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba.mdx",
         "sha256": "09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba",
         "bytes": 576
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/trajectory-emitter/d41e01b3fdd1e1f110a2527dbfea156775b0629ea5520124d6cfc8429eb2ce86.png",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba",
-        "packSha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22"
       }
     },
     {
@@ -939,12 +911,6 @@
         "url": "/slides/effects/examples/branch-fan/49e46cba4126d63f3fe012738f5a6760e1154a7101b9cc5d90094165fa687433.mdx",
         "sha256": "49e46cba4126d63f3fe012738f5a6760e1154a7101b9cc5d90094165fa687433",
         "bytes": 324
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/branch-fan/1f78e5bbba098e86ed6bc3eea2076139debd88a4a72d15e0f73e5368b0c6b557.png",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "49e46cba4126d63f3fe012738f5a6760e1154a7101b9cc5d90094165fa687433",
-        "packSha256": "6373c6cf7f232fda9e88d5274985671a021c07f49d557bed09732be7d9f60960"
       }
     },
     {
