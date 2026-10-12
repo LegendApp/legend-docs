@@ -22,13 +22,13 @@
       }
     },
     "backgrounds": {
-      "latest": "1.0.0",
+      "latest": "1.0.1",
       "versions": {
-        "1.0.0": {
-          "version": "1.0.0",
-          "sha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf",
-          "bytes": 23937,
-          "url": "/slides/effects/packs/backgrounds/1.0.0/ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf.json",
+        "1.0.1": {
+          "version": "1.0.1",
+          "sha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1",
+          "bytes": 21616,
+          "url": "/slides/effects/packs/backgrounds/1.0.1/488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1.json",
           "hostApiVersion": 1,
           "capabilities": [
             "reanimated",
@@ -43,7 +43,6 @@
             "Droplets": "./Droplets.tsx",
             "GlassAtmosphere": "./GlassAtmosphere.tsx",
             "Fluid": "./Fluid.tsx",
-            "Smoke": "./Smoke.tsx",
             "Wireframe": "./Wireframe.tsx",
             "DropletMaterial": "./DropletMaterial.ts",
             "DropletGeometry": "./DropletGeometry.ts",
@@ -190,13 +189,13 @@
       }
     },
     "particles": {
-      "latest": "1.0.1",
+      "latest": "1.0.2",
       "versions": {
-        "1.0.0": {
-          "version": "1.0.0",
-          "sha256": "5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22",
-          "bytes": 14594,
-          "url": "/slides/effects/packs/particles/1.0.0/5a3d5f0f755b340c157dc06f6c468edd443580ab71c145162db38b9fa75bba22.json",
+        "1.0.2": {
+          "version": "1.0.2",
+          "sha256": "83d994d18c7c53621056eff121f6abc28cb0262bdaad0c23d64ea2261d35398d",
+          "bytes": 12072,
+          "url": "/slides/effects/packs/particles/1.0.2/83d994d18c7c53621056eff121f6abc28cb0262bdaad0c23d64ea2261d35398d.json",
           "hostApiVersion": 1,
           "capabilities": [
             "reanimated",
@@ -205,26 +204,6 @@
           "dependencies": {},
           "exports": {
             "GlowField": "./GlowField.ts",
-            "WindowStorm": "./WindowStorm.ts",
-            "Constellation": "./Constellation.ts",
-            "InterfaceReveal": "./InterfaceReveal.ts",
-            "TrajectoryEmitter": "./TrajectoryEmitter.tsx"
-          }
-        },
-        "1.0.1": {
-          "version": "1.0.1",
-          "sha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d",
-          "bytes": 14547,
-          "url": "/slides/effects/packs/particles/1.0.1/fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d.json",
-          "hostApiVersion": 1,
-          "capabilities": [
-            "reanimated",
-            "webgpu"
-          ],
-          "dependencies": {},
-          "exports": {
-            "GlowField": "./GlowField.ts",
-            "WindowStorm": "./WindowStorm.ts",
             "Constellation": "./Constellation.ts",
             "InterfaceReveal": "./InterfaceReveal.ts",
             "TrajectoryEmitter": "./TrajectoryEmitter.tsx"
@@ -356,7 +335,7 @@
         "video": "/slides/effects/previews/ambientaurora/2d94e4be2ad7e1bef8f7313bfd0b25373966113f5271a299e05df5153d9fcd59.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "534860c59d615b56b31f074f299df8bf69e03721322d0321e0f0b0e5ba022f6e",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
+        "packSha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1"
       }
     },
     {
@@ -386,7 +365,7 @@
         "video": "/slides/effects/previews/droplets/22d8ab5ffd0a00b2111be8bc609d24f9e5dbb68a5a2c59876cddbbe33a3c5fe7.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "2c4bea7941e78879ee841c375786ee007f353832bf5a2c68bd73e1f35db11732",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
+        "packSha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1"
       }
     },
     {
@@ -423,45 +402,7 @@
         "video": "/slides/effects/previews/fluid/8859e1e7ddaef47c0f09742cc1f38b73849deeb89227a4eec074316849ecfa95.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "5cece03b9a747e4d9714af4b44ce30385eba7a634a58a060d900efe931ede46f",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
-      }
-    },
-    {
-      "slug": "smoke",
-      "title": "Smoke",
-      "pack": "backgrounds",
-      "entry": "Smoke",
-      "symbol": "Smoke",
-      "description": "Drifting layered smoke.",
-      "tags": [
-        "backgrounds"
-      ],
-      "props": [
-        {
-          "name": "Background",
-          "description": "Use the host wrapper for priority and intensity."
-        }
-      ],
-      "snippet": "---\ntitle: Smoke\n---\n\nimport { View, Text } from \"react-native\";\nimport { Smoke } from \"slides:backgrounds/Smoke\";\nimport { Background } from \"@legend-apps/presentation\";\n\n\n# Smoke\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Smoke /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
-      "recording": {
-        "seconds": 12,
-        "motion": [
-          "2:10"
-        ],
-        "noiseDb": -80,
-        "freezeMs": 300
-      },
-      "example": {
-        "url": "/slides/effects/examples/smoke/54a677330b19ad45e322a3f169e434c00c621b1d3c4ef2731afa30b04ac83893.mdx",
-        "sha256": "54a677330b19ad45e322a3f169e434c00c621b1d3c4ef2731afa30b04ac83893",
-        "bytes": 382
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/smoke/c9fe6690253446a65d0996d51ce95d0af90167affe79d015ab32f9ac45923228.png",
-        "video": "/slides/effects/previews/smoke/5eefd2631f5a1d0cbc10c02ea31ca5ff3b178bca1a77ee04f54058e0df4139f4.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "54a677330b19ad45e322a3f169e434c00c621b1d3c4ef2731afa30b04ac83893",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
+        "packSha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1"
       }
     },
     {
@@ -497,7 +438,7 @@
         "video": "/slides/effects/previews/wireframe/5ff8723ef07eaff1f988f97eb47b6e55b4b979a450c656bd49283cf22bae6167.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "96be1c7b976330533f084c294f6c7e4b313b96c9befb38b32fc723275bf10c7b",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
+        "packSha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1"
       }
     },
     {
@@ -534,7 +475,7 @@
         "video": "/slides/effects/previews/glassatmosphere/4c243b94202b90562c64a640c68487229234868512b1eaae9cf84923f5b28c59.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "df828c951a1decd0f8a873c9d7f63728d8695dbcfa89a6b3a3786f1a0c2f7af1",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
+        "packSha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1"
       }
     },
     {
@@ -570,7 +511,7 @@
         "video": "/slides/effects/previews/interactive-glass/dfa662902a462619d6fc6953cf5234917311c643801b5999518dffe2a1acda20.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "0015893eb6948aaf2a0b3163cffebe109768d21107168d58d43eb5c9a205b7b5",
-        "packSha256": "ce9ec478c20ea92f3c40d7a3d76f7d35c8da6af22162d43c6642df9ef96e5fbf"
+        "packSha256": "488b15de4f985188fd479218c9e5d0f7a37986ca5635a1848c2e6aa5a40133b1"
       }
     },
     {
@@ -912,41 +853,7 @@
         "video": "/slides/effects/previews/glow-field/f1bc7641bf141f7c176d4e23622fd9d750159d4bff5d3ea7253f7183c690257f.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "5f41f0a356e58e3e60ee1bcc2e7935c1837c34fa2b2dd8a39d163070ff25b00c",
-        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
-      }
-    },
-    {
-      "slug": "window-storm",
-      "title": "Window storm",
-      "pack": "particles",
-      "entry": "WindowStorm",
-      "symbol": "createWindowStorm",
-      "description": "A configurable particle program executed by the host WebGPU renderer.",
-      "tags": [
-        "particles"
-      ],
-      "props": [
-        {
-          "name": "particleCount",
-          "description": "Choose particle density; keep it paired with the returned program."
-        },
-        {
-          "name": "speed / scale",
-          "description": "Adjust shared-clock speed and cloud geometry."
-        }
-      ],
-      "snippet": "---\ntitle: Window storm\n---\n\nimport { View, Text } from \"react-native\";\nimport { createWindowStorm } from \"slides:particles/WindowStorm\";\n\nexport const field = createWindowStorm({particleCount: 384});\n\n# Window storm\n\n<View style={{ width: 1696, height: 650 }}>\n<TypeGPUShader code={field.program} particleCount={field.particleCount} particles width={1696} height={650} />\n</View>\n",
-      "example": {
-        "url": "/slides/effects/examples/window-storm/c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b.mdx",
-        "sha256": "c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b",
-        "bytes": 381
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/window-storm/a79813b3ea1ae6838e2032ee62ac2a1a6b5f35efe49ff5c5fb9822bc5be011cc.png",
-        "video": "/slides/effects/previews/window-storm/196825713101a7661fb2a241347c4fd277c04845bb03a7d1991618c28642ffc3.mp4",
-        "renderer": "Legend Slides for macOS (development build)",
-        "exampleSha256": "c15f07e81fc719ea14b9e98b01fc3fcad883aea17718e41f2e33617b3f60624b",
-        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
+        "packSha256": "83d994d18c7c53621056eff121f6abc28cb0262bdaad0c23d64ea2261d35398d"
       }
     },
     {
@@ -980,7 +887,7 @@
         "video": "/slides/effects/previews/constellation/560195dea0774628d7ab2b713cc7acae8e7510a4048bcb16732c768e453dc2c0.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "e639f8b0992df9e02129418d932fd939ce23935282eb91fdf0bcf1d51814f78e",
-        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
+        "packSha256": "83d994d18c7c53621056eff121f6abc28cb0262bdaad0c23d64ea2261d35398d"
       }
     },
     {
@@ -1014,7 +921,7 @@
         "video": "/slides/effects/previews/interface-reveal/1fb361254b3c657bbf1e4edec4a2954237088b7c23f9b25b0b4775479ad3867c.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "65f81dfeccdfb51f481ecd5ad012cfaaa948d42bd181b1fd74445429be873cf4",
-        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
+        "packSha256": "83d994d18c7c53621056eff121f6abc28cb0262bdaad0c23d64ea2261d35398d"
       }
     },
     {
@@ -1057,7 +964,7 @@
         "video": "/slides/effects/previews/trajectory-emitter/8ce753545cc35d179b39c94803a771c2189628727ba2041df2a16346ae20f414.mp4",
         "renderer": "Legend Slides for macOS (development build)",
         "exampleSha256": "09a6294349bf8b2981d17c4b442ce87144aca17a8361027b9458be47f2836dba",
-        "packSha256": "fbe81cf9d307c03a1a4d0c02a48b0b1190a633f8916e69d02cfd37b24dfe9e4d"
+        "packSha256": "83d994d18c7c53621056eff121f6abc28cb0262bdaad0c23d64ea2261d35398d"
       }
     },
     {

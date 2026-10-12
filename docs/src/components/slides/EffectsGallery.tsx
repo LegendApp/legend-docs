@@ -11,7 +11,7 @@ type Catalog = { packs: Record<string, {latest: string; versions: Record<string,
 const catalog = rawCatalog as Catalog;
 const families = Object.keys(catalog.packs).sort();
 // Featured in the landing reel, in order; effects without a video are skipped.
-const featured = ['fluid', 'window-storm', 'glow-field', 'upward-flames', 'glass-strike', 'constellation', 'animated-title', 'chart-bar'];
+const featured = ['fluid', 'glow-field', 'upward-flames', 'glass-strike', 'constellation', 'animated-title', 'chart-bar'];
 const reel = featured.flatMap(slug => catalog.effects.filter(effect => effect.slug === slug && effect.preview?.video));
 const frame = 'overflow-hidden rounded-xl border border-[#29313a] bg-[#11171e]';
 const label = 'font-mono text-[11px] uppercase tracking-wide text-[#6d8498]';
