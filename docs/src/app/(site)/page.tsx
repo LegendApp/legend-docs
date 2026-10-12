@@ -208,10 +208,6 @@ function Spark() {
                     <div className="flex flex-wrap items-center gap-3">
                         <Image src="/assets/legend-spark.png" alt="" width={44} height={44} className="rounded-[10px]" />
                         <span className="text-[17px] font-semibold text-white">Legend Spark</span>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-300/[0.12] px-3 py-1 text-[12px] font-semibold uppercase tracking-wider text-amber-200">
-                            <span className="size-1.5 rounded-full bg-amber-300" />
-                            Experimental
-                        </span>
                     </div>
                     <h3 className="mt-8 text-[34px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[44px]">
                         React Native, meet the desktop.
@@ -220,6 +216,11 @@ function Spark() {
                         Build native Mac apps with React Native and Expo Desktop. Screens use React Native&apos;s native
                         renderer, JavaScript runs in Hermes, and one package brings real windows, menus, dialogs, and files.
                     </p>
+                    <div className="mt-5 inline-flex max-w-full overflow-x-auto rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2">
+                        <code className="whitespace-nowrap font-mono text-[12px] text-white/80">
+                            npm create @legendapp/spark@next MyApp
+                        </code>
+                    </div>
                     <div className="mt-8">
                         <code className="text-[13px] text-white/80">@legendapp/spark/…</code>
                         <ul className="mt-3 flex flex-wrap gap-1.5">
