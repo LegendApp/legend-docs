@@ -3,7 +3,7 @@ import { ArrowDownToLine } from 'lucide-react';
 import type { Project } from '@/lib/projects';
 
 // Accent glow per app, plus each window screenshot's size and toolbar color so the title bar blends in.
-const looks: Record<string, { accent: string; window?: { width: number; height: number; bar: string } }> = {
+export const looks: Record<string, { accent: string; window?: { width: number; height: number; bar: string } }> = {
     diff: { accent: '#3ecf6e', window: { width: 1276, height: 748, bar: '#212123' } },
     markdown: { accent: '#ffa526', window: { width: 896, height: 696, bar: '#f5f6f8' } },
     code: { accent: '#2bb4e6', window: { width: 1076, height: 756, bar: '#1e1e1e' } },
@@ -12,7 +12,17 @@ const looks: Record<string, { accent: string; window?: { width: number; height: 
     photos: { accent: '#f28a52' },
 };
 
-function AppIcon({ project, size, className = '' }: { project: Project; size: number; className?: string }) {
+export function AppIcon({
+    project,
+    size,
+    className = '',
+    priority = true,
+}: {
+    project: Project;
+    size: number;
+    className?: string;
+    priority?: boolean;
+}) {
     return (
         <Image
             src={`/assets/apps/${project.slug}-icon.png`}
@@ -20,7 +30,7 @@ function AppIcon({ project, size, className = '' }: { project: Project; size: nu
             width={size}
             height={size}
             className={`rounded-[22.5%] shadow-[0_1px_0_#ffffff26_inset,0_18px_40px_-12px_#000c] ${className}`}
-            priority
+            priority={priority}
         />
     );
 }

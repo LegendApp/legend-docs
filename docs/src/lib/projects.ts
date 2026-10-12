@@ -115,6 +115,7 @@ export const projects: Project[] = [
             'A local music player for macOS, built around the folders, audio files, and .m3u playlists you already have.',
         highlights: ['Your own audio files', 'Playlists + queue', 'Native media controls'],
         homepage: {
+            download: 'https://github.com/LegendApp/legend-music/releases/tag/v0.0.8',
             details: [
                 { label: 'Library', text: 'Scans one or more folders and caches track metadata and artwork. Browse and search by album, artist, or playlist.' },
                 { label: 'Formats', text: 'MP3, WAV, M4A, AAC, FLAC, AIFF, and CAF.' },

@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
-const heroCode = `import { createMenu } from '@legendapp/spark/menus'
+export const heroCode = `import { AppRegistry, Text } from 'react-native'
+import { createMenu } from '@legendapp/spark/menus'
 import { openWindow } from '@legendapp/spark/windows'
 
-await createMenu({
+AppRegistry.registerComponent('Inspector', () => () => <Text>Inspector</Text>)
+
+createMenu({
   id: 'editor',
   items: [{
     type: 'submenu', id: 'view', label: 'View',
@@ -22,7 +25,7 @@ await createMenu({
       })
     }
   },
-})`;
+}).catch(console.error)`;
 
 const capabilities = [
     { path: '/windows', title: 'Windows', text: 'Named windows, displays, geometry, close guards, and native macOS chrome.' },
@@ -62,7 +65,7 @@ const docs = [
     { label: 'Examples', href: '/spark/examples', text: 'Kitchen Sink and small apps' },
 ];
 
-function highlight(code: string) {
+export function highlight(code: string) {
     return code.split(/('[^']*'|\/\/.*|\b(?:import|from|await|if)\b)/g).map((part, i) =>
         part.startsWith("'") ? (
             <span key={i} className="text-[#9fd3a8]">{part}</span>
@@ -220,8 +223,9 @@ export function FrameworkLanding() {
                             source, with native acceptance pending.
                         </p>
                         <p>
-                            The published <code className="text-white/80">@next</code> preview predates the APIs on this
-                            page and in the guides. Use the current source SDK to try them.
+                            The <code className="text-white/80">@next</code> preview uses matching SDK archives and
+                            downloads the macOS Apple Silicon Spark Runner on first launch. Signed distribution
+                            acceptance remains pending.
                         </p>
                     </div>
                     <Link
