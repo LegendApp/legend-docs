@@ -50,7 +50,7 @@ export function SlidesLanding() {
                 <div className="slides-section-intro">
                     <span className="slides-label">01 / The deck</span>
                     <h2 id="slides-deck-title">Keep the source.</h2>
-                    <p>Slides are local MDX files. Headings divide slides; attributes control shared elements and reveals. Speaker notes live beside the content.</p>
+                    <p>Slides are local MDX files. Separators divide slides; attributes control shared elements and reveals. Speaker notes live beside the content.</p>
                     <a href="/slides/examples/first-deck.mdx" download className="slides-text-link">Download the starter deck <ArrowRight size={16} /></a>
                 </div>
                 <div className="slides-code">
