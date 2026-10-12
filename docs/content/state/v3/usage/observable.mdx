@@ -355,25 +355,41 @@ state$.itemsReady[0].status.set('disabled')
 A function with a single `string` key can be used as a lookup table (an object with a string key). Accessing it by index will call the function to create a computed observable by that key.
 
 ```ts
-const state$ = observable({
-    selector: 'text',
-    items: {
-        test1: { text: 'hi', othertext: 'bye' },
-        test2: { text: 'hello', othertext: 'goodbye' }
-    },
-    // Return a link to the [selector] property in the given item
-    texts: (key: string) => {
-        return state$.items[key][state$.selector.get()]
-    },
-})
+import {
+	type Observable,
+	observable,
+} from "@legendapp/state";
+
+type Item = {
+	text: string;
+	othertext: string;
+};
+type Items = Record<string, Item>;
+type State = {
+	selector: keyof Item;
+	items: Items;
+	texts: (key: keyof State['items']) => Observable<string>;
+};
+
+const state$: Observable<State> = observable<State>({
+	selector: 'text',
+	items: {
+		test1: { text: 'hi', othertext: 'bye' },
+		test2: { text: 'hello', othertext: 'goodbye' },
+	},
+	// Return a link to the [selector] property in the given item
+	texts: (key: keyof State['items']) => {
+		return state$.items[key][state$.selector.get()];
+	},
+});
 
 // Now these reference the same thing:
-state$.items.test1.text.get()
-state$.texts['test1'].get()
+state$.items.test1.text.get();
+state$.texts['test1'].get();
 
 // And setting a text goes through to the linked observable
-state$.texts.test1.set('hello')
-state$.items.test1.text.get() // 'hello'
+state$.texts.test1.set('hello');
+state$.items.test1.text.get(); // 'hello'
 ```
 
 ### event
