@@ -996,8 +996,8 @@
         "bytes": 438
       },
       "preview": {
-        "poster": "/slides/effects/previews/glow-field/2217db4be1c280c76f0c489c371f79717085d08f9f80c70c9a7d277407ebb1c0.png",
-        "video": "/slides/effects/previews/glow-field/43fd9e464d17b2532c732bce31ee7377d32f2656e8a4a0114a9b865bba0827a1.mp4",
+        "poster": "/slides/effects/previews/glow-field/8b0f42725743876dca6d2fa7d453052cd4aae06db73ab6e3576a7da1baa0c13f.png",
+        "video": "/slides/effects/previews/glow-field/f6c51a770a78fb4c468d7bfec25835f14df4c7f04f369d4a5c8b3b5a77115d57.mp4",
         "renderer": "Legend Slides for macOS (release build)",
         "exampleSha256": "1aeb1f3a18ce1e5d49f3a56a0481a121120c1333048c951e3355d5353c28117e",
         "packSha256": "165a21363e848f9c9c04a602fd7610f63261a2800456dd3c202db0111bd5b52c"
@@ -1068,8 +1068,8 @@
         "bytes": 431
       },
       "preview": {
-        "poster": "/slides/effects/previews/interface-reveal/51179ce6c5581452f0702419246033d4567be5dbda9bc67d3bfb884b6bc366aa.png",
-        "video": "/slides/effects/previews/interface-reveal/551b8b825d888798853c1fb2aa5ea12140040126a7c30a06cb03185f723a4115.mp4",
+        "poster": "/slides/effects/previews/interface-reveal/3e6e92049a804ba085de5efef72ccc4e212360dd4f477161a63bc588d5cdf876.png",
+        "video": "/slides/effects/previews/interface-reveal/c71f0fe0c4766a929795a32c88659ff9d2b40d09127074c4b0a9bfc61cc50bc3.mp4",
         "renderer": "Legend Slides for macOS (release build)",
         "exampleSha256": "fb2fe495d285dc1f25be8e39d59f2a0d3628d46f0641818c8f359e320ed72387",
         "packSha256": "165a21363e848f9c9c04a602fd7610f63261a2800456dd3c202db0111bd5b52c"
@@ -1111,8 +1111,8 @@
         "bytes": 1053
       },
       "preview": {
-        "poster": "/slides/effects/previews/trajectory-emitter/ff9f531f597336b26906bb61906d43cf18b17bdc7605cab6bff1877b5c063a4b.png",
-        "video": "/slides/effects/previews/trajectory-emitter/38d0c3fea2b82a847e6210279c1c752d9576fe161aa96022218d26c2b0bc7606.mp4",
+        "poster": "/slides/effects/previews/trajectory-emitter/77092f5746d648a18177affd1d49ecdfe8f02be5510ab8b75b175e4ce7aecaf8.png",
+        "video": "/slides/effects/previews/trajectory-emitter/98ff3d801ccaf95742924bdae7eaf7bda14d727b12d7f31b381e8eb688f13483.mp4",
         "renderer": "Legend Slides for macOS (release build)",
         "exampleSha256": "49fb59f638d23e52f399459e9ed283f6c85955d410c5f873d979a95196889957",
         "packSha256": "165a21363e848f9c9c04a602fd7610f63261a2800456dd3c202db0111bd5b52c"
