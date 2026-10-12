@@ -1,0 +1,14 @@
+---
+title: Soft ripple
+---
+
+import { View, Text } from "react-native";
+import { createSoftRippleShader } from "slides:materials/Distortion";
+
+export const ripple = createSoftRippleShader(0.35);
+
+# Soft ripple
+
+<View style={{ width: 1696, height: 650 }}>
+<Effect shader={ripple} style={{ width: 1696, height: 600 }}><View style={{ width: 1696, height: 600, backgroundColor: "#164e63", alignItems: "center", justifyContent: "center" }}><Text style={{ color: "white", fontSize: 94 }}>A gentler wave</Text></View></Effect>
+</View>
