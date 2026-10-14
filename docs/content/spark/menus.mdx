@@ -3,7 +3,7 @@ title: Menus and shortcuts
 description: Owned native menus, portable accelerators, command routing, and tray items.
 ---
 
-Spark menu items discriminate `type`, use stable IDs, and share label/disabled/checked semantics. Every surface accepts its own subset; shared types do not imply all native surfaces support submenus, roles, icons, or sliders.
+Spark menu items discriminate `type`, use stable IDs, and share label/disabled/checked semantics. The shared model includes checkbox and radio items. Every surface accepts its own subset; shared types do not imply all native surfaces support radio items, submenus, roles, icons, or sliders.
 
 ## Application menus
 
@@ -25,6 +25,24 @@ await menu.remove();
 Top-level items are submenus. Contributions merge by IDs, never translated labels. Later owners take precedence; removal restores earlier contributions/native items. Updates replace the owner's contribution. Native publication is acknowledged before create/update resolves. Failed publication retains the previous state; failed removal retains retryable ownership.
 
 Targets bind native root menus, IDs, or macOS semantic roles. Role items dispatch through native responders; ordinary actions targeting roles dispatch to JavaScript. `useMenu` owns the same lifetime and exposes loading/ready/error state plus cleanup-error callbacks. Keep unchanged item structure stable; callback changes do not require republishing.
+
+## Checked items
+
+| Shared item type | State and options |
+| --- | --- |
+| `checkbox` | Required boolean `checked`; optional `shortcut` |
+| `radio` | Required boolean `checked`; optional `shortcut`, with checkbox-like checked semantics |
+
+The radio shape in the [shared menu contract](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/packages/desktop-app/src/contracts/menu.ts) is:
+
+```ts
+const radioItem = {
+  type: 'radio', id: 'sort-name', label: 'Name', checked: true,
+  shortcut: 'CmdOrCtrl+1',
+} as const;
+```
+
+This shows the shared model only. In v0.0.1-next.4, the surfaces below still reject radio items with `E_UNSUPPORTED_OPTION`; the [`/menus` application subset](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/packages/native-menu/src/api.ts) also excludes radio from its exported `MenuItem` type.
 
 ## Surface support
 

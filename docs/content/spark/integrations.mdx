@@ -1,6 +1,6 @@
 ---
 title: Desktop and shared integrations
-description: Clipboard, notifications, system APIs, processes, databases, WebView, audio, and auth.
+description: Clipboard, notifications, system APIs, processes, databases, WebView, audio, auth, camera, and Markdown.
 ---
 
 ## Clipboard, links, and drag/drop
@@ -98,6 +98,16 @@ Refs request reload/back/forward, string messaging, or script injection; they do
 `createMediaSession` lets desktop/web publish controls for an external engine. One session owns system controls; stale handles cannot clear a newer session. Command callbacks request operations rather than confirming playback. Standalone external-engine sessions are unsupported on mobile, where Expo Audio owns its player controls. Browser playback may require a gesture. See [audio](https://github.com/LegendApp/legend-spark/blob/main/docs/audio.md).
 
 `/auth-session` provides prepared state/redirect sessions, browser callback transport, and explicit dismissal. Success, cancellation, dismissal, and timeout remain distinct outcomes. Provider SDKs, token exchange, and credential policy belong to the app. This is not complete `expo-auth-session` compatibility. See [authentication](https://github.com/LegendApp/legend-spark/blob/main/docs/auth-session.md).
+
+## Camera
+
+`@legendapp/spark/camera` exposes VisionCamera with upstream semantics and automatic native compatibility patches. See [Camera](/spark/camera) for a preview example, permissions, and platform limits.
+
+## Enriched Markdown
+
+Spark includes `react-native-enriched-markdown` 1.0.2 as an ordinary pinned dependency. Import from that package; there is no `@legendapp/spark/markdown` export. Compatibility patches apply automatically during installation and native preparation, like camera, without an app package-manager patch declaration. Native preparation also handles disabled install scripts and reinstalls. Production builds can prune the native module when unused.
+
+Math and syntax-highlighting assets still require the upstream per-app `enriched-markdown` configuration in `package.json`; they can download and compile additional assets. Automatic patching does not configure these features. See [integrated external libraries](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/docs/external-libraries.md#built-in-backend-dependencies).
 
 ## Independent Hermes runtimes
 

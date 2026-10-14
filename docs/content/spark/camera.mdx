@@ -1,0 +1,36 @@
+---
+title: Camera
+description: VisionCamera previews, permissions, and automatic native compatibility patches.
+---
+
+`@legendapp/spark/camera` exposes VisionCamera components, device/permission hooks, photo/video outputs, and session APIs with upstream semantics. It also exports `NitroImage` and its `Image` type. Advanced APIs remain available from `react-native-vision-camera` directly.
+
+## Camera preview
+
+```tsx
+import {
+  Camera, useCameraDevices, useCameraPermission, usePhotoOutput,
+} from '@legendapp/spark/camera';
+import { Button } from 'react-native';
+
+export function PhotoCamera() {
+  const devices = useCameraDevices();
+  const { hasPermission, requestPermission } = useCameraPermission();
+  const photoOutput = usePhotoOutput({ containerFormat: 'jpeg' });
+
+  if (!hasPermission) {
+    return <Button title="Allow camera" onPress={() => void requestPermission()} />;
+  }
+  return devices[0] ? <Camera device={devices[0]} isActive outputs={[photoOutput]} /> : null;
+}
+```
+
+## Installation and permissions
+
+Spark pins VisionCamera 5.2.3, Nitro Image 0.15.2, and Nitro Modules 0.37.0 as ordinary npm dependencies. Installation and native preparation apply compatibility patches automatically, including when install scripts were disabled. No separate camera install command is needed. Production selection can prune unused camera code; selecting VisionCamera retains both Nitro dependencies.
+
+iOS and Android use upstream implementations; Spark adds macOS 14+ AppKit patches. Windows and web are unsupported. Live capture and mobile acceptance remain unverified; see the [prototype evidence and limits](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/docs/camera-prototype.md).
+
+Supply camera usage descriptions through your native configuration. On macOS, set `NSCameraUsageDescription` in `desktop.config.json` under `macos.infoPlist`; audio recording also needs `NSMicrophoneUsageDescription`. Configure iOS usage descriptions and Android manifest permissions through Expo/native configuration. Installation does not request permission.
+
+See Spark's [camera integration](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/docs/camera.md) for imperative APIs, resource lifetimes, and patch details.
