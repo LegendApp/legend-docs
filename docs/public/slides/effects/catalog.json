@@ -1353,6 +1353,13 @@
         "url": "/slides/effects/examples/content-swap/83c7fdaeee7f972b03874a4e0c7ddaaf0b7c6c39be5c0bd2f069aadad591ab85.mdx",
         "sha256": "83c7fdaeee7f972b03874a4e0c7ddaaf0b7c6c39be5c0bd2f069aadad591ab85",
         "bytes": 971
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/content-swap/d174823c1003e9805d2e912885b5128b9e4e4f700ade4d196c171b6c1e3887c4.png",
+        "video": "/slides/effects/previews/content-swap/57353c7e7f84117f5b9a17d7a5527b325617c9862dbf088a06958bacc6328649.mp4",
+        "renderer": "Legend Slides for macOS (release build)",
+        "exampleSha256": "83c7fdaeee7f972b03874a4e0c7ddaaf0b7c6c39be5c0bd2f069aadad591ab85",
+        "packSha256": "1cb325f89446b06275bd6827365723b8b6156a39cd47309a1a81ce3ec16a68c5"
       }
     },
     {
