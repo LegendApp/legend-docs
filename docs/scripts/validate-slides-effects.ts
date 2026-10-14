@@ -28,10 +28,17 @@ for (const effect of catalog.effects) {
     slugs.add(effect.slug);
     const pack = catalog.packs[effect.pack];
     if (!pack?.versions[pack.latest].exports[effect.entry]) throw new Error(`Unknown effect entry: ${effect.slug}`);
-    if (artifact(effect.example.url, effect.example.sha256, effect.example.bytes).toString() !== effect.snippet) throw new Error(`Snippet mismatch: ${effect.slug}`);
+    let source = artifact(effect.example.url, effect.example.sha256, effect.example.bytes).toString();
+    if (source !== effect.snippet) source = source.replace(/data:image\/png;base64,([A-Za-z0-9+/=]+)/g, (_uri, encoded) => {
+        const sha256 = createHash('sha256').update(Buffer.from(encoded, 'base64')).digest('hex');
+        const url = `/slides/effects/sprites/${sha256}.png`;
+        artifact(url, sha256);
+        return `https://legend.so${url}`;
+    });
+    if (source !== effect.snippet) throw new Error(`Snippet mismatch: ${effect.slug}`);
     if (!fs.existsSync(path.join(root, 'content/slides/effects', effect.slug + '.mdx'))) throw new Error(`Missing effect page: ${effect.slug}`);
     if (effect.preview) {
-        if (effect.preview.exampleSha256 !== effect.example.sha256 || effect.preview.packSha256 !== pack.versions[pack.latest].sha256) throw new Error(`Stale preview: ${effect.slug}`);
+        if (effect.preview.exampleSha256 !== effect.example.sha256 || !Object.values(pack.versions).some((release: any) => release.sha256 === effect.preview.packSha256 && release.exports[effect.entry])) throw new Error(`Stale preview: ${effect.slug}`);
         artifact(effect.preview.poster); if (effect.preview.video) artifact(effect.preview.video);
     }
 }

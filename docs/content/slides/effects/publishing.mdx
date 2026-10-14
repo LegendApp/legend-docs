@@ -47,6 +47,10 @@ Keep old archives available for pinned decks. Source archives contain UTF-8
 TypeScript and JSON files; installation requires no native binaries or
 package-manager installs.
 
+Gallery snippets may use hosted PNG sprite URLs under `https://legend.so/slides/effects/sprites/`
+while downloadable examples embed the same images for offline playback. Name each
+PNG by its SHA-256 checksum; verification checks that the images match.
+
 ## Add native previews
 
 Capture the example running in the native app, including its reveal states. Put
@@ -67,6 +71,8 @@ Describe the actual app and build used in `renderer`. Use the example and primar
 pack checksums from the generated catalog. Refresh
 preserves previews only while both match. Check playback at normal speed before
 publishing a video; use a still when a clip has unresolved motion problems.
+Existing previews retain the checksum of the pack actually captured, even when
+a newer pack release is available.
 Browser approximations cannot verify native Skia or WebGPU effects.
 
 ## Test installation and offline playback
