@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { hostedSpriteSnippet } from './slides-effect-snippets';
 const root = path.resolve(import.meta.dirname, '..');
 const catalog = JSON.parse(fs.readFileSync(path.join(root, 'public/slides/effects/catalog.json'), 'utf8'));
 function artifact(url: string, checksum?: string, bytes?: number) {
@@ -29,12 +30,7 @@ for (const effect of catalog.effects) {
     const pack = catalog.packs[effect.pack];
     if (!pack?.versions[pack.latest].exports[effect.entry]) throw new Error(`Unknown effect entry: ${effect.slug}`);
     let source = artifact(effect.example.url, effect.example.sha256, effect.example.bytes).toString();
-    if (source !== effect.snippet) source = source.replace(/data:image\/png;base64,([A-Za-z0-9+/=]+)/g, (_uri, encoded) => {
-        const sha256 = createHash('sha256').update(Buffer.from(encoded, 'base64')).digest('hex');
-        const url = `/slides/effects/sprites/${sha256}.png`;
-        artifact(url, sha256);
-        return `https://legend.so${url}`;
-    });
+    if (source !== effect.snippet) source = hostedSpriteSnippet(source, (url, sha256) => { artifact(url, sha256); });
     if (source !== effect.snippet) throw new Error(`Snippet mismatch: ${effect.slug}`);
     if (!fs.existsSync(path.join(root, 'content/slides/effects', effect.slug + '.mdx'))) throw new Error(`Missing effect page: ${effect.slug}`);
     if (effect.preview) {

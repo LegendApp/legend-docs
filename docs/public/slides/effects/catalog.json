@@ -406,7 +406,7 @@
       "props": [
         {
           "name": "Background",
-          "description": "Use the host wrapper for priority and intensity."
+          "description": "Use the host wrapper for priority and overall brightness."
         },
         {
           "name": "intensity",
@@ -482,11 +482,11 @@
       "props": [
         {
           "name": "Background",
-          "description": "Use the host wrapper for priority and intensity."
+          "description": "Use the host wrapper for priority and overall brightness."
         },
         {
           "name": "intensity",
-          "description": "0–1; defaults to 1, preserving the existing appearance."
+          "description": "Effect detail strength, 0–1; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Fluid\n---\n\nimport { View, Text } from \"react-native\";\nimport { Fluid } from \"slides:backgrounds/Fluid\";\nimport { Background } from \"@legend-apps/presentation\";\n\n# Fluid\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Fluid intensity={1} /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
@@ -523,11 +523,11 @@
       "props": [
         {
           "name": "Background",
-          "description": "Use the host wrapper for priority and intensity."
+          "description": "Use the host wrapper for priority and overall brightness."
         },
         {
           "name": "intensity",
-          "description": "0–1; defaults to 1, preserving the existing appearance."
+          "description": "Effect detail strength, 0–1; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Wireframe\n---\n\nimport { View, Text } from \"react-native\";\nimport { Wireframe } from \"slides:backgrounds/Wireframe\";\nimport { Background } from \"@legend-apps/presentation\";\n\n# Wireframe\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Wireframe intensity={1} /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
@@ -563,11 +563,11 @@
       "props": [
         {
           "name": "Background",
-          "description": "Use the host wrapper for priority and intensity."
+          "description": "Use the host wrapper for priority and overall brightness."
         },
         {
           "name": "intensity",
-          "description": "0–1; defaults to 1, preserving the existing appearance."
+          "description": "Effect detail strength, 0–1; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Glass atmosphere\n---\n\nimport { View, Text } from \"react-native\";\nimport { GlassAtmosphere } from \"slides:backgrounds/GlassAtmosphere\";\nimport { Background } from \"@legend-apps/presentation\";\n\n# Glass atmosphere\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><GlassAtmosphere intensity={1} /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>Light, folded into glass</Text>\n</View>\n",
@@ -892,10 +892,6 @@
         {
           "name": "strength",
           "description": "Adjust displacement."
-        },
-        {
-          "name": "timing uniforms",
-          "description": "Control delay, duration and interval."
         },
         {
           "name": "createSoftRippleShader(intensity)",

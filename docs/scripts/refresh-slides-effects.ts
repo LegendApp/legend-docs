@@ -3,15 +3,16 @@ import path from 'node:path';
 import os from 'node:os';
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
+import { hostedSpriteSnippet } from './slides-effect-snippets';
 
 const root = path.resolve(import.meta.dirname, '..');
 const output = path.join(root, 'public/slides/effects');
 const apps = process.env.LEGEND_APPS_PATH ?? path.resolve(root, '../../legend-apps');
 const sources = path.join(apps, 'packages/slides-effects');
 const digest = (text: string) => createHash('sha256').update(text).digest('hex');
-function immutable(file: string, contents: string) {
+function immutable(file: string, contents: string | Buffer) {
     if (fs.existsSync(file)) {
-        if (fs.readFileSync(file, 'utf8') !== contents) throw new Error(`Published artifact changed: ${file}`);
+        if (!fs.readFileSync(file).equals(typeof contents === 'string' ? Buffer.from(contents) : contents)) throw new Error(`Published artifact changed: ${file}`);
         return;
     }
     fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -59,7 +60,9 @@ try {
         if (!release?.exports[effect.entry]) throw new Error(`Unexported catalog entry: ${effect.slug}`);
         const exampleFile = path.join(sources, 'examples', effect.slug, 'example.mdx');
         const source = fs.readFileSync(exampleFile, 'utf8');
-        if (source !== effect.snippet) throw new Error(`Example and snippet differ: ${effect.slug}`);
+        const writeSprite = (url: string, _sha256: string, data: Buffer) => immutable(path.join(root, 'public', url), data);
+        const snippet = hostedSpriteSnippet(source, writeSprite);
+        if (snippet !== hostedSpriteSnippet(effect.snippet, writeSprite)) throw new Error(`Example and snippet differ: ${effect.slug}`);
         const pins: Record<string, {version: string; sha256: string}> = {};
         function pin(id: string, version: string) {
             if (pins[id]) { if (pins[id].version !== version) throw new Error(`Conflicting example dependency: ${id}`); return; }
@@ -76,10 +79,13 @@ try {
         const sha256 = digest(source), url = `/slides/effects/examples/${effect.slug}/${sha256}.mdx`;
         immutable(path.join(root, 'public', url), source);
         const previous = catalog.effects.find((entry: {slug: string}) => entry.slug === effect.slug);
-        effects.push({ ...effect, example: { url, sha256, bytes: Buffer.byteLength(source) }, ...(previous?.preview?.exampleSha256 === sha256 && previous.preview.packSha256 === release.sha256 ? {preview: previous.preview} : {}) });
-        const page = `---\ntitle: ${effect.title}\ndescription: ${effect.description}\n---\n\nimport { EffectDetail } from '@/components/slides/EffectsGallery';\n\n<EffectDetail slug="${effect.slug}" />\n`;
-        fs.mkdirSync(path.join(root, 'content/slides/effects'), {recursive: true});
-        fs.writeFileSync(path.join(root, 'content/slides/effects', effect.slug + '.mdx'), page);
+        effects.push({ ...effect, snippet, example: { url, sha256, bytes: Buffer.byteLength(source) }, ...(previous?.preview?.exampleSha256 === sha256 && Object.values(catalog.packs[effect.pack].versions).some((version: any) => version.sha256 === previous.preview.packSha256 && version.exports[effect.entry]) ? {preview: previous.preview} : {}) });
+        const pageFile = path.join(root, 'content/slides/effects', effect.slug + '.mdx');
+        const body = fs.existsSync(pageFile) ? fs.readFileSync(pageFile, 'utf8').replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+            : `\nimport { EffectDetail } from '@/components/slides/EffectsGallery';\n\n<EffectDetail slug="${effect.slug}" />\n`;
+        const page = `---\ntitle: ${effect.title}\ndescription: ${effect.description}\n---\n${body}`;
+        fs.mkdirSync(path.dirname(pageFile), {recursive: true});
+        fs.writeFileSync(pageFile, page);
     }
 } finally { fs.rmSync(stage, {recursive: true, force: true}); }
 catalog.effects = effects;
