@@ -22,7 +22,7 @@
       }
     },
     "backgrounds": {
-      "latest": "1.0.2",
+      "latest": "1.0.3",
       "versions": {
         "1.0.1": {
           "version": "1.0.1",
@@ -73,6 +73,31 @@
             "DropletGeometry": "./DropletGeometry.ts",
             "DropletField": "./DropletField.ts"
           }
+        },
+        "1.0.3": {
+          "version": "1.0.3",
+          "sha256": "6c49f60816e8f1bf9752772208312394d56ff168708ad526d1fa551336ff621b",
+          "bytes": 22097,
+          "url": "/slides/effects/packs/backgrounds/1.0.3/6c49f60816e8f1bf9752772208312394d56ff168708ad526d1fa551336ff621b.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "skia",
+            "webgpu"
+          ],
+          "dependencies": {},
+          "exports": {
+            "AmbientAurora": "./AmbientAurora.tsx",
+            "AnimatedAtmosphere": "./AnimatedAtmosphere.tsx",
+            "TypeGPUGlassBackground": "./TypeGPUGlassBackground.tsx",
+            "Droplets": "./Droplets.tsx",
+            "GlassAtmosphere": "./GlassAtmosphere.tsx",
+            "Fluid": "./Fluid.tsx",
+            "Wireframe": "./Wireframe.tsx",
+            "DropletMaterial": "./DropletMaterial.ts",
+            "DropletGeometry": "./DropletGeometry.ts",
+            "DropletField": "./DropletField.ts"
+          }
         }
       }
     },
@@ -99,7 +124,7 @@
       }
     },
     "diagrams": {
-      "latest": "1.0.1",
+      "latest": "1.0.2",
       "versions": {
         "1.0.0": {
           "version": "1.0.0",
@@ -130,6 +155,23 @@
           ],
           "dependencies": {
             "materials": "1.0.1"
+          },
+          "exports": {
+            "BranchFan": "./BranchFan.tsx"
+          }
+        },
+        "1.0.2": {
+          "version": "1.0.2",
+          "sha256": "3a0a0000eb8bcb3f0c2f6b5da981434fee3d7cc67c44e68f1e6f368478174209",
+          "bytes": 4155,
+          "url": "/slides/effects/packs/diagrams/1.0.2/3a0a0000eb8bcb3f0c2f6b5da981434fee3d7cc67c44e68f1e6f368478174209.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "skia"
+          ],
+          "dependencies": {
+            "materials": "1.0.2"
           },
           "exports": {
             "BranchFan": "./BranchFan.tsx"
@@ -278,7 +320,7 @@
       }
     },
     "presenting": {
-      "latest": "1.0.3",
+      "latest": "1.0.4",
       "versions": {
         "1.0.0": {
           "version": "1.0.0",
@@ -304,6 +346,25 @@
           "sha256": "e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd",
           "bytes": 22450,
           "url": "/slides/effects/packs/presenting/1.0.3/e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "skia"
+          ],
+          "dependencies": {},
+          "exports": {
+            "Attention": "./Attention.tsx",
+            "Composition": "./Composition.tsx",
+            "FreezeFrame": "./FreezeFrame.tsx",
+            "CodeWalkthrough": "./CodeWalkthrough.tsx",
+            "Motion": "./Motion.ts"
+          }
+        },
+        "1.0.4": {
+          "version": "1.0.4",
+          "sha256": "59fc2fc9bcb0def1e9ec09a0da831a1488fc05edd4d4d087fdd69fe44de1b632",
+          "bytes": 22464,
+          "url": "/slides/effects/packs/presenting/1.0.4/59fc2fc9bcb0def1e9ec09a0da831a1488fc05edd4d4d087fdd69fe44de1b632.json",
           "hostApiVersion": 1,
           "capabilities": [
             "reanimated",
@@ -381,16 +442,16 @@
           "description": "Use slide or step playback time."
         }
       ],
-      "snippet": "---\ntitle: Animated title\n---\n\nimport { View, Text } from \"react-native\";\nimport { AnimatedTitle } from \"slides:typography/AnimatedTitle\";\n\nexport const recommended = [\"soft-rise\", \"word-lift\", \"split-arrival\", \"wipe\"];\n\n# Animated title\n\n<View style={{ width: 1696, height: 650, justifyContent: \"center\" }}>\n<Steps count={4}>{step => <View><Text style={{ color: \"#67e8f9\", fontSize: 35, marginBottom: 28, textAlign: \"center\" }}>{recommended[step]}</Text><AnimatedTitle clock=\"step\" effect={recommended[step]} width={1696} fontSize={104}>Make an entrance</AnimatedTitle></View>}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Animated title\n---\n\nimport { View, Text } from \"react-native\";\nimport { AnimatedTitle } from \"slides:typography/AnimatedTitle\";\n\nexport const recommended = [\"soft-rise\", \"word-lift\", \"split-arrival\", \"wipe\"];\n\n# Animated title\n\n<View style={{ width: 1696, height: 650, justifyContent: \"center\" }}>\n<Steps count={4}>{step => <View><Text style={{ color: \"#67e8f9\", fontSize: 35, marginBottom: 28, textAlign: \"center\" }}>{recommended[step]}</Text><AnimatedTitle effect={recommended[step]} width={1696} fontSize={104}>Make an entrance</AnimatedTitle></View>}</Steps>\n</View>\n",
       "recording": {
         "motion": [
           "0.1:0.5"
         ]
       },
       "example": {
-        "url": "/slides/effects/examples/animated-title/3825fb51b5bf530876dd2e2f0495e16a31deeb76d1bdca74cc2e2b9fb4fbd603.mdx",
-        "sha256": "3825fb51b5bf530876dd2e2f0495e16a31deeb76d1bdca74cc2e2b9fb4fbd603",
-        "bytes": 595
+        "url": "/slides/effects/examples/animated-title/94cc84f151e2c6f387808b4537c2460b6f39346ba8fdc29eb950b0ca8f9db59d.mdx",
+        "sha256": "94cc84f151e2c6f387808b4537c2460b6f39346ba8fdc29eb950b0ca8f9db59d",
+        "bytes": 582
       }
     },
     {
@@ -486,7 +547,7 @@
         },
         {
           "name": "intensity",
-          "description": "Effect detail strength, 0–1; defaults to 1."
+          "description": "Effect detail strength, 0\u20131; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Fluid\n---\n\nimport { View, Text } from \"react-native\";\nimport { Fluid } from \"slides:backgrounds/Fluid\";\nimport { Background } from \"@legend-apps/presentation\";\n\n# Fluid\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Fluid intensity={1} /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
@@ -527,7 +588,7 @@
         },
         {
           "name": "intensity",
-          "description": "Effect detail strength, 0–1; defaults to 1."
+          "description": "Effect detail strength, 0\u20131; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Wireframe\n---\n\nimport { View, Text } from \"react-native\";\nimport { Wireframe } from \"slides:backgrounds/Wireframe\";\nimport { Background } from \"@legend-apps/presentation\";\n\n# Wireframe\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><Wireframe intensity={1} /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>A little atmosphere</Text>\n</View>\n",
@@ -567,7 +628,7 @@
         },
         {
           "name": "intensity",
-          "description": "Effect detail strength, 0–1; defaults to 1."
+          "description": "Effect detail strength, 0\u20131; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Glass atmosphere\n---\n\nimport { View, Text } from \"react-native\";\nimport { GlassAtmosphere } from \"slides:backgrounds/GlassAtmosphere\";\nimport { Background } from \"@legend-apps/presentation\";\n\n# Glass atmosphere\n\n<View style={{ width: 1696, height: 650 }}>\n<Background><GlassAtmosphere intensity={1} /></Background>\n<Text style={{ color: \"#f8fafc\", fontSize: 86, textAlign: \"center\", marginTop: 230 }}>Light, folded into glass</Text>\n</View>\n",
@@ -727,7 +788,7 @@
         },
         {
           "name": "intensity",
-          "description": "0–1; defaults to 1, preserving the existing appearance."
+          "description": "0\u20131; defaults to 1, preserving the existing appearance."
         }
       ],
       "snippet": "---\ntitle: Upward flames\n---\n\nimport { View, Text } from \"react-native\";\nimport { Flames } from \"slides:materials/Fire\";\n\n\n# Upward flames\n\n<View style={{ width: 1696, height: 650 }}>\n<Flames width={600} barHeight={30} x={548} y={410} />\n</View>\n",
@@ -816,7 +877,7 @@
           "description": "Supply image size, position, scale and radius."
         }
       ],
-      "snippet": "---\ntitle: Image shatter\n---\n\nimport { View, Text } from \"react-native\";\nimport { ImageShatter } from \"slides:materials/ImageShatter\";\n\nexport const poster = \"data:image/png;base64,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\";\n\n# Image shatter\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <ImageShatter source={poster} width={1696} height={650} revealAtStep={1} geometry={{imageWidth: 900,imageHeight: 500,centerX: 848,centerY: 325,scale: 1}} />}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Image shatter\n---\n\nimport { View, Text } from \"react-native\";\nimport { ImageShatter } from \"slides:materials/ImageShatter\";\n\nexport const poster = \"https://legend.so/slides/effects/sprites/3a6256d54ebda659424dbc1c9b1f1be0338004cdf97c30fbe0ff2cb4c74b35d4.png\";\n\n# Image shatter\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <ImageShatter source={poster} width={1696} height={650} revealAtStep={1} geometry={{imageWidth: 900,imageHeight: 500,centerX: 848,centerY: 325,scale: 1}} />}</Steps>\n</View>\n",
       "recording": {
         "posterAt": 4.75
       },
@@ -854,7 +915,7 @@
         },
         {
           "name": "createPrismaticTearShader(intensity)",
-          "description": "Factory argument, 0–1; defaults to 1."
+          "description": "Factory argument, 0\u20131; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Prismatic tear\n---\n\nimport { View, Text } from \"react-native\";\nimport { createPrismaticTearShader } from \"slides:materials/Distortion\";\n\nexport const tear = createPrismaticTearShader(0.7);\n\n# Prismatic tear\n\n<View style={{ width: 1696, height: 650 }}>\n<Effect shader={tear} uniforms={{ delaySeconds: 1, durationSeconds: 0.36, intervalSeconds: 4 }} style={{ width: 1696, height: 600 }}><View style={{ width: 1696, height: 600, backgroundColor: \"#164e63\", alignItems: \"center\", justifyContent: \"center\" }}><Text style={{ color: \"white\", fontSize: 100 }}>A change in perspective</Text></View></Effect>\n</View>\n",
@@ -895,7 +956,7 @@
         },
         {
           "name": "createSoftRippleShader(intensity)",
-          "description": "Factory argument, 0–1; defaults to 1."
+          "description": "Factory argument, 0\u20131; defaults to 1."
         }
       ],
       "snippet": "---\ntitle: Soft ripple\n---\n\nimport { View, Text } from \"react-native\";\nimport { createSoftRippleShader } from \"slides:materials/Distortion\";\n\nexport const ripple = createSoftRippleShader(0.35);\n\n# Soft ripple\n\n<View style={{ width: 1696, height: 650 }}>\n<Effect shader={ripple} style={{ width: 1696, height: 600 }}><View style={{ width: 1696, height: 600, backgroundColor: \"#164e63\", alignItems: \"center\", justifyContent: \"center\" }}><Text style={{ color: \"white\", fontSize: 94 }}>A gentler wave</Text></View></Effect>\n</View>\n",
@@ -943,7 +1004,7 @@
         },
         {
           "name": "intensity",
-          "description": "0–1; defaults to 1, preserving the existing appearance."
+          "description": "0\u20131; defaults to 1, preserving the existing appearance."
         }
       ],
       "snippet": "---\ntitle: Refraction\n---\n\nimport { View, Text } from \"react-native\";\nimport { createRefractionShader } from \"slides:materials/Refraction\";\n\nexport const refraction = createRefractionShader({ intensity: 0.45 });\n\n# Refraction\n\n<View style={{ width: 1696, height: 650 }}>\n<Effect shader={refraction} strength={18} uniforms={{ surfaceA: [0.08, 0.12, 0.38, 0.82], surfaceB: [0.58, 0.16, 0.92, 0.84] }} style={{ width: 1696, height: 600 }}><View style={{ width: 1696, height: 600, backgroundColor: \"#164e63\", justifyContent: \"center\", alignItems: \"center\" }}><Text style={{ color: \"white\", fontSize: 102 }}>Light through glass</Text></View></Effect>\n</View>\n",
@@ -1055,7 +1116,7 @@
         },
         {
           "name": "intensity",
-          "description": "0–1; defaults to 1, preserving the existing appearance."
+          "description": "0\u20131; defaults to 1, preserving the existing appearance."
         }
       ],
       "snippet": "---\ntitle: Interface reveal\n---\n\nimport { View, Text } from \"react-native\";\nimport { createInterfaceReveal } from \"slides:particles/InterfaceReveal\";\n\nexport const field = createInterfaceReveal({ particleCount: 4096, columns: 80, intensity: 1 });\n\n# Interface reveal\n\n<View style={{ width: 1696, height: 650 }}>\n<TypeGPUShader code={field.program} particleCount={field.particleCount} particles width={1696} height={650} />\n</View>\n",
@@ -1175,28 +1236,17 @@
           "description": "Give the composition explicit stage bounds."
         }
       ],
-      "snippet": "---\ntitle: Progressive detail\n---\n\nimport { View, Text } from \"react-native\";\nimport { ProgressiveDetail } from \"slides:presenting/Composition\";\n\nexport function Summary() { return <View style={{ padding: 42, borderRadius: 32, backgroundColor: \"#123444\" }}><Text style={{ color: \"white\", fontSize: 74 }}>One request</Text><Text style={{ color: \"#67e8f9\", fontSize: 38 }}>from tap to pixels</Text></View>; }\nexport function Detail() { return <View style={{ width: 920, gap: 24 }}>{[\"1  Parse the input\", \"2  Update state\", \"3  Draw the view\"].map(row => <View key={row} style={{ padding: 22, borderRadius: 20, backgroundColor: \"#164e63\" }}><Text style={{ color: \"white\", fontSize: 42 }}>{row}</Text></View>)}</View>; }\n\n# Progressive detail\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <ProgressiveDetail expanded={step > 0} summary={<Summary />} detail={<Detail />} style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Progressive detail\n---\n\nimport { View, Text } from \"react-native\";\nimport { ProgressiveDetail } from \"slides:presenting/Composition\";\n\nexport function Summary() { return <View style={{ padding: 42, borderRadius: 32, backgroundColor: \"#123444\" }}><Text style={{ color: \"white\", fontSize: 74 }}>One request</Text><Text style={{ color: \"#67e8f9\", fontSize: 38 }}>from tap to pixels</Text></View>; }\nexport function Detail() { return <View style={{ width: 920, gap: 24 }}>{[\"1  Parse the input\", \"2  Update state\", \"3  Draw the view\"].map(row => <View key={row} style={{ padding: 22, borderRadius: 20, backgroundColor: \"#164e63\" }}><Text style={{ color: \"white\", fontSize: 42 }}>{row}</Text></View>)}</View>; }\n\n# Progressive detail\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={2}>{step => <ProgressiveDetail expanded={step > 0} summary={<Summary />} detail={<Detail />} style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
       "recording": {
         "seconds": 8,
-        "motion": [
-          "3.15:3.6"
-        ],
         "noiseDb": -80,
         "freezeMs": 300,
-        "steps": 3,
         "posterAt": 6
       },
       "example": {
-        "url": "/slides/effects/examples/progressive-detail/de8dde22f1cd96cacb768ce220e64b77af1ffe77da0dcbccf4d7f9ea5694b9be.mdx",
-        "sha256": "de8dde22f1cd96cacb768ce220e64b77af1ffe77da0dcbccf4d7f9ea5694b9be",
+        "url": "/slides/effects/examples/progressive-detail/19aba1b6a4c8df96c3dc3862bf9125eabd3be6dfc3532e71d6c7240397451648.mdx",
+        "sha256": "19aba1b6a4c8df96c3dc3862bf9125eabd3be6dfc3532e71d6c7240397451648",
         "bytes": 949
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/progressive-detail/b1292e5a2589e73e0e908b24fc777e4e894c6efe426d87b33b450fe5927045d4.png",
-        "video": "/slides/effects/previews/progressive-detail/56932e7ac2d3103a1370785d97f9a6f0d8b8db13967206310903480fc3611a60.mp4",
-        "renderer": "Legend Slides for macOS (release build)",
-        "exampleSha256": "de8dde22f1cd96cacb768ce220e64b77af1ffe77da0dcbccf4d7f9ea5694b9be",
-        "packSha256": "e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd"
       }
     },
     {
@@ -1219,28 +1269,17 @@
           "description": "Give the composition explicit stage bounds."
         }
       ],
-      "snippet": "---\ntitle: Comparison wipe\n---\n\nimport { View, Text } from \"react-native\";\nimport { ComparisonWipe } from \"slides:presenting/Composition\";\n\nexport function Panel({ refined }) { return <View style={{ flex: 1, padding: 90, backgroundColor: refined ? \"#083344\" : \"#172033\", justifyContent: \"center\" }}><Text style={{ color: \"white\", fontSize: 72 }}>{refined ? \"Clear signal\" : \"Too much noise\"}</Text><View style={{ flexDirection: \"row\", gap: 28, marginTop: 48 }}>{[0, 1, 2, 3].map(i => <View key={i} style={{ width: 245, height: refined ? 95 + i * 65 : 180 + (i % 2) * 150, borderRadius: 18, backgroundColor: refined ? \"#22d3ee\" : i % 2 ? \"#6d28d9\" : \"#a3346b\" }} />)}</View></View>; }\n\n# Comparison wipe\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <ComparisonWipe position={step > 0 ? 0.5 : 0} before={<Panel refined={false} />} after={<Panel refined />} beforeLabel=\"Before\" afterLabel=\"After\" style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Comparison wipe\n---\n\nimport { View, Text } from \"react-native\";\nimport { ComparisonWipe } from \"slides:presenting/Composition\";\n\nexport function Panel({ refined }) { return <View style={{ flex: 1, padding: 90, backgroundColor: refined ? \"#083344\" : \"#172033\", justifyContent: \"center\" }}><Text style={{ color: \"white\", fontSize: 72 }}>{refined ? \"Clear signal\" : \"Too much noise\"}</Text><View style={{ flexDirection: \"row\", gap: 28, marginTop: 48 }}>{[0, 1, 2, 3].map(i => <View key={i} style={{ width: 245, height: refined ? 95 + i * 65 : 180 + (i % 2) * 150, borderRadius: 18, backgroundColor: refined ? \"#22d3ee\" : i % 2 ? \"#6d28d9\" : \"#a3346b\" }} />)}</View></View>; }\n\n# Comparison wipe\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={2}>{step => <ComparisonWipe position={step > 0 ? 0.5 : 0} before={<Panel refined={false} />} after={<Panel refined />} beforeLabel=\"Before\" afterLabel=\"After\" style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
       "recording": {
         "seconds": 8,
-        "motion": [
-          "3.15:3.6"
-        ],
         "noiseDb": -80,
         "freezeMs": 300,
-        "steps": 3,
         "posterAt": 6
       },
       "example": {
-        "url": "/slides/effects/examples/comparison-wipe/6305f50cd510026e1ebc1882ced5e6d5c973d72986ea7aa966f466e56a1a016a.mdx",
-        "sha256": "6305f50cd510026e1ebc1882ced5e6d5c973d72986ea7aa966f466e56a1a016a",
+        "url": "/slides/effects/examples/comparison-wipe/48b06699355d92f34a5d7daaf12aee54860c9055624794a718477ee27d84a2a3.mdx",
+        "sha256": "48b06699355d92f34a5d7daaf12aee54860c9055624794a718477ee27d84a2a3",
         "bytes": 978
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/comparison-wipe/7b0f8412d48348dd586a10795e3afebaed5f57294db37f82a5ed2f0d210a6a77.png",
-        "video": "/slides/effects/previews/comparison-wipe/9bc28654e411686f4426c030cd192cb5c9861be77c527b30476d7316ac5f6b1b.mp4",
-        "renderer": "Legend Slides for macOS (release build)",
-        "exampleSha256": "6305f50cd510026e1ebc1882ced5e6d5c973d72986ea7aa966f466e56a1a016a",
-        "packSha256": "e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd"
       }
     },
     {
@@ -1263,28 +1302,17 @@
           "description": "Give the composition explicit stage bounds."
         }
       ],
-      "snippet": "---\ntitle: Content swap\n---\n\nimport { View, Text } from \"react-native\";\nimport { ContentSwap } from \"slides:presenting/Composition\";\n\nexport function Evidence() { return <View style={{ padding: 70, gap: 30 }}><Text style={{ color: \"#e0f2fe\", fontSize: 70 }}>The evidence</Text><Text style={{ color: \"white\", fontSize: 110 }}>7 steps → 2 steps</Text><Text style={{ color: \"#94a3b8\", fontSize: 42 }}>Same outcome, less work</Text></View>; }\nexport function Takeaway() { return <View style={{ padding: 70, gap: 28 }}><Text style={{ color: \"#67e8f9\", fontSize: 70 }}>The takeaway</Text><Text style={{ color: \"white\", fontSize: 110 }}>Simpler wins.</Text><Text style={{ color: \"#94a3b8\", fontSize: 42 }}>Keep the path people actually use.</Text></View>; }\n\n# Content swap\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <ContentSwap active={step > 0} before={<Evidence />} after={<Takeaway />} style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Content swap\n---\n\nimport { View, Text } from \"react-native\";\nimport { ContentSwap } from \"slides:presenting/Composition\";\n\nexport function Evidence() { return <View style={{ padding: 70, gap: 30 }}><Text style={{ color: \"#e0f2fe\", fontSize: 70 }}>The evidence</Text><Text style={{ color: \"white\", fontSize: 110 }}>7 steps \u2192 2 steps</Text><Text style={{ color: \"#94a3b8\", fontSize: 42 }}>Same outcome, less work</Text></View>; }\nexport function Takeaway() { return <View style={{ padding: 70, gap: 28 }}><Text style={{ color: \"#67e8f9\", fontSize: 70 }}>The takeaway</Text><Text style={{ color: \"white\", fontSize: 110 }}>Simpler wins.</Text><Text style={{ color: \"#94a3b8\", fontSize: 42 }}>Keep the path people actually use.</Text></View>; }\n\n# Content swap\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={2}>{step => <ContentSwap active={step > 0} before={<Evidence />} after={<Takeaway />} style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
       "recording": {
         "seconds": 8,
-        "motion": [
-          "3.15:3.6"
-        ],
         "noiseDb": -80,
         "freezeMs": 300,
-        "steps": 3,
         "posterAt": 6
       },
       "example": {
-        "url": "/slides/effects/examples/content-swap/0c912c72bbaa6cbcba68ebfe8d8528357ca06d59ef943c82b99503d63b02ac26.mdx",
-        "sha256": "0c912c72bbaa6cbcba68ebfe8d8528357ca06d59ef943c82b99503d63b02ac26",
+        "url": "/slides/effects/examples/content-swap/83c7fdaeee7f972b03874a4e0c7ddaaf0b7c6c39be5c0bd2f069aadad591ab85.mdx",
+        "sha256": "83c7fdaeee7f972b03874a4e0c7ddaaf0b7c6c39be5c0bd2f069aadad591ab85",
         "bytes": 971
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/content-swap/f7402e04e1791accadc8677d0ed6f600b8e0ee7241ac814db74c5610bcf07fe6.png",
-        "video": "/slides/effects/previews/content-swap/303d44d560293410a38fe07a3bdef5e17119be115062ff2885b606847ea8d1d5.mp4",
-        "renderer": "Legend Slides for macOS (release build)",
-        "exampleSha256": "0c912c72bbaa6cbcba68ebfe8d8528357ca06d59ef943c82b99503d63b02ac26",
-        "packSha256": "e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd"
       }
     },
     {
@@ -1307,28 +1335,17 @@
           "description": "Give the composition explicit stage bounds."
         }
       ],
-      "snippet": "---\ntitle: Exploded layers\n---\n\nimport { View, Text } from \"react-native\";\nimport { ExplodedLayers } from \"slides:presenting/Composition\";\n\nexport const layers = [\n  { id: \"view\", label: \"View\", content: <Text style={{ color: \"white\", fontSize: 34 }}>What the user sees</Text>, color: \"#155e75\" },\n  { id: \"state\", label: \"State\", content: <Text style={{ color: \"white\", fontSize: 34 }}>The current model</Text>, color: \"#214b74\" },\n  { id: \"data\", label: \"Data\", content: <Text style={{ color: \"white\", fontSize: 34 }}>Where it comes from</Text>, color: \"#312e81\" },\n];\n\n# Exploded layers\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <ExplodedLayers expanded={step > 0} layers={layers} style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Exploded layers\n---\n\nimport { View, Text } from \"react-native\";\nimport { ExplodedLayers } from \"slides:presenting/Composition\";\n\nexport const layers = [\n  { id: \"view\", label: \"View\", content: <Text style={{ color: \"white\", fontSize: 34 }}>What the user sees</Text>, color: \"#155e75\" },\n  { id: \"state\", label: \"State\", content: <Text style={{ color: \"white\", fontSize: 34 }}>The current model</Text>, color: \"#214b74\" },\n  { id: \"data\", label: \"Data\", content: <Text style={{ color: \"white\", fontSize: 34 }}>Where it comes from</Text>, color: \"#312e81\" },\n];\n\n# Exploded layers\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={2}>{step => <ExplodedLayers expanded={step > 0} layers={layers} style={{ width: 1696, height: 580 }} />}</Steps>\n</View>\n",
       "recording": {
         "seconds": 8,
-        "motion": [
-          "3.15:3.6"
-        ],
         "noiseDb": -80,
         "freezeMs": 300,
-        "steps": 3,
         "posterAt": 6
       },
       "example": {
-        "url": "/slides/effects/examples/exploded-layers/d2b7a65b574e055ec523c58b6404dc4b6f1f179a9ad68cc0d10630f820dd084e.mdx",
-        "sha256": "d2b7a65b574e055ec523c58b6404dc4b6f1f179a9ad68cc0d10630f820dd084e",
+        "url": "/slides/effects/examples/exploded-layers/5509cae18f5d05f3f62700ea458c11cae16e23d9c72bf6c46a3fee7ec4a8a3fa.mdx",
+        "sha256": "5509cae18f5d05f3f62700ea458c11cae16e23d9c72bf6c46a3fee7ec4a8a3fa",
         "bytes": 770
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/exploded-layers/6c5d349eadc1ea25b51f69e50fc61859ffee684632a5d030544b9ca9627a2829.png",
-        "video": "/slides/effects/previews/exploded-layers/70b307342f57a1995d4dd42774ed169f28da47112b1f381e29d5cc79d9593c2c.mp4",
-        "renderer": "Legend Slides for macOS (release build)",
-        "exampleSha256": "d2b7a65b574e055ec523c58b6404dc4b6f1f179a9ad68cc0d10630f820dd084e",
-        "packSha256": "e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd"
       }
     },
     {
@@ -1354,10 +1371,7 @@
       "snippet": "---\ntitle: Spotlight and callouts\n---\n\nimport { View, Text } from \"react-native\";\nimport { AttentionStage, AttentionTarget, Spotlight, Callout } from \"slides:presenting/Attention\";\nimport { useMotion } from \"slides:presenting/Motion\";\n\nexport function MovingIdea({ step }) {\n  const position = useMotion(step === 1 ? [950, 300] : [150, 160], 1200);\n  return <AttentionTarget id=\"idea\" style={{ position: \"absolute\" }} frameStyle={() => { \"worklet\"; return { transform: [{ translateX: position.value[0] }, { translateY: position.value[1] }] }; }}><Text style={{ color: \"white\", fontSize: 90 }}>The idea</Text></AttentionTarget>;\n}\n\n# Spotlight and callouts\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <AttentionStage style={{ width: 1696, height: 580 }}><MovingIdea step={step} /><Spotlight target=\"idea\" /><Callout target=\"idea\">Follow the idea</Callout></AttentionStage>}</Steps>\n</View>\n",
       "recording": {
         "seconds": 8,
-        "motion": [
-          "1.8:2.5",
-          "4.3:5"
-        ]
+        "still": true
       },
       "example": {
         "url": "/slides/effects/examples/spotlight/2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb.mdx",
@@ -1393,28 +1407,17 @@
           "description": "Set code text size; defaults to 25."
         }
       ],
-      "snippet": "---\ntitle: Code walkthrough\n---\n\nimport { View, Text } from \"react-native\";\nimport { CodeWalkthrough } from \"slides:presenting/CodeWalkthrough\";\n\nexport const code = `async function showResults(query) {\n  const rows = await search(query);\n  const visible = rows.slice(0, 20);\n  setResults(visible);\n  announce(visible.length);\n}`;\nexport const highlights = [2, 3, 3];\nexport const notes = [\"Fetch matching rows\", \"Keep the visible rows\", \"Keep the visible rows\"];\n\n# Code walkthrough\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <CodeWalkthrough source={code} lines={[highlights[step], highlights[step]]} fontSize={34} explanation={<Text style={{ color: \"white\", fontSize: 52 }}>{notes[step]}</Text>} />}</Steps>\n</View>\n",
+      "snippet": "---\ntitle: Code walkthrough\n---\n\nimport { View, Text } from \"react-native\";\nimport { CodeWalkthrough } from \"slides:presenting/CodeWalkthrough\";\n\nexport const code = `async function showResults(query) {\n  const rows = await search(query);\n  const visible = rows.slice(0, 20);\n  setResults(visible);\n  announce(visible.length);\n}`;\nexport const highlights = [2, 3, 4];\nexport const notes = [\"Fetch matching rows\", \"Keep the visible rows\", \"Publish the results\"];\n\n# Code walkthrough\n\n<View style={{ width: 1696, height: 650 }}>\n<Steps count={3}>{step => <CodeWalkthrough source={code} lines={[highlights[step], highlights[step]]} fontSize={34} explanation={<Text style={{ color: \"white\", fontSize: 52 }}>{notes[step]}</Text>} />}</Steps>\n</View>\n",
       "recording": {
         "seconds": 8,
-        "motion": [
-          "3.15:3.6"
-        ],
         "noiseDb": -80,
         "freezeMs": 300,
-        "steps": 3,
         "posterAt": 6
       },
       "example": {
-        "url": "/slides/effects/examples/code-walkthrough/1be5c9d398afb128d3085e3b07d21adb7b03791603259413c077d4b62daf8760.mdx",
-        "sha256": "1be5c9d398afb128d3085e3b07d21adb7b03791603259413c077d4b62daf8760",
-        "bytes": 747
-      },
-      "preview": {
-        "poster": "/slides/effects/previews/code-walkthrough/e67738879ff39617de0c465408dd1937f297867bdec0061d6c341235bc55ee86.png",
-        "video": "/slides/effects/previews/code-walkthrough/f5363b935d7b6901719db537d9a1b5d9cb9272f15c4fd404ddf95843f5810106.mp4",
-        "renderer": "Legend Slides for macOS (release build)",
-        "exampleSha256": "1be5c9d398afb128d3085e3b07d21adb7b03791603259413c077d4b62daf8760",
-        "packSha256": "e1b31a46a9439544fe664ec3dd8bccee5e1f5887e276cc90773bb4e573713efd"
+        "url": "/slides/effects/examples/code-walkthrough/22cb185643d6b6fbe9153fdf0ff130775c34c3254fa9c1f0b407c58794ba5730.mdx",
+        "sha256": "22cb185643d6b6fbe9153fdf0ff130775c34c3254fa9c1f0b407c58794ba5730",
+        "bytes": 745
       }
     },
     {
