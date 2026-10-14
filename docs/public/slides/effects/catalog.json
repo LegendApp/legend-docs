@@ -1313,6 +1313,13 @@
         "url": "/slides/effects/examples/comparison-wipe/48b06699355d92f34a5d7daaf12aee54860c9055624794a718477ee27d84a2a3.mdx",
         "sha256": "48b06699355d92f34a5d7daaf12aee54860c9055624794a718477ee27d84a2a3",
         "bytes": 978
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/comparison-wipe/296f0c751c731df066356da58c626a2ea7a83f2b1b3a3c69ead140cbf7a8fa47.png",
+        "video": "/slides/effects/previews/comparison-wipe/914be8591c218b3651041bb280924ebaddc636a3a7d2d9ae727091d88b987979.mp4",
+        "renderer": "Legend Slides for macOS (release build)",
+        "exampleSha256": "48b06699355d92f34a5d7daaf12aee54860c9055624794a718477ee27d84a2a3",
+        "packSha256": "1cb325f89446b06275bd6827365723b8b6156a39cd47309a1a81ce3ec16a68c5"
       }
     },
     {
