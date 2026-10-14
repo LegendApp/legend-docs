@@ -320,7 +320,7 @@
       }
     },
     "presenting": {
-      "latest": "1.0.4",
+      "latest": "1.0.5",
       "versions": {
         "1.0.0": {
           "version": "1.0.0",
@@ -365,6 +365,25 @@
           "sha256": "59fc2fc9bcb0def1e9ec09a0da831a1488fc05edd4d4d087fdd69fe44de1b632",
           "bytes": 22464,
           "url": "/slides/effects/packs/presenting/1.0.4/59fc2fc9bcb0def1e9ec09a0da831a1488fc05edd4d4d087fdd69fe44de1b632.json",
+          "hostApiVersion": 1,
+          "capabilities": [
+            "reanimated",
+            "skia"
+          ],
+          "dependencies": {},
+          "exports": {
+            "Attention": "./Attention.tsx",
+            "Composition": "./Composition.tsx",
+            "FreezeFrame": "./FreezeFrame.tsx",
+            "CodeWalkthrough": "./CodeWalkthrough.tsx",
+            "Motion": "./Motion.ts"
+          }
+        },
+        "1.0.5": {
+          "version": "1.0.5",
+          "sha256": "1cb325f89446b06275bd6827365723b8b6156a39cd47309a1a81ce3ec16a68c5",
+          "bytes": 22526,
+          "url": "/slides/effects/packs/presenting/1.0.5/1cb325f89446b06275bd6827365723b8b6156a39cd47309a1a81ce3ec16a68c5.json",
           "hostApiVersion": 1,
           "capabilities": [
             "reanimated",
