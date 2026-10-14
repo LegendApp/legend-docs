@@ -452,6 +452,13 @@
         "url": "/slides/effects/examples/animated-title/94cc84f151e2c6f387808b4537c2460b6f39346ba8fdc29eb950b0ca8f9db59d.mdx",
         "sha256": "94cc84f151e2c6f387808b4537c2460b6f39346ba8fdc29eb950b0ca8f9db59d",
         "bytes": 582
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/animated-title/3ae3be7433ce16caf6cc85acc55792e13b8358b72038fcf07e010f7ec90a0602.png",
+        "video": "/slides/effects/previews/animated-title/3be418f24ca51905d132267596924ac899ef53311d145d84f3d7adb9cd7401b7.mp4",
+        "renderer": "Legend Slides for macOS (release build)",
+        "exampleSha256": "94cc84f151e2c6f387808b4537c2460b6f39346ba8fdc29eb950b0ca8f9db59d",
+        "packSha256": "4a1588decd4fc1194f340b042c226de4123411941b515bf3f6d0d29634282d2d"
       }
     },
     {
@@ -1377,6 +1384,12 @@
         "url": "/slides/effects/examples/spotlight/2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb.mdx",
         "sha256": "2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb",
         "bytes": 916
+      },
+      "preview": {
+        "poster": "/slides/effects/previews/spotlight/bc7d5b489ac0e8581c2c02ed123810ee4b4d46ad5db365e09e0ae6622217cc34.png",
+        "renderer": "Legend Slides for macOS (release build)",
+        "exampleSha256": "2df6025975d253d658aeda0b73ec62139f4e657fa10dd3e624e215e3931c10fb",
+        "packSha256": "59fc2fc9bcb0def1e9ec09a0da831a1488fc05edd4d4d087fdd69fe44de1b632"
       }
     },
     {
