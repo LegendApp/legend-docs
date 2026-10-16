@@ -1,0 +1,98 @@
+---
+title: Rich text
+description: Read and edit Markdown and HTML with native text views.
+---
+
+Import `Markdown`, `MarkdownInput`, and `EditableMarkdown` from `@legendapp/spark/markdown`, or `Html`, `HtmlInput`, and `EditableHtml` from `@legendapp/spark/html`. Spark bundles the Enriched backends and applies their native compatibility patches during installation and native preparation; no separate backend installation is needed.
+
+macOS 14+ (Apple Silicon) supported; Windows preview, not yet verified. Rich text is unsupported on Windows. See [backend limits](#backend-limits) before choosing content and styles.
+
+## Read-only readers
+
+```tsx
+import { Markdown } from '@legendapp/spark/markdown';
+import { Html } from '@legendapp/spark/html';
+
+export function Readers() {
+  return (
+    <>
+      <Markdown
+        value={'# Hello\n\nRead **Spark** and [Legend](https://legendapp.com).'}
+        onLinkPress={({ url }) => console.log(url)}
+      />
+      <Html selectable={false}>
+        {'<h1>Hello</h1><p>Read <strong>Spark</strong>.</p>'}
+      </Html>
+    </>
+  );
+}
+```
+
+Both readers accept these props:
+
+| Prop | Behavior |
+| --- | --- |
+| `value?: string`, `children?: string` | `value` takes precedence, including an empty string. With neither, the reader is empty. |
+| `selectable?: boolean` | Enables native text selection; defaults to `true`. |
+| `style` | React Native text style or style array. Markdown applies it to its container; HTML passes it to its text view. |
+| `onLinkPress({ url })` | The application owns link navigation. The example logs the URL. |
+| View props | Ordinary view accessibility and test props are accepted. |
+
+`Markdown` also accepts `markdownStyle` for text and block formatting. It renders headings, lists, links, code, and images; task checkboxes stay read-only. `Html` accepts `htmlStyle`, with element and style support determined by the backend.
+
+## Controlled inputs
+
+`MarkdownInput` and `HtmlInput` stay in editor mode. `EditableMarkdown` and `EditableHtml` show rendered content while unfocused: click to edit, then blur or press Escape to finish.
+
+```tsx
+import { useState } from 'react';
+import { MarkdownInput, EditableMarkdown } from '@legendapp/spark/markdown';
+import { HtmlInput, EditableHtml } from '@legendapp/spark/html';
+
+export function Editors() {
+  const [markdown, setMarkdown] = useState('Hello **Spark**');
+  const [html, setHtml] = useState('<p>Hello <strong>Spark</strong></p>');
+  return (
+    <>
+      <MarkdownInput value={markdown} onChangeText={setMarkdown} />
+      <EditableMarkdown
+        value={markdown}
+        onChangeText={setMarkdown}
+        placeholder="Write a note"
+        style={{ backgroundColor: '#fff' }}
+      />
+      <HtmlInput value={html} onChangeText={setHtml} />
+      <EditableHtml
+        value={html}
+        onChangeText={setHtml}
+        style={{ backgroundColor: '#fff' }}
+      />
+    </>
+  );
+}
+```
+
+All four require `value: string` and `onChangeText(value: string)`. They also accept `placeholder`, `autoFocus`, `onFocus`, `onBlur`, React Native `style`, `accessibilityLabel`, and `testID`. Changes arrive while typing as Markdown or HTML strings, including whitespace. A ref exposes `focus()` and `blur()` through `MarkdownInputRef` or `HtmlInputRef`, exported from the corresponding capability path.
+
+`MarkdownInput` and `EditableMarkdown` also accept `markdownStyle`. Reader props such as `selectable`, `htmlStyle`, and `onLinkPress` are not input props.
+
+### Formatting
+
+Set `formatting` to show Bold, Italic, Link, Bullets, and Numbers buttons. Supply a synchronous `onRequestLink={() => url}` returning a string or `undefined` to enable Link. On macOS, formatting also enables Cmd-B, Cmd-I, Cmd-K, Cmd-Shift-7, and Cmd-Shift-8 for those actions while the input is focused.
+
+### Selection and controlled values
+
+The editable variants retain the native input across focus changes so native hit testing places the caret. Selection positions belong to the native plain-text view, including styled text and emoji; they are not Markdown source offsets. The public inputs do not expose a controlled selection prop.
+
+Echoing an accepted edit back through `value` leaves native selection and undo intact. An external replacement or rejected edit may reset selection. Editors serialize supported formatting, so editing does not guarantee the original Markdown or HTML spelling survives unchanged.
+
+Use an opaque `style.backgroundColor` for editable previews; the reader overlay defaults to white. Reader/editor layout parity, particularly custom block styles and line heights, still needs native acceptance.
+
+## Backend limits
+
+- The macOS HTML backend supports basic inline formatting, paragraphs, headings, links, and lists.
+- Editing HTML flattens nested lists. Remote image URLs round-trip without loading their images; readers show placeholders.
+- The macOS backend does not apply custom `htmlStyle`, including HTML block styles.
+- Markdown math and syntax highlighting depend on application Enriched build settings.
+
+See the [rich-text source guide](https://github.com/LegendApp/legend-spark/blob/261e2c337905d501d86f8b38b9036feb4ed746b4/docs/rich-text.md) for backend configuration and native validation details.

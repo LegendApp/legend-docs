@@ -9,7 +9,7 @@ description: Clipboard, notifications, system APIs, processes, databases, WebVie
 
 `/links` supplies `openURL`, `canOpenURL`, `getInitialURL`, and `addEventListener('url', listener)`. Desktop `openPath` opens a native file with its associated application. File/URL launch replay and recent history live under [/app/documents](/spark/documents).
 
-`/drag-drop` handles generic files/text/URLs/custom MIME payloads with consumer-facing events and explicit operations/coordinates. Application-specific music/track models do not belong in the SDK. Use availability and `onError` rather than assuming every import has a native backend.
+`/drag-drop` handles generic files/text/URLs/custom MIME payloads with consumer-facing events and explicit operations/coordinates. Application-specific music/track models do not belong in the SDK. Use availability and `onError` rather than assuming every import has a native backend. See [Drag and drop](/spark/drag-drop) for sources, destinations, and event contracts.
 
 ## Local notifications
 

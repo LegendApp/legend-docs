@@ -1,0 +1,115 @@
+---
+title: Keyboard shortcuts
+description: Local and global accelerators, command routing, customizable bindings, and keyboard events.
+---
+
+Choose a shortcut surface according to its owner:
+
+| Import | Purpose |
+| --- | --- |
+| `@legendapp/spark/shortcuts` | Shortcuts in the focused application, optionally scoped to a window. |
+| `@legendapp/spark/global-shortcuts` | System-wide shortcuts, including when the app is unfocused. |
+| `@legendapp/spark/shortcuts/commands` | Named commands, routing, capture controls, and persisted bindings. |
+| `@legendapp/spark/shortcuts/keyboard` | Low-level observation of keydown and keyup. |
+
+macOS 14+ (Apple Silicon) supported; Windows preview, not yet verified. Local and global registration have desktop backends; the command router and low-level keyboard backend currently require macOS. Native key dispatch, layouts, media keys, and focus transitions still need host acceptance.
+
+## Accelerator strings
+
+Menus and registered shortcuts share named accelerators such as `CmdOrCtrl+S`, `Alt+Left`, `Shift+Up`, and `F5`. `CmdOrCtrl` means Command on macOS and Control on Windows. Character shortcuts require a modifier on these surfaces. Use `Plus` for the plus key, for example `CmdOrCtrl+Plus`.
+
+Commands additionally allow unmodified character keys, `Home`, `End`, `PageUp`, `PageDown`, `MediaPlayPause`, `MediaNext`, and `MediaPrevious`, with explicit `Fn` and `CapsLock` modifiers. Other shortcut surfaces reject those extensions. Bindings use named strings; physical codes belong to low-level events.
+
+## Local and global registrations
+
+```ts
+import { registerShortcut } from '@legendapp/spark/shortcuts';
+import { registerGlobalShortcut } from '@legendapp/spark/global-shortcuts';
+
+const local = await registerShortcut('CmdOrCtrl+S', () => {
+  console.log('Save requested');
+}, { windowId: 'main' });
+
+const global = await registerGlobalShortcut('CmdOrCtrl+Shift+K', () => {
+  console.log('Global shortcut requested');
+});
+
+// When the owner ends:
+await local.remove();
+await global.remove();
+```
+
+Local shortcuts are consumed before insertion into text fields. Options are `windowId` and `repeat`; repeat defaults to `false`. Global options contain only `repeat`. Windows supports global repeat; requesting `repeat: true` on macOS rejects `E_UNSUPPORTED_OPTION`. Conflicting or reserved global shortcuts reject with `E_BUSY`.
+
+`getShortcutAvailability()` and `getGlobalShortcutAvailability()` report host/module availability from their respective imports. Registration failures reject. Await removal and retain a failed handle for cleanup retry; removal stops JavaScript callbacks immediately.
+
+To display a shortcut in an application menu, use the menu item's `shortcut` field; see [menus](/spark/menus).
+
+## Named commands and routing
+
+```ts
+import { createHotkeyRouter } from '@legendapp/spark/shortcuts/commands';
+
+const definitions = [
+  { id: 'save', title: 'Save', defaultBindings: ['CmdOrCtrl+S'] },
+] as const;
+const router = createHotkeyRouter();
+const registration = await router.register({
+  definitions,
+  scope: { kind: 'window', windowId: 'editor' },
+  handlers: { save: () => { console.log('Save requested'); } },
+});
+
+await registration.setEnabled(false);
+await registration.setEnabled(true);
+const suspension = await router.suspend({ kind: 'window', windowId: 'editor' });
+await suspension.remove();
+await registration.remove();
+```
+
+`defaultBindings` and per-command `bindings` overrides are arrays. An empty override disables a command; an omitted override uses its defaults. Registrations snapshot their configuration. Higher priority runs first: defaults are 100 for window scope and 0 for application scope. Equal priorities favor the newest registration.
+
+A synchronous handler returning `false` lets dispatch continue to the next Spark handler. Other synchronous results stop routing. Native consumption is decided before JavaScript runs, so returning `false` cannot send the key back to AppKit. Launch asynchronous work explicitly and handle its errors. Only definitions with `repeat: true` run on repeated keydowns; `allowExtraModifiers` opts into subset modifier matching.
+
+The native event's window ID determines ownership. Window changes reset pressed-key state; `setActiveWindowId` can also reset that state on app focus changes, but does not override native event ownership. `enabled` is a boolean. Await `setEnabled` for native acknowledgment.
+
+`router.suspend(scope?)` returns an async registration; await its `remove()` to resume. Window suspension also blocks application handlers in that window. The final command registration releases shared native observers and consumption rules. Setup, updates, and cleanup reject on failure, and cleanup can be retried on the same handle.
+
+### React ownership and capture
+
+`useRoutedHotkeys({ router, definitions, bindings, handlers, ... })` returns `loading`, `ready` with the registration, or `error` state. It uses current handlers and enabled state without replacing the registration for callback identity changes, and removes late registrations after unmount. `onError` reports setup/update failures; `onCleanupError(error, registration)` exposes failed cleanup for retry.
+
+`useHotkeySuspension({ active, router, scope?, onError?, onCleanupError? })` owns suspension for an effect lifetime. Both hooks share the commands import.
+
+`HotkeyCapture` takes `value`, `onChange`, and optional capture/error callbacks. It owns native capture only while recording, commits a named accelerator on key release, and cancels on Escape. Capture temporarily consumes monitored keys. `HotkeyBindingsSettingsContent` and `HotkeyBindingsSettingsPage` edit arrays of bindings through `definitions`, `values`, and `onChange(id, values)`; `maxBindingsPerCommand` can limit the number per command.
+
+## Persisting bindings
+
+`createHotkeyStore({ definitions, path, maxBindingsPerCommand?, storage?, debounceMs? })` comes from the commands import. Await the factory before using its Legend State `value$`, `error$`, `flush()`, and `close()`. The parent directory must exist; follow [observable persistence](/spark/settings#observable-persistence).
+
+The file format is:
+
+```json
+{ "version": 1, "bindings": { "save": ["CmdOrCtrl+S"] } }
+```
+
+Serialization preserves portable `CmdOrCtrl`. Missing commands acquire defaults, removed IDs are discarded, and empty arrays stay empty. Invalid versions, scalar bindings, or malformed accelerators reject and preserve existing file bytes. A nonnegative integer `maxBindingsPerCommand` keeps the first N bindings. Conflicts remain visible through `getHotkeyBindingConflicts` and the settings UI rather than silently replacing another command.
+
+Await `flush()` to persist the current snapshot and `close()` when its owner ends. The store persists bindings; supply them to a router registration or `useRoutedHotkeys` to apply them.
+
+## Low-level keyboard events
+
+```ts
+import { addKeyboardListener } from '@legendapp/spark/shortcuts/keyboard';
+
+const listener = await addKeyboardListener('down', event => {
+  console.log(event.key, event.keyCode, event.consumed);
+}, { windowIds: ['editor'] });
+await listener.remove();
+```
+
+Use `'down'` or `'up'`. Events include `windowId` (or `null`), a layout-derived unmodified `key`, physical `keyCode`, a numeric `modifiers` mask, and `repeated`, `consumed`, and `captured` booleans. Window filtering applies to both event kinds. `KeyCodes`, `KeyText`, `hasModifier`, and `createModifierMask` are exported from the same path.
+
+Callbacks observe the native decision; their return values never consume a key. Native matching does not wait for JavaScript. `getKeyboardAvailability()` checks host/module support; registration explicitly rejects on unsupported hosts or a missing module. Removing the last registration stops monitoring and releases bridge observers. Failed removal can be retried.
+
+See the [commands source guide](https://github.com/LegendApp/legend-spark/blob/261e2c337905d501d86f8b38b9036feb4ed746b4/docs/commands.md) for routing and persistence details.
