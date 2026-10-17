@@ -41,7 +41,7 @@ const runtimes = [
         label: 'Spark Runner',
         title: 'Start without Xcode',
         text: 'A prebuilt development app. Create a project, run it, and edit App.tsx with Fast Refresh.',
-        code: 'npx @legendapp/spark@next create MyApp\ncd MyApp\nnpm run macos',
+        code: 'npm create @legendapp/spark@next MyApp\ncd MyApp\nnpm run macos',
     },
     {
         label: 'Custom development build',

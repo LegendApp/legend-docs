@@ -18,7 +18,7 @@ Creating an app and running it with Spark Runner does not require Xcode or Cocoa
 Create an app with npm:
 
 ```sh
-npm create @legendapp/spark@latest MyApp
+npm create @legendapp/spark@next MyApp
 cd MyApp
 ```
 
@@ -27,15 +27,21 @@ The command runs `@legendapp/create-spark`, which creates the app and installs i
 Other package managers:
 
 ```sh
-bunx @legendapp/create-spark MyApp
-pnpm create @legendapp/spark MyApp
-yarn create @legendapp/spark MyApp
+bun create @legendapp/spark@next MyApp
+pnpm create @legendapp/spark@next MyApp
+yarn create @legendapp/spark@next MyApp # Yarn 2+
+```
+
+For Yarn Classic (1.x), use npm to run the tagged creator and select Yarn for installation:
+
+```sh
+npm create @legendapp/spark@next MyApp -- --package-manager yarn
 ```
 
 To choose a package manager, pass `--package-manager npm|pnpm|yarn|bun`. For example:
 
 ```sh
-npm create @legendapp/spark@latest MyApp -- --package-manager pnpm
+npm create @legendapp/spark@next MyApp -- --package-manager pnpm
 ```
 
 The chosen manager must be installed. The commands below use npm; use your chosen manager's `run` command instead if needed. Keep the generated lockfile and `spark-packages/` archives in version control so other machines can reinstall the same inputs.
