@@ -1,0 +1,76 @@
+---
+title: Drag and drop
+description: Native drag sources and drop destinations for files, text, URLs, and custom data.
+---
+
+`@legendapp/spark/drag-drop` exports `DragDropView`, `getDragDropAvailability`, and payload/event types. One view can be a source, a destination, or both, and accepts ordinary React Native `ViewProps`.
+
+macOS 14+ (Apple Silicon) supported; Windows preview, not yet verified. Native drag interaction and Windows compilation still need acceptance for this API.
+
+## Sources and destinations
+
+```tsx
+import { Text } from 'react-native';
+import { DragDropView } from '@legendapp/spark/drag-drop';
+
+export function DragExample() {
+  return (
+    <>
+      <DragDropView
+        source={{ data: { 'application/x-my-item': JSON.stringify({ id: '42' }) } }}
+        sourceOperations={['copy', 'move']}
+        onDragEnd={event => console.log(event.accepted, event.operation)}
+        onError={console.error}
+      >
+        <Text>Drag this item</Text>
+      </DragDropView>
+      <DragDropView
+        acceptedTypes={['files', 'application/x-my-item']}
+        acceptedOperations={['copy', 'move']}
+        onDrop={({ files, data, operation, x, y }) => {
+          console.log({ files, data, operation, x, y });
+        }}
+        onError={console.error}
+      >
+        <Text>Drop here</Text>
+      </DragDropView>
+    </>
+  );
+}
+```
+
+## Payloads and negotiation
+
+`DragPayload` can contain several representations at once:
+
+| Field | Value |
+| --- | --- |
+| `files` | Array of absolute native paths. Local file URLs in a source are normalized. |
+| `text` | A string. |
+| `urls` | Array of absolute URLs. Windows sources allow one URL; multiple URLs reject with `E_UNSUPPORTED_OPTION`. |
+| `data` | Map of lowercase custom MIME names to UTF-8 strings. The app owns JSON schemas and validation. |
+
+A source must contain at least one representation. `text/plain`, `text/uri-list`, and `application/x-spark-drag` are reserved; use the built-in fields for text and URLs.
+
+`sourceOperations` and `acceptedOperations` accept `copy`, `move`, and `link`, and each defaults to `['copy']`. Destinations default to `acceptedTypes={['files', 'text', 'urls']}`; custom MIME types require explicit opt-in. The first mutually supported target operation wins. Empty accepted operations or types reject all drops; `disabled` disables both directions.
+
+Accepted types determine drop eligibility. A payload may still include coexisting built-in representations, while custom data is restricted to requested custom types.
+
+## Events
+
+| Callback | Payload |
+| --- | --- |
+| `onDragEnter`, `onDrop` | `DropEvent`: payload fields plus `x`, `y`, and `operation`. |
+| `onDragOver` | `DragOverEvent`: only `x`, `y`, and `operation`. |
+| `onDragLeave` | No payload. |
+| `onDragEnd` | `{ accepted: true, operation: 'copy' \| 'move' \| 'link' }` or `{ accepted: false, operation: 'none' }`. |
+
+Coordinates use logical units from the destination's top-left corner, positive downward. Acceptance describes native negotiation, not successful application persistence. For a move, coordinate persistence and source deletion in application code.
+
+## Availability and errors
+
+`getDragDropAvailability()` synchronously reports an unsupported platform or a missing native component. An unavailable host renders an ordinary `View` with the children intact. Remount after repairing the host to retry.
+
+`onError` receives `SparkError` for unavailable hosts, malformed native events, and native operation failures; its default is `console.error`. The view adds no error message to the UI. Invalid source/options throw during rendering and can be handled by a React error boundary. Invalid native events report through `onError` without invoking their event callback.
+
+See the [drag-and-drop source guide](https://github.com/LegendApp/legend-spark/blob/261e2c337905d501d86f8b38b9036feb4ed746b4/docs/drag-drop.md) and [shared error contracts](/spark/reference#shared-contracts).
