@@ -62,15 +62,18 @@ Analysis records production reachability in `.spark/selection-report.json`. SDK 
 
 ## SDK iteration and diagnostics
 
-Repack after SDK source changes and rebuild/register a Runner when its native signature changes. From the framework checkout, `node scripts/refresh-consumer.ts /path/to/app` refreshes a local test consumer's SDK archives. Content-hashed archives avoid stale package-manager cache identities. Use real packed consumers for distribution checks.
+After SDK source changes, run `node scripts/refresh-consumer.ts /path/to/app` from the framework checkout to refresh a test app. Rebuild/register its Runner when the native signature changes.
 
-`spark doctor` checks native prerequisites and dependency pins. `spark upgrade` updates the project's dependency pins. Run them from your app:
+Use `spark doctor` to check native prerequisites and dependency pins. Preview upgrades before applying them:
 
 ```sh
 npx --no-install spark doctor
+npx --no-install spark upgrade --dry-run
 npx --no-install spark upgrade
 ```
 
-Generated diagnostics live under `.spark/`: command records, full build logs, native selection, compatibility session state, and product/fingerprint records. Keep those outputs out of version control.
+Upgrade stays on your current release channel and applies versioned migrations. See [Upgrading Spark](/spark/migration) to move from a preview to 0.0.1. Keep React and Expo on Spark's tested pins. Doctor also reports outdated Enriched HTML web dependencies; upgrade repairs their pins.
+
+Build logs and diagnostic reports live under `.spark/`. Keep generated diagnostics out of version control.
 
 See [configuration](/spark/configuration), [examples and validation](/spark/examples), and the [SDK development guide](https://github.com/LegendApp/legend-spark/blob/main/docs/development.md).

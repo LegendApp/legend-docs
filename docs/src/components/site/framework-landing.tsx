@@ -41,7 +41,7 @@ const runtimes = [
         label: 'Spark Runner',
         title: 'Start without Xcode',
         text: 'A prebuilt development app. Create a project, run it, and edit App.tsx with Fast Refresh.',
-        code: 'npm create @legendapp/spark@next MyApp\ncd MyApp\nnpm run macos',
+        code: 'npm create @legendapp/spark MyApp\ncd MyApp\nnpm run macos',
     },
     {
         label: 'Custom development build',
@@ -59,7 +59,7 @@ const runtimes = [
 
 const docs = [
     { label: 'Overview', href: '/spark/overview', text: 'How the pieces fit' },
-    { label: 'Getting started', href: '/spark/getting-started', text: 'Preview and source setup' },
+    { label: 'Getting started', href: '/spark/getting-started', text: 'Create and run an app' },
     { label: 'Development', href: '/spark/development', text: 'Runtimes and native changes' },
     { label: 'API guide', href: '/spark/reference', text: 'Every capability' },
     { label: 'Examples', href: '/spark/examples', text: 'Kitchen Sink and small apps' },
@@ -103,7 +103,7 @@ export function FrameworkLanding() {
                     <div className="flex items-center gap-3 mb-7">
                         <img src="/assets/legend-spark.png" alt="" width={40} height={40} className="rounded-[10px]" />
                         <span className="text-white/90 font-medium">Legend Spark</span>
-                        <span className="status-badge">Experimental</span>
+                        <span className="status-badge">Experimental — not for production</span>
                     </div>
                     <h1 className="text-[44px] sm:text-[58px] font-medium tracking-[-0.045em] leading-[1.05] text-white">
                         React Native, meet the desktop.
@@ -134,7 +134,7 @@ export function FrameworkLanding() {
                         </pre>
                     </div>
                     <figcaption className="mt-3 text-xs text-[#787c85]">
-                        Current source API ·{' '}
+                        Spark 0.0.1 API ·{' '}
                         <Link href="/spark/getting-started" className="text-[#91c7e9] hover:text-white">
                             see Getting started
                         </Link>
@@ -218,14 +218,12 @@ export function FrameworkLanding() {
                     <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">Where it stands</h2>
                     <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-[#929da8] max-w-lg">
                         <p>
-                            Spark is experimental and not ready for production; APIs can still change. macOS 14+ on
-                            Apple Silicon is the primary target. Intel Mac builds and Windows development exist in
-                            source, with native acceptance pending.
+                            macOS 14+ on Apple Silicon is the primary target. Intel Mac builds and Windows development
+                            still need native validation.
                         </p>
                         <p>
-                            The <code className="text-white/80">@next</code> preview uses matching SDK archives and
-                            downloads the macOS Apple Silicon Spark Runner on first launch. Signed distribution
-                            acceptance remains pending.
+                            Spark 0.0.1 downloads a matching macOS Apple Silicon Runner on first launch.
+                            Test signed distribution with your own app and credentials.
                         </p>
                     </div>
                     <Link

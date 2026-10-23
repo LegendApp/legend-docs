@@ -72,7 +72,7 @@ export default async function ProjectLayout({
                     .filter((item) => item.category !== 'library' && !item.homepage)
                     .map((item) => ({
                         title: item.name,
-                        description: item.category === 'library' ? 'Open-source library' : item.status,
+                        description: item.slug === 'spark' ? undefined : item.status,
                         url: `/${item.slug}`,
                         icon: <ProjectIcon slug={item.slug} size={19} />,
                     })),

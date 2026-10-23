@@ -3,9 +3,9 @@ title: Drag and drop
 description: Native drag sources and drop destinations for files, text, URLs, and custom data.
 ---
 
-`@legendapp/spark/drag-drop` exports `DragDropView`, `getDragDropAvailability`, and payload/event types. One view can be a source, a destination, or both, and accepts ordinary React Native `ViewProps`.
+Use `DragDropView` from `@legendapp/spark/drag-drop` to drag or receive files, text, URLs, and custom data. It accepts ordinary React Native view props.
 
-macOS 14+ (Apple Silicon) supported; Windows preview, not yet verified. Native drag interaction and Windows compilation still need acceptance for this API.
+Native drag behavior on macOS and Windows still needs validation.
 
 ## Sources and destinations
 
@@ -65,12 +65,12 @@ Accepted types determine drop eligibility. A payload may still include coexistin
 | `onDragLeave` | No payload. |
 | `onDragEnd` | `{ accepted: true, operation: 'copy' \| 'move' \| 'link' }` or `{ accepted: false, operation: 'none' }`. |
 
-Coordinates use logical units from the destination's top-left corner, positive downward. Acceptance describes native negotiation, not successful application persistence. For a move, coordinate persistence and source deletion in application code.
+Coordinates are logical units from the destination's top-left corner. For a move, save the dropped data before deleting it at the source. An accepted drop does not confirm that saving succeeded.
 
 ## Availability and errors
 
 `getDragDropAvailability()` synchronously reports an unsupported platform or a missing native component. An unavailable host renders an ordinary `View` with the children intact. Remount after repairing the host to retry.
 
-`onError` receives `SparkError` for unavailable hosts, malformed native events, and native operation failures; its default is `console.error`. The view adds no error message to the UI. Invalid source/options throw during rendering and can be handled by a React error boundary. Invalid native events report through `onError` without invoking their event callback.
+Handle `onError` to show unavailable-host and native errors; it defaults to `console.error`. Invalid props throw during render. Invalid native events report through `onError` and skip their callback.
 
-See the [drag-and-drop source guide](https://github.com/LegendApp/legend-spark/blob/261e2c337905d501d86f8b38b9036feb4ed746b4/docs/drag-drop.md) and [shared error contracts](/spark/reference#shared-contracts).
+See the [drag-and-drop source guide](https://github.com/LegendApp/legend-spark/blob/main/docs/drag-drop.md) and [shared error contracts](/spark/reference#shared-contracts).

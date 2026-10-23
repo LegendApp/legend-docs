@@ -3,7 +3,7 @@ title: Menus and shortcuts
 description: Owned native menus, portable accelerators, command routing, and tray items.
 ---
 
-Spark menu items discriminate `type`, use stable IDs, and share label/disabled/checked semantics. The shared model includes checkbox and radio items. Every surface accepts its own subset; shared types do not imply all native surfaces support radio items, submenus, roles, icons, or sliders.
+Create menus with typed items and stable IDs. Each surface supports the item types listed below.
 
 ## Application menus
 
@@ -28,21 +28,7 @@ Targets bind native root menus, IDs, or macOS semantic roles. Role items dispatc
 
 ## Checked items
 
-| Shared item type | State and options |
-| --- | --- |
-| `checkbox` | Required boolean `checked`; optional `shortcut` |
-| `radio` | Required boolean `checked`; optional `shortcut`, with checkbox-like checked semantics |
-
-The radio shape in the [shared menu contract](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/packages/desktop-app/src/contracts/menu.ts) is:
-
-```ts
-const radioItem = {
-  type: 'radio', id: 'sort-name', label: 'Name', checked: true,
-  shortcut: 'CmdOrCtrl+1',
-} as const;
-```
-
-This shows the shared model only. In v0.0.1-next.4, the surfaces below still reject radio items with `E_UNSUPPORTED_OPTION`; the [`/menus` application subset](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/packages/native-menu/src/api.ts) also excludes radio from its exported `MenuItem` type.
+Use `type: 'checkbox'` with a boolean `checked` for selectable state. The shared contract also defines `radio`, but the surfaces below reject it with `E_UNSUPPORTED_OPTION`; `/menus` excludes it from its exported `MenuItem` type.
 
 ## Surface support
 
@@ -59,25 +45,8 @@ This shows the shared model only. In v0.0.1-next.4, the surfaces below still rej
 
 `createTray` returns a handle with `update` and async `remove`. Images distinguish SF Symbol names from local files; symbol images are macOS-specific. Dock/taskbar menu registrations live in `/system` and have separate native availability.
 
-## Local and global shortcuts
+## Shortcuts
 
-See [Keyboard shortcuts](/spark/keyboard-shortcuts) for the full registration, routing, capture, and persistence guide.
+Set an item's `shortcut`, such as `CmdOrCtrl+O`, to show and register its accelerator. Use [Keyboard shortcuts](/spark/keyboard-shortcuts) for local/global registrations, named commands, customizable bindings, and raw key events.
 
-```ts
-import { registerShortcut } from '@legendapp/spark/shortcuts';
-
-const shortcut = await registerShortcut('CmdOrCtrl+S', () => {
-  console.log('Save requested');
-}, { windowId: 'main' });
-await shortcut.remove();
-```
-
-Local and global registration share portable accelerator parsing and async removal. Local options include window ownership and repeat behavior. `registerGlobalShortcut(accelerator, handler, { repeat? })` lives under `/global-shortcuts`. Windows supports repeat; requesting it on macOS rejects `E_UNSUPPORTED_OPTION`. Conflicts are failures, not silently replaced registrations.
-
-## Commands and raw keys
-
-`/shortcuts/commands` includes `createHotkeyRouter`, `createHotkeyStore`, optional React bindings, capture, and settings UI. Routers arbitrate enabled commands by window/application scope and priority. The store owns versioned JSON bindings, keeps portable `CmdOrCtrl` spelling, exposes conflicts, and requires flush/close for persistence.
-
-`/shortcuts/keyboard` supplies `addKeyboardListener`, key codes, and modifier helpers. Registrations have explicit ownership; callbacks observe native `consumed`/`captured` decisions and cannot consume a key by returning a value. The low-level backend/command router currently requires macOS. Native shortcut matching never waits synchronously for JavaScript.
-
-See [menu details](https://github.com/LegendApp/legend-spark/blob/main/docs/menus.md) and [command routing](https://github.com/LegendApp/legend-spark/blob/main/docs/commands.md).
+See [menu details](https://github.com/LegendApp/legend-spark/blob/main/docs/menus.md) for targeting and ownership.

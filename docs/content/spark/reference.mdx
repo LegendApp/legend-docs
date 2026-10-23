@@ -3,7 +3,7 @@ title: API guide
 description: Public capability imports, ownership, errors, and resource lifetimes.
 ---
 
-Import application APIs from `@legendapp/spark/<feature>`. The single SDK archive includes private implementation modules; applications should not install or deep-import them. Hooks, imperative operations, and public types share their capability entry point.
+Import APIs and types from `@legendapp/spark/<feature>`. Use these public paths rather than internal packages.
 
 ## Capability entry points
 
@@ -30,6 +30,7 @@ Import application APIs from `@legendapp/spark/<feature>`. The single SDK archiv
 | `/markdown`, `/html` | Read-only rich text, controlled inputs, and editable previews | [Rich text](/spark/rich-text) |
 | `/ui/search`, `/ui/sidebar`, `/ui/split-view`, `/ui/swipe`, `/ui/glass`, `/ui/symbol` | Specialized macOS views | [Native UI](/spark/ui) |
 | `/ai`, `/ai/codex` | Installed AI CLI execution and optional macOS Codex supervisor | [AI execution](/spark/ai) |
+| `/customize` | Optional macOS app customization: generate, review, preview, and apply edits | [Customization guide](https://github.com/LegendApp/legend-spark/blob/main/docs/customize-apps.md) |
 | `/contracts`, `/diagnostics` | Shared error/availability/resource types and explicit diagnostic utilities | [Shared contracts](#shared-contracts) |
 
 Support varies by platform. Check feature-specific availability, permissions, and [platform limits](/spark/limitations).

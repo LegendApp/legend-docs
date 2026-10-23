@@ -12,7 +12,7 @@ Choose a shortcut surface according to its owner:
 | `@legendapp/spark/shortcuts/commands` | Named commands, routing, capture controls, and persisted bindings. |
 | `@legendapp/spark/shortcuts/keyboard` | Low-level observation of keydown and keyup. |
 
-macOS 14+ (Apple Silicon) supported; Windows preview, not yet verified. Local and global registration have desktop backends; the command router and low-level keyboard backend currently require macOS. Native key dispatch, layouts, media keys, and focus transitions still need host acceptance.
+Local and global shortcuts have macOS and Windows backends. Command routing and low-level keyboard events require macOS. Test key layouts and focus changes on your target host.
 
 ## Accelerator strings
 
@@ -71,13 +71,13 @@ await registration.remove();
 
 A synchronous handler returning `false` lets dispatch continue to the next Spark handler. Other synchronous results stop routing. Native consumption is decided before JavaScript runs, so returning `false` cannot send the key back to AppKit. Launch asynchronous work explicitly and handle its errors. Only definitions with `repeat: true` run on repeated keydowns; `allowExtraModifiers` opts into subset modifier matching.
 
-The native event's window ID determines ownership. Window changes reset pressed-key state; `setActiveWindowId` can also reset that state on app focus changes, but does not override native event ownership. `enabled` is a boolean. Await `setEnabled` for native acknowledgment.
+The event's window ID determines ownership. Window changes reset pressed keys; `setActiveWindowId` can reset them on focus changes too. Await `setEnabled(boolean)` before relying on the new state.
 
 `router.suspend(scope?)` returns an async registration; await its `remove()` to resume. Window suspension also blocks application handlers in that window. The final command registration releases shared native observers and consumption rules. Setup, updates, and cleanup reject on failure, and cleanup can be retried on the same handle.
 
 ### React ownership and capture
 
-`useRoutedHotkeys({ router, definitions, bindings, handlers, ... })` returns `loading`, `ready` with the registration, or `error` state. It uses current handlers and enabled state without replacing the registration for callback identity changes, and removes late registrations after unmount. `onError` reports setup/update failures; `onCleanupError(error, registration)` exposes failed cleanup for retry.
+`useRoutedHotkeys({ router, definitions, bindings, handlers, ... })` manages registration for a component. It returns loading/ready/error state and keeps handlers current. Use `onError` for setup/update failures and `onCleanupError(error, registration)` to retry failed cleanup.
 
 `useHotkeySuspension({ active, router, scope?, onError?, onCleanupError? })` owns suspension for an effect lifetime. Both hooks share the commands import.
 
@@ -110,6 +110,6 @@ await listener.remove();
 
 Use `'down'` or `'up'`. Events include `windowId` (or `null`), a layout-derived unmodified `key`, physical `keyCode`, a numeric `modifiers` mask, and `repeated`, `consumed`, and `captured` booleans. Window filtering applies to both event kinds. `KeyCodes`, `KeyText`, `hasModifier`, and `createModifierMask` are exported from the same path.
 
-Callbacks observe the native decision; their return values never consume a key. Native matching does not wait for JavaScript. `getKeyboardAvailability()` checks host/module support; registration explicitly rejects on unsupported hosts or a missing module. Removing the last registration stops monitoring and releases bridge observers. Failed removal can be retried.
+Callbacks observe the native decision; returning a value cannot consume a key. Check `getKeyboardAvailability()` before registering. Await removal when the owner ends; retry the same handle if cleanup fails.
 
-See the [commands source guide](https://github.com/LegendApp/legend-spark/blob/261e2c337905d501d86f8b38b9036feb4ed746b4/docs/commands.md) for routing and persistence details.
+See the [commands source guide](https://github.com/LegendApp/legend-spark/blob/main/docs/commands.md) for routing and persistence details.

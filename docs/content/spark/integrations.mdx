@@ -1,6 +1,6 @@
 ---
 title: Desktop and shared integrations
-description: Clipboard, notifications, system APIs, processes, databases, WebView, audio, auth, camera, and Markdown.
+description: Clipboard, notifications, system APIs, processes, databases, WebView, audio, auth, camera, and rich text.
 ---
 
 ## Clipboard, links, and drag/drop
@@ -9,7 +9,7 @@ description: Clipboard, notifications, system APIs, processes, databases, WebVie
 
 `/links` supplies `openURL`, `canOpenURL`, `getInitialURL`, and `addEventListener('url', listener)`. Desktop `openPath` opens a native file with its associated application. File/URL launch replay and recent history live under [/app/documents](/spark/documents).
 
-`/drag-drop` handles generic files/text/URLs/custom MIME payloads with consumer-facing events and explicit operations/coordinates. Application-specific music/track models do not belong in the SDK. Use availability and `onError` rather than assuming every import has a native backend. See [Drag and drop](/spark/drag-drop) for sources, destinations, and event contracts.
+Use [Drag and drop](/spark/drag-drop) for files, text, URLs, and custom MIME data.
 
 ## Local notifications
 
@@ -103,11 +103,9 @@ Refs request reload/back/forward, string messaging, or script injection; they do
 
 `@legendapp/spark/camera` exposes VisionCamera with upstream semantics and automatic native compatibility patches. See [Camera](/spark/camera) for a preview example, permissions, and platform limits.
 
-## Enriched Markdown
+## Rich text
 
-Spark includes `react-native-enriched-markdown` 1.0.2 as an ordinary pinned dependency. Import from that package; there is no `@legendapp/spark/markdown` export. Compatibility patches apply automatically during installation and native preparation, like camera, without an app package-manager patch declaration. Native preparation also handles disabled install scripts and reinstalls. Production builds can prune the native module when unused.
-
-Math and syntax-highlighting assets still require the upstream per-app `enriched-markdown` configuration in `package.json`; they can download and compile additional assets. Automatic patching does not configure these features. See [integrated external libraries](https://github.com/LegendApp/legend-spark/blob/v0.0.1-next.4/docs/external-libraries.md#built-in-backend-dependencies).
+Use `@legendapp/spark/markdown` and `@legendapp/spark/html` to read and edit rich text. Spark installs and patches both Enriched backends. See [Rich text](/spark/rich-text) for components, formatting, and build settings.
 
 ## Independent Hermes runtimes
 

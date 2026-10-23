@@ -22,11 +22,11 @@ The build validates content links, exports the site to `docs/dist/`, then genera
 
 - `/`: a single overview of Legend, apps, open-source libraries, and the framework; navigation links to page sections
 - `/list`, `/state`, `/motion`: existing library entry points and versioned documentation
-- `/spark`: framework landing page and current-source SDK guides
+- `/spark`: framework landing page and Spark 0.0.1 guides
 - `/diff`, `/markdown`, `/music`, `/slides`, `/code`, `/chat-history`: app and demo pages
 - `/blog`: existing articles
 
-Library documentation and interactive examples stay in their existing locations. Spark guides cover source APIs and distinguish them from the published experimental preview. Kitchen Sink is an SDK example, not a separate product landing page.
+Library documentation and interactive examples stay in their existing locations. Spark guides cover 0.0.1. Kitchen Sink is an SDK example, not a separate product landing page.
 
 The new landing pages live in `docs/src/app/(site)` with components in `docs/src/components/site`. Styles are scoped to `.legend-site` so they do not change library documentation or examples. The homepage uses a custom Legend hero, app screenshots, images from the library documentation, and short product summaries; there are no separate `/apps` or `/libraries` pages.
 

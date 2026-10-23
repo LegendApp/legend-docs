@@ -3,13 +3,13 @@ title: Status and limitations
 description: Platform support, feature restrictions, and distribution limits.
 ---
 
-Spark is experimental and not ready for production use. APIs, configuration, and native implementations can change. macOS 14+ on Apple Silicon is the primary target.
+Spark 0.0.1 primarily targets macOS 14+ on Apple Silicon.
 
 ## What works where
 
 | Target | Available workflow | Limits |
 | --- | --- | --- |
-| macOS 14+, Apple Silicon | Spark Runner, custom development builds, standalone apps, signing/notarization, and whole-app updates | Experimental; check each feature's availability and test it in your app |
+| macOS 14+, Apple Silicon | Spark Runner, custom development builds, standalone apps, signing/notarization, and whole-app updates | Check feature availability in your app |
 | macOS 14+, Intel x64 | Source tooling targets builds, Runner registration/downloads, and packaging | Native compilation, runtime behavior, and signed distribution still need validation; the published Runner is ARM64 only |
 | Windows 11, x64/ARM64 | Local source Runner and custom development builds | Native compilation and runtime behavior still need validation; no hosted Runner or production packaging workflow |
 | iOS / Android / web | Expo workflows and selected shared API/UI adapters | Desktop windows, files, menus, and processes are not universal capabilities |
@@ -27,7 +27,7 @@ Check feature-specific availability and permissions before offering a capability
 
 ## Standalone apps and updates
 
-macOS build, Developer ID signing, notarization, and whole-app update tooling are available. Distribution and updates remain experimental: test installation, startup, update/relaunch, and rejection of older builds with your signed app and update feed. See [packaging and updates](/spark/distribution).
+macOS build, Developer ID signing, notarization, and whole-app update tooling are available. Test installation, startup, update/relaunch, and rejection of older builds with your signed app and update feed. See [packaging and updates](/spark/distribution).
 
 Windows production builds, signing, and MSIX packaging are unsupported.
 

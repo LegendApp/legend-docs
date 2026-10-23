@@ -1,9 +1,42 @@
 ---
-title: Updating an existing prototype
-description: Move removed imports and resource contracts to the consolidated API.
+title: Upgrading Spark
+description: Update Spark, review migrations, and move older prototypes to the current APIs.
 ---
 
-Updating an older prototype requires import and contract changes. Removed exports have no compatibility aliases. Update the SDK and rebuild native runtimes whose signatures changed. For local source development, refresh the packed dependencies as well.
+## Upgrade an app
+
+Commit your app and lockfile first. Record the old version from `.spark/version`, or the installed Spark package if that file is missing.
+
+```sh
+npx --no-install spark upgrade --dry-run
+npx --no-install spark upgrade
+npx --no-install spark doctor
+```
+
+The dry run lists dependency pins, file changes, and manual steps. Upgrade installs matching SDK archives and applies migrations in version order. It keeps your package manager and updates its settings and overrides. Keep `spark-packages/` and those settings in version control; do not replace patched archives with upstream packages.
+
+Read `node_modules/@legendapp/spark/skills/spark/UPGRADING.md` from the newly installed package for every version between the old and new releases. Complete `.spark/upgrade-notes.md`, then run your app's typecheck and tests. Rebuild custom development runtimes after native changes. If installation fails, fix the cause and retry; partial edits may remain.
+
+### Move from a preview to 0.0.1
+
+`spark upgrade` stays on the installed release's channel: previews use `next`, stable releases use `latest`. To switch an npm app to 0.0.1 after it is published:
+
+```sh
+npm install --save-exact @legendapp/spark@0.0.1
+```
+
+Use your package manager's equivalent install command, then run the upgrade and doctor commands above. Preserve the old version record until migration finishes. Review the installed notes and test your app. For a new release with pnpm 12, see the [release-age option](/spark/getting-started#install-just-after-a-release).
+
+### Changes since next.5
+
+- next.6 repaired the creator package; existing apps need no source migration.
+- next.7 added creator release-selection flags. These apply when creating apps, not to `spark upgrade`.
+- Yarn PnP can run the creator; generated native apps use `node_modules`.
+- Dependency fixes preserve pnpm settings and patched Nitro peers, repair Enriched HTML web dependencies, and keep Fast Refresh working when imports are removed and re-added.
+
+## Older prototypes
+
+Older prototypes need import and contract changes. Removed exports have no aliases. Rebuild matching native runtimes after updating.
 
 ## Import changes
 
@@ -40,7 +73,7 @@ Check feature availability on each target platform. Unknown options reject. Awai
 
 ## Configuration and tooling
 
-The tooling runs on Node 24.19.0+; Bun is optional for app consumers. The framework checkout requires the pinned Bun version; see [source setup](/spark/getting-started#contributing-build-spark-from-source). Use `bun run spark ...` in the framework checkout and `npx --no-install spark ...` in consumers. Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`; old prebuilt/go command spellings are removed. Expo's `dev --go` still means mobile Expo Go.
+Use Node 24.19.0+. Run `npx --no-install spark ...` in apps and `bun run spark ...` in the [source checkout](/spark/getting-started#contributing-build-spark-from-source). Runner commands are `sdk build-runner`, `build --runner`, and `dev --runner-binary`. Expo's `dev --go` selects mobile Expo Go.
 
 Author Spark-owned desktop settings in `desktop.config.json`, preserve `projectId`, and compose existing Expo projects through `/expo-config`, `/metro`, and `/native`. Review generated templates/wrappers when updating local consumers. Old Frame native identities/data are not automatically migrated.
 

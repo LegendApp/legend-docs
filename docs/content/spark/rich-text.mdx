@@ -3,11 +3,11 @@ title: Rich text
 description: Read and edit Markdown and HTML with native text views.
 ---
 
-Import `Markdown`, `MarkdownInput`, and `EditableMarkdown` from `@legendapp/spark/markdown`, or `Html`, `HtmlInput`, and `EditableHtml` from `@legendapp/spark/html`. Spark bundles the Enriched backends and applies their native compatibility patches during installation and native preparation; no separate backend installation is needed.
+Use `@legendapp/spark/markdown` for Markdown and `@legendapp/spark/html` for HTML. Both include readers, controlled inputs, and click-to-edit previews.
 
-macOS 14+ (Apple Silicon) supported; Windows preview, not yet verified. Rich text is unsupported on Windows. See [backend limits](#backend-limits) before choosing content and styles.
+Rich text is unsupported on Windows. See [backend limits](#backend-limits) for macOS restrictions.
 
-## Read-only readers
+## Display rich text
 
 ```tsx
 import { Markdown } from '@legendapp/spark/markdown';
@@ -46,28 +46,17 @@ Both readers accept these props:
 
 ```tsx
 import { useState } from 'react';
-import { MarkdownInput, EditableMarkdown } from '@legendapp/spark/markdown';
-import { HtmlInput, EditableHtml } from '@legendapp/spark/html';
+import { EditableMarkdown } from '@legendapp/spark/markdown';
 
-export function Editors() {
-  const [markdown, setMarkdown] = useState('Hello **Spark**');
-  const [html, setHtml] = useState('<p>Hello <strong>Spark</strong></p>');
+export function Editor() {
+  const [value, setValue] = useState('Hello **Spark**');
   return (
-    <>
-      <MarkdownInput value={markdown} onChangeText={setMarkdown} />
-      <EditableMarkdown
-        value={markdown}
-        onChangeText={setMarkdown}
-        placeholder="Write a note"
-        style={{ backgroundColor: '#fff' }}
-      />
-      <HtmlInput value={html} onChangeText={setHtml} />
-      <EditableHtml
-        value={html}
-        onChangeText={setHtml}
-        style={{ backgroundColor: '#fff' }}
-      />
-    </>
+    <EditableMarkdown
+      value={value}
+      onChangeText={setValue}
+      placeholder="Write a note"
+      style={{ backgroundColor: '#fff' }}
+    />
   );
 }
 ```
@@ -82,11 +71,24 @@ Set `formatting` to show Bold, Italic, Link, Bullets, and Numbers buttons. Suppl
 
 ### Selection and controlled values
 
-The editable variants retain the native input across focus changes so native hit testing places the caret. Selection positions belong to the native plain-text view, including styled text and emoji; they are not Markdown source offsets. The public inputs do not expose a controlled selection prop.
+Echoing an edit through `value` preserves selection and undo. Replacing or rejecting it may reset selection. Inputs expose no controlled selection prop. Editors preserve supported formatting, but may change the original Markdown or HTML spelling.
 
-Echoing an accepted edit back through `value` leaves native selection and undo intact. An external replacement or rejected edit may reset selection. Editors serialize supported formatting, so editing does not guarantee the original Markdown or HTML spelling survives unchanged.
+Use an opaque `style.backgroundColor` for editable previews; it defaults to white. Check reader/editor alignment when using custom block styles or line heights.
 
-Use an opaque `style.backgroundColor` for editable previews; the reader overlay defaults to white. Reader/editor layout parity, particularly custom block styles and line heights, still needs native acceptance.
+## Installation and build settings
+
+Spark installs Enriched Markdown and Enriched HTML 1.1.1 and applies compatibility patches automatically. No separate backend install is needed. Existing apps can run `spark doctor` and `spark upgrade` to repair outdated web dependency pins.
+
+Math and syntax highlighting need per-app build settings and can download large assets. To disable them in `package.json`:
+
+```json
+{
+  "enriched-markdown": {
+    "enableCodeHighlight": false,
+    "enableMath": false
+  }
+}
+```
 
 ## Backend limits
 
@@ -95,4 +97,4 @@ Use an opaque `style.backgroundColor` for editable previews; the reader overlay 
 - The macOS backend does not apply custom `htmlStyle`, including HTML block styles.
 - Markdown math and syntax highlighting depend on application Enriched build settings.
 
-See the [rich-text source guide](https://github.com/LegendApp/legend-spark/blob/261e2c337905d501d86f8b38b9036feb4ed746b4/docs/rich-text.md) for backend configuration and native validation details.
+See the [rich-text source guide](https://github.com/LegendApp/legend-spark/blob/main/docs/rich-text.md) for backend configuration and native validation details.

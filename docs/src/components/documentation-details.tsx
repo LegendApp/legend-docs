@@ -7,10 +7,10 @@ export function DocumentationStructuredData({ page, ancestors }: { page: Documen
 
 export function DocumentationContext({ url }: { url: string }) {
     const { project, version, archived } = documentContext(url);
+    if (project?.slug === 'spark') return null;
     return <aside className="mb-6 text-sm text-fd-muted-foreground" aria-label="Documentation status">
         {version && <p>{project?.name} {version} documentation. {archived ? <><strong>Archived version.</strong> <Link href={project!.currentDocs!}>Read the current documentation.</Link></> : 'Current documentation version.'}</p>}
         {project?.status && <p>{project.name}: {project.status}.</p>}
-        {project?.slug === 'spark' && <p>These guides cover source SDK APIs; the published preview can differ. <Link href="/spark/limitations/">Check release status.</Link></p>}
     </aside>;
 }
 

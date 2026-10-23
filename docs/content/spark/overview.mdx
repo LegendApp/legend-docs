@@ -3,18 +3,18 @@ title: Overview
 description: How React Native, Expo Desktop, and Spark runtimes fit together.
 ---
 
-Legend Spark adds native desktop capabilities and a managed development workflow to React Native and Expo Desktop. Build React Native screens, use native windows, menus, dialogs, and files, and edit JavaScript with Fast Refresh.
+Build desktop apps with React Native screens, native windows, menus, dialogs, and files. Edit JavaScript with Fast Refresh.
 
-The public package is `@legendapp/spark`; the CLI is `spark`. The single package includes its private implementation modules. Application code imports capability paths such as `@legendapp/spark/files` rather than installing internal `@legendapp/spark-*` packages.
+Install `@legendapp/spark` for the APIs and `spark` CLI. Import features from paths such as `@legendapp/spark/files`.
 
 ## How the pieces fit
 
-- **React Native** renders native interfaces. Application JavaScript runs in Hermes.
-- **Expo** supplies mobile/web tooling and selected library backends.
-- **Expo Desktop** creates projects and generates native desktop hosts.
-- **Spark** supplies desktop APIs, native compatibility checks, runtime selection, and build/packaging orchestration. Expo CLI owns Metro and the development terminal.
+- **[React Native](https://github.com/facebook/react-native)** renders native interfaces. Application JavaScript runs in Hermes.
+- **[Expo](https://github.com/expo/expo)** supplies mobile/web tooling and selected library backends.
+- **[Expo Desktop](https://github.com/shirakaba/expo-desktop)** creates projects and generates native desktop hosts.
+- **[Legend Spark](/spark)** supplies desktop APIs, native compatibility checks, runtime selection, and build/packaging orchestration. Expo CLI owns Metro and the development terminal.
 
-Node 24.19.0 or newer runs the tooling. For app consumers, npm, pnpm, Yarn, and Bun are package-manager choices; Bun is optional. The source checkout requires the pinned Bun version; see [source setup](/spark/getting-started#contributing-build-spark-from-source). Neither Node nor Bun is embedded in the application.
+Node 24.19.0+ runs the tooling. Use npm, pnpm, Yarn, or Bun to manage dependencies. Neither Node nor Bun runs inside the app.
 
 ## Three runtime choices
 
@@ -30,13 +30,13 @@ Start with a compatible Runner. Adding native dependencies, helper executables, 
 
 | Target | Available workflow | Limits |
 | --- | --- | --- |
-| macOS 14+, Apple Silicon | Runner, custom development, standalone builds and packaging | Primary target; experimental |
+| macOS 14+, Apple Silicon | Runner, custom development, standalone builds and packaging | Primary target |
 | macOS 14+, Intel x64 | Architecture selection across builds, Runner registration/downloads and packaging | Native builds and runtime behavior still need validation; published Runner is ARM64 only |
 | Windows 11, x64/ARM64 | Local Runner and custom development builds | Native builds and runtime behavior still need validation; no production packaging or hosted Windows Runner |
 | iOS / Android / web | Expo workflows and selected shared API/UI adapters | Desktop APIs do not imply mobile/web support |
 | Linux / Mac App Store | Outside the supported workflow | No support claim |
 
-The source targets Expo SDK 54, React Native 0.81, and Expo Desktop `1.0.0`. See [status and limitations](/spark/limitations) for platform and feature restrictions.
+Spark 0.0.1 targets Expo SDK 54, React Native 0.81, and Expo Desktop `1.0.0`. See [status and limitations](/spark/limitations) for platform and feature restrictions.
 
 ## Application architecture
 

@@ -3,10 +3,6 @@ title: Getting started
 description: Create a macOS app from npm, edit it with Fast Refresh, and build a standalone app.
 ---
 
-<Callout type="warn" title="Experimental">
-Spark is experimental and not ready for production use. See [status and limitations](/spark/limitations).
-</Callout>
-
 ## Prerequisites
 
 Use macOS **14 or newer** on **Apple Silicon** with Node **24.19.0 or newer**. npm comes with Node; pnpm, Yarn, and Bun are also supported package managers. Bun is optional for app development.
@@ -18,33 +14,45 @@ Creating an app and running it with Spark Runner does not require Xcode or Cocoa
 Create an app with npm:
 
 ```sh
-npm create @legendapp/spark@next MyApp
+npm create @legendapp/spark MyApp
 cd MyApp
 ```
 
-The command runs `@legendapp/create-spark`, which creates the app and installs its dependencies. `@legendapp/spark` includes the `spark` CLI and the public APIs.
-
-Other package managers:
+The creator installs the app's dependencies, including the `spark` CLI. You can also use:
 
 ```sh
-bun create @legendapp/spark@next MyApp
-pnpm create @legendapp/spark@next MyApp
-yarn create @legendapp/spark@next MyApp # Yarn 2+
+bun create @legendapp/spark MyApp
+pnpm create @legendapp/spark MyApp
+yarn create @legendapp/spark MyApp
 ```
 
-For Yarn Classic (1.x), use npm to run the tagged creator and select Yarn for installation:
+Yarn Classic and modern Yarn are supported, including running the creator under Yarn PnP. Generated apps use `node_modules` for native tooling.
+
+To choose another installed package manager:
 
 ```sh
-npm create @legendapp/spark@next MyApp -- --package-manager yarn
+npm create @legendapp/spark MyApp -- --package-manager pnpm
 ```
 
-To choose a package manager, pass `--package-manager npm|pnpm|yarn|bun`. For example:
+Use `--package-manager npm|pnpm|yarn|bun`. npm needs the `--` separator; the other managers take creator flags directly.
+
+### Choose a release
+
+The creator uses its own bundled Spark release by default. Pass `--next` for a prerelease, `--latest` for the current stable release, or `--spark-version <version|tag>` for a specific release. Choose one flag, for example `npm create @legendapp/spark MyApp -- --next`.
+
+If the selected release differs from the creator's version, it prints the exact matching creator command to run. Follow that command to create the app.
+
+### Install just after a release
+
+pnpm 12 skips versions published less than a day ago by default ([`minimumReleaseAge`](https://github.com/pnpm/pnpm/blob/main/pnpm/docs/settings/dependency-resolution.md#minimumreleaseage)). Right after a release, you may need:
 
 ```sh
-npm create @legendapp/spark@next MyApp -- --package-manager pnpm
+pnpm --config.minimum-release-age=0 create @legendapp/spark MyApp
 ```
 
-The chosen manager must be installed. The commands below use npm; use your chosen manager's `run` command instead if needed. Keep the generated lockfile and `spark-packages/` archives in version control so other machines can reinstall the same inputs.
+Use the same option with `pnpm install` if dependency installation is blocked by release age.
+
+The rest of this guide uses npm. Use your manager's `run` command if needed. Commit the generated lockfile, package-manager settings, and `spark-packages/` archives so other machines can reinstall the same dependencies.
 
 ## Run and edit
 
@@ -54,7 +62,7 @@ From the generated app:
 npm run macos
 ```
 
-On the first launch, Spark downloads and verifies the matching macOS ARM64 Spark Runner. This requires an internet connection. Later sessions reuse the downloaded Runner. Expo CLI starts Metro and opens your app in the Runner.
+The first launch downloads and verifies the matching macOS ARM64 Spark Runner. Later sessions reuse it. Expo CLI starts Metro and opens your app.
 
 Open `App.tsx`, change the `Hello, Legend Spark` text, and save. JavaScript changes appear through Fast Refresh. Extra native dependencies or native configuration can require a [custom development build](/spark/development#native-changes).
 
@@ -89,7 +97,7 @@ For framework development, install Git and the checkout's pinned Bun **1.3.14**,
 ```sh
 git clone https://github.com/LegendApp/legend-spark.git
 cd legend-spark
-bun install
+bun install --frozen-lockfile
 bun run spark sdk pack
 bun run spark sdk build-runner
 bun run spark create /absolute/path/to/MyApp

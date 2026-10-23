@@ -218,7 +218,7 @@ function Spark() {
                     </p>
                     <div className="mt-5 inline-flex max-w-full overflow-x-auto rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2">
                         <code className="whitespace-nowrap font-mono text-[12px] text-white/80">
-                            npm create @legendapp/spark@next MyApp
+                            npm create @legendapp/spark MyApp
                         </code>
                     </div>
                     <div className="mt-8">

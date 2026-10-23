@@ -82,7 +82,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                     {project.category === 'library'
                         ? 'OPEN SOURCE'
                         : project.category === 'framework'
-                          ? 'FRAMEWORK'
+                          ? project.name
                           : project.category === 'demo'
                             ? 'FROM THE WORKBENCH'
                             : 'LEGEND APPS'}

@@ -11,7 +11,7 @@ From the current source checkout:
 bun run kitchen-sink
 ```
 
-After installing/preparing the source SDK, normal development starts the managed session; it does not compile a native runtime. A matching registered Runner is required. If needed, build from the checked-in app:
+[Prepare the source SDK](/spark/getting-started#contributing-build-spark-from-source) and register a matching Runner first. To build a custom runtime for Kitchen Sink:
 
 ```sh
 cd examples/kitchen-sink
@@ -22,7 +22,7 @@ bun run macos
 # bun run windows
 ```
 
-Kitchen Sink demonstrates windows/geometry, menus/shortcuts, files/dialogs, streaming/Trash, settings, clipboard, notifications/system APIs, audio, and native controls. Progress, results, and errors appear inline with detailed logs. Disposable filesystem demos create/recycle test data.
+Kitchen Sink demonstrates desktop APIs, camera, rich text, and native controls. Results and errors appear inline. Filesystem demos create and recycle test data.
 
 `bun run kitchen-sink:prepare /absolute/path/to/KitchenSinkCheck` packs the SDK and creates a separate copied consumer for integration testing. It preserves that consumer's generated identity/configuration rather than changing the checked-in app.
 
@@ -31,10 +31,10 @@ Kitchen Sink demonstrates windows/geometry, menus/shortcuts, files/dialogs, stre
 Create a focused app with npm:
 
 ```sh
-npm create @legendapp/spark@next MyNotes -- --example notes-lite
-npm create @legendapp/spark@next MyMusic -- --example music-lite
-npm create @legendapp/spark@next MyDiff -- --example diff-lite
-npm create @legendapp/spark@next MyEditor -- --example document-editor
+npm create @legendapp/spark MyNotes -- --example notes-lite
+npm create @legendapp/spark MyMusic -- --example music-lite
+npm create @legendapp/spark MyDiff -- --example diff-lite
+npm create @legendapp/spark MyEditor -- --example document-editor
 ```
 
 Then run the generated app, for example:
@@ -60,7 +60,7 @@ bun run test
 bun run test:templates
 ```
 
-`bun run test` uses Vitest, not Bun's test runner. Source checks validate contract behavior, export policy, lifecycle transitions, and tooling; template checks create real consumers. Packed consumer checks separately validate the archive's dependency graph and declarations.
+`bun run test` uses Vitest, not Bun's test runner. Source checks cover APIs, lifetimes, and tooling. Template checks create real apps; packed consumer checks verify distributed dependencies and types.
 
 ## Native and platform checks
 
