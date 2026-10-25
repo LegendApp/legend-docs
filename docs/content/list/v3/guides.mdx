@@ -204,6 +204,8 @@ This block layout adds line breaks around the match. For inline highlights or ne
 
 Virtualized offscreen items may have no current match measurement. First navigate to the containing item to mount it, then wait for its match layout/measurement callback before requesting the region. Awaiting the first scroll alone does not guarantee that measurement exists. Refresh measurements when the query, item content, width, font size, or layout changes, and discard them when a recycled view represents another item.
 
+With `recycleItems`, use [useRecyclingEffect](../api#userecyclingeffect) to remeasure and report the new item's match even if its position and size are unchanged; `onLayout` may not fire again.
+
 A region fully visible inside the margins needs no scrolling. A region above/before the available viewport aligns to its start margin; one below/after it aligns to its end margin. A region larger than the available space aligns its start, including when it already spans that space. Passing only one region parameter defaults the other to `0`; omitting both preserves whole-item behavior, where an item already spanning the available viewport stays in place.
 
 Margins reserve space within the viewport without adding content padding; near content edges, the reachable scroll range can limit alignment. Promise resolution also covers interruption, cancellation, or an unreachable target; it does not prove the match is visible. See the [API reference](../api#scrollitemintoview) for the full signature.
