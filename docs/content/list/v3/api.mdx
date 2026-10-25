@@ -1047,14 +1047,25 @@ Reports an externally measured content inset (merged with props/native insets). 
 
 ### scrollIndexIntoView
 
-Scrolls only when the item extends outside the available viewport. Items above it align to the start; items below it align to the end. An item that already spans the available viewport does not scroll.
+Scrolls an item, or a region inside it, into the available viewport. `animated` defaults to `true`.
 
-**New in 3.7:** `viewportMargin` keeps space clear at the start and end of the viewport along the scroll axis (top/bottom for vertical lists; also supported on horizontal lists). Both margins default to `0`. Margins reserve viewport space for this request; they do not add content padding. An oversized item that does not already span the available viewport aligns to the start.
+**New in 3.7:** `itemOffset` is the region's start measured from the item's start along the scroll axis; `itemLength` is its length along that axis. Passing either enables region targeting, and the omitted value defaults to `0`. For example, `itemOffset` alone targets a point inside the item. Omit both to retain whole-item behavior.
+
+`viewportMargin` keeps space clear at the start and end of the viewport along the scroll axis (top/bottom for vertical lists; also supported on horizontal lists). Both margins default to `0`. Margins reserve viewport space for this request; they do not add content padding.
+
+- A region fully visible inside the margins does not scroll.
+- A region extending above/before the available viewport aligns its start to the start margin.
+- A region extending below/after it aligns its end to the end margin.
+- A region larger than the available space aligns its start, even if it already spans that space.
+
+When both region parameters are omitted, a whole item that already spans the available viewport does not scroll. Otherwise, whole items use the same start/end alignment rules. The reachable scroll range can limit alignment near content edges.
 
 ```ts
 scrollIndexIntoView(params: {
   animated?: boolean | undefined;
   index: number;
+  itemOffset?: number;
+  itemLength?: number;
   viewportMargin?: { start?: number; end?: number };
 }): Promise<void>;
 ```
@@ -1096,14 +1107,19 @@ export function ScrollExample() {
 
 ### scrollItemIntoView
 
-Scrolls the item into view. If the item is above the viewable range it will be scrolled to the top of the screen, and if it's below the viewable range it will be scrolled to the bottom of the screen.
+Scrolls an item, or a region inside it, into view. Pass the same item reference that is present in `data`. `animated` defaults to `true`.
 
-Pass the same item reference that is present in `data`.
+**New in 3.7:** Accepts `itemOffset`, `itemLength`, and `viewportMargin` with the same [region and alignment rules as scrollIndexIntoView](#scrollindexintoview). `itemOffset` is measured from the item's start along the scroll axis; `itemLength` is the region's length along that axis. Passing either region parameter enables region targeting; the other defaults to `0`. Omit both to reveal the whole item.
+
+A fully visible region does not scroll; a region above/before the available viewport aligns to the start margin, and one below/after it aligns to the end margin. A region larger than the space inside the margins aligns its start. With whole-item targeting, an item already spanning that space stays in place. Both margins default to `0`, apply to vertical and horizontal lists, and reserve viewport space without adding content padding. The reachable scroll range can limit alignment near content edges.
 
 ```ts
 scrollItemIntoView(params: {
   animated?: boolean | undefined;
   item: any;
+  itemOffset?: number;
+  itemLength?: number;
+  viewportMargin?: { start?: number; end?: number };
 }): Promise<void>;
 ```
 

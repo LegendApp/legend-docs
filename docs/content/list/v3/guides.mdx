@@ -149,72 +149,64 @@ Pitfalls:
 
 ## Scrolling a Search Match into View
 
-**New in 3.7:** `scrollIndexIntoView` accepts `viewportMargin` to keep the containing item clear of overlays. Find the current index of the matching item, then request only enough scrolling to bring that item into the available viewport.
+**New in 3.7:** Use `itemOffset` and `itemLength` with `scrollItemIntoView` or `scrollIndexIntoView` to reveal the match itself, even inside an item taller than the viewport. These are layout distances along the scroll axis, not character indices or string lengths. `viewportMargin` keeps the match clear of overlays.
 
-This example highlights matching text, jumps to the first matching message, and reserves `64` pixels for the search control over the list, plus `16` pixels at the end.
+Measure the match relative to the item's root. In this vertical React Native example, the search layer supplies `before`, `match`, and `after` as separate text blocks. Because the highlighted `Text` is a direct child of the item's root `View`, its `onLayout` gives `y` and `height` in the required coordinate space, including the root's padding.
 
 ```tsx
-import { useCallback, useRef } from "react";
-import { Button, Text, View } from "react-native";
-import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+import { Text, View } from "react-native";
 
-type SearchMessage = { id: string; text: string };
-const searchMessageKey = (message: SearchMessage) => message.id;
+type SearchMessage = { id: string; before: string; match: string; after: string };
+type MatchRegion = { matchOffset: number; matchLength: number };
 
-export function SearchableMessages({ messages, query }: {
-  messages: SearchMessage[];
-  query: string;
+export function MessageWithMatch({ message, onMatchLayout }: {
+  message: SearchMessage;
+  onMatchLayout: (message: SearchMessage, region: MatchRegion) => void;
 }) {
-  const listRef = useRef<LegendListRef>(null);
-  const matchIndex = query
-    ? messages.findIndex((message) => message.text.includes(query))
-    : -1;
-
-  const renderMessage = useCallback(({ item }: { item: SearchMessage }) => {
-    const start = query ? item.text.indexOf(query) : -1;
-    return (
-      <Text style={{ padding: 12 }}>
-        {start < 0 ? item.text : (
-          <>
-            {item.text.slice(0, start)}
-            <Text style={{ backgroundColor: "yellow" }}>{query}</Text>
-            {item.text.slice(start + query.length)}
-          </>
-        )}
-      </Text>
-    );
-  }, [query]);
-
-  const showMatch = async () => {
-    if (matchIndex < 0) return;
-    await listRef.current?.scrollIndexIntoView({
-      index: matchIndex,
-      animated: true,
-      viewportMargin: { start: 64, end: 16 },
-    });
-  };
-
   return (
-    <View style={{ flex: 1 }}>
-      <LegendList
-        ref={listRef}
-        style={{ flex: 1 }}
-        data={messages}
-        keyExtractor={searchMessageKey}
-        extraData={query}
-        renderItem={renderMessage}
-      />
-      <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 64 }}>
-        <Button title="Show first match" onPress={showMatch} disabled={matchIndex < 0} />
-      </View>
+    <View style={{ padding: 12 }}>
+      {message.before.length > 0 && <Text>{message.before}</Text>}
+      <Text
+        style={{ backgroundColor: "yellow" }}
+        onLayout={({ nativeEvent: { layout } }) => {
+          const matchOffset = layout.y;
+          const matchLength = layout.height;
+          onMatchLayout(message, { matchOffset, matchLength });
+        }}
+      >
+        {message.match}
+      </Text>
+      {message.after.length > 0 && <Text>{message.after}</Text>}
     </View>
   );
 }
 ```
 
-The request targets the whole item containing the match. When that item fits within the available viewport, its highlighted text is visible too. A row taller than the available space cannot be fully revealed this way: an item already spanning that space stays in place; otherwise it aligns to the start. For long documents, split content into smaller list items so the matching item fits.
+In the component owning `listRef`, use the current measurement from `onMatchLayout` when navigating to that match. Pass the message object currently present in `data`:
 
-Margins apply along the scroll axis on vertical and horizontal lists. They reserve space within the viewport without adding content padding; near the content edges, the reachable scroll range can limit alignment. A visible item needs no scrolling. Promise resolution also covers interruption, cancellation, or an unreachable target; it does not prove the match is visible.
+```tsx
+async function showMatch(
+  message: SearchMessage,
+  { matchOffset, matchLength }: MatchRegion,
+) {
+  await listRef.current?.scrollItemIntoView({
+    item: message,
+    itemOffset: matchOffset,
+    itemLength: matchLength,
+    viewportMargin: { start: 24, end: 24 },
+  });
+}
+```
+
+For index-based navigation, pass the current `index` to `scrollIndexIntoView` with the same `itemOffset`, `itemLength`, and `viewportMargin`.
+
+This block layout adds line breaks around the match. For inline highlights or nested content, measure the rendered match relative to the item's root instead; a nested child's `onLayout` is relative to its immediate parent. Use a host-view measurement such as `measureLayout` relative to the item root where supported, or accumulate parent offsets. Wrapped inline text requires text-layout geometry for the matching lines; a character offset alone is not a pixel offset. On left-to-right horizontal lists, use `x` and `width` instead of `y` and `height`; always measure the offset from the item's start along the scroll axis.
+
+Virtualized offscreen items may have no current match measurement. First navigate to the containing item to mount it, then wait for its match layout/measurement callback before requesting the region. Awaiting the first scroll alone does not guarantee that measurement exists. Refresh measurements when the query, item content, width, font size, or layout changes, and discard them when a recycled view represents another item.
+
+A region fully visible inside the margins needs no scrolling. A region above/before the available viewport aligns to its start margin; one below/after it aligns to its end margin. A region larger than the available space aligns its start, including when it already spans that space. Passing only one region parameter defaults the other to `0`; omitting both preserves whole-item behavior, where an item already spanning the available viewport stays in place.
+
+Margins reserve space within the viewport without adding content padding; near content edges, the reachable scroll range can limit alignment. Promise resolution also covers interruption, cancellation, or an unreachable target; it does not prove the match is visible. See the [API reference](../api#scrollitemintoview) for the full signature.
 
 ## Floating Composer / Overlay Insets
 
