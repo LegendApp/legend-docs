@@ -147,6 +147,75 @@ Pitfalls:
 - Provide `getFixedItemSize` when target rows have exact fixed sizes. Use `estimatedItemSize` only as a rough initial offset hint when dynamic rows are significantly different from `100px`.
 - Use stable keys so measurement caches can survive data refreshes.
 
+## Scrolling a Search Match into View
+
+**New in 3.7:** `scrollIndexIntoView` accepts `viewportMargin` to keep the containing item clear of overlays. Find the current index of the matching item, then request only enough scrolling to bring that item into the available viewport.
+
+This example highlights matching text, jumps to the first matching message, and reserves `64` pixels for the search control over the list, plus `16` pixels at the end.
+
+```tsx
+import { useCallback, useRef } from "react";
+import { Button, Text, View } from "react-native";
+import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+
+type SearchMessage = { id: string; text: string };
+const searchMessageKey = (message: SearchMessage) => message.id;
+
+export function SearchableMessages({ messages, query }: {
+  messages: SearchMessage[];
+  query: string;
+}) {
+  const listRef = useRef<LegendListRef>(null);
+  const matchIndex = query
+    ? messages.findIndex((message) => message.text.includes(query))
+    : -1;
+
+  const renderMessage = useCallback(({ item }: { item: SearchMessage }) => {
+    const start = query ? item.text.indexOf(query) : -1;
+    return (
+      <Text style={{ padding: 12 }}>
+        {start < 0 ? item.text : (
+          <>
+            {item.text.slice(0, start)}
+            <Text style={{ backgroundColor: "yellow" }}>{query}</Text>
+            {item.text.slice(start + query.length)}
+          </>
+        )}
+      </Text>
+    );
+  }, [query]);
+
+  const showMatch = async () => {
+    if (matchIndex < 0) return;
+    await listRef.current?.scrollIndexIntoView({
+      index: matchIndex,
+      animated: true,
+      viewportMargin: { start: 64, end: 16 },
+    });
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <LegendList
+        ref={listRef}
+        style={{ flex: 1 }}
+        data={messages}
+        keyExtractor={searchMessageKey}
+        extraData={query}
+        renderItem={renderMessage}
+      />
+      <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 64 }}>
+        <Button title="Show first match" onPress={showMatch} disabled={matchIndex < 0} />
+      </View>
+    </View>
+  );
+}
+```
+
+The request targets the whole item containing the match. When that item fits within the available viewport, its highlighted text is visible too. A row taller than the available space cannot be fully revealed this way: an item already spanning that space stays in place; otherwise it aligns to the start. For long documents, split content into smaller list items so the matching item fits.
+
+Margins apply along the scroll axis on vertical and horizontal lists. They reserve space within the viewport without adding content padding; near the content edges, the reachable scroll range can limit alignment. A visible item needs no scrolling. Promise resolution also covers interruption, cancellation, or an unreachable target; it does not prove the match is visible.
+
 ## Floating Composer / Overlay Insets
 
 Use this when a composer or input bar visually covers the end of the list but should stay outside the list's normal content.
