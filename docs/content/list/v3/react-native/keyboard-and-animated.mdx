@@ -260,6 +260,8 @@ The hook:
 - awaits the list's async `scrollToEnd({ animated })`
 - sets `freeze` back to `false` after both operations finish
 
+**New in 3.7:** `scrollMessageToEnd({ animated: true, closeKeyboard: true })` starts scrolling immediately and eases to the closed-keyboard end in one smooth motion while the keyboard closes. Keyboard dismissal is shared by overlapping sends, so it happens once during that close.
+
 Pass the returned `freeze` to `KeyboardAwareLegendList` when using `scrollMessageToEnd`.
 
 ```tsx

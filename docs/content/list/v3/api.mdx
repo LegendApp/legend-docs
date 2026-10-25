@@ -285,6 +285,8 @@ Changing `extraData` causes Legend List to re-render all items because the value
 
 Prefer external state that each item subscribes to directly, for example React context, a state library selector, or another item-scoped subscription. Use `extraData` only when you intentionally need every rendered item to re-evaluate from the same changed value.
 
+**New in 3.7:** When `getFixedItemSize` is set, changing `extraData` also invalidates all cached fixed sizes and recalculates item positions. Pass the external value here if it changes the fixed sizes returned by your callback.
+
 See [React Native Docs](https://reactnative.dev/docs/flatlist#extraData).
 
 ### experimental_adaptiveRender
@@ -351,6 +353,8 @@ getFixedItemSize?: (item: ItemT, index: number, itemType?: string) => number | u
 ```
 
 For items with known fixed sizes, this enables optimal performance as it disables the overhead of measuring and updating item size. Return a number for fixed-size items or undefined for dynamic-size items.
+
+**New in 3.7:** Changes to [extraData](#extradata) invalidate cached fixed sizes, so sizes can depend on that external value.
 
 ### getItemType
 
@@ -475,6 +479,7 @@ See [React Native Docs](https://reactnative.dev/docs/flatlist#listheadercomponen
 maintainScrollAtEnd?: boolean | {
   animated?: boolean;
   on?: {
+    dataAppend?: boolean;
     dataChange?: boolean;
     footerLayout?: boolean;
     itemLayout?: boolean;
@@ -489,6 +494,8 @@ If enabled, LegendList keeps the view pinned to end when you are near the bottom
 - `animated`: whether the automatic scroll-to-end should animate. Defaults to `false`.
 - If `on` is omitted, the object form enables all triggers.
 - If `on` is provided, only the keys set to `true` are enabled.
+- `dataAppend`: **New in 3.7.** Follow additions at the end only when every existing item key remains in the same order at the start of the new data. Use stable keys. Prepends, removals, reorders, and same-length updates do not trigger this option.
+- `dataChange`: follow all data changes. Keep it omitted or `false` for append-only following; setting it to `true` takes precedence over `dataAppend`.
 - `footerLayout`: opt into footer size changes when using an explicit `on` config. This is useful for chat typing indicators and dynamic footers that should keep an end-pinned list at the bottom.
 
 See [Chat interfaces](../guides#chat-interfaces) for more.
@@ -500,6 +507,8 @@ maintainScrollAtEndThreshold?: number;
 ```
 
 This defines what percent of the screen counts as the bottom. Defaults to `0.1`.
+
+**New in 3.7:** End thresholds count trailing content and keyboard insets once, including for `maintainScrollAtEnd`, `isAtEnd`, and `onEndReached`. With a trailing inset, these activate closer to the physical end instead of firing early by the inset amount.
 
 See [Chat interfaces](../guides#chat-interfaces) for more.
 
@@ -539,6 +548,8 @@ onEndReached?: ((info: { distanceFromEnd: number }) => void) | null | undefined;
 
 Called when the list enters the `onEndReachedThreshold` range near the bottom. Repeated callbacks are gated to avoid duplicate loads after data/layout changes. Moving beyond the range uses hysteresis before resetting; a new user scroll gesture can re-arm the callback.
 
+**New in 3.7:** Row measurements and header/footer size changes recheck the threshold, so `onEndReached` can fire without scrolling when layout brings the edge into range.
+
 ### onEndReachedThreshold
 
 ```ts
@@ -546,6 +557,8 @@ onEndReachedThreshold?: number | null | undefined;
 ```
 
 The distance from the end as a percentage that the scroll should be from the end to trigger `onEndReached`. It is multiplied by screen size, so a value of 0.5 will trigger `onEndReached` when scrolling to half a screen from the end.
+
+**New in 3.7:** Trailing content and keyboard insets are counted once when checking this threshold.
 
 ### onFirstVisibleItemChanged
 
@@ -620,6 +633,8 @@ onStartReached?: ((info: { distanceFromStart: number }) => void) | null | undefi
 ```
 
 Called when the list enters the `onStartReachedThreshold` range near the top. Repeated callbacks are gated to avoid duplicate loads after data/layout changes. Moving beyond the range uses hysteresis before resetting; a new user scroll gesture can re-arm the callback.
+
+**New in 3.7:** Row measurements and header/footer size changes recheck the threshold, so `onStartReached` can fire without scrolling when layout brings the edge into range.
 
 ### onStartReachedThreshold
 
@@ -919,6 +934,10 @@ ref.current?.scrollToLocation({
 ## Ref Methods
 ___
 
+**New in 3.7:** All scroll methods returning `Promise<void>` (`scrollToIndex`, `scrollToOffset`, `scrollToItem`, `scrollToKey`, `scrollToEnd`, `scrollIndexIntoView`, and `scrollItemIntoView`) resolve when the scroll lands, is interrupted by user input, is canceled or replaced, or cannot reach its target. Removed targets, dataset replacement, and unmounting also settle pending requests. Resolution does not guarantee arrival at the requested target.
+
+On empty data, index-based navigation and `scrollToEnd` resolve without scrolling, even with a header or footer.
+
 ### anchorVisibleContent
 
 **New in 3.7**
@@ -1144,7 +1163,9 @@ scrollToIndex(params: {
 ```
 
 Scrolls to the item at the specified index. For the most accurate initial offset, use [getFixedItemSize](#getfixeditemsize) for truly fixed-size rows. Dynamic rows stabilize through measurement; `estimatedItemSize` is only an initial hint and is most useful when rows differ significantly from the default `100px`.
-Returns a promise that resolves when the imperative scroll finishes, is cancelled or superseded, or no scroll is needed. `viewPositionFallback` handles oversized items as described under [initialScrollIndex](#initialscrollindex).
+`viewPositionFallback` handles oversized items as described under [initialScrollIndex](#initialscrollindex).
+
+**New in 3.7:** Out-of-range indices clamp to the first or last item; the promise resolves once the clamped scroll lands (or is interrupted, canceled, or unreachable). Empty data resolves without scrolling.
 
 ### scrollToItem
 
@@ -1202,6 +1223,8 @@ scrollToOffset(params: {
 ```
 
 Scroll to a specific content pixel offset in the list.
+
+**New in 3.7:** Out-of-range offsets clamp to the reachable scroll range. The promise resolves once the clamped scroll lands (or is interrupted, canceled, or unreachable).
 
 Valid parameters:
 
@@ -1541,7 +1564,7 @@ type LegendListAverageItemSize = {
 - `elementAtIndex(index)`: rendered native element for an index (if currently mapped to a container)
 - `getAverageItemSizes()`: measured average item sizes grouped by item type. Use this to inspect real sizing data when deciding whether `estimatedItemSize` is worth setting for unusually sized rows.
 - `indexByKey(key)`: cached index for a key, or `undefined` if unknown
-- `isAtStart` / `isAtEnd`: threshold-based booleans for edge-of-list state
+- `isAtStart` / `isAtEnd`: threshold-based booleans for edge-of-list state. **New in 3.7:** End checks count trailing and keyboard insets once
 - `isNearStart` / `isNearEnd`: proximity booleans based on the configured start/end thresholds
 - `isStartReached` / `isEndReached`: whether the one-shot threshold callbacks are currently latched
 - `isWithinMaintainScrollAtEndThreshold`: whether the current scroll position is close enough to the tail for `maintainScrollAtEnd` to apply
