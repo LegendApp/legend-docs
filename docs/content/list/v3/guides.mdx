@@ -8,26 +8,99 @@ Practical recipes for common Legend List use cases.
 
 Use this when your messages should start at the bottom without using `inverted`.
 
-```ts
-alignItemsAtEnd?: boolean;
-maintainScrollAtEnd?: boolean;
-maintainScrollAtEndThreshold?: number;
-```
+**New in 3.7:** Use `maintainScrollAtEnd.on.dataAppend` to follow new messages while leaving prepends and other data edits out of that trigger. Every existing key must remain in order at the start of the new array. Leave `dataChange` disabled for this behavior.
+
+The parent in this example owns `messages`: append incoming messages with an immutable update, and implement `onPrepend` to insert the fetched older messages at the start. Keep message IDs stable across updates.
 
 ```tsx
-<LegendList
-  data={items}
-  renderItem={({ item }) => <Text>{item.title}</Text>}
-  estimatedItemSize={320}
-  alignItemsAtEnd
-  maintainScrollAtEnd
-  maintainScrollAtEndThreshold={0.1}
-/>
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Button, Text, View } from "react-native";
+import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+
+type Message = { id: string; text: string; replyToId?: string };
+type ChatHistoryProps = {
+  messages: Message[];
+  fetchOlder: (beforeId: string | undefined) => Promise<Message[]>;
+  onPrepend: (older: Message[]) => void;
+};
+
+const followNewMessages = {
+  on: { dataAppend: true, itemLayout: true, footerLayout: true, layout: true },
+};
+const messageKey = (message: Message) => message.id;
+
+export function ChatHistory({ messages, fetchOlder, onPrepend }: ChatHistoryProps) {
+  const listRef = useRef<LegendListRef>(null);
+  const [isFollowingEnd, setIsFollowingEnd] = useState(false);
+
+  useEffect(() => {
+    const state = listRef.current!.getState();
+    setIsFollowingEnd(state.isFollowingEnd);
+    return state.listen("isFollowingEnd", setIsFollowingEnd);
+  }, []);
+
+  const renderMessage = useCallback(({ item }: { item: Message }) => {
+    const replyToId = item.replyToId;
+    return (
+      <View>
+        <Text>{item.text}</Text>
+        {replyToId && (
+          <Button
+            title="View quoted message"
+            onPress={() => listRef.current?.scrollToKey({
+              key: replyToId,
+              animated: true,
+              viewPosition: 0.5,
+            })}
+          />
+        )}
+      </View>
+    );
+  }, []);
+
+  const loadOlder = async () => {
+    const older = await fetchOlder(messages[0]?.id);
+    // Capture the reader's current position just before applying the prepend.
+    listRef.current?.anchorVisibleContent();
+    onPrepend(older);
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Button title="Load older messages" onPress={loadOlder} />
+      <LegendList
+        ref={listRef}
+        style={{ flex: 1 }}
+        data={messages}
+        keyExtractor={messageKey}
+        initialScrollAtEnd
+        alignItemsAtEnd
+        maintainScrollAtEnd={followNewMessages}
+        renderItem={renderMessage}
+      />
+      {!isFollowingEnd && (
+        <Button
+          title="Jump to latest"
+          onPress={() => listRef.current?.scrollToEnd({ animated: true })}
+        />
+      )}
+    </View>
+  );
+}
 ```
+
+`isFollowingEnd` reports end-follow intent, including retained intent while maintenance is paused; it is not just a proximity check. Subscribe with `getState().listen("isFollowingEnd", ...)` and return its unsubscribe function from the effect. `distanceFromEnd` is a snapshot, not a listen channel.
+
+`scrollToKey` keeps a quoted-message target attached to its stable key even if older messages are prepended while scrolling. A missing or removed key settles the promise without reaching the item. Scroll promises also resolve when interrupted or canceled, so awaiting them does not guarantee arrival.
+
+`anchorVisibleContent()` holds the first visible item's key and viewport offset through layout changes. Call it before applying a prepend or expanding content above the reader. Pass `{ key: messageId }` to choose an item, or `{ hold: false }` to inspect the anchor without changing scrolling. It can return `undefined` before initial placement, during dataset replacement, or when no item is found. At the end while following, it returns the anchor without interrupting following.
+
+For a floating composer and keyboard dismissal, see [Floating composer / overlay insets](#floating-composer--overlay-insets) and [useKeyboardScrollToEnd](../react-native/keyboard-and-animated#usekeyboardscrolltoend).
 
 Pitfalls:
 - Avoid `inverted`; it can cause animation and scroll edge cases.
 - Tune `maintainScrollAtEndThreshold` for your UX.
+- Use stable keys rather than indices when messages can be prepended.
 
 ## Initial Positioning
 
