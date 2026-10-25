@@ -2,7 +2,7 @@
 title: API Reference
 ---
 
-This page documents LegendList APIs for both React Native and React (Web).
+This page documents LegendList APIs for both React Native and React (Web). Features marked **New in 3.7** require 3.7.0 (unreleased).
 
 <Callout>
 Props apply to both React Native and Web unless otherwise noted. Platform-specific notes are called out inline.
@@ -637,6 +637,18 @@ onStickyHeaderChange?: (info: { index: number; item: any }) => void;
 
 Called when the active sticky header changes.
 
+### onUserScroll
+
+**New in 3.7 · Experimental**
+
+```ts
+onUserScroll?: () => void;
+```
+
+Called once per accepted real user gesture, including a native drag and its momentum, web touch/wheel gesture, scroll key press, scrollbar input, or iOS status-bar tap. List-owned and list-ref scrolls, layout adjustments, and clamping do not call it. Use [onScroll](#onscroll) for individual scroll events.
+
+Gesture detection is experimental: wheel grouping uses heuristics; native pointer/wheel-only input without a screen reader is not detected, and web scrollbar detection requires a measurable, non-overlay gutter. With a native screen reader enabled, otherwise unowned accessibility scrolling is inferred once per burst; assistive input during library animations can be missed. Before navigation that bypasses the list (such as native-ref commands or Reanimated `scrollTo`), call `cancelScroll()` on the JS thread to release end following.
+
 ### onViewableItemsChanged
 
 ```ts
@@ -873,6 +885,15 @@ Notes:
 - Section and item separators receive section/item context. The `separators` helpers passed to `renderItem` (`highlight`, `unhighlight`, `updateProps`) are currently no-ops.
 - Sections may override `renderItem`, `keyExtractor`, and `ItemSeparatorComponent`; stable section `key` values keep flattened keys stable.
 
+**New in 3.7:** `SectionListRef` also exposes `cancelScroll`, `scrollToKey`, and `anchorVisibleContent`. Key-based methods accept flattened keys, and `anchorVisibleContent` returns them:
+
+- Items: `${sectionKey}:item:${itemKey}`
+- Section headers/footers: `${sectionKey}:header` / `${sectionKey}:footer`
+- Item separators: `${sectionKey}:separator:${itemIndex}`
+- Section separators: `${sectionKey}:section-separator`
+
+`sectionKey` is the section's `key`, or `section-${sectionIndex}` when omitted. `itemKey` comes from the section or list `keyExtractor`.
+
 ### scrollToLocation
 
 Returns `void`. Set `itemIndex: -1` to target the section header, falling back to its first item or footer. It also accepts `viewPositionFallback` for oversized items, as described under [initialScrollIndex](#initialscrollindex).
@@ -898,7 +919,41 @@ ref.current?.scrollToLocation({
 ## Ref Methods
 ___
 
-<a id="ref-method-getstate"></a>
+### anchorVisibleContent
+
+**New in 3.7**
+
+```ts
+anchorVisibleContent(options?: {
+  key?: string;
+  hold?: boolean;
+}): { key: string; offset: number } | undefined;
+```
+
+Captures an item's key and viewport offset and holds it through layout changes by default. Omit `key` to anchor the first visible item, or pass a stable item key to choose one. Pass `hold: false` for a read-only snapshot without changing scrolling or anchoring.
+
+The returned `offset` is the viewport start minus the item's start along the scroll axis, so it is positive when the item's start is before the viewport. Returns `undefined` before initial placement, during dataset replacement, or when no item is found. While following at the end, it returns the anchor without interrupting end following.
+
+```ts
+const anchor = listRef.current?.anchorVisibleContent();
+const snapshot = listRef.current?.anchorVisibleContent({ hold: false });
+```
+
+See [Chat interfaces](../guides#chat-interfaces) for preserving the reader's position while content changes.
+
+### cancelScroll
+
+**New in 3.7**
+
+```ts
+cancelScroll(): void;
+```
+
+Stops queued and active scrolling at the observed offset and resolves the pending scroll promise. It also releases automatic end following.
+
+```ts
+listRef.current?.cancelScroll();
+```
 
 ### clearCaches
 
@@ -953,6 +1008,8 @@ getScrollResponder(): any;
 
 Returns the platform scroll responder object for advanced integrations.
 
+<a id="ref-method-getstate"></a>
+
 ### getState
 
 ```ts
@@ -971,35 +1028,47 @@ Reports an externally measured content inset (merged with props/native insets). 
 
 ### scrollIndexIntoView
 
-Scrolls the index into view. If the index is above the viewable range it will be scrolled to the top of the screen, and if it's below the viewable range it will be scrolled to the bottom of the screen.
+Scrolls only when the item extends outside the available viewport. Items above it align to the start; items below it align to the end. An item that already spans the available viewport does not scroll.
+
+**New in 3.7:** `viewportMargin` keeps space clear at the start and end of the viewport along the scroll axis (top/bottom for vertical lists; also supported on horizontal lists). Both margins default to `0`. Margins reserve viewport space for this request; they do not add content padding. An oversized item that does not already span the available viewport aligns to the start.
 
 ```ts
 scrollIndexIntoView(params: {
   animated?: boolean | undefined;
   index: number;
-}): Promise<void>
+  viewportMargin?: { start?: number; end?: number };
+}): Promise<void>;
 ```
 
-```jsx
+```tsx
 import { useRef } from "react";
-import { Button } from "react-native";
-import { LegendList } from "@legendapp/list/react-native";
+import { Button, Text } from "react-native";
+import { LegendList, type LegendListRef } from "@legendapp/list/react-native";
+
+const data = Array.from({ length: 30 }, (_, index) => ({
+  id: String(index),
+  title: `Item ${index}`,
+}));
 
 export function ScrollExample() {
-  const listRef = useRef(null);
-
-  const scrollToItem = () => {
-    // Scroll to the item at index 10
-    listRef.current?.scrollIndexIntoView({ index: 10 });
-  };
+  const listRef = useRef<LegendListRef>(null);
 
   return (
     <>
-      <Button title="Scroll to item 10" onPress={scrollToItem} />
+      <Button
+        title="Scroll to item 10"
+        onPress={() => listRef.current?.scrollIndexIntoView({
+          index: 10,
+          animated: true,
+          viewportMargin: { start: 48, end: 16 },
+        })}
+      />
       <LegendList
         ref={listRef}
+        style={{ flex: 1 }}
         data={data}
-        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <Text>{item.title}</Text>}
       />
     </>
   );
@@ -1097,6 +1166,31 @@ Valid parameters:
 
 - *animated* (boolean) - Whether the list should do an animation while scrolling. Defaults to true.
 - *item* (object) - The item to scroll to. Required.
+
+### scrollToKey
+
+**New in 3.7**
+
+```ts
+scrollToKey(params: {
+  key: string;
+  animated?: boolean;
+  viewOffset?: number;
+  viewPosition?: number;
+}): Promise<void>;
+```
+
+Scrolls to a stable item key from `keyExtractor`, retaining the target through prepends and same-key item updates. `animated` defaults to `true`; `viewPosition` and `viewOffset` control alignment as with [scrollToIndex](#scrolltoindex). If the key is missing or removed, the promise resolves without reaching that item.
+
+```ts
+await listRef.current?.scrollToKey({
+  key: "message-42",
+  animated: true,
+  viewPosition: 0.5,
+});
+```
+
+For SectionList, use the flattened item key `${sectionKey}:item:${itemKey}`. See [SectionList](#sectionlist).
 
 ### scrollToOffset
 
@@ -1393,6 +1487,8 @@ type LegendListState = {
   activeStickyIndex: number;
   contentLength: number;
   data: readonly any[];
+  dataKey?: Key;
+  distanceFromEnd: number;
   elementAtIndex: (index: number) => any;
   end: number;
   endBuffered: number;
@@ -1400,15 +1496,22 @@ type LegendListState = {
   isAtEnd: boolean;
   isAtStart: boolean;
   isEndReached: boolean;
+  isFollowingEnd: boolean;
   isNearEnd: boolean;
   isNearStart: boolean;
   isStartReached: boolean;
   isWithinMaintainScrollAtEndThreshold: boolean;
   indexByKey: (key: string) => number | undefined;
-  listen: <T extends LegendListListenerType>(
-    listenerType: T,
-    callback: (value: ListenerTypeValueMap[T]) => void
-  ) => () => void;
+  listen: {
+    <T extends Exclude<LegendListListenerType, "isFollowingEnd">>(
+      listenerType: T,
+      callback: (value: Pick<ListenerTypeValueMap, LegendListListenerType>[T]) => void
+    ): () => void;
+    <T extends LegendListListenerType>(
+      listenerType: T,
+      callback: (value: Pick<ListenerTypeValueMap, LegendListListenerType>[T]) => void
+    ): () => void;
+  };
   listenToPosition: (key: string, callback: (value: number) => void) => () => void;
   positionAtIndex: (index: number) => number;
   positionByKey: (key: string) => number | undefined;
@@ -1432,6 +1535,9 @@ type LegendListAverageItemSize = {
 - `activeStickyIndex`: currently active sticky item index (`-1` when none)
 - `contentLength`: content size of the list including header/footer/insets
 - `data`: current data array reference used by the list
+- `dataKey`: **New in 3.7.** The current optional dataset key, as passed to the `dataKey` prop
+- `distanceFromEnd`: **New in 3.7.** Nonnegative distance in pixels to the physical scroll edge, including the trailing inset. Computed when `getState()` is called
+- `isFollowingEnd`: **New in 3.7.** End-follow intent, including retained intent while `maintainScrollAtEnd` is paused. This is distinct from simply being near the end
 - `elementAtIndex(index)`: rendered native element for an index (if currently mapped to a container)
 - `getAverageItemSizes()`: measured average item sizes grouped by item type. Use this to inspect real sizing data when deciding whether `estimatedItemSize` is worth setting for unusually sized rows.
 - `indexByKey(key)`: cached index for a key, or `undefined` if unknown
@@ -1462,6 +1568,7 @@ type LegendListAverageItemSize = {
 - `headerSize` (`number`)
 - `isAtEnd` (`boolean`)
 - `isAtStart` (`boolean`)
+- `isFollowingEnd` (`boolean`) — **New in 3.7**
 - `isNearEnd` (`boolean`)
 - `isNearStart` (`boolean`)
 - `isWithinMaintainScrollAtEndThreshold` (`boolean`)
@@ -1473,6 +1580,8 @@ type LegendListAverageItemSize = {
 - `readyToRender` (`boolean`)
 - `snapToOffsets` (`number[]`)
 - `totalSize` (`number`)
+
+**New in 3.7:** `listen("isFollowingEnd", callback)` subscribes to end-follow intent. `distanceFromEnd` is not a listen channel; read a fresh `getState().distanceFromEnd` snapshot when needed.
 
 ### Caveats
 
