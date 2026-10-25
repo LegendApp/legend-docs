@@ -8,7 +8,7 @@ Practical recipes for common Legend List use cases.
 
 Use this when your messages should start at the bottom without using `inverted`.
 
-**New in 3.7:** Use `maintainScrollAtEnd.on.dataAppend` to follow new messages while leaving prepends and other data edits out of that trigger. Every existing key must remain in order at the start of the new array. Leave `dataChange` disabled for this behavior.
+**New in 3.7:** Use `maintainScrollAtEnd.on.dataAppend` to follow new messages while leaving prepends and other data edits out of that trigger. Provide a stable `keyExtractor`: every existing key must remain in order at the start of the new array. Without it, keys are indices, so any increase in data length, including a prepend, triggers following. Leave `dataChange` disabled for append-only following.
 
 The parent in this example owns `messages`: append incoming messages with an immutable update, and implement `onPrepend` to insert the fetched older messages at the start. Keep message IDs stable across updates.
 
@@ -93,7 +93,7 @@ export function ChatHistory({ messages, fetchOlder, onPrepend }: ChatHistoryProp
 
 `scrollToKey` keeps a quoted-message target attached to its stable key even if older messages are prepended while scrolling. A missing or removed key settles the promise without reaching the item. Scroll promises also resolve when interrupted or canceled, so awaiting them does not guarantee arrival.
 
-`anchorVisibleContent()` holds the first visible item's key and viewport offset through layout changes. Call it before applying a prepend or expanding content above the reader. Pass `{ key: messageId }` to choose an item, or `{ hold: false }` to inspect the anchor without changing scrolling. It can return `undefined` before initial placement, during dataset replacement, or when no item is found. At the end while following, it returns the anchor without interrupting following.
+`anchorVisibleContent()` holds the first visible item's key and viewport offset through layout changes. Call it before applying a prepend or expanding content above the reader. Pass `{ key: messageId }` to choose an item, or `{ hold: false }` to inspect the anchor without changing scrolling. It can return `undefined` before initial placement, during dataset replacement, or when no item is found. At the end while following, it returns the anchor without interrupting following. Otherwise, holding the anchor interrupts `maintainScrollAtEnd`, including retained intent while it is paused.
 
 For a floating composer and keyboard dismissal, see [Floating composer / overlay insets](#floating-composer--overlay-insets) and [useKeyboardScrollToEnd](../react-native/keyboard-and-animated#usekeyboardscrolltoend).
 

@@ -8,7 +8,7 @@ Version 3 introduces first‑class Web support and a new SectionList component, 
 
 **New in 3.7** (3.7.0 is unreleased).
 
-The breaking changes are type-only: code that implements or mocks the public ref and state types must add the new required members. Apps that only consume refs and state do not need to implement these members themselves. There are no deprecations in 3.7.
+The only breaking type changes are new required members on the public ref and state types: code that implements or mocks these types must add them. Apps that only consume refs and state do not need to implement these members themselves. There are no deprecations in 3.7.
 
 | Type | New required members |
 | --- | --- |
@@ -41,12 +41,13 @@ const newStateMembers: Pick<LegendListState,
 
 Add those members to your existing mock's ref and state objects. See the [ref methods](../api#ref-methods) and [state fields](../api#fields-and-methods) for their contracts.
 
-For SectionList key-based methods, pass flattened item keys of the form `${sectionKey}:item:${itemKey}`, rather than the bare item key. `sectionKey` is the section's `key` or `section-${sectionIndex}` when omitted; `itemKey` comes from the section or list `keyExtractor`. `anchorVisibleContent` accepts and returns those same flattened keys. See [SectionList](../api#sectionlist) for header, footer, and separator keys.
+For SectionList key-based methods, pass flattened item keys of the form `${sectionKey}:item:${itemKey}`, rather than the bare item key. `sectionKey` is the section's `key` or `section-${sectionIndex}` when omitted; `itemKey` comes from the section or list `keyExtractor`; without one, it uses `item.key`, then `item.id`, then the item index within the section, converted to a string. `anchorVisibleContent` accepts and returns those same flattened keys. See [SectionList](../api#sectionlist) for header, footer, and separator keys.
 
-When adopting the new behavior:
+Behavior also changes in 3.7:
 
-- Await scroll promises for landing or settlement, including interruption, cancellation, replacement, or an unreachable target. Resolution does not guarantee arrival.
-- Use `maintainScrollAtEnd.on.dataAppend` with stable keys for append-only following, leaving `dataChange` disabled.
+- Scroll promises now resolve on landing or settlement, including interruption, cancellation, replacement, or an unreachable target, instead of resolving early or never. Resolution does not guarantee arrival.
+- Use `maintainScrollAtEnd.on.dataAppend` with a stable `keyExtractor` for append-only following, leaving `dataChange` disabled. Without `keyExtractor`, any increase in data length, including a prepend, triggers following.
+- With a trailing inset, `isAtEnd`, `onEndReached`, and `maintainScrollAtEnd` now activate closer to the physical end because the inset is counted once.
 - Allow `onStartReached` / `onEndReached` to run after layout changes without a scroll event.
 - Pass external fixed-size dependencies through `extraData` so `getFixedItemSize` sizes are invalidated when they change.
 

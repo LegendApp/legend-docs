@@ -494,7 +494,7 @@ If enabled, LegendList keeps the view pinned to end when you are near the bottom
 - `animated`: whether the automatic scroll-to-end should animate. Defaults to `false`.
 - If `on` is omitted, the object form enables all triggers.
 - If `on` is provided, only the keys set to `true` are enabled.
-- `dataAppend`: **New in 3.7.** Follow additions at the end only when every existing item key remains in the same order at the start of the new data. Use stable keys. Prepends, removals, reorders, and same-length updates do not trigger this option.
+- `dataAppend`: **New in 3.7.** With a stable `keyExtractor`, follow additions at the end only when every existing item key remains in the same order at the start of the new data. Prepends, removals, reorders, and same-length updates do not trigger this option. Without `keyExtractor`, keys are indices, so any increase in data length, including a prepend, triggers following.
 - `dataChange`: follow all data changes. Keep it omitted or `false` for append-only following; setting it to `true` takes precedence over `dataAppend`.
 - `footerLayout`: opt into footer size changes when using an explicit `on` config. This is useful for chat typing indicators and dynamic footers that should keep an end-pinned list at the bottom.
 
@@ -662,7 +662,7 @@ onUserScroll?: () => void;
 
 Called once per accepted real user gesture, including a native drag and its momentum, web touch/wheel gesture, scroll key press, scrollbar input, or iOS status-bar tap. List-owned and list-ref scrolls, layout adjustments, and clamping do not call it. Use [onScroll](#onscroll) for individual scroll events.
 
-Gesture detection is experimental: wheel grouping uses heuristics; native pointer/wheel-only input without a screen reader is not detected, and web scrollbar detection requires a measurable, non-overlay gutter. With a native screen reader enabled, otherwise unowned accessibility scrolling is inferred once per burst; assistive input during library animations can be missed. Before navigation that bypasses the list (such as native-ref commands or Reanimated `scrollTo`), call `cancelScroll()` on the JS thread to release end following.
+Gesture detection is experimental: wheel grouping uses heuristics; native pointer/wheel-only input without a screen reader is not detected, and web scrollbar detection requires a measurable, non-overlay gutter. With a native screen reader enabled, otherwise unowned accessibility scrolling is inferred once per burst; assistive input during library animations can be missed. Before navigation that bypasses the list (such as native-ref commands or Reanimated `scrollTo`), call `cancelScroll()` on the JS thread to release end following. Following can resume if that navigation settles within `maintainScrollAtEndThreshold`.
 
 ### onViewableItemsChanged
 
@@ -907,7 +907,7 @@ Notes:
 - Item separators: `${sectionKey}:separator:${itemIndex}`
 - Section separators: `${sectionKey}:section-separator`
 
-`sectionKey` is the section's `key`, or `section-${sectionIndex}` when omitted. `itemKey` comes from the section or list `keyExtractor`.
+`sectionKey` is the section's `key`, or `section-${sectionIndex}` when omitted. `itemKey` comes from the section or list `keyExtractor`; without one, it uses `item.key`, then `item.id`, then the item index within the section, converted to a string.
 
 ### scrollToLocation
 
@@ -951,7 +951,7 @@ anchorVisibleContent(options?: {
 
 Captures an item's key and viewport offset and holds it through layout changes by default. Omit `key` to anchor the first visible item, or pass a stable item key to choose one. Pass `hold: false` for a read-only snapshot without changing scrolling or anchoring.
 
-The returned `offset` is the viewport start minus the item's start along the scroll axis, so it is positive when the item's start is before the viewport. Returns `undefined` before initial placement, during dataset replacement, or when no item is found. While following at the end, it returns the anchor without interrupting end following.
+The returned `offset` is the viewport start minus the item's start along the scroll axis, so it is positive when the item's start is before the viewport. Returns `undefined` before initial placement, during dataset replacement, or when no item is found. While following at the end, it returns the anchor without interrupting end following. Otherwise, holding the anchor interrupts `maintainScrollAtEnd`, including retained intent while it is paused.
 
 ```ts
 const anchor = listRef.current?.anchorVisibleContent();
@@ -968,7 +968,7 @@ See [Chat interfaces](../guides#chat-interfaces) for preserving the reader's pos
 cancelScroll(): void;
 ```
 
-Stops queued and active scrolling at the observed offset and resolves the pending scroll promise. It also releases automatic end following.
+Stops queued and active scrolling at the observed offset and resolves the pending scroll promise. It also releases automatic end following. Following can resume after about 500 ms if scrolling has settled within `maintainScrollAtEndThreshold`.
 
 ```ts
 listRef.current?.cancelScroll();
