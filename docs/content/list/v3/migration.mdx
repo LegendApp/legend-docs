@@ -4,6 +4,54 @@ title: Migration to v3
 
 Version 3 introduces first‑class Web support and a new SectionList component, plus several API improvements.
 
+## Migrating from 3.6 to 3.7
+
+**New in 3.7** (3.7.0 is unreleased).
+
+The breaking changes are type-only: code that implements or mocks the public ref and state types must add the new required members. Apps that only consume refs and state do not need to implement these members themselves. There are no deprecations in 3.7.
+
+| Type | New required members |
+| --- | --- |
+| `LegendListRef` (React Native and Web) | `cancelScroll`, `scrollToKey`, `anchorVisibleContent` |
+| `SectionListRef` | `cancelScroll`, `scrollToKey`, `anchorVisibleContent`, inherited from `LegendListRef` |
+| `LegendListState` | `distanceFromEnd`, `isFollowingEnd` |
+
+`LegendListState.dataKey` is a new optional member. `listen` accepts `isFollowingEnd`; `distanceFromEnd` is computed when `getState()` is called and is not a listen key. Existing 3.6-shaped `listen` implementations remain assignable. `LegendListMetrics` is unchanged: `onMetricsChange` still receives only `headerSize` and `footerSize`.
+
+For example, update a test double that only needs to model cancellation and unreachable key navigation with these members. A mock that simulates actual scrolling should model the new completion behavior too.
+
+```ts
+import type { LegendListRef, LegendListState } from "@legendapp/list/react-native";
+
+const newRefMembers: Pick<LegendListRef,
+  "cancelScroll" | "scrollToKey" | "anchorVisibleContent"
+> = {
+  cancelScroll: () => {},
+  scrollToKey: async () => {},
+  anchorVisibleContent: () => undefined,
+};
+
+const newStateMembers: Pick<LegendListState,
+  "distanceFromEnd" | "isFollowingEnd"
+> = {
+  distanceFromEnd: 0,
+  isFollowingEnd: false,
+};
+```
+
+Add those members to your existing mock's ref and state objects. See the [ref methods](../api#ref-methods) and [state fields](../api#fields-and-methods) for their contracts.
+
+For SectionList key-based methods, pass flattened item keys of the form `${sectionKey}:item:${itemKey}`, rather than the bare item key. `sectionKey` is the section's `key` or `section-${sectionIndex}` when omitted; `itemKey` comes from the section or list `keyExtractor`. `anchorVisibleContent` accepts and returns those same flattened keys. See [SectionList](../api#sectionlist) for header, footer, and separator keys.
+
+When adopting the new behavior:
+
+- Await scroll promises for landing or settlement, including interruption, cancellation, replacement, or an unreachable target. Resolution does not guarantee arrival.
+- Use `maintainScrollAtEnd.on.dataAppend` with stable keys for append-only following, leaving `dataChange` disabled.
+- Allow `onStartReached` / `onEndReached` to run after layout changes without a scroll event.
+- Pass external fixed-size dependencies through `extraData` so `getFixedItemSize` sizes are invalidated when they change.
+
+See [Chat interfaces](../guides#chat-interfaces) and [Scrolling a search match into view](../guides#scrolling-a-search-match-into-view) for examples.
+
 ## ✨ New in v3
 
 ### Web Support
