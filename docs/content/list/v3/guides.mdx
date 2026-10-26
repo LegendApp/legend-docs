@@ -149,7 +149,7 @@ Pitfalls:
 
 ## Scrolling a Search Match into View
 
-**New in 3.7:** Use `itemOffset` and `itemLength` with `scrollItemIntoView` or `scrollIndexIntoView` to reveal the match itself, even inside an item taller than the viewport. These are layout distances along the scroll axis, not character indices or string lengths. `viewportMargin` keeps the match clear of overlays.
+**New in 3.7:** Use `itemOffset` and `itemLength` with `scrollItemIntoView` or `scrollIndexIntoView` to reveal the match itself, even inside an item taller than the viewport. These are layout distances along the scroll axis, not character indices or string lengths. The region should be within the item. `viewportMargin` keeps the match clear of overlays.
 
 Measure the match relative to the item's root. In this vertical React Native example, the search layer supplies `before`, `match`, and `after` as separate text blocks. Because the highlighted `Text` is a direct child of the item's root `View`, its `onLayout` gives `y` and `height` in the required coordinate space, including the root's padding.
 

@@ -1049,7 +1049,7 @@ Reports an externally measured content inset (merged with props/native insets). 
 
 Scrolls an item, or a region inside it, into the available viewport. `animated` defaults to `true`.
 
-**New in 3.7:** `itemOffset` is the region's start measured from the item's start along the scroll axis; `itemLength` is its length along that axis. Passing either enables region targeting, and the omitted value defaults to `0`. For example, `itemOffset` alone targets a point inside the item. Omit both to retain whole-item behavior.
+**New in 3.7:** `itemOffset` is the region's start measured from the item's start along the scroll axis; `itemLength` is its length along that axis. Passing either enables region targeting, and the omitted value defaults to `0`. For example, `itemOffset` alone targets a point inside the item. The region should be within the item. Omit both to retain whole-item behavior.
 
 `viewportMargin` keeps space clear at the start and end of the viewport along the scroll axis (top/bottom for vertical lists; also supported on horizontal lists). Both margins default to `0`. Margins reserve viewport space for this request; they do not add content padding.
 
