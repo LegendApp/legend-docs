@@ -59,7 +59,7 @@ export const projects: Project[] = [
         category: 'framework',
         status: 'Experimental — not for production',
         github: 'https://github.com/LegendApp/legend-spark',
-        tagline: 'React Native, meet the desktop.',
+        tagline: 'React Native on desktop.',
         description:
             'An experimental React Native and Expo Desktop framework with native desktop APIs and prebuilt development runtimes. Not ready for production use.',
         highlights: ['Native windows + menus', 'Hermes runtime', 'Spark Runner + Fast Refresh'],

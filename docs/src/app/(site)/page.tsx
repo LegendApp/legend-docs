@@ -210,7 +210,7 @@ function Spark() {
                         <span className="text-[17px] font-semibold text-white">Legend Spark</span>
                     </div>
                     <h3 className="mt-8 text-[34px] font-bold leading-[1.08] tracking-[-0.03em] text-white md:text-[44px]">
-                        React Native, meet the desktop.
+                        React Native on desktop.
                     </h3>
                     <p className="mt-5 max-w-[480px] text-base leading-relaxed text-[#b4b7bd] md:text-[17px]">
                         Build native Mac apps with React Native and Expo Desktop. Screens use React Native&apos;s native

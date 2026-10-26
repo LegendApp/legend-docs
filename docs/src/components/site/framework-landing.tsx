@@ -106,7 +106,7 @@ export function FrameworkLanding() {
                         <span className="status-badge">Experimental — not for production</span>
                     </div>
                     <h1 className="text-[44px] sm:text-[58px] font-medium tracking-[-0.045em] leading-[1.05] text-white">
-                        React Native, meet the desktop.
+                        React Native on desktop.
                     </h1>
                     <p className="mt-6 text-[17px] leading-relaxed text-[#a4adb6] max-w-[480px]">
                         Spark gives React Native apps real windows, menus, dialogs, and files on the Mac. Start in a
