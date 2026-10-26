@@ -113,7 +113,7 @@ export function FrameworkLanding() {
                         prebuilt runner with Fast Refresh, then ship a standalone <code className="text-white/85">.app</code>.
                     </p>
                     <div className="mt-9 flex flex-wrap items-center gap-3">
-                        <Link href="/spark/getting-started" className="button button-primary">
+                        <Link href="/spark/overview" className="button button-primary">
                             Get started <ArrowRight size={15} />
                         </Link>
                         <a href="https://github.com/LegendApp/legend-spark" className="button button-outline text-[#d1d6df]">
@@ -135,7 +135,7 @@ export function FrameworkLanding() {
                     </div>
                     <figcaption className="mt-3 text-xs text-[#787c85]">
                         Spark 0.0.1 API ·{' '}
-                        <Link href="/spark/getting-started" className="text-[#91c7e9] hover:text-white">
+                        <Link href="/spark/overview" className="text-[#91c7e9] hover:text-white">
                             see Getting started
                         </Link>
                     </figcaption>
