@@ -195,20 +195,29 @@ export function FrameworkLanding() {
 
             {/* Architecture */}
             <section className="container pt-28 sm:pt-32">
-                <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-14 border-y border-[#29313a] py-12">
-                    <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">No browser inside.</h2>
-                    <div className="grid gap-8 sm:grid-cols-2 text-[14px] leading-relaxed text-[#929da8]">
-                        <p>
-                            <span className="block text-white font-medium mb-1.5">React Native all the way down</span>
-                            Screens are React Native views and your JavaScript runs in Hermes. Node runs the tooling and
-                            is never bundled into the app.
-                        </p>
-                        <p>
-                            <span className="block text-white font-medium mb-1.5">The Expo workflow you know</span>
-                            Expo Desktop generates the native host and Expo CLI owns Metro, logs, and reload. Spark adds
-                            desktop APIs and runtime selection.
-                        </p>
+                <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-14 lg:items-center border-y border-[#29313a] py-12">
+                    <div>
+                        <h2 className="text-[26px] font-medium tracking-[-0.02em] text-white">No browser inside.</h2>
+                        <div className="mt-8 grid gap-8 text-[14px] leading-relaxed text-[#929da8]">
+                            <p>
+                                <span className="block text-white font-medium mb-1.5">React Native all the way down</span>
+                                Screens are React Native views and your JavaScript runs in Hermes. Node runs the tooling and
+                                is never bundled into the app.
+                            </p>
+                            <p>
+                                <span className="block text-white font-medium mb-1.5">The Expo workflow you know</span>
+                                Expo Desktop generates the native host and Expo CLI owns Metro, logs, and reload. Spark adds
+                                desktop APIs and runtime selection.
+                            </p>
+                        </div>
                     </div>
+                    <img
+                        src="/assets/spark/spark-expo-desktop-react-native-stack.webp"
+                        alt="Layer diagram: Legend Spark on top of Expo Desktop, which builds on Expo, which builds on React Native"
+                        width={1680}
+                        height={1200}
+                        className="w-full h-auto rounded-xl border border-[#29313a] shadow-[0_24px_60px_#0008]"
+                    />
                 </div>
             </section>
 
