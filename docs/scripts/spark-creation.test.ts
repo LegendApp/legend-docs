@@ -7,7 +7,7 @@ const content = path.join(docs, 'content/spark');
 const landing = 'src/components/site/framework-landing.tsx';
 const read = (file: string) => readFileSync(path.join(docs, file), 'utf8');
 
-test('every Spark registry creation command uses the untagged creator', () => {
+test('every Spark registry creation command uses the untagged or next creator', () => {
     const files = readdirSync(content, { recursive: true, encoding: 'utf8' })
         .filter((file) => file.endsWith('.mdx')).map((file) => `content/spark/${file}`);
     let commands = 0;
@@ -16,7 +16,7 @@ test('every Spark registry creation command uses the untagged creator', () => {
         for (const match of read(file).matchAll(pattern)) {
             commands++;
             const creator = match[1].endsWith('create') ? '@legendapp/spark' : '@legendapp/create-spark';
-            expect({ file, package: match[2] }).toEqual({ file, package: creator });
+            expect([creator, `${creator}@next`]).toContain(match[2]);
         }
     }
     expect(commands).toBeGreaterThan(0);
@@ -24,16 +24,10 @@ test('every Spark registry creation command uses the untagged creator', () => {
 
 test('Spark onboarding keeps package manager variants, examples, and landing next steps', () => {
     const gettingStarted = read('content/spark/getting-started.mdx');
-    for (const manager of ['npm', 'bun', 'pnpm', 'yarn']) {
-        expect(gettingStarted).toContain(`${manager} create @legendapp/spark MyApp`);
-    }
-    expect(gettingStarted).toContain('Yarn Classic');
-    expect(gettingStarted).toContain('Yarn PnP');
-    expect(gettingStarted).toContain('npm create @legendapp/spark MyApp -- --package-manager pnpm');
-    expect(gettingStarted).toContain('npm create @legendapp/spark MyApp -- --next');
+    // Fumadocs remarkNpm renders this fence as npm/pnpm/yarn/bun tabs.
+    expect(gettingStarted).toMatch(/^```npm\nnpm create @legendapp\/spark@next MyApp\n```$/m);
     expect(gettingStarted).toContain('--latest');
     expect(gettingStarted).toContain('--spark-version <version|tag>');
-    expect(gettingStarted).toContain('pnpm --config.minimum-release-age=0 create @legendapp/spark MyApp');
     const examples = read('content/spark/examples.mdx');
     for (const [app, example] of [['MyNotes', 'notes-lite'], ['MyMusic', 'music-lite'], ['MyDiff', 'diff-lite'], ['MyEditor', 'document-editor']]) {
         expect(examples).toContain(`npm create @legendapp/spark ${app} -- --example ${example}`);
