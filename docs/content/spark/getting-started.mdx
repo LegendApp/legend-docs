@@ -5,60 +5,31 @@ description: Create a macOS app from npm, edit it with Fast Refresh, and build a
 
 ## Prerequisites
 
-Use macOS **14 or newer** on **Apple Silicon** with Node **24.19.0 or newer**. npm comes with Node; pnpm, Yarn, and Bun are also supported package managers. Bun is optional for app development.
+Use macOS **14 or newer** on **Apple Silicon** with Node **24.19.0 or newer**.
 
 Creating an app and running it with Spark Runner does not require Xcode or CocoaPods. You need those tools when compiling a standalone app or a custom native development build.
 
 ## Create an app
 
-Create an app with npm:
-
-```sh
-npm create @legendapp/spark MyApp
-cd MyApp
+```npm
+npm create @legendapp/spark@next MyApp
 ```
 
-The creator installs the app's dependencies, including the `spark` CLI. You can also use:
-
-```sh
-bun create @legendapp/spark MyApp
-pnpm create @legendapp/spark MyApp
-yarn create @legendapp/spark MyApp
-```
-
-Yarn Classic and modern Yarn are supported, including running the creator under Yarn PnP. Generated apps use `node_modules` for native tooling.
-
-To choose another installed package manager:
-
-```sh
-npm create @legendapp/spark MyApp -- --package-manager pnpm
-```
-
-Use `--package-manager npm|pnpm|yarn|bun`. npm needs the `--` separator; the other managers take creator flags directly.
+The creator installs the app's dependencies, including the `spark` CLI. Commit the generated lockfile and `spark-packages/` archives so other machines can reinstall the same dependencies.
 
 ### Choose a release
 
-The creator uses its own bundled Spark release by default. Pass `--next` for a prerelease, `--latest` for the current stable release, or `--spark-version <version|tag>` for a specific release. Choose one flag, for example `npm create @legendapp/spark MyApp -- --next`.
-
-If the selected release differs from the creator's version, it prints the exact matching creator command to run. Follow that command to create the app.
-
-### Install just after a release
-
-pnpm 12 skips versions published less than a day ago by default ([`minimumReleaseAge`](https://github.com/pnpm/pnpm/blob/main/pnpm/docs/settings/dependency-resolution.md#minimumreleaseage)). Right after a release, you may need:
-
-```sh
-pnpm --config.minimum-release-age=0 create @legendapp/spark MyApp
-```
-
-Use the same option with `pnpm install` if dependency installation is blocked by release age.
-
-The rest of this guide uses npm. Use your manager's `run` command if needed. Commit the generated lockfile, package-manager settings, and `spark-packages/` archives so other machines can reinstall the same dependencies.
+The creator uses its own bundled Spark release by default. Pass `--latest` for the current stable release or `--spark-version <version|tag>` for a specific release. If the selected release differs from the creator's version, it prints the exact matching creator command to run.
 
 ## Run and edit
 
-From the generated app:
+Move into the app and start it:
 
 ```sh
+cd MyApp
+```
+
+```npm
 npm run macos
 ```
 
@@ -81,8 +52,11 @@ Install full Xcode, complete its first-launch setup, and select it in the Xcode 
 
 Stop the development session with Ctrl+C, then run:
 
-```sh
+```npm
 npm run build
+```
+
+```sh
 npx --no-install spark open
 ```
 
