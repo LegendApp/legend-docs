@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: How React Native, Expo Desktop, and Spark runtimes fit together.
+description: How Legend Spark builds on React Native, Expo, and Expo Desktop, and how Spark Runner gets you developing.
 ---
 
 Build desktop apps with React Native screens, native windows, menus, dialogs, and files. Edit JavaScript with Fast Refresh.
@@ -24,27 +24,17 @@ Install `@legendapp/spark` for the APIs and `spark` CLI. Import features from pa
 
 Node 24.19.0+ runs the tooling. Use npm, pnpm, Yarn, or Bun to manage dependencies. Neither Node nor Bun runs inside the app.
 
-## Three runtime choices
+## Spark Runner
 
-| Runtime | Native contents | JavaScript |
-| --- | --- | --- |
-| Spark Runner | Shared SDK development profile | Metro / Fast Refresh |
-| Custom development build | SDK plus app-specific native dependencies/configuration | Metro / Fast Refresh |
-| Standalone macOS application | Production-selected native modules | Embedded bundle |
+Spark Runner is a prebuilt desktop app that runs your JavaScript from Metro with Fast Refresh, so you can start developing without Xcode or compiling native code. The first launch downloads a matching Runner and later sessions reuse it. JavaScript changes never need a rebuild.
 
-Start with a compatible Runner. Adding native dependencies, helper executables, or native configuration can require a custom build. Compatibility checks include SDK, architecture, and native signatures. JavaScript-only changes do not require rebuilding.
+When your app adds native dependencies, helper executables, or native configuration such as URL/document associations, Spark asks for a [custom development build](/spark/development#native-changes) instead. It works the same way, with your native code included.
 
 ## Platform scope
 
-| Target | Available workflow | Limits |
-| --- | --- | --- |
-| macOS 14+, Apple Silicon | Runner, custom development, standalone builds and packaging | Primary target |
-| macOS 14+, Intel x64 | Architecture selection across builds, Runner registration/downloads and packaging | Native builds and runtime behavior still need validation; published Runner is ARM64 only |
-| Windows 11, x64/ARM64 | Local Runner and custom development builds | Native builds and runtime behavior still need validation; no production packaging or hosted Windows Runner |
-| iOS / Android / web | Expo workflows and selected shared API/UI adapters | Desktop APIs do not imply mobile/web support |
-| Linux / Mac App Store | Outside the supported workflow | No support claim |
+macOS 14+ on Apple Silicon is the primary target today. Windows and Intel Mac support are in progress; see [status and limitations](/spark/limitations) for details.
 
-Spark 0.0.1 targets Expo SDK 54, React Native 0.81, and Expo Desktop `1.0.0`. See [status and limitations](/spark/limitations) for platform and feature restrictions.
+Spark 0.0.1 targets Expo SDK 54, React Native 0.81, and Expo Desktop `1.0.0`.
 
 ## Application architecture
 
@@ -55,7 +45,7 @@ For Electron migrations, replace DOM/CSS screens with React Native screens and b
 ## Explore
 
 - [Getting started](/spark/getting-started): create, run, and build a macOS app from npm.
-- [Development](/spark/development) and [configuration](/spark/configuration): runtimes, Expo integration, and native changes.
+- [Development](/spark/development) and [configuration](/spark/configuration): Spark Runner, custom development builds, Expo integration, and native changes.
 - [API guide](/spark/reference): every public capability and shared contracts.
 - [Native UI](/spark/ui), [AI execution](/spark/ai), and [examples](/spark/examples).
 - [Packaging and updates](/spark/distribution) and [migration](/spark/migration).
