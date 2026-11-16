@@ -55,9 +55,13 @@ The `list` function expects an array of rows to be returned from your API.
 The shape of the observable object returned from a `list` can be changed with the `as` parameter, which supports four options:
 
 1. `object`: The default, an object keyed by the row's `id` field.
-2. `array`: Treat the result of a query as an array
+2. `array`: Treat the result of a query as an array. Discouraged for data you edit, see [Prefer objects or Maps keyed by id](#prefer-objects-or-maps-keyed-by-id)
 3. `Map`: A Map, which can be more efficient for accessing rows by key
 4. `value`: Treat the result of a query as a single value like a `get`
+
+### Prefer objects or Maps keyed by id
+
+Per-item sync is designed around rows keyed by id, so the default `as: 'object'` (or `as: 'Map'`) is the most robust choice. `get` syncs a single item, so use `list` rather than returning an array of rows from `get`. Likewise, `create` and `update` should return the saved row itself, not an array of rows: with Supabase's `insert().select()`, for example, return `data[0]` rather than `data`. In development, Legend-State logs a warning if `get` returns an array of rows or `create` or `update` returns an array.
 
 ## create
 
@@ -227,6 +231,7 @@ This has a few requirements to work correctly:
 - `update`: Update a single value on the backend
 - `delete`: Delete a single value on the backend
 - `onSaved`: Update local value with remote data
+- `as`: 'object' | 'Map' | 'array' | 'value'. Defaults to 'object'. The shape of the observable for `list`. Avoid 'array' for data you edit, see [Prefer objects or Maps keyed by id](#prefer-objects-or-maps-keyed-by-id)
 - `fieldId`: Row identifier field, defaults to `id`
 - `fieldCreatedAt`: Set the field your backend uses for created times
 - `fieldUpdatedAt`: Set the field your backend uses for updated times

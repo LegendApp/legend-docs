@@ -149,6 +149,28 @@ observe(() => {
 store$.users.push({ id: 0, name: 'name' })
 ```
 
+#### Arrays in synced data
+
+Arrays in synced data aren't supported for per-item sync. Array items are tracked by their index, so if the server sends an array with items added, removed or reordered while local edits inside it are still pending, those edits can be applied to the wrong item. Store collections as an object or a `Map` keyed by id instead:
+
+```ts
+// ❌ Local edits are tracked by index
+const state$ = observable(synced({
+    get: () => ({ todos: [{ id: 'a', text: 'Hi' }] }),
+    // ...
+}))
+state$.todos[0].text.set('Edited')
+
+// ✅ Local edits are tracked by id
+const state$ = observable(synced({
+    get: () => ({ todos: { a: { id: 'a', text: 'Hi' } } }),
+    // ...
+}))
+state$.todos.a.text.set('Edited')
+```
+
+Arrays that you always replace as a whole value, such as `state$.tags.set(['a', 'b'])`, are fine. Editing items in place, including with `push` or `splice`, records the edits by index. In development, Legend-State logs a warning when a remote array replaces an array that has pending local edits inside it.
+
 ### Sync with paging
 
 `get()` is an observing context, so if you get an observable's value it will re-run if it changes. We can use that to created a paging query by setting the query mode to "append" (or "assign" if it's an object) to append new pages into the observable array.
