@@ -83,6 +83,24 @@ const profile$ = observable(syncedCrud({
 }))
 ```
 
+### Ids are created on the client
+
+The client creates each row's id, and the server must save and return that same id. A new row is keyed by its id as soon as it's added locally, so the crud plugin doesn't rekey it if `create` returns a different id. Create ids locally, by setting the `id` field yourself or with the `generateId` option, and make sure your API stores the id it's given rather than assigning its own.
+
+```ts
+import { observable } from "@legendapp/state";
+import { syncedCrud } from "@legendapp/state/sync-plugins/crud";
+
+const todos$ = observable(syncedCrud({
+    list: listTodos,
+    create: createTodo, // Must save and return the id it receives
+    generateId: () => crypto.randomUUID(),
+}))
+
+const id = crypto.randomUUID()
+todos$[id].set({ id, text: 'New todo' })
+```
+
 ## update
 
 If an element in the observable is updated it will call the `update` function with the changed value. If you've enabled the `updatePartial` option then the value will include only the changed fields and the `id`. Otherwise it will be the full changed object.
@@ -214,7 +232,7 @@ This has a few requirements to work correctly:
 - `fieldDeletedList`: Recognize a separate deletion marker in list results without enabling soft-delete writes
 - `updatePartial`: Send only changed fields into update function
 - `changesSince`: 'all' | 'last-sync'. Defaults to 'all'. 'last-sync' syncs only diffs
-- `generateId`: Provide a function for creating row ids.
+- `generateId`: Provide a function for creating row ids. Ids are created on the client, so the server must save and return the same id.
 - `subscribe`: Set up a realtime connection or polling
 - `retry`: Options for retrying in case of error. Applies to both get and set.
 - `persist`: Options for persisting locally. See [Persist and sync](../persist-sync).
