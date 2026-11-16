@@ -8,6 +8,10 @@ title: Migrating
 
 Previously, copying and persisting data turned every string matching `YYYY-MM-DDTHH:mm:ss.sssZ` into a `Date`, which also changed CRUD inputs and `getPrevious()`. Now values are kept exactly. Use `transformStringifyDates` for fields you want as `Date`s. Previously persisted data still loads as before and is rewritten in the new format on its next save. See [Dates](../../sync/persist-sync#dates).
 
+### Supabase requires @supabase/supabase-js 2.56.0
+
+`syncedSupabase` now requires `@supabase/supabase-js` 2.56.0 or later, which changed the client's TypeScript generics. See [Supabase](../../sync/supabase#set-up-supabase-types).
+
 ## 3.0.0-beta.19 to 3.0.0-beta.20
 
 ### observer -> useValue

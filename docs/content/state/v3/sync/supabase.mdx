@@ -67,6 +67,14 @@ function updateMessage(id: string, text: string) {
 
 ## Set up Supabase types
 
+`syncedSupabase` requires `@supabase/supabase-js` 2.56.0 or later. It's an optional peer dependency of `@legendapp/state`, so install it yourself:
+
+```npm
+npm install @supabase/supabase-js
+```
+
+Version 2.56.0 changed the TypeScript generics of `SupabaseClient` and its query builders, and earlier versions are not supported. With an earlier version installed, npm reports a peer dependency conflict, so upgrade `@supabase/supabase-js`.
+
 The first step to getting strongly typed observables from Supabase is to follow their instructions to create a typed client.
 
 https://supabase.com/docs/guides/api/rest/generating-types
@@ -109,6 +117,19 @@ const messages$ = observable(syncedSupabase({
     // select: (from) => from.select('id,text').eq('user_id', 'uid')
 }))
 ```
+
+The type of the synced rows comes from your `select` query, so if you select a subset of columns or embed related tables, the observable is typed to match:
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    // Each row is typed as a message row with its embedded profiles row
+    select: (from) => from.select('*, profiles(*)'),
+}))
+```
+
+Changes are sent back with the same shape. If you embed related tables, provide custom `create` and `update` functions (or a `transform`) that remove the fields the table doesn't accept.
 
 ## actions
 
