@@ -70,6 +70,57 @@ export default function App() {
 }
 ```
 
+#### Using with React Compiler
+
+`useValue` works with [React Compiler](https://react.dev/learn/react-compiler). It subscribes through `useSyncExternalStore`, so you don't need to call that yourself. Use `useValue` rather than `use$`, because the Compiler only treats `use` followed by a capital letter or digit as a hook.
+
+The one thing to watch for is object and array identity. `useValue(state$.favorites)` returns the raw value, which Legend-State changes in place, so after `state$.favorites.push(...)` the component re-renders but `favorites` is still the same array. The Compiler caches function calls, method calls and JSX on the references passed into them, so it reuses the cached result and shows stale data. Reading fields inline (`user.name`) is fine, because the Compiler caches on the field value.
+
+```jsx
+import { observable } from "@legendapp/state"
+import { useValue } from "@legendapp/state/react"
+
+const state$ = observable({
+  favorites: ["Apples"],
+  user: { name: "Annyong", age: 10 },
+})
+
+// ❌ favorites is the same array after a push, so the Compiler reuses the cached join
+function Favorites() {
+  const favorites = useValue(state$.favorites)
+  const joined = favorites.join(", ")
+  return <div>{joined}</div>
+}
+
+const formatUser = (user) => `${user.name} (${user.age})`
+
+// ❌ user is the same object after state$.user.name.set(...), so the Compiler reuses the cached formatUser(user)
+function UserName() {
+  const user = useValue(state$.user)
+  const label = formatUser(user)
+  return <div>{label}</div>
+}
+```
+
+Instead, do the derived work inside the `useValue` selector so that it returns a new value when it changes, or read only the fields you need.
+
+```jsx
+// ✅ Compute inside the selector
+function Favorites() {
+  const joined = useValue(() => state$.favorites.get().join(", "))
+  return <div>{joined}</div>
+}
+
+// ✅ Read only the fields you need
+function UserName() {
+  const name = useValue(state$.user.name)
+  const age = useValue(state$.user.age)
+  return <div>{`${name} (${age})`}</div>
+}
+```
+
+The same applies to passing the raw object as a prop: the Compiler caches the JSX element on its reference, so the child won't re-render. Pass the specific fields, or pass the observable (`user$={state$.user}`) and read it with `useValue` in the child.
+
 ### observer
 
 `observer` is a good optimization if you consume many observables in one component. It inserts a single tracking hook into the component. Calls to `useValue` with an observable argument and without suspense share that tracking context, reducing the number of hooks. Calls with a computation function still use their own hook.
