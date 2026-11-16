@@ -101,6 +101,8 @@ const id = crypto.randomUUID()
 todos$[id].set({ id, text: 'New todo' })
 ```
 
+In development, `syncedCrud` logs a warning if `create` returns an id (the `fieldId` field, `id` by default) that doesn't match the row's key. Ids are compared as strings, so a numeric `42` matches the key `'42'`.
+
 ## update
 
 If an element in the observable is updated it will call the `update` function with the changed value. If you've enabled the `updatePartial` option then the value will include only the changed fields and the `id`. Otherwise it will be the full changed object.
