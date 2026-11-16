@@ -1,0 +1,80 @@
+---
+title: FAQ
+---
+
+## Why doesn't my computed update when I change a child in place?
+
+A computed compares its new value with its previous value **by reference**. If the computed returns raw data taken from another observable with `get()`, the computed's value and the source share the same objects. When you change a child of the source (`push`, `set` on a nested field), that shared object is changed in place, so the computed's previous value already contains the change. The computed recomputes, sees the same objects it had before, and nothing is notified: listeners on the computed or its children do not fire.
+
+```js
+const plugins$ = observable([{ tabs: [{ a: 1 }] }])
+
+// ❌ Returns the source's raw objects (map(a => a) copies the array, not the items)
+const view$ = computed(() => plugins$.get().map((p) => p))
+
+view$[0].tabs.onChange(() => console.log('never fires'))
+plugins$[0].tabs.push({ a: 2 })
+```
+
+Spreading only the top level has the same problem: `[...base, ...items$.get()]` is a new array, but its items are still the source's objects.
+
+This is by design. Treating "same object" as a change would also make `Change.prevValue` wrong, because the previous value would be the already modified object.
+
+Fixes, best first:
+
+**1. Return the observable instead of its raw value.** Returning an observable from a computed [links to it](../../usage/observable#link-to-another-observable), so changes inside it notify through the computed and `set` passes through to the source. This also works for a lookup (`() => state$.items[state$.selectedId.get()]`) and for an array that mixes raw values and child observables.
+
+```js
+// ✅ Link to the source
+const view$ = computed(() => plugins$)
+// ✅ Link to one item
+const first$ = computed(() => plugins$[0])
+// ✅ Combine fixed values with child observables
+const all$ = computed(() => [...base, ...items$.map((item$) => item$)])
+```
+
+**2. Build new objects down to the level that changes.** If the computed needs to transform the data, return new objects. They have to be new at every level that changes in place: copying the array or the item is not enough when you `push` into `item.tabs`.
+
+```js
+// ❌ New array and new items, but `tabs` is still the source's array
+computed(() => plugins$.get().map((p) => ({ ...p })))
+
+// ✅ New down to the changed array
+computed(() => plugins$.get().map((p) => ({ ...p, tabs: [...p.tabs] })))
+
+// ✅ Each item is a leaf object: a shallow copy of each item is enough
+computed(() => [...base, ...items$.get().map((item) => ({ ...item }))])
+```
+
+This copies on every recompute, so prefer fix 1 for large data.
+
+**3. Include a version number in the computed's result** (only if you observe the whole computed). Bumping a version observable that the computed reads and returns, such as `computed(() => ({ version: version$.get(), list: plugins$.get() }))`, notifies observers of the whole computed (`view$.get()`, `useValue(view$)`). Listeners on children inside the shared data (`view$.list[0].tabs.onChange`) still do not fire, and you must remember to bump the version after every in-place change. A version that is tracked but not part of the returned value does nothing.
+
+Also see [Observables are mutable](../../usage/observable#observables-are-mutable): modifying raw data from `get()` directly has the same cause.
+
+## Why are record and array children possibly undefined with noUncheckedIndexedAccess?
+
+With TypeScript's `noUncheckedIndexedAccess` option, TypeScript adds `| undefined` to every read through an index signature. Observables of records and arrays type their children with an index signature, so dynamic children like `store$.todos[id]` or `arr$[0]` are typed `Observable<T> | undefined`, and TypeScript reports "Object is possibly 'undefined'".
+
+At runtime the child observable always exists, even for a key that isn't in the data. Only its value may be `undefined`. So you can use a non-null assertion or optional chaining:
+
+```ts
+const store$ = observable({ todos: {} as Record<string, Todo> })
+
+store$.todos[id]!.text.get()
+store$.todos[id]?.text.get()
+```
+
+Or use a small typed lookup helper, which also types the value as possibly `undefined`:
+
+```ts
+import type { Observable } from '@legendapp/state'
+
+function child<T>(obs$: Observable<Record<string, T>>, key: string): Observable<T | undefined> {
+    return (obs$ as any)[key]
+}
+
+const text = child(store$.todos, id).text.get() // string | undefined
+```
+
+Maps are not affected, because `map$.get(id)` is a method call rather than an index read.

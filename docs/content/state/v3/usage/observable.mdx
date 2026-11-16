@@ -204,6 +204,8 @@ The difference between using it as a function vs. as a computed observable is th
 - `fullName()` is a function that re-computes whenever you call it.
 - `fullName.get()` creates a computed observable that re-computes itself whenever its dependencies change.
 
+A computed compares its value by reference, so if it returns raw objects from another observable's `get()`, changing a child of them in place won't notify it; see [Why doesn't my computed update when I change a child in place?](../../other/faq#why-doesnt-my-computed-update-when-i-change-a-child-in-place).
+
 ## Async Observables
 
 Creating an observable with a Promise or async function will initialize it to `undefined`, and it will be updated with the value of the Promise when it resolves.
