@@ -538,6 +538,37 @@ const state$ = observable(synced({
 }))
 ```
 
+### Dates
+
+Legend-State keeps values exactly as you set them: a `Date` stays a `Date` and a string stays a string, including strings that look like ISO dates. This applies to `getPrevious()`, the values passed to sync and CRUD functions, saved results, and persisted data. Internally these copies are made directly rather than through a JSON round trip, which keeps values exact and is much faster. If you set a custom `jsonReplacer` or `jsonReviver` with `configureLegendState`, copies still go through JSON so that they run.
+
+If your backend sends dates as ISO strings and you want `Date` objects locally, opt in with `transformStringifyDates`, either for specific fields or for all ISO strings at the top level of each value:
+
+```ts
+import { observable } from "@legendapp/state"
+import { synced, transformStringifyDates } from "@legendapp/state/sync"
+
+const profile$ = observable(synced({
+    get: () => fetch('/api/profile').then((res) => res.json()),
+    // Parse these fields to Dates on load and stringify them again on save
+    transform: transformStringifyDates('createdAt', 'updatedAt'),
+}))
+```
+
+**Persistence**: The persist plugins that store JSON (Local Storage, Session Storage, MMKV, AsyncStorage and Expo SQLite) save a `Date` in a tagged form, `{"__LSType":"Date","value":"..."}`, so it loads back as a `Date`, and strings load back as strings. Each table's metadata records the storage format version. IndexedDB stores native `Date`s and is unchanged.
+
+**Upgrading**: Data saved by earlier versions has no format version, so it still loads with the old behavior, where every ISO date string becomes a `Date`. It's rewritten in the new format the next time that table or its metadata is saved, so nothing needs to be migrated by hand. Earlier versions can't read the new format correctly, so downgrading after a save is not supported.
+
+**Custom JSON functions**: A custom `jsonReviver` now also receives ISO date strings, so it can convert them itself if you want the old behavior for specific keys. A custom `jsonReplacer` is not called for `Date` values, because they are tagged first.
+
+**Development warning**: During the 3.0 prereleases, development builds log a warning once per field name where an ISO string would previously have become a `Date`. Silence it with:
+
+```ts
+import { configureLegendState } from "@legendapp/state/config/configureLegendState"
+
+configureLegendState({ warnOnDateStrings: false })
+```
+
 ## Persist plugins
 
 First choose and configure the storage plugin for your platform.
