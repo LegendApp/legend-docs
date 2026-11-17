@@ -491,7 +491,7 @@ If you don't want this extra observable behavior, `get()` or `peek()` the observ
 
 ### Observables are mutable
 
-Legend-State does not use immutability because immutability is slow. It needs to do deep equality checking of changes to know which nodes to notify anyway, so immutability just isn't needed. So there are two things to be careful of.
+Legend-State does not use immutability because immutability is slow. It needs to do deep equality checking of changes to know which nodes to notify anyway, so immutability just isn't needed. So there are three things to be careful of.
 
 #### 1. Modifying raw data breaks notifying of changes.
 
@@ -555,3 +555,25 @@ const list = list$.get()
 const idx = list.findIndex((item) => item.id === itemId)
 list$[idx].delete()
 ```
+
+#### 3. Don't reuse an initial object
+
+An observable stores the object you give it and changes that object in place, so the object you created it with always holds the current state. Reusing that object as a reset value or as the initial value of another observable doesn't work:
+
+```js
+const initialState = { done: false, name: '' }
+const state$ = observable(initialState)
+
+state$.done.set(true)
+// initialState is now { done: true, name: '' }
+
+// ❌ Sets it to the current value, so nothing changes
+state$.set(initialState)
+
+// ✅ Create a new object each time
+const createInitialState = () => ({ done: false, name: '' })
+const store$ = observable(createInitialState())
+store$.set(createInitialState())
+```
+
+The same applies to the `initial` option of `synced`: give each synced observable its own object rather than sharing one between several. `initial` can also be a function that returns a new object.
