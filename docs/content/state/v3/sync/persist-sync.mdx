@@ -469,7 +469,7 @@ The `isLoaded` and `error` properties are accessible when using `syncState` on a
 - `lastSync: number | undefined`: Timestamp of the latest sync
 - `syncCount: number | undefined`: Number of times it's synced
 - `clearPersist: () => Promise<void>`: Clear the local persistence
-- `sync: () => Promise<void>`: Re-run the get function
+- `sync: () => Promise<void>`: Re-run the get function. The Promise resolves after the get finishes, even if nothing observes the observable
 - `getPendingChanges: () => Record<string, { p: any; v?: any }> | undefined`: Get all unsaved changes
 - `error: Error | undefined`: The latest error
 - `isGetting`, `isSetting`: Whether remote operations are active
@@ -478,6 +478,13 @@ The `isLoaded` and `error` properties are accessible when using `syncState` on a
 - `reset: () => Promise<void>`: Also restore the configured initial value and reset sync state
 
 Use `sync({ resetLastSync: true })` to request a fresh sync without the previous timestamp.
+
+Because `sync()` waits for its get, you can await it to load data on demand, for example after signing in:
+
+```ts
+await syncState(todos$).sync()
+const todos = todos$.peek()
+```
 
 #### Pending saves
 
