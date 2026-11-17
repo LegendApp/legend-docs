@@ -442,6 +442,14 @@ The `isLoaded` and `error` properties are accessible when using `syncState` on a
 
 Use `sync({ resetLastSync: true })` to request a fresh sync without the previous timestamp.
 
+#### Pending saves
+
+`numPendingSets` counts saves that have started and not finished yet. It doesn't change synchronously in `set()`: changes are batched and the save starts shortly after (after `debounceSet`, if you set it). So read it reactively rather than right after a `set()`, for example to show a saving indicator:
+
+```ts
+const isSaving = useValue(() => syncState(todos$).numPendingSets.get() > 0)
+```
+
 ### useObservable + synced
 
 Create a synced observable within a React component using [useObservable](../../react/react-api#useobservable).

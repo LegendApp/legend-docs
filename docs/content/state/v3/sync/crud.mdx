@@ -128,6 +128,10 @@ todos$[id].set({ id, text: 'New todo' })
 
 In development, `syncedCrud` logs a warning if `create` returns an id (the `fieldId` field, `id` by default) that doesn't match the row's key. Ids are compared as strings, so a numeric `42` matches the key `'42'`.
 
+### Let the server set timestamps
+
+Leave `fieldCreatedAt` and `fieldUpdatedAt` for your backend to set, for example with column defaults or a trigger, and return them from `create` and `update` so they're merged into the local row. Don't set them yourself when adding a row: with `get`, a value that already has a `fieldCreatedAt` is sent to `update` instead of `create`. And with `changesSince: 'last-sync'`, the latest `fieldUpdatedAt` (or `fieldCreatedAt`) in the results becomes the `lastSync` for the next `list`, so it needs to come from the server's clock.
+
 ## update
 
 If an element in the observable is updated it will call the `update` function with the changed value. If you've enabled the `updatePartial` option then the value will include only the changed fields and the `id`. Otherwise it will be the full changed object.
