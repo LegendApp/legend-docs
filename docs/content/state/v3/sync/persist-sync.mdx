@@ -236,6 +236,43 @@ const profile$ = observable(syncedCrud({
 }))
 ```
 
+### Reset on sign out
+
+When a user signs out, reset each synced observable that holds their data with `syncState(obs$).reset()`. It:
+
+- Deletes the observable's persisted data and metadata, including `lastSync`
+- Discards local changes that haven't been saved yet
+- Sets the observable back to its `initial` value
+- Syncs again the next time the observable is observed
+
+Clearing `lastSync` matters with `changesSince: 'last-sync'`: otherwise the next sign-in lists only rows changed since the previous session's last sync, so most rows are missing. `resetPersistence()` alone isn't enough for this, because it only deletes the persisted data: the observable keeps its current value and `lastSync`.
+
+Use `waitFor` so that nothing syncs while signed out:
+
+```ts
+import { observable, syncState } from '@legendapp/state'
+import { syncedCrud } from '@legendapp/state/sync-plugins/crud'
+
+const isSignedIn$ = observable(false)
+
+const todos$ = observable(syncedCrud({
+    list: listTodos,
+    create: createTodo,
+    update: updateTodo,
+    // Don't sync until signed in
+    waitFor: isSignedIn$,
+    persist: { name: 'todos', retrySync: true },
+    changesSince: 'last-sync',
+    fieldUpdatedAt: 'updated_at',
+}))
+
+async function signOut() {
+    isSignedIn$.set(false)
+    await syncState(todos$).reset()
+    // Reset every other synced observable with user data too
+}
+```
+
 ## API
 
 ### configureSynced
