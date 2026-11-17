@@ -65,7 +65,7 @@ Per-item sync is designed around rows keyed by id, so the default `as: 'object'`
 
 ## create
 
-The `create` function is called whenever a new object is added to the observable. If you provide a `fieldCreatedAt` then this is determined by whether the object has a value at that field. Otherwise it's determined by whether the new value was previously undefined.
+The `create` function is called whenever a new object is added to the observable. With `list`, a row is new if there was no row at its key before. If you provide a `fieldCreatedAt` (or only a `fieldUpdatedAt`), a row whose previous value has no value at that field is also treated as new, so make sure the rows from `list` include that field. With `get`, if you provide a `fieldCreatedAt` then this is determined by whether the object has a value at that field. Otherwise it's determined by whether the new value was previously undefined.
 
 The returned value will be merged into the local value, applying any server defaults or created/updated times from the server value. See [onSaved](#onsaved) for more details.
 
@@ -85,6 +85,27 @@ const profile$ = observable(syncedCrud({
     },
     fieldCreatedAt: 'created_at'
 }))
+```
+
+### Add rows by setting them at their key
+
+Add a row by setting it at its id, or with `assign`. Either way only the new row is created:
+
+```ts
+const id = crypto.randomUUID()
+todos$[id].set({ id, text: 'New todo' })
+// Or
+todos$.assign({ [id]: { id, text: 'New todo' } })
+```
+
+Setting the whole collection compares it with the previous value row by row: new rows are created, changed rows are updated, and rows that are missing are deleted. So setting the collection to only the new row deletes every other row.
+
+```ts
+// ❌ Creates the new row and deletes all the others
+todos$.set({ [id]: { id, text: 'New todo' } })
+
+// ✅ Creates only the new row
+todos$.set({ ...todos$.peek(), [id]: { id, text: 'New todo' } })
 ```
 
 ### Ids are created on the client
