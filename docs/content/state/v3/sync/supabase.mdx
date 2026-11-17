@@ -202,6 +202,25 @@ const messages$ = observable(syncedSupabase({
 }))
 ```
 
+## Errors
+
+Errors from Supabase are passed to `onError`, with `source` set to `'list'`, `'create'`, `'update'` or `'delete'`. This includes your own `list`, `create`, `update` and `delete` functions: return Supabase's response (`{ data, error }`) and its `error` is reported the same way. A failed create, update or delete is then retried according to the `retry` option, and calling `revert` from the error params undoes the local change.
+
+```ts
+const messages$ = observable(syncedSupabase({
+    supabase,
+    collection: 'messages',
+    create: (input) => supabase.rpc('create_message', input),
+    onError: (error, { source, revert }) => {
+        console.error(`Supabase ${source} failed`, error)
+        // Optionally undo the local change
+        // revert?.()
+    },
+}))
+```
+
+An update that matches no rows is reported as an error too, rather than treated as saved. That happens if the row doesn't exist on the server, was deleted there, or is hidden by a row level security policy. With `retry: { infinite: true }` it keeps retrying.
+
 ## Sync only diffs
 
 An optional but very useful feature is the `changesSince: 'last-sync'` option. This can massively reduce bandwidth usage when you're persisting list results since it only needs to list changes since the last query. The way this works internally is basically:
@@ -245,6 +264,8 @@ CREATE TRIGGER handle_times
     FOR EACH ROW
 EXECUTE PROCEDURE handle_times();
 ```
+
+The trigger sets both columns, so leave them empty when adding rows (see [Let the server set timestamps](../crud#let-the-server-set-timestamps)).
 
 And to enable this feature in Legend-State, use the `changesSince` option and set the `fieldCreatedAt` and `fieldUpdatedAt` options to match the Supabase column names.
 
