@@ -52,6 +52,27 @@ mergeIntoObservable(state$, newValue);
 state$.store.get().text === newValue.store.text; // ✅ true
 ```
 
+## setSilently
+
+`setSilently` sets an observable's value without notifying anything: `onChange` and `observe` listeners don't run, components using it don't re-render, and synced observables don't persist or save the change. It returns the new value.
+
+Use it for bookkeeping that nothing should react to, such as clearing a value right after consuming it in a listener:
+
+```ts
+import { observable, setSilently } from "@legendapp/state";
+
+const picked$ = observable<string | null>(null);
+
+picked$.onChange(({ value }) => {
+  if (value === null) return;
+  applyPick(value);
+  // Clear it without running this listener again
+  setSilently(picked$, null);
+});
+```
+
+Because listeners aren't notified, components and computeds that already read the value keep showing the old one until the next normal change.
+
 ## trackHistory
 
 `trackHistory` creates an observable that tracks all changes in the target observable, with the previous value at the time it was changed.
